@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: saas_mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - saas_network
+
+  backend-api:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: saas_backend_api
+    restart: always
+    ports:
+      - "5246:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - MongoDB__ConnectionString=mongodb://mongodb:27017
+      - MongoDB__DatabaseName=VentasSaaS
+      - JwtSettings__Secret=SuperSecretSaaSKeyOfLengthGreaterThan32Characters!12345
+    depends_on:
+      - mongodb
+    networks:
+      - saas_network
+
+  frontend-app:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: saas_frontend_app
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend-api
+    networks:
+      - saas_network
+
+volumes:
+  mongo_data:
+
+networks:
+  saas_network:
+    driver: bridge

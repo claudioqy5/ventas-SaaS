@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Pastel Modern Color Palette */
+  --primary: #a3c4f3;      /* Soft Pastel Blue */
+  --primary-hover: #90b3e2;
+  --secondary: #f1c0e8;    /* Soft Pastel Pink */
+  --secondary-hover: #dfaed6;
+  --success: #b9fbc0;      /* Soft Pastel Green */
+  --warning: #fbf8cc;      /* Soft Pastel Yellow */
+  --danger: #ffcfd2;       /* Soft Pastel Red */
+  --danger-hover: #ebbcc0;
+  
+  --bg-app: #f8f9fa;       /* Light Elegant Grey */
+  --bg-card: #ffffff;
+  --text-main: #2d3748;    /* Charcoal */
+  --text-muted: #718096;
+  --border-color: #edf2f7;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 10px 25px rgba(163, 196, 243, 0.15);
+  --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.04);
+  
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  
+  --font-family: 'Outfit', sans-serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* App Container */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Button & Interactive styles with gorgeous micro-animations */
+button, .btn {
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition);
+  outline: none;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: #1e3a8a;
+}
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(163, 196, 243, 0.4);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  color: #5c2053;
+}
+.btn-secondary:hover {
+  background-color: var(--secondary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(241, 192, 232, 0.4);
+}
+
+.btn-success {
+  background-color: var(--success);
+  color: #1b4d3e;
+}
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(185, 251, 192, 0.4);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: #7f1d1d;
+}
+.btn-danger:hover {
+  background-color: var(--danger-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 207, 210, 0.4);
+}
+
+/* Form Controls */
+input, select, textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  background-color: #fff;
+  color: var(--text-main);
+  transition: var(--transition);
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(163, 196, 243, 0.25);
+  outline: none;
+}
+
+/* Elegant Cards */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Responsive Layout Utilities */
+.grid {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Dashboard Metrics styling */
+.metric-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+}
+.metric-card.blue { border-left: 6px solid var(--primary); }
+.metric-card.pink { border-left: 6px solid var(--secondary); }
+.metric-card.green { border-left: 6px solid var(--success); }
+.metric-card.red { border-left: 6px solid var(--danger); }
+
+/* Typography helper classes */
+.text-title {
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--text-main);
+}
+
+.text-subtitle {
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
