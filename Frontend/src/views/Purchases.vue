@@ -10,8 +10,9 @@
       <nav class="nav-links">
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item">📊 <span class="sidebar-text">Dashboard</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item">📦 <span class="sidebar-text">Productos</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/categories" class="nav-item">🏷️ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item">🏷️ <span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item">👥 <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item active">💵 <span class="sidebar-text">Compras</span></router-link>
@@ -76,13 +77,13 @@
               </div>
               
               <div class="field price-cell">
-                <label>Costo Unitario Compra ($)</label>
+                <label>Costo Unitario Compra (S/.)</label>
                 <input v-model.number="item.precioCosto" type="number" step="0.01" min="0" required />
               </div>
 
               <div class="item-total-cell">
                 <label>Subtotal</label>
-                <span class="subtotal-val">${{ (item.cantidad * item.precioCosto).toFixed(2) }}</span>
+                <span class="subtotal-val">S/. {{ (item.cantidad * item.precioCosto).toFixed(2) }}</span>
               </div>
 
               <button type="button" @click="removeItem(idx)" class="btn-remove-item">✕</button>
@@ -91,7 +92,7 @@
 
           <div class="form-footer">
             <div class="grand-total">
-              Total Compra: <span>${{ grandTotal.toFixed(2) }}</span>
+              Total Compra: <span>S/. {{ grandTotal.toFixed(2) }}</span>
             </div>
             <button type="submit" class="btn btn-success" :disabled="form.detalles.length === 0 || loading">
               {{ loading ? 'Procesando...' : '📥 Confirmar e Ingresar a Almacén' }}
@@ -109,6 +110,7 @@
         <table v-else class="data-table">
           <thead>
             <tr>
+              <th style="width: 50px;">N°</th>
               <th>Fecha</th>
               <th>Proveedor</th>
               <th>Productos Comprados</th>
@@ -117,7 +119,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="pur in purchases" :key="pur.id">
+            <tr v-for="(pur, index) in purchases" :key="pur.id">
+              <td><strong>{{ index + 1 }}</strong></td>
               <td><code>{{ new Date(pur.fechaCreacion).toLocaleDateString() }}</code></td>
               <td><strong>{{ pur.nombreProveedor }}</strong></td>
               <td>
@@ -127,8 +130,8 @@
                   </li>
                 </ul>
               </td>
-              <td><span class="total-badge">${{ pur.total.toFixed(2) }}</span></td>
-              <td>{{ pur.creadoPorNombre || 'Administrador' }}</td>
+              <td><span class="total-badge">S/. {{ pur.total.toFixed(2) }}</span></td>
+              <td>{{ /^[0-9a-fA-F]{24}$/.test(pur.creadoPorNombre) ? 'Administrador' : (pur.creadoPorNombre || 'Administrador') }}</td>
             </tr>
           </tbody>
         </table>

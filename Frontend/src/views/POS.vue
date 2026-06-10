@@ -10,8 +10,9 @@
       <nav class="nav-links">
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item">📊 <span class="sidebar-text">Dashboard</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item">📦 <span class="sidebar-text">Productos</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/categories" class="nav-item">🏷️ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item">🏷️ <span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item">👥 <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item">💵 <span class="sidebar-text">Compras</span></router-link>
@@ -25,7 +26,13 @@
       <!-- Products Selection Area -->
       <main class="products-area">
         <header class="search-header">
-          <input v-model="searchQuery" type="text" placeholder="🔍 Buscar por nombre o código de barra..." class="search-input" />
+          <div class="search-filters">
+            <input v-model="searchQuery" type="text" placeholder="🔍 Buscar por nombre o código de barra..." class="search-input" />
+            <select v-model="selectedCategory" class="category-select">
+              <option value="">🏷️ Todas las Categorías</option>
+              <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
+            </select>
+          </div>
         </header>
 
         <div v-if="filteredProducts.length === 0" class="empty-state">
@@ -38,7 +45,7 @@
               <h3 class="product-name">{{ product.nombre }}</h3>
               <p class="product-barcode">{{ product.codigoBarras }}</p>
               <div class="product-footer">
-                <span class="product-price">${{ product.precio.toFixed(2) }}</span>
+                <span class="product-price">S/. {{ product.precio.toFixed(2) }}</span>
                 <span :class="['product-stock', product.stock <= product.stockMinimo ? 'low' : 'ok']">
                   Stock: {{ product.stock }}
                 </span>
@@ -50,7 +57,10 @@
 
       <!-- Cart Checkout Side Panel -->
       <aside class="cart-panel">
-        <h2 class="cart-title">🛒 Carrito de Compra</h2>
+        <div class="cart-header">
+          <h2 class="cart-title">🛒 Carrito de Compra</h2>
+          <span class="sale-code-badge">{{ codigoVenta }}</span>
+        </div>
 
         <div v-if="cart.length === 0" class="empty-cart">
           <p>El carrito está vacío.</p>
@@ -61,12 +71,15 @@
           <div v-for="item in cart" :key="item.productoId" class="cart-item">
             <div class="item-details">
               <p class="item-name">{{ item.nombreProducto }}</p>
-              <p class="item-sub">${{ (item.precioUnitario * item.cantidad).toFixed(2) }}</p>
+              <p class="item-sub">S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}</p>
             </div>
-            <div class="item-controls">
-              <button @click="updateQty(item, -1)" class="btn-qty">-</button>
-              <span class="item-qty">{{ item.cantidad }}</span>
-              <button @click="updateQty(item, 1)" class="btn-qty">+</button>
+            <div class="item-controls-wrapper">
+              <div class="item-controls">
+                <button @click="updateQty(item, -1)" class="btn-qty">-</button>
+                <span class="item-qty">{{ item.cantidad }}</span>
+                <button @click="updateQty(item, 1)" class="btn-qty">+</button>
+              </div>
+              <button @click="removeFromCart(item.productoId)" class="btn-remove" title="Quitar producto">×</button>
             </div>
           </div>
         </div>
@@ -74,15 +87,15 @@
         <div class="cart-summary">
           <div class="summary-row">
             <span>Subtotal</span>
-            <span>${{ cartSubtotal.toFixed(2) }}</span>
+            <span>S/. {{ cartSubtotal.toFixed(2) }}</span>
           </div>
           <div class="summary-row">
             <span>Impuestos (19%)</span>
-            <span>${{ cartTax.toFixed(2) }}</span>
+            <span>S/. {{ cartTax.toFixed(2) }}</span>
           </div>
           <div class="summary-row total">
             <span>Total a Pagar</span>
-            <span>${{ cartTotal.toFixed(2) }}</span>
+            <span>S/. {{ cartTotal.toFixed(2) }}</span>
           </div>
 
           <div class="payment-method">
@@ -91,6 +104,14 @@
               <option value="Efectivo">💵 Efectivo</option>
               <option value="Tarjeta">💳 Tarjeta</option>
               <option value="Transferencia">🏦 Transferencia</option>
+            </select>
+          </div>
+
+          <div class="client-selection">
+            <label>Cliente (Opcional)</label>
+            <select v-model="selectedClientId">
+              <option value="">👤 Cliente General</option>
+              <option v-for="cli in clients" :key="cli.id" :value="cli.id">👤 {{ cli.nombre }}</option>
             </select>
           </div>
 
@@ -117,6 +138,17 @@ const searchQuery = ref('')
 const paymentMethod = ref('Efectivo')
 const loading = ref(false)
 
+const selectedCategory = ref('')
+const categories = ref([])
+const selectedClientId = ref('')
+const clients = ref([])
+const codigoVenta = ref('')
+
+const generarCodigoVenta = () => {
+  const num = Math.floor(10000 + Math.random() * 90000)
+  codigoVenta.value = `VTA-${num}`
+}
+
 const fetchProducts = async () => {
   try {
     const res = await fetch('http://localhost:5246/api/products', {
@@ -129,12 +161,38 @@ const fetchProducts = async () => {
   }
 }
 
+const fetchCategories = async () => {
+  try {
+    const res = await fetch('http://localhost:5246/api/categories', {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (!res.ok) throw new Error()
+    categories.value = await res.json()
+  } catch (err) {
+    console.error('Error fetching categories for POS')
+  }
+}
+
+const fetchClients = async () => {
+  try {
+    const res = await fetch('http://localhost:5246/api/clients', {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (!res.ok) throw new Error()
+    clients.value = await res.json()
+  } catch (err) {
+    console.error('Error fetching clients for POS')
+  }
+}
+
 const filteredProducts = computed(() => {
   const q = searchQuery.value.toLowerCase()
-  return products.value.filter(p => 
-    (p.nombre && p.nombre.toLowerCase().includes(q)) || 
-    (p.codigoBarras && p.codigoBarras.includes(q))
-  )
+  return products.value.filter(p => {
+    const matchesSearch = (p.nombre && p.nombre.toLowerCase().includes(q)) || 
+                          (p.codigoBarras && p.codigoBarras.includes(q))
+    const matchesCategory = !selectedCategory.value || p.categoriaId === selectedCategory.value
+    return matchesSearch && matchesCategory
+  })
 })
 
 const addToCart = (product) => {
@@ -173,6 +231,10 @@ const updateQty = (item, amount) => {
   }
 }
 
+const removeFromCart = (productoId) => {
+  cart.value = cart.value.filter(item => item.productoId !== productoId)
+}
+
 const cartSubtotal = computed(() => cart.value.reduce((sum, item) => sum + (item.precioUnitario * item.cantidad), 0) / 1.19)
 const cartTax = computed(() => cartTotal.value - cartSubtotal.value)
 const cartTotal = computed(() => cart.value.reduce((sum, item) => sum + (item.precioUnitario * item.cantidad), 0))
@@ -180,6 +242,10 @@ const cartTotal = computed(() => cart.value.reduce((sum, item) => sum + (item.pr
 const checkout = async () => {
   loading.value = true
   try {
+    const client = clients.value.find(c => c.id === selectedClientId.value)
+    const clienteId = client ? client.id : null
+    const nombreCliente = client ? client.nombre : 'Cliente General'
+
     const res = await fetch('http://localhost:5246/api/sales', {
       method: 'POST',
       headers: {
@@ -188,7 +254,9 @@ const checkout = async () => {
       },
       body: JSON.stringify({
         detalles: cart.value,
-        metodoPago: paymentMethod.value
+        metodoPago: paymentMethod.value,
+        clienteId: clienteId,
+        nombreCliente: nombreCliente
       })
     })
 
@@ -197,8 +265,10 @@ const checkout = async () => {
       throw new Error(err.message || 'Error al procesar la venta.')
     }
 
-    alert('¡Venta realizada con éxito!')
+    alert(`¡Venta realizada con éxito! Código: ${codigoVenta.value}`)
     cart.value = []
+    selectedClientId.value = ''
+    generarCodigoVenta()
     fetchProducts()
   } catch (err) {
     alert(err.message)
@@ -209,6 +279,9 @@ const checkout = async () => {
 
 onMounted(() => {
   fetchProducts()
+  fetchCategories()
+  fetchClients()
+  generarCodigoVenta()
 })
 </script>
 
@@ -231,10 +304,28 @@ onMounted(() => {
   margin-bottom: 30px;
 }
 
+.search-filters {
+  display: flex;
+  gap: 16px;
+}
+
 .search-input {
+  flex-grow: 1;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
+}
+
+.category-select {
+  width: 240px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: #ffffff;
+  color: var(--text-main);
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+  outline: none;
 }
 
 .products-grid {
@@ -284,7 +375,7 @@ onMounted(() => {
 
 /* Cart Styling */
 .cart-panel {
-  width: 400px;
+  width: 30%;
   background-color: #ffffff;
   border-left: 1px solid var(--border-color);
   display: flex;
@@ -294,10 +385,27 @@ onMounted(() => {
   text-align: left;
 }
 
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
 .cart-title {
   font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 24px;
+  margin: 0;
+}
+
+.sale-code-badge {
+  background-color: #eff6ff;
+  color: #1e40af;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1px solid #bfdbfe;
 }
 
 .empty-cart {
@@ -337,10 +445,33 @@ onMounted(() => {
   color: var(--text-muted);
 }
 
+.item-controls-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .item-controls {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.btn-remove:hover {
+  color: #b91c1c;
+  transform: scale(1.15);
 }
 
 .btn-qty {
@@ -388,13 +519,28 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 10px;
 }
 
-.payment-method label {
+.payment-method label,
+.client-selection label {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-muted);
+}
+
+.client-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.client-selection select {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background-color: #ffffff;
+  outline: none;
 }
 
 .checkout-btn {

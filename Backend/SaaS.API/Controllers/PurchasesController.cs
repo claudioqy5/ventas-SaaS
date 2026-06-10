@@ -51,7 +51,11 @@ public class PurchasesController : ControllerBase
         purchase.Id = string.Empty;
         purchase.EmpresaId = empresaId;
         purchase.CreadoPor = _userContext.UserId ?? string.Empty;
-        purchase.CreadoPorNombre = _userContext.UserId ?? "Empleado";
+        
+        var nameClaim = User.FindFirst("name")?.Value 
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value 
+            ?? "Empleado";
+        purchase.CreadoPorNombre = nameClaim;
         purchase.FechaCreacion = DateTime.UtcNow;
 
         decimal computedTotal = 0;
@@ -92,7 +96,7 @@ public class PurchasesController : ControllerBase
                 StockNuevo = newStock,
                 Motivo = "Abastecimiento por Compra",
                 CreadoPor = _userContext.UserId ?? string.Empty,
-                CreadoPorNombre = _userContext.UserId ?? "Empleado",
+                CreadoPorNombre = nameClaim,
                 FechaCreacion = DateTime.UtcNow
             };
             await _context.StockMovements.InsertOneAsync(movement);

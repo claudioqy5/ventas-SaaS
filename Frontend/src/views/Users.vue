@@ -10,8 +10,9 @@
       <nav class="nav-links">
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item">📊 <span class="sidebar-text">Dashboard</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item">📦 <span class="sidebar-text">Productos</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/categories" class="nav-item">🏷️ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item">🏷️ <span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item">👥 <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item">💵 <span class="sidebar-text">Compras</span></router-link>
@@ -40,6 +41,7 @@
         <table v-else class="data-table">
           <thead>
             <tr>
+              <th style="width: 50px;">N°</th>
               <th>Nombre</th>
               <th v-if="authStore.isSuperadmin">Tienda / Negocio</th>
               <th>Correo Electrónico</th>
@@ -50,7 +52,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="user in users" :key="user.id">
+            <tr v-for="(user, index) in users" :key="user.id">
+              <td><strong>{{ index + 1 }}</strong></td>
               <td><strong>{{ user.nombre }}</strong></td>
               <td v-if="authStore.isSuperadmin">
                 <span class="store-badge">{{ user.nombreEmpresa || 'Sin Tienda' }}</span>
@@ -176,6 +179,18 @@
                   <input type="checkbox" value="compras" v-model="form.permisos" />
                   <span>💵 Compras (Sensible)</span>
                 </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" value="categorias" v-model="form.permisos" />
+                  <span>🏷️ Categorías</span>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" value="modificar_productos" v-model="form.permisos" />
+                  <span>✏️ Editar/Eliminar Productos</span>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" value="historial_ventas" v-model="form.permisos" />
+                  <span>📋 Historial de Ventas</span>
+                </label>
               </div>
             </div>
 
@@ -267,7 +282,7 @@ const saveUser = async () => {
       correo: form.correo,
       clave: form.clave || null,
       rol: form.rol,
-      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'ventas', 'productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config'] : form.permisos,
+      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config'] : form.permisos,
       activo: form.activo,
       nombreTienda: form.nombreTienda || null
     }

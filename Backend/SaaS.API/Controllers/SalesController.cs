@@ -28,7 +28,7 @@ public class SalesController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         // Check custom permission
-        if (!_userContext.HasPermission("ventas"))
+        if (!_userContext.HasPermission("historial_ventas"))
             return Forbid();
 
         var empresaId = _userContext.EmpresaId;
@@ -54,7 +54,11 @@ public class SalesController : ControllerBase
         sale.Id = string.Empty;
         sale.EmpresaId = empresaId;
         sale.CreadoPor = _userContext.UserId ?? string.Empty;
-        sale.CreadoPorNombre = _userContext.UserId ?? "Empleado";
+        
+        var nameClaim = User.FindFirst("name")?.Value 
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value 
+            ?? "Empleado";
+        sale.CreadoPorNombre = nameClaim;
         sale.FechaCreacion = DateTime.UtcNow;
 
         decimal computedTotal = 0;
@@ -97,7 +101,7 @@ public class SalesController : ControllerBase
                 StockNuevo = newStock,
                 Motivo = $"Venta registrada",
                 CreadoPor = _userContext.UserId ?? string.Empty,
-                CreadoPorNombre = _userContext.UserId ?? "Empleado",
+                CreadoPorNombre = nameClaim,
                 FechaCreacion = DateTime.UtcNow
             };
             await _context.StockMovements.InsertOneAsync(movement);

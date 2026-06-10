@@ -26,6 +26,8 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        if (!_userContext.HasPermission("productos")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
@@ -36,6 +38,8 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Product product)
     {
+        if (!_userContext.HasPermission("modificar_productos")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
@@ -71,6 +75,8 @@ public class ProductsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, [FromBody] Product product)
     {
+        if (!_userContext.HasPermission("modificar_productos")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
@@ -98,6 +104,8 @@ public class ProductsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
+        if (!_userContext.HasPermission("modificar_productos")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 

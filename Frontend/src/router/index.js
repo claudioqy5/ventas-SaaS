@@ -3,6 +3,7 @@ import { useAuthStore } from '../stores/auth'
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import POS from '../views/POS.vue'
+import SalesHistory from '../views/SalesHistory.vue'
 import Products from '../views/Products.vue'
 import Categories from '../views/Categories.vue'
 import Clients from '../views/Clients.vue'
@@ -23,6 +24,12 @@ const routes = [
     component: POS, 
     name: 'POS',
     meta: { requiresAuth: true, permission: 'ventas' } 
+  },
+  { 
+    path: '/sales-history', 
+    component: SalesHistory, 
+    name: 'SalesHistory',
+    meta: { requiresAuth: true, permission: 'historial_ventas' } 
   },
   { 
     path: '/products', 

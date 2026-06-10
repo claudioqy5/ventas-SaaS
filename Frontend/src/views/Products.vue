@@ -10,8 +10,9 @@
       <nav class="nav-links">
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item">📊 <span class="sidebar-text">Dashboard</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item active">📦 <span class="sidebar-text">Productos</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/categories" class="nav-item">🏷️ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item">🏷️ <span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item">👥 <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item">💵 <span class="sidebar-text">Compras</span></router-link>
@@ -28,7 +29,7 @@
             <h1 class="text-title">📦 Gestión de Productos</h1>
             <p class="text-subtitle">Registra nuevos productos y ajusta el stock</p>
           </div>
-          <button @click="openAddModal" class="btn btn-primary">➕ Agregar Producto</button>
+          <button v-if="authStore.hasPermission('modificar_productos')" @click="openAddModal" class="btn btn-primary">➕ Agregar Producto</button>
         </div>
       </header>
 
@@ -40,20 +41,23 @@
         <table v-else class="data-table">
           <thead>
             <tr>
+              <th style="width: 50px;">N°</th>
               <th>Código</th>
               <th>Producto</th>
               <th>Costo</th>
               <th>Precio Venta</th>
               <th>Stock</th>
               <th>Estado</th>
+              <th v-if="authStore.hasPermission('modificar_productos')">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="prod in products" :key="prod.id">
+            <tr v-for="(prod, index) in products" :key="prod.id">
+              <td><strong>{{ index + 1 }}</strong></td>
               <td><code>{{ prod.codigoBarras }}</code></td>
               <td><strong>{{ prod.nombre }}</strong></td>
-              <td>${{ prod.precioCosto.toFixed(2) }}</td>
-              <td>${{ prod.precio.toFixed(2) }}</td>
+              <td>S/. {{ prod.precioCosto.toFixed(2) }}</td>
+              <td>S/. {{ prod.precio.toFixed(2) }}</td>
               <td>
                 <span :class="['stock-badge', prod.stock <= prod.stockMinimo ? 'low' : 'ok']">
                   {{ prod.stock }} unidades
@@ -63,6 +67,12 @@
                 <span v-if="prod.stock <= prod.stockMinimo" class="status-indicator low">⚠️ Reabastecer</span>
                 <span v-else class="status-indicator ok">✅ Activo</span>
               </td>
+              <td v-if="authStore.hasPermission('modificar_productos')">
+                <div class="actions-cell">
+                  <button @click="openEditModal(prod)" class="btn-action edit" title="Editar">✏️</button>
+                  <button @click="confirmDelete(prod.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -71,7 +81,7 @@
       <!-- Add Product Modal Dialog -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title">📦 Registrar Producto</h2>
+          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Producto' : '📦 Registrar Producto' }}</h2>
           <form @submit.prevent="saveProduct" class="grid">
             <div class="grid grid-2">
               <div class="field">
@@ -86,16 +96,16 @@
 
             <div class="grid grid-3">
               <div class="field">
-                <label>Precio Costo ($)</label>
+                <label>Precio Costo (S/.)</label>
                 <input v-model.number="form.precioCosto" type="number" step="0.01" required />
               </div>
               <div class="field">
-                <label>Precio Venta ($)</label>
+                <label>Precio Venta (S/.)</label>
                 <input v-model.number="form.precio" type="number" step="0.01" required />
               </div>
               <div class="field">
-                <label>Stock Inicial</label>
-                <input v-model.number="form.stock" type="number" required />
+                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }}</label>
+                <input v-model.number="form.stock" type="number" :disabled="isEdit" required />
               </div>
             </div>
 
@@ -120,7 +130,7 @@
 
             <div class="modal-actions">
               <button type="button" @click="showModal = false" class="btn btn-secondary">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Guardar Producto</button>
+              <button type="submit" class="btn btn-primary">{{ isEdit ? 'Guardar Cambios' : 'Guardar Producto' }}</button>
             </div>
           </form>
         </div>
@@ -140,6 +150,8 @@ const authStore = useAuthStore()
 const products = ref([])
 const categories = ref([])
 const showModal = ref(false)
+const isEdit = ref(false)
+const currentProductId = ref(null)
 
 const form = reactive({
   nombre: '',
@@ -178,6 +190,8 @@ const fetchCategories = async () => {
 }
 
 const openAddModal = () => {
+  isEdit.value = false
+  currentProductId.value = null
   form.nombre = ''
   form.codigoBarras = ''
   form.precioCosto = 0
@@ -186,6 +200,22 @@ const openAddModal = () => {
   form.stockMinimo = 5
   form.descripcion = ''
   form.categoriaId = ''
+  form.imagenUrl = ''
+  showModal.value = true
+}
+
+const openEditModal = (product) => {
+  isEdit.value = true
+  currentProductId.value = product.id
+  form.nombre = product.nombre
+  form.codigoBarras = product.codigoBarras
+  form.precioCosto = product.precioCosto
+  form.precio = product.precio
+  form.stock = product.stock
+  form.stockMinimo = product.stockMinimo
+  form.descripcion = product.descripcion
+  form.categoriaId = product.categoriaId
+  form.imagenUrl = product.imagenUrl || ''
   showModal.value = true
 }
 
@@ -196,8 +226,13 @@ const saveProduct = async () => {
   }
 
   try {
-    const res = await fetch('http://localhost:5246/api/products', {
-      method: 'POST',
+    const url = isEdit.value
+      ? `http://localhost:5246/api/products/${currentProductId.value}`
+      : 'http://localhost:5246/api/products'
+    const method = isEdit.value ? 'PUT' : 'POST'
+
+    const res = await fetch(url, {
+      method: method,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authStore.token}`
@@ -207,7 +242,24 @@ const saveProduct = async () => {
     if (!res.ok) throw new Error('Error al guardar el producto.')
     
     showModal.value = false
-    alert('¡Producto agregado al inventario con éxito!')
+    alert(isEdit.value ? '¡Producto actualizado con éxito!' : '¡Producto agregado al inventario con éxito!')
+    fetchProducts()
+  } catch (err) {
+    alert(err.message)
+  }
+}
+
+const confirmDelete = async (id) => {
+  if (!confirm('¿Estás seguro de que deseas eliminar este producto permanentemente?')) return
+  try {
+    const res = await fetch(`http://localhost:5246/api/products/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authStore.token}`
+      }
+    })
+    if (!res.ok) throw new Error('Error al eliminar el producto.')
+    alert('¡Producto eliminado con éxito!')
     fetchProducts()
   } catch (err) {
     alert(err.message)
@@ -226,6 +278,25 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: var(--transition);
+}
+
+.btn-action:hover {
+  background-color: var(--border-color);
+  transform: scale(1.15);
+}
 
 .content-header {
   margin-bottom: 30px;

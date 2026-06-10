@@ -25,6 +25,8 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        if (!_userContext.HasPermission("categorias")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
@@ -35,6 +37,8 @@ public class CategoriesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Category category)
     {
+        if (!_userContext.HasPermission("categorias")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
@@ -48,6 +52,8 @@ public class CategoriesController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, [FromBody] Category category)
     {
+        if (!_userContext.HasPermission("categorias")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
@@ -69,6 +75,8 @@ public class CategoriesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
+        if (!_userContext.HasPermission("categorias")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
