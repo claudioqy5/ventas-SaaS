@@ -73,6 +73,8 @@ router.beforeEach((to, from, next) => {
   
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login')
+  } else if (authStore.isAuthenticated && authStore.isSuperadmin && to.path !== '/users') {
+    next('/users')
   } else if (to.meta.permission && !authStore.hasPermission(to.meta.permission)) {
     if (authStore.hasPermission('dashboard')) {
       next('/dashboard')

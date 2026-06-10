@@ -32,8 +32,11 @@ public class UserContext : IUserContext
 
     public bool HasPermission(string permission)
     {
-        if (Role == "Superadmin" || Role == "EmpresaOwner")
-            return true; // Administrators have absolute access inside their Empresa
+        if (Role == "EmpresaOwner")
+            return true; // Business Owners have absolute access inside their Empresa
+
+        if (Role == "Superadmin" && (permission == "usuarios" || permission == "empresas"))
+            return true; // Superadmin only manages users and businesses
 
         var permissions = User?.FindAll("permissions").Select(c => c.Value) ?? Enumerable.Empty<string>();
         return permissions.Contains(permission);

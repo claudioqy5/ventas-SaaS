@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
             Correo = request.Correo,
             ClaveHash = _passwordHasher.Hash(request.Clave),
             Rol = "Superadmin",
-            Permisos = new List<string> { "empresas", "dashboard", "ventas", "productos", "clientes", "proveedores", "compras", "movimientos" }
+            Permisos = new List<string> { "usuarios", "empresas" }
         };
 
         await _context.Users.InsertOneAsync(superadmin);
@@ -116,6 +116,9 @@ public class AuthController : ControllerBase
         }
 
         var token = _jwtProvider.GenerateToken(user);
+        var empresa = await _context.Empresas.Find(e => e.Id == user.EmpresaId).FirstOrDefaultAsync();
+        var nombreEmpresa = empresa?.Nombre ?? "SaaS Administración Global";
+
         return Ok(new
         {
             token,
@@ -126,7 +129,8 @@ public class AuthController : ControllerBase
                 Nombre = user.Nombre,
                 Correo = user.Correo,
                 Rol = user.Rol,
-                Permisos = user.Permisos
+                Permisos = user.Permisos,
+                NombreEmpresa = nombreEmpresa
             }
         });
     }
@@ -142,7 +146,27 @@ public class AuthController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (role == "Superadmin")
         {
-            empresaId = request.EmpresaId; // Superadmin can specify empresa
+            if (request.Rol == "EmpresaOwner")
+            {
+                if (string.IsNullOrWhiteSpace(request.NombreTienda))
+                {
+                    return BadRequest(new { message = "El nombre de la tienda es obligatorio para crear un nuevo administrador de negocio." });
+                }
+
+                // Create new Empresa
+                var nuevaEmpresa = new Empresa
+                {
+                    Nombre = request.NombreTienda,
+                    PlanSuscripcion = "Premium",
+                    FechaCreacion = DateTime.UtcNow
+                };
+                await _context.Empresas.InsertOneAsync(nuevaEmpresa);
+                empresaId = nuevaEmpresa.Id;
+            }
+            else
+            {
+                empresaId = request.EmpresaId; // Superadmin can specify empresa for other roles
+            }
         }
 
         var existingUser = await _context.Users.Find(u => u.Correo == request.Correo).FirstOrDefaultAsync();
@@ -161,6 +185,15 @@ public class AuthController : ControllerBase
         };
 
         await _context.Users.InsertOneAsync(newUser);
+
+        if (role == "Superadmin" && request.Rol == "EmpresaOwner" && empresaId != null)
+        {
+            // Link Owner to Empresa
+            var filter = Builders<Empresa>.Filter.Eq(e => e.Id, empresaId);
+            var update = Builders<Empresa>.Update.Set(e => e.PropietarioId, newUser.Id);
+            await _context.Empresas.UpdateOneAsync(filter, update);
+        }
+
         return Ok(new { message = "Subusuario creado con éxito.", userId = newUser.Id });
     }
 
@@ -175,12 +208,28 @@ public class AuthController : ControllerBase
         if (role == "Superadmin")
         {
             var allUsers = await _context.Users.Find(_ => true).ToListAsync();
-            return Ok(allUsers.Select(u => new { u.Id, u.EmpresaId, Nombre = u.Nombre, Correo = u.Correo, Rol = u.Rol, Activo = u.Activo }));
+            var allEmpresas = await _context.Empresas.Find(_ => true).ToListAsync();
+            var empresaMap = allEmpresas.ToDictionary(e => e.Id, e => e.Nombre);
+
+            var userDtos = allUsers.Select(u => new
+            {
+                u.Id,
+                u.EmpresaId,
+                Nombre = u.Nombre,
+                Correo = u.Correo,
+                Rol = u.Rol,
+                Permisos = u.Permisos,
+                Activo = u.Activo,
+                NombreEmpresa = u.EmpresaId != null && empresaMap.TryGetValue(u.EmpresaId, out var empName) ? empName : "Sin Tienda"
+            });
+            return Ok(userDtos);
         }
 
         var empresaId = _userContext.EmpresaId;
+        var empresa = await _context.Empresas.Find(e => e.Id == empresaId).FirstOrDefaultAsync();
+        var nombreEmpresa = empresa?.Nombre ?? "Mi Tienda";
         var empresaUsers = await _context.Users.Find(u => u.EmpresaId == empresaId).ToListAsync();
-        return Ok(empresaUsers.Select(u => new { u.Id, Nombre = u.Nombre, Correo = u.Correo, Rol = u.Rol, Activo = u.Activo, Permisos = u.Permisos }));
+        return Ok(empresaUsers.Select(u => new { u.Id, u.EmpresaId, Nombre = u.Nombre, Correo = u.Correo, Rol = u.Rol, Activo = u.Activo, Permisos = u.Permisos, NombreEmpresa = nombreEmpresa }));
     }
 
     [Authorize]
@@ -207,6 +256,11 @@ public class AuthController : ControllerBase
             .Set(u => u.Rol, request.Rol)
             .Set(u => u.Permisos, request.Permisos)
             .Set(u => u.Activo, request.Activo);
+
+        if (role == "Superadmin" && !string.IsNullOrEmpty(request.EmpresaId))
+        {
+            update = update.Set(u => u.EmpresaId, request.EmpresaId);
+        }
 
         if (!string.IsNullOrEmpty(request.Clave))
         {
@@ -256,5 +310,5 @@ public class AuthController : ControllerBase
 
 public record LoginRequest(string Correo, string Clave);
 public record RegisterEmpresaRequest(string NombreEmpresa, string PlanSuscripcion, string NombrePropietario, string CorreoPropietario, string ClavePropietario);
-public record CreateUserRequest(string? EmpresaId, string Nombre, string Correo, string Clave, string Rol, List<string> Permisos);
-public record UpdateUserRequest(string Nombre, string Correo, string? Clave, string Rol, List<string> Permisos, bool Activo);
+public record CreateUserRequest(string? EmpresaId, string Nombre, string Correo, string Clave, string Rol, List<string> Permisos, string? NombreTienda);
+public record UpdateUserRequest(string Nombre, string Correo, string? Clave, string Rol, List<string> Permisos, bool Activo, string? EmpresaId);

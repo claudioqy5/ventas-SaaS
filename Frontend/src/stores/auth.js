@@ -25,10 +25,19 @@ export const useAuthStore = defineStore('auth', {
           throw new Error(err.message || 'Error al iniciar sesión.')
         }
         const data = await response.json()
+        const normalizedUser = {
+          id: data.user.id || data.user.Id,
+          empresaId: data.user.empresaId || data.user.EmpresaId,
+          nombre: data.user.nombre || data.user.Nombre,
+          correo: data.user.correo || data.user.Correo,
+          rol: data.user.rol || data.user.Rol,
+          permisos: data.user.permisos || data.user.Permisos,
+          nombreEmpresa: data.user.nombreEmpresa || data.user.NombreEmpresa
+        }
         this.token = data.token
-        this.user = data.user
+        this.user = normalizedUser
         localStorage.setItem('token', data.token)
-        localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('user', JSON.stringify(normalizedUser))
         return true
       } catch (error) {
         console.error(error)
@@ -53,7 +62,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     hasPermission(permission) {
-      if (this.isSuperadmin || this.isEmpresaOwner) return true
+      if (this.isEmpresaOwner) return true
       return this.permissions.includes(permission)
     },
     logout() {

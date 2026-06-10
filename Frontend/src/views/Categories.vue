@@ -2,22 +2,22 @@
   <div class="dashboard-layout">
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
-      <div class="sidebar-brand">🍦 VentasSaaS</div>
+      <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.user?.rol }}</span>
       </div>
       <nav class="nav-links">
-        <router-link to="/dashboard" class="nav-item">📊 Dashboard</router-link>
-        <router-link to="/pos" class="nav-item">🛒 POS Ventas</router-link>
-        <router-link to="/products" class="nav-item">📦 Productos</router-link>
-        <router-link to="/categories" class="nav-item active">🏷️ Categorías</router-link>
-        <router-link v-if="authStore.hasPermission('clientes')" to="/clients" class="nav-item">👥 Clientes</router-link>
-        <router-link v-if="authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 Proveedores</router-link>
-        <router-link v-if="authStore.hasPermission('compras')" to="/purchases" class="nav-item">💵 Compras</router-link>
-        <router-link v-if="authStore.isEmpresaOwner || authStore.isSuperadmin" to="/users" class="nav-item">👥 Colaboradores</router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item">📊 <span class="sidebar-text">Dashboard</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item">📦 <span class="sidebar-text">Productos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/categories" class="nav-item active">🏷️ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item">👥 <span class="sidebar-text">Clientes</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 <span class="sidebar-text">Proveedores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="authStore.isEmpresaOwner || authStore.isSuperadmin" to="/users" class="nav-item">👥 <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 Cerrar Sesión</button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Main Content Area -->
@@ -189,86 +189,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.dashboard-layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-/* Sidebar Styling */
-.sidebar {
-  width: 280px;
-  background-color: #ffffff;
-  border-right: 1px solid var(--border-color);
-  padding: 30px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  flex-shrink: 0;
-}
-
-.sidebar-brand {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
-.user-info {
-  background: var(--bg-app);
-  padding: 16px;
-  border-radius: var(--radius-md);
-  text-align: left;
-}
-
-.user-name {
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.user-badge {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #1e3a8a;
-  background: var(--primary);
-  padding: 2px 8px;
-  border-radius: 99px;
-  display: inline-block;
-  margin-top: 4px;
-}
-
-.nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  padding: 14px 16px;
-  border-radius: var(--radius-sm);
-  color: var(--text-muted);
-  text-decoration: none;
-  font-weight: 600;
-  transition: var(--transition);
-}
-
-.nav-item:hover, .nav-item.active {
-  background-color: var(--border-color);
-  color: var(--text-main);
-}
-
-.logout-btn {
-  margin-top: auto;
-}
-
-/* Main Area */
-.main-content {
-  flex-grow: 1;
-  padding: 40px;
-  background-color: var(--bg-app);
-  overflow-y: auto;
-}
 
 .content-header {
   margin-bottom: 30px;

@@ -182,3 +182,139 @@ input:focus, select:focus, textarea:focus {
   font-size: 1.1rem;
   color: var(--text-muted);
 }
+
+/* Global Hover-Expanding/Collapsing Sidebar Layout */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 80px; /* Collapsed state */
+  background-color: #ffffff;
+  border-right: 1px solid var(--border-color);
+  padding: 30px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.sidebar:hover {
+  width: 280px; /* Expanded state */
+  padding: 30px 24px;
+}
+
+.sidebar-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  padding-left: 6px;
+  user-select: none;
+}
+
+/* User Info Profile panel (auto collapses/slides up when sidebar collapses) */
+.user-info {
+  background: var(--bg-app);
+  padding: 0;
+  margin: 0;
+  height: 0;
+  opacity: 0;
+  border-radius: var(--radius-md);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar:hover .user-info {
+  padding: 16px;
+  height: auto;
+  opacity: 1;
+  margin-bottom: 10px;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.user-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #1e3a8a;
+  background: var(--primary);
+  padding: 2px 8px;
+  border-radius: 99px;
+  display: inline-block;
+  margin-top: 4px;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+  gap: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+}
+
+.nav-item:hover, .nav-item.active {
+  background-color: var(--border-color);
+  color: var(--text-main);
+}
+
+.logout-btn {
+  margin-top: auto;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Text elements inside sidebar that hide when collapsed */
+.sidebar-text {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.sidebar:hover .sidebar-text {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Main Area */
+.main-content {
+  flex-grow: 1;
+  padding: 40px;
+  background-color: var(--bg-app);
+  overflow-y: auto;
+}
