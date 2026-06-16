@@ -1,0 +1,16 @@
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\bin\Debug\net9.0\SaaS.Application.deps.json
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\bin\Debug\net9.0\SaaS.Application.dll
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\bin\Debug\net9.0\SaaS.Application.pdb
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\bin\Debug\net9.0\SaaS.Domain.dll
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\bin\Debug\net9.0\SaaS.Domain.pdb
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\SaaS.Application.csproj.AssemblyReference.cache
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\SaaS.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\SaaS.Application.AssemblyInfoInputs.cache
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\SaaS.Application.AssemblyInfo.cs
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\SaaS.Application.csproj.CoreCompileInputs.cache
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\SaaS.Application.sourcelink.json
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\SaaS.App.D64653CB.Up2Date
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\SaaS.Application.dll
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\refint\SaaS.Application.dll
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\SaaS.Application.pdb
+C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Backend\SaaS.Application\obj\Debug\net9.0\ref\SaaS.Application.dll

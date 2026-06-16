@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "9uxtAsE1iHI=",
+  "dgSpecHash": "mHwcPKAbGtw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Application\\SaaS.Application.csproj",
+  "projectFilePath": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS\\Backend\\SaaS.Application\\SaaS.Application.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\FAMHURP\\.nuget\\packages\\mongodb.bson\\3.9.0\\mongodb.bson.3.9.0.nupkg.sha512"
+    "C:\\Users\\ADMIN\\.nuget\\packages\\mongodb.bson\\3.9.0\\mongodb.bson.3.9.0.nupkg.sha512",
+    "C:\\Users\\ADMIN\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\ADMIN\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }
