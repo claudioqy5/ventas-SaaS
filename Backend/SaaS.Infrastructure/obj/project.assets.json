@@ -939,26 +939,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ADMIN\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\FAMHURP\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS\\Backend\\SaaS.Infrastructure\\SaaS.Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Infrastructure\\SaaS.Infrastructure.csproj",
       "projectName": "SaaS.Infrastructure",
-      "projectPath": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS\\Backend\\SaaS.Infrastructure\\SaaS.Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS\\Backend\\SaaS.Infrastructure\\obj\\",
+      "projectPath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Infrastructure\\SaaS.Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\FAMHURP\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\FAMHURP\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -972,11 +965,11 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS\\Backend\\SaaS.Application\\SaaS.Application.csproj": {
-              "projectPath": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS\\Backend\\SaaS.Application\\SaaS.Application.csproj"
+            "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Application\\SaaS.Application.csproj": {
+              "projectPath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Application\\SaaS.Application.csproj"
             },
-            "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS\\Backend\\SaaS.Domain\\SaaS.Domain.csproj": {
-              "projectPath": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS\\Backend\\SaaS.Domain\\SaaS.Domain.csproj"
+            "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Domain\\SaaS.Domain.csproj": {
+              "projectPath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Domain\\SaaS.Domain.csproj"
             }
           }
         }
@@ -991,7 +984,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net9.0": {
@@ -1017,12 +1010,26 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[9.0.15, 9.0.15]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[9.0.15, 9.0.15]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[9.0.15, 9.0.15]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

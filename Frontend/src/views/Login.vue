@@ -115,17 +115,30 @@ const seedSuperadmin = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--bg-app);
+  background-image: url('../assets/saasfondo.jpg');
+  background-size: cover;
+  background-repeat: repeat-x;
+  animation: scrollBackground 60s linear infinite;
   padding: 20px;
+}
+
+@keyframes scrollBackground {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 2000px 0;
+  }
 }
 
 .login-card {
   width: 100%;
   max-width: 450px;
   padding: 40px;
-  background-color: var(--bg-card);
+  background-color: rgba(255, 255, 255, 0.69);
+  backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: var(--shadow-lg);
 }
 
