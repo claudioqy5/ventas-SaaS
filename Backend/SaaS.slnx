@@ -1,6 +1,3 @@
 <Solution>
-  <Project Path="SaaS.API/SaaS.API.csproj" />
-  <Project Path="SaaS.Application/SaaS.Application.csproj" />
-  <Project Path="SaaS.Domain/SaaS.Domain.csproj" />
-  <Project Path="SaaS.Infrastructure/SaaS.Infrastructure.csproj" />
+  <Project Path="SaaS.API\SaaS.API.csproj" />
 </Solution>

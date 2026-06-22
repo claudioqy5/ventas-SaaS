@@ -34,6 +34,7 @@
         <!-- Search and Filters -->
         <div class="filters-container">
           <input v-model="searchQuery" type="text" placeholder="🔍 Buscar por cliente o cajero..." class="filter-input" />
+          <input v-model="filterDate" type="date" class="filter-select" title="Filtrar por fecha" />
           <select v-model="filterPayment" class="filter-select">
             <option value="">💵 Todos los Métodos</option>
             <option value="Efectivo">💵 Efectivo</option>
@@ -177,6 +178,7 @@ const sales = ref([])
 const loading = ref(false)
 const searchQuery = ref('')
 const filterPayment = ref('')
+const filterDate = ref('')
 const selectedSale = ref(null)
 
 const fetchSales = async () => {
@@ -204,7 +206,18 @@ const filteredSales = computed(() => {
     
     const matchesPayment = !filterPayment.value || s.metodoPago === filterPayment.value
 
-    return matchesSearch && matchesPayment
+    let matchesDate = true
+    if (filterDate.value) {
+      // Extract local date part (YYYY-MM-DD) for timezone-safe local date comparison
+      const localDate = new Date(s.fechaCreacion)
+      const year = localDate.getFullYear()
+      const month = String(localDate.getMonth() + 1).padStart(2, '0')
+      const day = String(localDate.getDate()).padStart(2, '0')
+      const localDateStr = `${year}-${month}-${day}`
+      matchesDate = localDateStr === filterDate.value
+    }
+
+    return matchesSearch && matchesPayment && matchesDate
   })
 })
 
@@ -410,5 +423,68 @@ onMounted(() => {
 .data-table th {
   font-weight: 600;
   color: var(--text-muted);
+}
+
+/* Modal Overlay and Layout Positioning */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 600px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  text-align: left;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 15px;
+}
+
+.modal-header h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.close-btn:hover {
+  color: var(--text-main);
+  transform: scale(1.15);
+}
+
+.max-width-600 {
+  max-width: 600px;
 }
 </style>

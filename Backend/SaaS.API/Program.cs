@@ -1,9 +1,8 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using SaaS.Application.Interfaces;
-using SaaS.Infrastructure.Persistence;
-using SaaS.Infrastructure.Services;
+using SaaS.API.Services;
+using SaaS.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

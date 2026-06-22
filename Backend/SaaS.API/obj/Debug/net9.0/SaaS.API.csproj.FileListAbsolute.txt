@@ -81,12 +81,6 @@ C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\bin\Debug\n
 C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\bin\Debug\net9.0\ZstdSharp.dll
-C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\bin\Debug\net9.0\SaaS.Application.dll
-C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\bin\Debug\net9.0\SaaS.Domain.dll
-C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\bin\Debug\net9.0\SaaS.Infrastructure.dll
-C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\bin\Debug\net9.0\SaaS.Infrastructure.pdb
-C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\bin\Debug\net9.0\SaaS.Application.pdb
-C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\bin\Debug\net9.0\SaaS.Domain.pdb
 C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\obj\Debug\net9.0\SaaS.API.csproj.AssemblyReference.cache
 C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\obj\Debug\net9.0\rpswa.dswa.cache.json
 C:\Users\FAMHURP\Desktop\PROYECTOS CFQY\VENTAS SaaS\backend\saas.api\obj\Debug\net9.0\SaaS.API.GeneratedMSBuildEditorConfig.editorconfig

@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using SaaS.Application.Interfaces;
-using SaaS.Domain.Entities;
-using SaaS.Infrastructure.Persistence;
+using SaaS.API.Services;
+using SaaS.API.Models;
+using SaaS.API.Data;
 
 namespace SaaS.API.Controllers;
 
@@ -64,6 +64,59 @@ public class DashboardController : ControllerBase
             .Limit(5)
             .ToListAsync();
 
+        // 1. Group sales by Month (e.g. "2026-06")
+        var ventasMensuales = sales
+            .GroupBy(s => s.FechaCreacion.ToString("yyyy-MM"))
+            .Select(g => new
+            {
+                Mes = g.Key,
+                Total = g.Sum(s => (double)s.Total),
+                Cantidad = g.Count()
+            })
+            .OrderBy(x => x.Mes)
+            .ToList();
+
+        // 2. Group sales by Payment Method
+        var metodosPago = sales
+            .GroupBy(s => s.MetodoPago ?? "Efectivo")
+            .Select(g => new
+            {
+                Metodo = g.Key,
+                Total = g.Sum(s => (double)s.Total)
+            })
+            .ToList();
+
+        // 3. Top selling products
+        var productosMasVendidos = sales
+            .SelectMany(s => s.Detalles)
+            .GroupBy(d => d.NombreProducto)
+            .Select(g => new
+            {
+                Producto = g.Key,
+                Cantidad = g.Sum(d => d.Cantidad)
+            })
+            .OrderByDescending(x => x.Cantidad)
+            .Take(5)
+            .ToList();
+
+        // 4. Daily sales trend (6:00 AM to 11:59 PM) for the latest active date of sales
+        var latestSaleDate = sales.Any() ? sales.Max(s => s.FechaCreacion.ToLocalTime().Date) : DateTime.Today;
+        var todaySales = sales
+            .Where(s => s.FechaCreacion.ToLocalTime().Date == latestSaleDate)
+            .ToList();
+
+        var ventasHorarias = Enumerable.Range(6, 18) // Hours 6 to 23
+            .Select(h => new
+            {
+                Hora = $"{h:00}:00",
+                Total = todaySales
+                    .Where(s => s.FechaCreacion.ToLocalTime().Hour == h)
+                    .Sum(s => (double)s.Total),
+                Cantidad = todaySales
+                    .Count(s => s.FechaCreacion.ToLocalTime().Hour == h)
+            })
+            .ToList();
+
         return Ok(new
         {
             TotalProductos = totalProductos,
@@ -80,7 +133,12 @@ public class DashboardController : ControllerBase
                 Cantidad = m.Cantidad,
                 Motivo = m.Motivo,
                 FechaCreacion = m.FechaCreacion
-            })
+            }),
+            VentasMensuales = ventasMensuales,
+            MetodosPago = metodosPago,
+            ProductosMasVendidos = productosMasVendidos,
+            VentasHorarias = ventasHorarias,
+            FechaDiaActual = latestSaleDate.ToString("dd/MM/yyyy")
         });
     }
 }

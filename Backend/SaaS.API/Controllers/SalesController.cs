@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using SaaS.Application.Interfaces;
-using SaaS.Domain.Entities;
-using SaaS.Infrastructure.Persistence;
+using SaaS.API.Services;
+using SaaS.API.Models;
+using SaaS.API.Data;
 
 namespace SaaS.API.Controllers;
 

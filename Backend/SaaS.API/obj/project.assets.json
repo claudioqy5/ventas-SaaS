@@ -445,48 +445,6 @@
         "runtime": {
           "lib/net7.0/ZstdSharp.dll": {}
         }
-      },
-      "SaaS.Application/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v9.0",
-        "dependencies": {
-          "SaaS.Domain": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/SaaS.Application.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SaaS.Application.dll": {}
-        }
-      },
-      "SaaS.Domain/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v9.0",
-        "dependencies": {
-          "MongoDB.Bson": "3.9.0"
-        },
-        "compile": {
-          "bin/placeholder/SaaS.Domain.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SaaS.Domain.dll": {}
-        }
-      },
-      "SaaS.Infrastructure/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v9.0",
-        "dependencies": {
-          "Microsoft.AspNetCore.Authentication.JwtBearer": "9.0.0",
-          "MongoDB.Driver": "3.9.0",
-          "SaaS.Application": "1.0.0",
-          "SaaS.Domain": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/SaaS.Infrastructure.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SaaS.Infrastructure.dll": {}
-        }
       }
     }
   },
@@ -1404,29 +1362,13 @@
         "zstdsharp.port.0.7.3.nupkg.sha512",
         "zstdsharp.port.nuspec"
       ]
-    },
-    "SaaS.Application/1.0.0": {
-      "type": "project",
-      "path": "../SaaS.Application/SaaS.Application.csproj",
-      "msbuildProject": "../SaaS.Application/SaaS.Application.csproj"
-    },
-    "SaaS.Domain/1.0.0": {
-      "type": "project",
-      "path": "../SaaS.Domain/SaaS.Domain.csproj",
-      "msbuildProject": "../SaaS.Domain/SaaS.Domain.csproj"
-    },
-    "SaaS.Infrastructure/1.0.0": {
-      "type": "project",
-      "path": "../SaaS.Infrastructure/SaaS.Infrastructure.csproj",
-      "msbuildProject": "../SaaS.Infrastructure/SaaS.Infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.0",
       "Microsoft.AspNetCore.OpenApi >= 9.0.0",
-      "SaaS.Application >= 1.0.0",
-      "SaaS.Infrastructure >= 1.0.0",
+      "MongoDB.Driver >= 3.9.0",
       "Swashbuckle.AspNetCore >= 6.6.2"
     ]
   },
@@ -1436,11 +1378,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\saas.api\\SaaS.API.csproj",
+      "projectUniqueName": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\Backend\\SaaS.API\\SaaS.API.csproj",
       "projectName": "SaaS.API",
-      "projectPath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\saas.api\\SaaS.API.csproj",
+      "projectPath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\Backend\\SaaS.API\\SaaS.API.csproj",
       "packagesPath": "C:\\Users\\FAMHURP\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\saas.api\\obj\\",
+      "outputPath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\Backend\\SaaS.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\FAMHURP\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1456,14 +1398,7 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {
-            "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Application\\SaaS.Application.csproj": {
-              "projectPath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Application\\SaaS.Application.csproj"
-            },
-            "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Infrastructure\\SaaS.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\FAMHURP\\Desktop\\PROYECTOS CFQY\\VENTAS SaaS\\backend\\SaaS.Infrastructure\\SaaS.Infrastructure.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {
@@ -1489,6 +1424,10 @@
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
             "version": "[9.0.0, )"
+          },
+          "MongoDB.Driver": {
+            "target": "Package",
+            "version": "[3.9.0, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
