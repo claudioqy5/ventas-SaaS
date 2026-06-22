@@ -1,0 +1,25 @@
+# .NET Build outputs
+**/bin/
+**/obj/
+
+# Local databases
+mongodb-data/
+
+# Frontend dependencies
+**/node_modules/
+dist/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE configurations
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# OS temporary files
+.DS_Store
+Thumbs.db
