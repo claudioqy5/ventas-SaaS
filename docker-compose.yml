@@ -6,7 +6,7 @@ services:
     container_name: saas_mongodb
     restart: always
     ports:
-      - "27017:27017"
+      - "27019:27017"
     volumes:
       - mongo_data:/data/db
     networks:
@@ -37,7 +37,7 @@ services:
     container_name: saas_frontend_app
     restart: always
     ports:
-      - "80:80"
+      - "8086:80"
     depends_on:
       - backend-api
     networks:
