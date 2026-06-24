@@ -281,6 +281,11 @@ const checkout = async () => {
   }
 }
 
+const handleLogout = () => {
+  authStore.logout()
+  router.push('/login')
+}
+
 onMounted(() => {
   fetchProducts()
   fetchCategories()
