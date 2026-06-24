@@ -4,6 +4,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace SaaS.API.Models;
 
+// Modelo que registra cada entrada o salida del inventario.
+// Se genera automaticamente al crear una venta, una compra o un ajuste manual.
+// Sirve como auditoria completa del historial de movimientos del almacen.
 [BsonIgnoreExtraElements]
 public class StockMovement
 {
@@ -14,13 +17,16 @@ public class StockMovement
     [BsonRepresentation(BsonType.ObjectId)]
     public string EmpresaId { get; set; } = string.Empty;
 
+    // Producto al que corresponde este movimiento
     [BsonRepresentation(BsonType.ObjectId)]
     public string ProductoId { get; set; } = string.Empty;
     public string NombreProducto { get; set; } = string.Empty;
 
     public string Tipo { get; set; } = "Entrada"; // Tipos de movimiento: Entrada, Salida, Venta, Compra, Ajuste
     public int Cantidad { get; set; }
+    // Stock antes del movimiento (para tener trazabilidad del historial)
     public int StockAnterior { get; set; }
+    // Stock resultante despues del movimiento
     public int StockNuevo { get; set; }
     public string ReferenciaId { get; set; } = string.Empty; // Vinculacion del movimiento: SaleId, PurchaseId o comentarios de ajuste manual
     public string Motivo { get; set; } = string.Empty;

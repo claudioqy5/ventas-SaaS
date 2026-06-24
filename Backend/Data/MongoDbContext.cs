@@ -4,10 +4,14 @@ using SaaS.API.Models;
 
 namespace SaaS.API.Data;
 
+// Esta clase es el punto de acceso central a la base de datos MongoDB.
+// Todos los controladores la usan para leer y escribir datos.
+// Cada propiedad publica representa una coleccion (tabla) dentro de la BD.
 public class MongoDbContext
 {
     private readonly IMongoDatabase _database;
 
+    // Constructor: lee la cadena de conexion y el nombre de la BD desde el archivo appsettings.json
     public MongoDbContext(IConfiguration configuration)
     {
         var connectionString = configuration.GetValue<string>("MongoDB:ConnectionString") ?? "mongodb://localhost:27017";
@@ -17,6 +21,7 @@ public class MongoDbContext
         _database = client.GetDatabase(databaseName);
     }
 
+    // Colecciones disponibles — cada una mapea a un modelo y una coleccion en MongoDB
     public IMongoCollection<Empresa> Empresas => _database.GetCollection<Empresa>("Empresas");
     public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
     public IMongoCollection<Category> Categories => _database.GetCollection<Category>("Categories");

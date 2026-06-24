@@ -5,6 +5,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace SaaS.API.Models;
 
+// Modelo que representa una venta registrada desde el POS.
+// Al guardarse, descuenta el stock de cada producto incluido en el detalle.
 [BsonIgnoreExtraElements]
 public class Sale
 {
@@ -15,18 +17,23 @@ public class Sale
     [BsonRepresentation(BsonType.ObjectId)]
     public string EmpresaId { get; set; } = string.Empty;
 
+    // Cliente al que se le hizo la venta (puede ser nulo si es venta rapida sin cliente registrado)
     [BsonRepresentation(BsonType.ObjectId)]
     public string? ClienteId { get; set; }
     public string NombreCliente { get; set; } = "Cliente General";
 
+    // Lista de productos vendidos en esta transaccion
     public List<SaleItem> Detalles { get; set; } = new();
 
+    // Subtotal antes de impuesto
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Subtotal { get; set; }
 
+    // Monto del impuesto aplicado (calculado en el servidor)
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Impuesto { get; set; }
 
+    // Total final que pago el cliente
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Total { get; set; }
 
@@ -39,6 +46,7 @@ public class Sale
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 }
 
+// Representa cada linea de producto dentro de una venta
 [BsonIgnoreExtraElements]
 public class SaleItem
 {
@@ -47,9 +55,11 @@ public class SaleItem
     public string NombreProducto { get; set; } = string.Empty;
     public int Cantidad { get; set; }
 
+    // Precio al que se vendio el producto en este momento (puede diferir del precio actual)
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal PrecioUnitario { get; set; }
 
+    // Total de esta linea calculado automaticamente: Cantidad x PrecioUnitario
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Total => Cantidad * PrecioUnitario;
 }

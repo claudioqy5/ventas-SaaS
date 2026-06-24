@@ -4,6 +4,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace SaaS.API.Models;
 
+// Modelo que representa a un cliente registrado en el sistema.
+// Los clientes se pueden seleccionar al momento de registrar una venta en el POS.
 [BsonIgnoreExtraElements]
 public class Client
 {
@@ -11,6 +13,7 @@ public class Client
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = string.Empty;
 
+    // Empresa duena de este cliente (cada tienda gestiona su propia cartera de clientes)
     [BsonRepresentation(BsonType.ObjectId)]
     public string EmpresaId { get; set; } = string.Empty;
 
