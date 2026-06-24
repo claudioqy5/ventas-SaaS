@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    <!-- Sidebar Navigation -->
+    <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
@@ -21,7 +21,7 @@
       <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Area de contenido principal -->
     <main class="main-content">
       <header class="content-header">
         <div class="header-flex">
@@ -33,7 +33,7 @@
         </div>
       </header>
 
-      <!-- Filters -->
+      <!-- Seccion de filtros de busqueda -->
       <div class="table-filters card">
         <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código o descripción..." class="filter-input" />
         <select v-model="selectedCategory" class="filter-select">
@@ -42,7 +42,7 @@
         </select>
       </div>
 
-      <!-- Products Inventory Table -->
+      <!-- Tabla de inventario de productos -->
       <div class="card font-card">
         <div v-if="filteredProducts.length === 0" class="empty-state">
           No hay productos que coincidan con la búsqueda.
@@ -92,7 +92,7 @@
         </table>
       </div>
 
-      <!-- Add Product Modal Dialog -->
+      <!-- Modal para el registro/edicion de productos -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
           <h2 class="modal-title">{{ isEdit ? '✏️ Editar Producto' : '📦 Registrar Producto' }}</h2>
@@ -406,7 +406,7 @@ onMounted(() => {
   color: #dc2626;
 }
 
-/* Modal overlays and dialog cards */
+/* Estilos para las ventanas modales y tarjetas de dialogo */
 .modal-overlay {
   position: fixed;
   top: 0;

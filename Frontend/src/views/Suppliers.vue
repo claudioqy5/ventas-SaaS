@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    <!-- Sidebar Navigation -->
+    <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
@@ -21,7 +21,7 @@
       <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Area de contenido principal -->
     <main class="main-content">
       <header class="content-header">
         <div class="header-flex">
@@ -33,12 +33,12 @@
         </div>
       </header>
 
-      <!-- Filters -->
+      <!-- Seccion de filtros de busqueda -->
       <div class="table-filters card">
         <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, correo o teléfono..." class="filter-input" />
       </div>
 
-      <!-- Table Card -->
+      <!-- Tabla de datos principal -->
       <div class="card font-card">
         <div v-if="filteredSuppliers.length === 0" class="empty-state">
           No se encontraron proveedores que coincidan con la búsqueda.
@@ -72,7 +72,7 @@
         </table>
       </div>
 
-      <!-- Add/Edit Modal -->
+      <!-- Formulario modal de creacion/edicion -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
           <h2 class="modal-title">{{ isEdit ? '✏️ Editar Proveedor' : '🏢 Registrar Proveedor' }}</h2>
@@ -285,7 +285,7 @@ onMounted(() => {
   transform: scale(1.15);
 }
 
-/* Modal overlays and dialog cards */
+/* Estilos para las ventanas modales y tarjetas de dialogo */
 .modal-overlay {
   position: fixed;
   top: 0;

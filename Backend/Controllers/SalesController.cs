@@ -27,7 +27,7 @@ public class SalesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        // Check custom permission
+        // Validar los permisos del usuario actual
         if (!_userContext.HasPermission("historial_ventas"))
             return Forbid();
 
@@ -44,7 +44,7 @@ public class SalesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Sale sale)
     {
-        // Verify user has permission to sell
+        // Confirmar si el usuario tiene habilitado el modulo de ventas
         if (!_userContext.HasPermission("ventas"))
             return Forbid();
 
@@ -63,7 +63,7 @@ public class SalesController : ControllerBase
 
         decimal computedTotal = 0;
 
-        // Process stock deductions
+        // Procesar la disminucion del stock de los productos vendidos
         foreach (var item in sale.Detalles)
         {
             var productFilter = Builders<Product>.Filter.And(
@@ -82,14 +82,14 @@ public class SalesController : ControllerBase
                 return BadRequest(new { message = $"Stock insuficiente para '{product.Nombre}'. Stock actual: {product.Stock}." });
             }
 
-            // Deduct stock
+            // Restar cantidad del almacen
             var previousStock = product.Stock;
             var newStock = previousStock - item.Cantidad;
 
             var stockUpdate = Builders<Product>.Update.Set(p => p.Stock, newStock);
             await _context.Products.UpdateOneAsync(productFilter, stockUpdate);
 
-            // Log stock movement
+            // Registrar la transaccion en el historial de movimientos de inventario
             var movement = new StockMovement
             {
                 EmpresaId = empresaId,
@@ -110,7 +110,7 @@ public class SalesController : ControllerBase
         }
 
         sale.Total = computedTotal;
-        sale.Subtotal = computedTotal / 1.19m; // assuming 19% VAT or generic
+        sale.Subtotal = computedTotal / 1.19m; // Calculo considerando el porcentaje de impuesto estandar
         sale.Impuesto = computedTotal - sale.Subtotal;
 
         await _context.Sales.InsertOneAsync(sale);

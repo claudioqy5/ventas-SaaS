@@ -73,18 +73,18 @@ public class PurchasesController : ControllerBase
                 return BadRequest(new { message = $"El producto '{item.NombreProducto}' no existe." });
             }
 
-            // Increase stock
+            // Incrementar la cantidad del producto en almacen
             var previousStock = product.Stock;
             var newStock = previousStock + item.Cantidad;
 
-            // Update cost price of product dynamically
+            // Actualizar el costo unitario del producto en base a la ultima compra
             var stockUpdate = Builders<Product>.Update
                 .Set(p => p.Stock, newStock)
                 .Set(p => p.PrecioCosto, item.PrecioCosto);
 
             await _context.Products.UpdateOneAsync(productFilter, stockUpdate);
 
-            // Log stock movement
+            // Registrar la transaccion en el historial de movimientos de inventario
             var movement = new StockMovement
             {
                 EmpresaId = empresaId,

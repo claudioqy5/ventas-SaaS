@@ -13,13 +13,13 @@ public class User
     public string Id { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? EmpresaId { get; set; } // Null for Superadmin
+    public string? EmpresaId { get; set; } // Nulo si el rol es Superadmin
 
     public string Nombre { get; set; } = string.Empty;
     public string Correo { get; set; } = string.Empty;
     public string ClaveHash { get; set; } = string.Empty;
-    public string Rol { get; set; } = "Employee"; // Superadmin, EmpresaOwner, Employee
-    public List<string> Permisos { get; set; } = new(); // dashboard, ventas, productos, clientes, proveedores, compras, movimientos, config
+    public string Rol { get; set; } = "Employee"; // Roles validos: Superadmin, EmpresaOwner, Employee
+    public List<string> Permisos { get; set; } = new(); // Modulos disponibles: dashboard, ventas, productos, clientes, proveedores, compras, movimientos, config
     public bool Activo { get; set; } = true;
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 }

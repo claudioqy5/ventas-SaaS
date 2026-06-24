@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    <!-- Sidebar Navigation -->
+    <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
@@ -21,9 +21,9 @@
       <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
-    <!-- POS Workspace -->
+    <!-- Espacio de trabajo del punto de venta (POS) -->
     <div class="pos-workspace">
-      <!-- Products Selection Area -->
+      <!-- Panel de seleccion de productos disponibles -->
       <main class="products-area">
         <header class="search-header">
           <div class="search-filters">
@@ -56,7 +56,7 @@
         </div>
       </main>
 
-      <!-- Cart Checkout Side Panel -->
+      <!-- Panel lateral para el resumen de compra y pago -->
       <aside class="cart-panel">
         <div class="cart-header">
           <h2 class="cart-title">🛒 Carrito de Compra</h2>
@@ -296,7 +296,7 @@ onMounted(() => {
 
 <style scoped>
 
-/* POS Workspace Styling */
+/* Estilos de la interfaz principal del POS */
 .pos-workspace {
   display: flex;
   flex-grow: 1;
@@ -418,7 +418,7 @@ onMounted(() => {
   margin-top: auto;
 }
 
-/* Cart Styling */
+/* Estilos del panel de carrito de compras */
 .cart-panel {
   width: 30%;
   background-color: #ffffff;
@@ -537,7 +537,7 @@ onMounted(() => {
   font-size: 0.95rem;
 }
 
-/* Cart Summary */
+/* Estilos del resumen de pago */
 .cart-summary {
   border-top: 1px dashed var(--border-color);
   padding-top: 20px;

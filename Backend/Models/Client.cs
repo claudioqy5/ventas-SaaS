@@ -17,7 +17,7 @@ public class Client
     public string Nombre { get; set; } = string.Empty;
     public string Telefono { get; set; } = string.Empty;
     public string Correo { get; set; } = string.Empty;
-    public string NumeroDocumento { get; set; } = string.Empty; // DNI, RUC, etc.
+    public string NumeroDocumento { get; set; } = string.Empty; // Numero de identificacion tributaria (DNI, RUC, etc.)
     public string Direccion { get; set; } = string.Empty;
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 }

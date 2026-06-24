@@ -7,7 +7,7 @@
       </div>
 
       <form @submit.prevent="handleSubmit" class="grid">
-        <!-- Register Mode Fields -->
+        <!-- Campos adicionales para el registro de negocio -->
         <template v-if="isRegister">
           <div class="field">
             <label>Nombre del Negocio</label>
@@ -19,7 +19,7 @@
           </div>
         </template>
 
-        <!-- General Fields -->
+        <!-- Campos generales de acceso -->
         <div class="field">
           <label>Correo Electrónico</label>
           <input v-model="form.correo" type="email" placeholder="ejemplo@correo.com" required />
@@ -43,7 +43,7 @@
         </a>
       </div>
       
-      <!-- Seed Admin Trigger Helper for Developers -->
+      <!-- Boton de ayuda para la carga inicial de datos en desarrollo -->
       <div v-if="!isRegister" class="seed-helper">
         <button @click="seedSuperadmin" class="btn btn-secondary w-full" style="font-size: 0.8rem; margin-top: 10px; padding: 6px;">
           Seed Superadmin Inicial (Dev)

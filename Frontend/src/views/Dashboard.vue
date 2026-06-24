@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    <!-- Sidebar Navigation -->
+    <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">

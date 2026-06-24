@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    <!-- Sidebar Navigation -->
+    <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
@@ -21,7 +21,7 @@
       <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Area de contenido principal -->
     <main class="main-content">
       <header class="content-header">
         <div>
@@ -31,7 +31,7 @@
       </header>
 
       <div class="card font-card">
-        <!-- Search and Filters -->
+        <!-- Barra de busqueda y filtros -->
         <div class="filters-container">
           <input v-model="searchQuery" type="text" placeholder="🔍 Buscar por cliente o cajero..." class="filter-input" />
           <input v-model="filterDate" type="date" class="filter-select" title="Filtrar por fecha" />
@@ -51,7 +51,7 @@
           No se encontraron ventas registradas que coincidan con los filtros.
         </div>
 
-        <!-- Sales Table -->
+        <!-- Registro de ventas del historial -->
         <table v-else class="data-table">
           <thead>
             <tr>
@@ -92,7 +92,7 @@
         </table>
       </div>
 
-      <!-- Details Modal -->
+      <!-- Modal con los detalles de la venta -->
       <div v-if="selectedSale" class="modal-overlay" @click.self="selectedSale = null">
         <div class="modal-content card max-width-600">
           <header class="modal-header">
@@ -209,7 +209,7 @@ const filteredSales = computed(() => {
 
     let matchesDate = true
     if (filterDate.value) {
-      // Extract local date part (YYYY-MM-DD) for timezone-safe local date comparison
+      // Extraer fecha local (AAAA-MM-DD) para comparar sin problemas de zona horaria
       const localDate = new Date(s.fechaCreacion)
       const year = localDate.getFullYear()
       const month = String(localDate.getMonth() + 1).padStart(2, '0')
@@ -228,7 +228,7 @@ const openDetails = (sale) => {
 
 const formatCreatorName = (name) => {
   if (!name) return 'Empleado'
-  // If it matches 24 characters of hexadecimal, it is a Mongo ObjectId
+  // Verificar si el termino de busqueda es un ObjectId valido de MongoDB (24 caracteres hexadecimales)
   if (/^[0-9a-fA-F]{24}$/.test(name)) {
     return 'Administrador'
   }
@@ -327,7 +327,7 @@ onMounted(() => {
   font-size: 0.85rem;
 }
 
-/* Modal Styling */
+/* Estilos de las ventanas modales */
 .sale-meta-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -426,7 +426,7 @@ onMounted(() => {
   color: var(--text-muted);
 }
 
-/* Modal Overlay and Layout Positioning */
+/* Fondo oscuro y posicionamiento de modales */
 .modal-overlay {
   position: fixed;
   top: 0;

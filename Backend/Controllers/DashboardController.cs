@@ -32,10 +32,10 @@ public class DashboardController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
-        // Get total products count
+        // Obtener la cantidad total de productos registrados
         var totalProductos = await _context.Products.CountDocumentsAsync(p => p.EmpresaId == empresaId);
 
-        // Get low stock list
+        // Listar productos con niveles de inventario por debajo del minimo establecido
         var products = await _context.Products.Find(p => p.EmpresaId == empresaId).ToListAsync();
         var productosBajoStock = products.Where(p => p.Stock <= p.StockMinimo).Select(p => new
         {
@@ -45,12 +45,12 @@ public class DashboardController : ControllerBase
             StockMinimo = p.StockMinimo
         }).ToList();
 
-        // Calculate sales summaries
+        // Calcular los resumenes financieros de ventas
         var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId).ToListAsync();
         var totalIngresos = sales.Sum(s => (double)s.Total);
         var totalVentasCount = sales.Count;
 
-        // Calculate purchases summary (if permitted)
+        // Calcular los costos acumulados de compras si el usuario tiene acceso
         double totalGastosCompras = 0;
         if (_userContext.HasPermission("compras"))
         {
@@ -58,7 +58,7 @@ public class DashboardController : ControllerBase
             totalGastosCompras = purchases.Sum(p => (double)p.Total);
         }
 
-        // Get 5 recent movements
+        // Cargar los 5 movimientos de almacen mas recientes
         var recentMovements = await _context.StockMovements.Find(m => m.EmpresaId == empresaId)
             .SortByDescending(m => m.FechaCreacion)
             .Limit(5)
@@ -105,7 +105,7 @@ public class DashboardController : ControllerBase
             .Where(s => s.FechaCreacion.ToLocalTime().Date == latestSaleDate)
             .ToList();
 
-        var ventasHorarias = Enumerable.Range(6, 18) // Hours 6 to 23
+        var ventasHorarias = Enumerable.Range(6, 18) // Distribucion horaria para el reporte diario
             .Select(h => new
             {
                 Hora = $"{h:00}:00",

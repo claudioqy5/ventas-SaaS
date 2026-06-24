@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    <!-- Sidebar Navigation -->
+    <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
@@ -21,7 +21,7 @@
       <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Area de contenido principal -->
     <main class="main-content">
       <header class="content-header">
         <div class="header-flex">
@@ -37,7 +37,7 @@
         </div>
       </header>
 
-      <!-- Section A: Register Purchase Form -->
+      <!-- Seccion A: Formulario de ingreso de mercaderia -->
       <div v-if="showRegisterForm" class="card font-card form-container">
         <h2 class="section-title">➕ Nueva Compra / Ingreso de Almacén</h2>
         
@@ -59,7 +59,7 @@
             </div>
           </div>
 
-          <!-- Restocked Items List -->
+          <!-- Lista de productos añadidos al abastecimiento -->
           <div class="restock-items">
             <h3>📦 Detalles de los Productos</h3>
             <div v-if="form.detalles.length === 0" class="empty-items">
@@ -101,11 +101,11 @@
         </form>
       </div>
 
-      <!-- Section B: Purchase History Table -->
+      <!-- Seccion B: Historial de facturas de compra -->
       <div v-else class="card font-card">
         <h2 class="section-title">📋 Historial de Compras Realizadas</h2>
         
-        <!-- Filters -->
+        <!-- Seccion de filtros de busqueda -->
         <div class="table-filters" style="margin-bottom: 20px;">
           <input v-model="searchQuery" type="text" placeholder="Buscar por proveedor..." class="filter-input" />
           <div class="filter-date-group">
@@ -258,7 +258,7 @@ const addProductToItems = () => {
       precioCosto: prod.precioCosto
     })
   }
-  selectedProductId.value = '' // Reset selector
+  selectedProductId.value = '' // Limpiar seleccion
 }
 
 const removeItem = (idx) => {
@@ -370,7 +370,7 @@ onMounted(() => {
   margin: 0;
 }
 
-/* Form Styles */
+/* Estilos para formularios de registro */
 .form-container {
   text-align: left;
 }

@@ -30,10 +30,10 @@ public class Sale
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Total { get; set; }
 
-    public string MetodoPago { get; set; } = "Efectivo"; // Efectivo, Tarjeta, Transferencia
+    public string MetodoPago { get; set; } = "Efectivo"; // Opciones de pago: Efectivo, Tarjeta, Transferencia
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string CreadoPor { get; set; } = string.Empty; // UserId
+    public string CreadoPor { get; set; } = string.Empty; // ID del usuario responsable
     public string CreadoPorNombre { get; set; } = string.Empty;
 
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;

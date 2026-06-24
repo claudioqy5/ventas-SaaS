@@ -49,7 +49,7 @@ public class ProductsController : ControllerBase
 
         await _context.Products.InsertOneAsync(product);
 
-        // Track initial stock movement if there is initial stock
+        // Registrar el ingreso inicial al almacen si se define un stock de partida
         if (product.Stock > 0)
         {
             var movement = new StockMovement

@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    <!-- Sidebar Navigation -->
+    <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
@@ -21,7 +21,7 @@
       <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Area de contenido principal -->
     <main class="main-content">
       <header class="content-header">
         <div class="header-flex">
@@ -33,7 +33,7 @@
         </div>
       </header>
 
-      <!-- Users Grid -->
+      <!-- Lista de colaboradores -->
       <div class="card font-card">
         <div v-if="users.length === 0" class="empty-state">
           No tienes trabajadores registrados todavía.
@@ -88,7 +88,7 @@
         </table>
       </div>
 
-      <!-- Add/Edit Worker Modal Dialog -->
+      <!-- Modal para agregar/editar colaboradores -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
           <h2 class="modal-title">{{ isEdit ? '✏️ Editar Colaborador' : '👥 Registrar Colaborador' }}</h2>
@@ -118,7 +118,7 @@
               </div>
             </div>
 
-            <!-- Store Name (Only if creating a new EmpresaOwner as Superadmin) -->
+            <!-- Nombre del negocio (Solo si el Superadmin crea un Administrador de Negocio) -->
             <div class="grid grid-1" v-if="!isEdit && form.rol === 'EmpresaOwner' && authStore.isSuperadmin" style="margin-bottom: 15px;">
               <div class="field">
                 <label>Nombre de la Tienda / Negocio</label>
@@ -126,7 +126,7 @@
               </div>
             </div>
 
-            <!-- Associate to Empresa (Only for Superadmin) -->
+            <!-- Asociar a tienda (Solo aplicable para el Superadmin) -->
             <div class="grid grid-1" v-if="authStore.isSuperadmin" style="margin-bottom: 15px;">
               <div class="field">
                 <label>Asociar a Tienda / Negocio</label>
@@ -139,7 +139,7 @@
               </div>
             </div>
 
-            <!-- Active Toggle (Only for edit mode) -->
+            <!-- Cambiar estado de cuenta activa (Solo al editar) -->
             <div class="grid grid-2" v-if="isEdit">
               <div class="field checkbox-wrapper">
                 <label class="checkbox-label">
@@ -149,7 +149,7 @@
               </div>
             </div>
 
-            <!-- Role-based Permissions Customizer -->
+            <!-- Selector de permisos dinamicos segun el rol de empleado -->
             <div v-if="form.rol === 'Employee'" class="permissions-selector">
               <h3>🔒 Asignar Permisos del Trabajador</h3>
               <p class="text-subtitle">Selecciona los módulos a los que este empleado tendrá acceso:</p>
@@ -261,7 +261,7 @@ const openEditModal = (user) => {
   currentUserId.value = user.id
   form.nombre = user.nombre
   form.correo = user.correo
-  form.clave = '' // Keep blank
+  form.clave = '' // Mantener en blanco para no modificar
   form.rol = user.rol
   form.permisos = [...(user.permisos || [])]
   form.activo = user.activo
@@ -485,7 +485,7 @@ onMounted(() => {
   transform: scale(1.15);
 }
 
-/* Permissions Selection Styling */
+/* Estilos para el selector de permisos */
 .permissions-selector {
   border-top: 1px dashed var(--border-color);
   padding-top: 20px;
@@ -552,7 +552,7 @@ onMounted(() => {
   display: flex;
 }
 
-/* Modal overlays and dialog cards */
+/* Estilos para las ventanas modales y tarjetas de dialogo */
 .modal-overlay {
   position: fixed;
   top: 0;

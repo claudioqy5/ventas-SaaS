@@ -6,10 +6,10 @@ using SaaS.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Registrar servicios en el contenedor de dependencias
 builder.Services.AddControllers();
 
-// Configure CORS
+// Configurar politicas de acceso CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configure JWT Authentication
+// Configurar el middleware de autenticacion con tokens JWT
 var secretKey = builder.Configuration.GetValue<string>("JwtSettings:Secret") ?? "SuperSecretSaaSKeyOfLengthGreaterThan32Characters!12345";
 var issuer = builder.Configuration.GetValue<string>("JwtSettings:Issuer") ?? "SaaSProvider";
 var audience = builder.Configuration.GetValue<string>("JwtSettings:Audience") ?? "SaaSClients";
@@ -44,20 +44,20 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Register Core Infrastructure and Services
+// Registrar la infraestructura principal y servicios personalizados de la API
 builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddSingleton<IJwtProvider, JwtProvider>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
 
-// Swagger API tools
+// Configurar herramientas de Swagger para documentacion de API
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configurar el pipeline de solicitudes HTTP (Middlewares)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
