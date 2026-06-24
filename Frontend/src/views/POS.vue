@@ -1,11 +1,11 @@
-<template>
+﻿<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
-        <span class="user-badge">{{ authStore.user?.rol }}</span>
+        <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
       <nav class="nav-links">
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item">📊 <span class="sidebar-text">Dashboard</span></router-link>

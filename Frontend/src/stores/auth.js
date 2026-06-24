@@ -12,6 +12,15 @@ export const useAuthStore = defineStore('auth', {
     permissions: (state) => state.user?.permisos || [],
     isSuperadmin: (state) => state.user?.rol === 'Superadmin',
     isEmpresaOwner: (state) => state.user?.rol === 'EmpresaOwner',
+    // Traduce el rol tecnico del backend a un nombre legible en español
+    rolEnEspanol: (state) => {
+      const roles = {
+        'Superadmin': 'Superadministrador',
+        'EmpresaOwner': 'Administrador',
+        'Employee': 'Empleado',
+      }
+      return roles[state.user?.rol] || state.user?.rol || 'Usuario'
+    },
   },
   actions: {
     async login(correo, clave) {
