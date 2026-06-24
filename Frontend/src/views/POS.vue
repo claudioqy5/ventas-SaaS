@@ -41,15 +41,16 @@
 
         <div v-else class="products-grid">
           <div v-for="product in filteredProducts" :key="product.id" @click="addToCart(product)" class="product-card card">
+            <div class="product-image-container">
+              <img :src="product.imagenUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&auto=format&fit=crop'" class="product-card-img" alt="product image" />
+              <span :class="['product-card-stock', product.stock <= product.stockMinimo ? 'low' : 'ok']">
+                Stock: {{ product.stock }}
+              </span>
+            </div>
             <div class="product-info">
               <h3 class="product-name">{{ product.nombre }}</h3>
-              <p class="product-barcode">{{ product.codigoBarras }}</p>
-              <div class="product-footer">
-                <span class="product-price">S/. {{ product.precio.toFixed(2) }}</span>
-                <span :class="['product-stock', product.stock <= product.stockMinimo ? 'low' : 'ok']">
-                  Stock: {{ product.stock }}
-                </span>
-              </div>
+              <p class="product-barcode">Cod: {{ product.codigoBarras }}</p>
+              <span class="product-price">S/. {{ product.precio.toFixed(2) }}</span>
             </div>
           </div>
         </div>
@@ -338,41 +339,77 @@ onMounted(() => {
 .product-card {
   cursor: pointer;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.product-image-container {
+  width: 100%;
+  height: 140px;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-app);
+}
+
+.product-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-card-stock {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  color: #ffffff;
+}
+
+.product-card-stock.ok { background-color: #48bb78; }
+.product-card-stock.low { background-color: #f56565; }
+
+.product-info {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .product-name {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  margin-bottom: 4px;
+  color: var(--text-main);
+  margin-bottom: 2px;
+  min-height: 38px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .product-barcode {
   font-size: 0.8rem;
   color: var(--text-muted);
-  margin-bottom: 12px;
-}
-
-.product-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  margin-bottom: 8px;
 }
 
 .product-price {
   font-weight: 700;
-  color: var(--text-main);
-  font-size: 1.2rem;
+  color: var(--primary);
+  font-size: 1.1rem;
+  margin-top: auto;
 }
-
-.product-stock {
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 99px;
-}
-
-.product-stock.ok { background-color: var(--success); color: #1b4d3e; }
-.product-stock.low { background-color: var(--danger); color: #7f1d1d; }
 
 /* Cart Styling */
 .cart-panel {

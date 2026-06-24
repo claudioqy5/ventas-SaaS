@@ -33,10 +33,15 @@
         </div>
       </header>
 
+      <!-- Filters -->
+      <div class="table-filters card">
+        <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, documento, correo o teléfono..." class="filter-input" />
+      </div>
+
       <!-- Table Card -->
       <div class="card font-card">
-        <div v-if="clients.length === 0" class="empty-state">
-          No hay clientes registrados.
+        <div v-if="filteredClients.length === 0" class="empty-state">
+          No se encontraron clientes que coincidan con la búsqueda.
         </div>
         <table v-else class="data-table">
           <thead>
@@ -51,7 +56,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(client, index) in clients" :key="client.id">
+            <tr v-for="(client, index) in filteredClients" :key="client.id">
               <td><strong>{{ index + 1 }}</strong></td>
               <td><strong>{{ client.nombre }}</strong></td>
               <td><code>{{ client.numeroDocumento || 'N/A' }}</code></td>
@@ -114,7 +119,7 @@
 
 <script setup>
 import { API_URL } from '../config'
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -125,6 +130,18 @@ const clients = ref([])
 const showModal = ref(false)
 const isEdit = ref(false)
 const currentId = ref(null)
+
+const searchQuery = ref('')
+
+const filteredClients = computed(() => {
+  const q = searchQuery.value.toLowerCase()
+  return clients.value.filter(c => 
+    (c.nombre && c.nombre.toLowerCase().includes(q)) ||
+    (c.numeroDocumento && c.numeroDocumento.toLowerCase().includes(q)) ||
+    (c.telefono && c.telefono.toLowerCase().includes(q)) ||
+    (c.correo && c.correo.toLowerCase().includes(q))
+  )
+})
 
 const form = reactive({
   nombre: '',
@@ -326,5 +343,34 @@ onMounted(() => {
   justify-content: flex-end;
   gap: 12px;
   margin-top: 24px;
+}
+.table-filters {
+  display: flex;
+  gap: 16px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  align-items: center;
+}
+
+.filter-input {
+  flex-grow: 1;
+  padding: 10px 16px 10px 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  font-size: 0.95rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  background-size: 18px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
 }
 </style>

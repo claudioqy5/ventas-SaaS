@@ -104,8 +104,20 @@
       <!-- Section B: Purchase History Table -->
       <div v-else class="card font-card">
         <h2 class="section-title">📋 Historial de Compras Realizadas</h2>
-        <div v-if="purchases.length === 0" class="empty-state">
-          No se han registrado compras de inventario todavía.
+        
+        <!-- Filters -->
+        <div class="table-filters" style="margin-bottom: 20px;">
+          <input v-model="searchQuery" type="text" placeholder="Buscar por proveedor..." class="filter-input" />
+          <div class="filter-date-group">
+            <span>Desde:</span>
+            <input v-model="startDate" type="date" class="filter-date" />
+            <span>Hasta:</span>
+            <input v-model="endDate" type="date" class="filter-date" />
+          </div>
+        </div>
+
+        <div v-if="filteredPurchases.length === 0" class="empty-state">
+          No se han encontrado compras que coincidan con los filtros.
         </div>
         <table v-else class="data-table">
           <thead>
@@ -119,7 +131,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(pur, index) in purchases" :key="pur.id">
+            <tr v-for="(pur, index) in filteredPurchases" :key="pur.id">
               <td><strong>{{ index + 1 }}</strong></td>
               <td><code>{{ new Date(pur.fechaCreacion).toLocaleDateString() }}</code></td>
               <td><strong>{{ pur.nombreProveedor }}</strong></td>
@@ -160,6 +172,35 @@ const products = ref([])
 const form = reactive({
   proveedorId: '',
   detalles: []
+})
+
+const searchQuery = ref('')
+const startDate = ref('')
+const endDate = ref('')
+
+const filteredPurchases = computed(() => {
+  const q = searchQuery.value.toLowerCase()
+  return purchases.value.filter(p => {
+    const matchesSearch = p.nombreProveedor && p.nombreProveedor.toLowerCase().includes(q)
+    
+    let matchesDate = true
+    if (p.fechaCreacion) {
+      const pDate = new Date(p.fechaCreacion)
+      pDate.setHours(0, 0, 0, 0)
+      
+      if (startDate.value) {
+        const start = new Date(startDate.value)
+        start.setHours(0, 0, 0, 0)
+        if (pDate < start) matchesDate = false
+      }
+      if (endDate.value) {
+        const end = new Date(endDate.value)
+        end.setHours(0, 0, 0, 0)
+        if (pDate > end) matchesDate = false
+      }
+    }
+    return matchesSearch && matchesDate
+  })
 })
 
 const grandTotal = computed(() => {
@@ -444,5 +485,53 @@ onMounted(() => {
   background-color: var(--warning);
   padding: 6px 16px;
   border-radius: 99px;
+}
+.table-filters {
+  display: flex;
+  gap: 16px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  background-color: var(--bg-app);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  align-items: center;
+}
+
+.filter-input {
+  flex-grow: 1;
+  padding: 10px 16px 10px 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  font-size: 0.95rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  background-size: 18px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #ffffff;
+}
+
+.filter-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.filter-date-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.filter-date {
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  outline: none;
+  font-weight: 500;
+  background-color: #ffffff;
 }
 </style>
