@@ -2,7 +2,7 @@ const getApiUrl = () => {
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
     
-    // Check if a Vite environment variable is defined
+    // Verifica si existe una variable de entorno de Vite definida en el build
     if (import.meta.env && import.meta.env.VITE_API_URL) {
       return import.meta.env.VITE_API_URL;
     }
@@ -11,7 +11,7 @@ const getApiUrl = () => {
       return 'http://localhost:5246';
     }
     
-    // In production (VPS or Vercel), default to the secure VPS API URL
+    // En produccion (VPS o Vercel), se usa por defecto la URL segura de la API en el VPS
     return 'https://ventassaas-api.helifyferdigital.cloud';
   }
   return 'http://localhost:5246';

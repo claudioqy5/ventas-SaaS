@@ -65,7 +65,7 @@ const routes = [
     path: '/users', 
     component: Users, 
     name: 'Users',
-    meta: { requiresAuth: true } // Only accessible to Owners / Superadmin
+    meta: { requiresAuth: true } // Solo accesible para Propietarios y Superadmin
   },
   { path: '/:pathMatch(.*)*', redirect: '/login' }
 ]
