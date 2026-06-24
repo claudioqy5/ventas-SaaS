@@ -33,10 +33,19 @@
         </div>
       </header>
 
+      <!-- Filters -->
+      <div class="table-filters card">
+        <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código o descripción..." class="filter-input" />
+        <select v-model="selectedCategory" class="filter-select">
+          <option value="">🏷️ Todas las Categorías</option>
+          <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
+        </select>
+      </div>
+
       <!-- Products Inventory Table -->
       <div class="card font-card">
-        <div v-if="products.length === 0" class="empty-state">
-          No hay productos registrados en el inventario.
+        <div v-if="filteredProducts.length === 0" class="empty-state">
+          No hay productos que coincidan con la búsqueda.
         </div>
         <table v-else class="data-table">
           <thead>
@@ -52,7 +61,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(prod, index) in products" :key="prod.id">
+            <tr v-for="(prod, index) in filteredProducts" :key="prod.id">
               <td><strong>{{ index + 1 }}</strong></td>
               <td><code>{{ prod.codigoBarras }}</code></td>
               <td>
@@ -160,7 +169,7 @@
 
 <script setup>
 import { API_URL } from '../config'
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -172,6 +181,20 @@ const categories = ref([])
 const showModal = ref(false)
 const isEdit = ref(false)
 const currentProductId = ref(null)
+
+const searchQuery = ref('')
+const selectedCategory = ref('')
+
+const filteredProducts = computed(() => {
+  const q = searchQuery.value.toLowerCase()
+  return products.value.filter(p => {
+    const matchesSearch = (p.nombre && p.nombre.toLowerCase().includes(q)) || 
+                          (p.codigoBarras && p.codigoBarras.toLowerCase().includes(q)) ||
+                          (p.descripcion && p.descripcion.toLowerCase().includes(q))
+    const matchesCategory = !selectedCategory.value || p.categoriaId === selectedCategory.value
+    return matchesSearch && matchesCategory
+  })
+})
 
 const form = reactive({
   nombre: '',
@@ -413,12 +436,58 @@ onMounted(() => {
 }
 
 .product-thumbnail {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  width: 45px;
+  height: 60px;
+  border-radius: 6px;
   object-fit: cover;
   border: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   background-color: var(--bg-app);
+  transition: transform 0.2s;
+}
+
+.product-thumbnail:hover {
+  transform: scale(1.1);
+}
+
+.table-filters {
+  display: flex;
+  gap: 16px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  align-items: center;
+}
+
+.filter-input {
+  flex-grow: 1;
+  padding: 10px 16px 10px 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  font-size: 0.95rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  background-size: 18px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.filter-select {
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: #ffffff;
+  color: var(--text-main);
+  font-weight: 500;
+  outline: none;
 }
 
 .image-preview-box {
