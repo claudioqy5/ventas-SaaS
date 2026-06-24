@@ -42,7 +42,7 @@
         <div v-else class="products-grid">
           <div v-for="product in filteredProducts" :key="product.id" @click="addToCart(product)" class="product-card card">
             <div class="product-image-container">
-              <img :src="product.imagenUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&auto=format&fit=crop'" class="product-card-img" alt="product image" />
+              <img :src="product.imagenUrl || defaultImage" class="product-card-img" alt="product image" />
               <span :class="['product-card-stock', product.stock <= product.stockMinimo ? 'low' : 'ok']">
                 Stock: {{ product.stock }}
               </span>
@@ -139,6 +139,8 @@ const cart = ref([])
 const searchQuery = ref('')
 const paymentMethod = ref('Efectivo')
 const loading = ref(false)
+
+const defaultImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><rect width='100%25' height='100%25' fill='%23f1f5f9'/><path d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M11 11.5L5 17h14l-4.5-6-3.5 4.5z'/></svg>"
 
 const selectedCategory = ref('')
 const categories = ref([])

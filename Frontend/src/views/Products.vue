@@ -66,7 +66,7 @@
               <td><code>{{ prod.codigoBarras }}</code></td>
               <td>
                 <div class="product-info-cell">
-                  <img :src="prod.imagenUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&auto=format&fit=crop'" class="product-thumbnail" alt="thumbnail" />
+                  <img :src="prod.imagenUrl || defaultImage" class="product-thumbnail" alt="thumbnail" />
                   <strong>{{ prod.nombre }}</strong>
                 </div>
               </td>
@@ -184,6 +184,8 @@ const currentProductId = ref(null)
 
 const searchQuery = ref('')
 const selectedCategory = ref('')
+
+const defaultImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><rect width='100%25' height='100%25' fill='%23f1f5f9'/><path d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M11 11.5L5 17h14l-4.5-6-3.5 4.5z'/></svg>"
 
 const filteredProducts = computed(() => {
   const q = searchQuery.value.toLowerCase()
