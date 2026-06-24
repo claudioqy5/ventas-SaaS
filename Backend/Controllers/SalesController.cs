@@ -10,6 +10,8 @@ using SaaS.API.Data;
 
 namespace SaaS.API.Controllers;
 
+// Controlador de ventas: procesa las ventas del POS, descuenta el stock y registra el historial
+// Rutas disponibles bajo: api/sales
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
@@ -18,12 +20,14 @@ public class SalesController : ControllerBase
     private readonly MongoDbContext _context;
     private readonly IUserContext _userContext;
 
+    // Constructor: inyecta la BD y el contexto del usuario actual
     public SalesController(MongoDbContext context, IUserContext userContext)
     {
         _context = context;
         _userContext = userContext;
     }
 
+    // GET api/sales — devuelve el historial de ventas de la empresa, del mas reciente al mas antiguo
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -34,6 +38,7 @@ public class SalesController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
+        // Ordeno las ventas de la mas reciente a la mas antigua
         var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId)
             .SortByDescending(s => s.FechaCreacion)
             .ToListAsync();
@@ -41,6 +46,7 @@ public class SalesController : ControllerBase
         return Ok(sales);
     }
 
+    // POST api/sales — registra una venta nueva, descuenta el stock y guarda el movimiento de inventario
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Sale sale)
     {
@@ -51,19 +57,21 @@ public class SalesController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
+        // Preparo los datos de la venta antes de procesarla
         sale.Id = string.Empty;
         sale.EmpresaId = empresaId;
         sale.CreadoPor = _userContext.UserId ?? string.Empty;
-        
-        var nameClaim = User.FindFirst("name")?.Value 
-            ?? User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value 
+
+        // Extraigo el nombre del vendedor desde el token JWT para dejarlo en el registro
+        var nameClaim = User.FindFirst("name")?.Value
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value
             ?? "Empleado";
         sale.CreadoPorNombre = nameClaim;
         sale.FechaCreacion = DateTime.UtcNow;
 
         decimal computedTotal = 0;
 
-        // Procesar la disminucion del stock de los productos vendidos
+        // Recorro cada producto del carrito para descontar el stock correspondiente
         foreach (var item in sale.Detalles)
         {
             var productFilter = Builders<Product>.Filter.And(
@@ -77,19 +85,21 @@ public class SalesController : ControllerBase
                 return BadRequest(new { message = $"El producto '{item.NombreProducto}' no existe." });
             }
 
+            // Verifico que haya suficiente stock antes de confirmar la venta
             if (product.Stock < item.Cantidad)
             {
                 return BadRequest(new { message = $"Stock insuficiente para '{product.Nombre}'. Stock actual: {product.Stock}." });
             }
 
-            // Restar cantidad del almacen
+            // Calculo el stock que quedara despues de esta venta
             var previousStock = product.Stock;
             var newStock = previousStock - item.Cantidad;
 
+            // Actualizo el stock del producto en la base de datos
             var stockUpdate = Builders<Product>.Update.Set(p => p.Stock, newStock);
             await _context.Products.UpdateOneAsync(productFilter, stockUpdate);
 
-            // Registrar la transaccion en el historial de movimientos de inventario
+            // Registro la transaccion en el historial de movimientos de inventario
             var movement = new StockMovement
             {
                 EmpresaId = empresaId,
@@ -106,9 +116,11 @@ public class SalesController : ControllerBase
             };
             await _context.StockMovements.InsertOneAsync(movement);
 
+            // Sumo el total de este item al total general de la venta
             computedTotal += item.Total;
         }
 
+        // Calculo el total, subtotal e impuesto desde el servidor (no confiamos en el valor del frontend)
         sale.Total = computedTotal;
         sale.Subtotal = computedTotal / 1.19m; // Calculo considerando el porcentaje de impuesto estandar
         sale.Impuesto = computedTotal - sale.Subtotal;

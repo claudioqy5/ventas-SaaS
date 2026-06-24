@@ -9,6 +9,8 @@ using SaaS.API.Data;
 
 namespace SaaS.API.Controllers;
 
+// Controlador del dashboard: calcula y devuelve todos los indicadores y graficas del panel principal
+// Ruta disponible en: api/dashboard
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
@@ -17,12 +19,14 @@ public class DashboardController : ControllerBase
     private readonly MongoDbContext _context;
     private readonly IUserContext _userContext;
 
+    // Constructor: inyecta la BD y el contexto del usuario logueado
     public DashboardController(MongoDbContext context, IUserContext userContext)
     {
         _context = context;
         _userContext = userContext;
     }
 
+    // GET api/dashboard — devuelve un resumen completo con KPIs, graficas y alertas para el panel
     [HttpGet]
     public async Task<IActionResult> GetSummary()
     {
@@ -32,10 +36,10 @@ public class DashboardController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
-        // Obtener la cantidad total de productos registrados
+        // Obtener la cantidad total de productos registrados en el inventario
         var totalProductos = await _context.Products.CountDocumentsAsync(p => p.EmpresaId == empresaId);
 
-        // Listar productos con niveles de inventario por debajo del minimo establecido
+        // Listar productos con stock por debajo del minimo para mostrar alertas en el dashboard
         var products = await _context.Products.Find(p => p.EmpresaId == empresaId).ToListAsync();
         var productosBajoStock = products.Where(p => p.Stock <= p.StockMinimo).Select(p => new
         {
@@ -45,12 +49,12 @@ public class DashboardController : ControllerBase
             StockMinimo = p.StockMinimo
         }).ToList();
 
-        // Calcular los resumenes financieros de ventas
+        // Calcular el total de ingresos y la cantidad de ventas realizadas
         var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId).ToListAsync();
         var totalIngresos = sales.Sum(s => (double)s.Total);
         var totalVentasCount = sales.Count;
 
-        // Calcular los costos acumulados de compras si el usuario tiene acceso
+        // Calcular el total gastado en compras (solo si el usuario tiene permiso para verlo)
         double totalGastosCompras = 0;
         if (_userContext.HasPermission("compras"))
         {
@@ -58,13 +62,13 @@ public class DashboardController : ControllerBase
             totalGastosCompras = purchases.Sum(p => (double)p.Total);
         }
 
-        // Cargar los 5 movimientos de almacen mas recientes
+        // Cargar los 5 movimientos de inventario mas recientes para la seccion de actividad reciente
         var recentMovements = await _context.StockMovements.Find(m => m.EmpresaId == empresaId)
             .SortByDescending(m => m.FechaCreacion)
             .Limit(5)
             .ToListAsync();
 
-        // 1. Group sales by Month (e.g. "2026-06")
+        // Agrupar las ventas por mes para la grafica de ventas mensuales
         var ventasMensuales = sales
             .GroupBy(s => s.FechaCreacion.ToString("yyyy-MM"))
             .Select(g => new
@@ -76,7 +80,7 @@ public class DashboardController : ControllerBase
             .OrderBy(x => x.Mes)
             .ToList();
 
-        // 2. Group sales by Payment Method
+        // Agrupar las ventas por metodo de pago para la grafica de torta
         var metodosPago = sales
             .GroupBy(s => s.MetodoPago ?? "Efectivo")
             .Select(g => new
@@ -86,7 +90,7 @@ public class DashboardController : ControllerBase
             })
             .ToList();
 
-        // 3. Top selling products
+        // Calcular los 5 productos mas vendidos por cantidad de unidades
         var productosMasVendidos = sales
             .SelectMany(s => s.Detalles)
             .GroupBy(d => d.NombreProducto)
@@ -99,7 +103,7 @@ public class DashboardController : ControllerBase
             .Take(5)
             .ToList();
 
-        // 4. Daily sales trend (6:00 AM to 11:59 PM) for the latest active date of sales
+        // Distribuir las ventas del dia actual por hora (de 6am a 11pm) para la grafica horaria
         var latestSaleDate = sales.Any() ? sales.Max(s => s.FechaCreacion.ToLocalTime().Date) : DateTime.Today;
         var todaySales = sales
             .Where(s => s.FechaCreacion.ToLocalTime().Date == latestSaleDate)
@@ -117,6 +121,7 @@ public class DashboardController : ControllerBase
             })
             .ToList();
 
+        // Retorno todos los datos agrupados para que el frontend los consuma en las distintas graficas
         return Ok(new
         {
             TotalProductos = totalProductos,
