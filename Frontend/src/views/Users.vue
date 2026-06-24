@@ -206,6 +206,7 @@
 </template>
 
 <script setup>
+import { API_URL } from '../config'
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -231,7 +232,7 @@ const form = reactive({
 
 const fetchUsers = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/auth/users', {
+    const res = await fetch(`${API_URL}/api/auth/users`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -271,8 +272,8 @@ const openEditModal = (user) => {
 const saveUser = async () => {
   try {
     const url = isEdit.value 
-      ? `http://localhost:5246/api/auth/users/${currentUserId.value}`
-      : 'http://localhost:5246/api/auth/create-user'
+      ? `${API_URL}/api/auth/users/${currentUserId.value}`
+      : `${API_URL}/api/auth/create-user`
     
     const method = isEdit.value ? 'PUT' : 'POST'
     
@@ -318,7 +319,7 @@ const confirmDelete = async (id) => {
   if (!confirm('¿Estás seguro de que deseas eliminar este colaborador permanentemente?')) return
 
   try {
-    const res = await fetch(`http://localhost:5246/api/auth/users/${id}`, {
+    const res = await fetch(`${API_URL}/api/auth/users/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${authStore.token}`
@@ -341,7 +342,7 @@ const empresas = ref([])
 const fetchEmpresas = async () => {
   if (!authStore.isSuperadmin) return
   try {
-    const res = await fetch('http://localhost:5246/api/auth/empresas', {
+    const res = await fetch(`${API_URL}/api/auth/empresas`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (res.ok) {

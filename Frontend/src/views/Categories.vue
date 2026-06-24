@@ -89,6 +89,7 @@
 </template>
 
 <script setup>
+import { API_URL } from '../config'
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -108,7 +109,7 @@ const form = reactive({
 
 const fetchCategories = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/categories', {
+    const res = await fetch(`${API_URL}/api/categories`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -137,8 +138,8 @@ const openEditModal = (cat) => {
 const saveCategory = async () => {
   try {
     const url = isEdit.value 
-      ? `http://localhost:5246/api/categories/${currentId.value}`
-      : 'http://localhost:5246/api/categories'
+      ? `${API_URL}/api/categories/${currentId.value}`
+      : `${API_URL}/api/categories`
     
     const method = isEdit.value ? 'PUT' : 'POST'
 
@@ -165,7 +166,7 @@ const confirmDelete = async (id) => {
   if (!confirm('¿Estás seguro de que deseas eliminar esta categoría?')) return
 
   try {
-    const res = await fetch(`http://localhost:5246/api/categories/${id}`, {
+    const res = await fetch(`${API_URL}/api/categories/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${authStore.token}`

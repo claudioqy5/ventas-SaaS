@@ -54,6 +54,7 @@
 </template>
 
 <script setup>
+import { API_URL } from '../config'
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -96,7 +97,7 @@ const handleSubmit = async () => {
 
 const seedSuperadmin = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/auth/seed-superadmin', {
+    const res = await fetch(`${API_URL}/api/auth/seed-superadmin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ correo: 'admin@ventassaas.com', clave: 'Password123!' })

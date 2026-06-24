@@ -105,6 +105,7 @@
 </template>
 
 <script setup>
+import { API_URL } from '../config'
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -126,7 +127,7 @@ const form = reactive({
 
 const fetchSuppliers = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/suppliers', {
+    const res = await fetch(`${API_URL}/api/suppliers`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -159,8 +160,8 @@ const openEditModal = (sup) => {
 const saveSupplier = async () => {
   try {
     const url = isEdit.value 
-      ? `http://localhost:5246/api/suppliers/${currentId.value}`
-      : 'http://localhost:5246/api/suppliers'
+      ? `${API_URL}/api/suppliers/${currentId.value}`
+      : `${API_URL}/api/suppliers`
     
     const method = isEdit.value ? 'PUT' : 'POST'
 
@@ -187,7 +188,7 @@ const confirmDelete = async (id) => {
   if (!confirm('¿Estás seguro de que deseas eliminar este proveedor?')) return
 
   try {
-    const res = await fetch(`http://localhost:5246/api/suppliers/${id}`, {
+    const res = await fetch(`${API_URL}/api/suppliers/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${authStore.token}`

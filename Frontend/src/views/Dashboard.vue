@@ -234,6 +234,7 @@
 </template>
 
 <script setup>
+import { API_URL } from '../config'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -258,7 +259,7 @@ const stats = ref({
 
 const fetchStats = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/dashboard', {
+    const res = await fetch(`${API_URL}/api/dashboard`, {
       headers: {
         'Authorization': `Bearer ${authStore.token}`
       }

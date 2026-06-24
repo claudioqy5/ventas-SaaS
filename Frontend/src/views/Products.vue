@@ -140,6 +140,7 @@
 </template>
 
 <script setup>
+import { API_URL } from '../config'
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -167,7 +168,7 @@ const form = reactive({
 
 const fetchProducts = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/products', {
+    const res = await fetch(`${API_URL}/api/products`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -179,7 +180,7 @@ const fetchProducts = async () => {
 
 const fetchCategories = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/categories', {
+    const res = await fetch(`${API_URL}/api/categories`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -227,8 +228,8 @@ const saveProduct = async () => {
 
   try {
     const url = isEdit.value
-      ? `http://localhost:5246/api/products/${currentProductId.value}`
-      : 'http://localhost:5246/api/products'
+      ? `${API_URL}/api/products/${currentProductId.value}`
+      : `${API_URL}/api/products`
     const method = isEdit.value ? 'PUT' : 'POST'
 
     const res = await fetch(url, {
@@ -252,7 +253,7 @@ const saveProduct = async () => {
 const confirmDelete = async (id) => {
   if (!confirm('¿Estás seguro de que deseas eliminar este producto permanentemente?')) return
   try {
-    const res = await fetch(`http://localhost:5246/api/products/${id}`, {
+    const res = await fetch(`${API_URL}/api/products/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${authStore.token}`

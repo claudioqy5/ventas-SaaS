@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { API_URL } from '../config'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -15,7 +16,7 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async login(correo, clave) {
       try {
-        const response = await fetch('http://localhost:5246/api/auth/login', {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ correo, clave }),
@@ -46,7 +47,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async registerEmpresa(nombreEmpresa, planSuscripcion, nombrePropietario, correoPropietario, clavePropietario) {
       try {
-        const response = await fetch('http://localhost:5246/api/auth/registrar-empresa', {
+        const response = await fetch(`${API_URL}/api/auth/registrar-empresa`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nombreEmpresa, planSuscripcion, nombrePropietario, correoPropietario, clavePropietario }),

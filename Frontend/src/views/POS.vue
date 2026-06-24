@@ -125,6 +125,7 @@
 </template>
 
 <script setup>
+import { API_URL } from '../config'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -151,7 +152,7 @@ const generarCodigoVenta = () => {
 
 const fetchProducts = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/products', {
+    const res = await fetch(`${API_URL}/api/products`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -163,7 +164,7 @@ const fetchProducts = async () => {
 
 const fetchCategories = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/categories', {
+    const res = await fetch(`${API_URL}/api/categories`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -175,7 +176,7 @@ const fetchCategories = async () => {
 
 const fetchClients = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/clients', {
+    const res = await fetch(`${API_URL}/api/clients`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -246,7 +247,7 @@ const checkout = async () => {
     const clienteId = client ? client.id : null
     const nombreCliente = client ? client.nombre : 'Cliente General'
 
-    const res = await fetch('http://localhost:5246/api/sales', {
+    const res = await fetch(`${API_URL}/api/sales`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

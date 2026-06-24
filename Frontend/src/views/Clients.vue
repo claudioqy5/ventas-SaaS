@@ -113,6 +113,7 @@
 </template>
 
 <script setup>
+import { API_URL } from '../config'
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -135,7 +136,7 @@ const form = reactive({
 
 const fetchClients = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/clients', {
+    const res = await fetch(`${API_URL}/api/clients`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -170,8 +171,8 @@ const openEditModal = (client) => {
 const saveClient = async () => {
   try {
     const url = isEdit.value 
-      ? `http://localhost:5246/api/clients/${currentId.value}`
-      : 'http://localhost:5246/api/clients'
+      ? `${API_URL}/api/clients/${currentId.value}`
+      : `${API_URL}/api/clients`
     
     const method = isEdit.value ? 'PUT' : 'POST'
 
@@ -198,7 +199,7 @@ const confirmDelete = async (id) => {
   if (!confirm('¿Estás seguro de que deseas eliminar este cliente?')) return
 
   try {
-    const res = await fetch(`http://localhost:5246/api/clients/${id}`, {
+    const res = await fetch(`${API_URL}/api/clients/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${authStore.token}`

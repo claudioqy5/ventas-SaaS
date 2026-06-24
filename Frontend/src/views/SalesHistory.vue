@@ -167,6 +167,7 @@
 </template>
 
 <script setup>
+import { API_URL } from '../config'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -184,7 +185,7 @@ const selectedSale = ref(null)
 const fetchSales = async () => {
   loading.value = true
   try {
-    const res = await fetch('http://localhost:5246/api/sales', {
+    const res = await fetch(`${API_URL}/api/sales`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()

@@ -141,6 +141,7 @@
 </template>
 
 <script setup>
+import { API_URL } from '../config'
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -167,7 +168,7 @@ const grandTotal = computed(() => {
 
 const fetchPurchases = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/purchases', {
+    const res = await fetch(`${API_URL}/api/purchases`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -179,7 +180,7 @@ const fetchPurchases = async () => {
 
 const fetchSuppliers = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/suppliers', {
+    const res = await fetch(`${API_URL}/api/suppliers`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -191,7 +192,7 @@ const fetchSuppliers = async () => {
 
 const fetchProducts = async () => {
   try {
-    const res = await fetch('http://localhost:5246/api/products', {
+    const res = await fetch(`${API_URL}/api/products`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
@@ -233,7 +234,7 @@ const submitPurchase = async () => {
       detalles: form.detalles
     }
 
-    const res = await fetch('http://localhost:5246/api/purchases', {
+    const res = await fetch(`${API_URL}/api/purchases`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
