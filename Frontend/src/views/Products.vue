@@ -55,7 +55,12 @@
             <tr v-for="(prod, index) in products" :key="prod.id">
               <td><strong>{{ index + 1 }}</strong></td>
               <td><code>{{ prod.codigoBarras }}</code></td>
-              <td><strong>{{ prod.nombre }}</strong></td>
+              <td>
+                <div class="product-info-cell">
+                  <img :src="prod.imagenUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&auto=format&fit=crop'" class="product-thumbnail" alt="thumbnail" />
+                  <strong>{{ prod.nombre }}</strong>
+                </div>
+              </td>
               <td>S/. {{ prod.precioCosto.toFixed(2) }}</td>
               <td>S/. {{ prod.precio.toFixed(2) }}</td>
               <td>
@@ -126,6 +131,20 @@
             <div class="field">
               <label>Descripción</label>
               <input v-model="form.descripcion" type="text" placeholder="Ej. Pastel húmedo sabor fresa" />
+            </div>
+
+            <div class="grid grid-2">
+              <div class="field">
+                <label>URL de la Imagen</label>
+                <input v-model="form.imagenUrl" type="url" placeholder="https://ejemplo.com/imagen.jpg" />
+              </div>
+              <div class="field">
+                <label>Vista Previa</label>
+                <div class="image-preview-box">
+                  <img v-if="form.imagenUrl" :src="form.imagenUrl" class="preview-img" alt="Vista previa" />
+                  <span v-else class="preview-placeholder">Sin imagen</span>
+                </div>
+              </div>
             </div>
 
             <div class="modal-actions">
@@ -379,10 +398,51 @@ onMounted(() => {
 .modal-card {
   width: 100%;
   max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
   padding: 30px;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   text-align: left;
+}
+
+.product-info-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.product-thumbnail {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-app);
+}
+
+.image-preview-box {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--bg-app);
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-placeholder {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
 }
 
 .modal-title {
