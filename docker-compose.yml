@@ -35,7 +35,7 @@ services:
       context: ./Frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=https://ventas-api.helifyferdigital.cloud
+        - VITE_API_URL=https://ventassaas-api.helifyferdigital.cloud
     container_name: saas_frontend_app
     restart: always
     ports:
