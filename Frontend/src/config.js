@@ -11,8 +11,8 @@ const getApiUrl = () => {
       return 'http://localhost:5246';
     }
     
-    // Default to using the current hostname with port 5246
-    return `http://${hostname}:5246`;
+    // In production (VPS or Vercel), default to the secure VPS API URL
+    return 'https://ventassaas-api.helifyferdigital.cloud';
   }
   return 'http://localhost:5246';
 };
