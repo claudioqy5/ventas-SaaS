@@ -132,6 +132,19 @@ public class DashboardController : ControllerBase
             })
             .ToList();
 
+        // Calcular los 5 productos mas vendidos por cantidad de unidades en el dia actual
+        var productosMasVendidosDia = todaySales
+            .SelectMany(s => s.Detalles)
+            .GroupBy(d => d.NombreProducto)
+            .Select(g => new
+            {
+                Producto = g.Key,
+                Cantidad = g.Sum(d => d.Cantidad)
+            })
+            .OrderByDescending(x => x.Cantidad)
+            .Take(5)
+            .ToList();
+
         // Retorno todos los datos agrupados para que el frontend los consuma en las distintas graficas
         return Ok(new
         {
@@ -154,6 +167,7 @@ public class DashboardController : ControllerBase
             MetodosPago = metodosPago,
             MetodosPagoDia = metodosPagoDia,
             ProductosMasVendidos = productosMasVendidos,
+            ProductosMasVendidosDia = productosMasVendidosDia,
             VentasHorarias = ventasHorarias,
             FechaDiaActual = targetDate.ToString("yyyy-MM-dd")
         });

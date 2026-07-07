@@ -87,20 +87,20 @@
             Cargando ventas del día...
           </div>
           <div v-else class="chart-wrapper" style="padding-top: 15px;">
-            <svg class="line-chart-svg" viewBox="0 0 600 200">
+            <svg class="line-chart-svg" viewBox="0 0 800 250">
               <defs>
                 <linearGradient id="area-grad-hourly" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.5" />
                   <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0" />
                 </linearGradient>
               </defs>
-              <line x1="50" y1="30" x2="580" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="50" y1="90" x2="580" y2="90" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="50" y1="150" x2="580" y2="150" stroke="#e2e8f0" stroke-width="1.5" />
+              <line x1="50" y1="30" x2="780" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
+              <line x1="50" y1="110" x2="780" y2="110" stroke="#f1f2f5" stroke-dasharray="4" />
+              <line x1="50" y1="190" x2="780" y2="190" stroke="#e2e8f0" stroke-width="1.5" />
 
               <text x="40" y="35" class="chart-axis-label" text-anchor="end">S/.{{ (maxHourlyVenta).toFixed(0) }}</text>
-              <text x="40" y="95" class="chart-axis-label" text-anchor="end">S/.{{ (maxHourlyVenta / 2).toFixed(0) }}</text>
-              <text x="40" y="155" class="chart-axis-label" text-anchor="end">0</text>
+              <text x="40" y="115" class="chart-axis-label" text-anchor="end">S/.{{ (maxHourlyVenta / 2).toFixed(0) }}</text>
+              <text x="40" y="195" class="chart-axis-label" text-anchor="end">0</text>
 
               <path :d="hourlyAreaPath" fill="url(#area-grad-hourly)" />
               <path :d="hourlyLinePath" fill="none" stroke="var(--primary-hover)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
@@ -108,7 +108,7 @@
               <g v-for="(point, idx) in hourlyChartPoints" :key="idx" class="chart-point-group">
                 <circle :cx="point.x" :cy="point.y" r="4.5" fill="#ffffff" stroke="var(--primary-hover)" stroke-width="2.5" class="chart-point" />
                 <text :x="point.x" :y="point.y - 12" class="chart-tooltip-text" text-anchor="middle">S/.{{ point.val.toFixed(0) }}</text>
-                <text :x="point.x" y="172" class="chart-axis-label" text-anchor="middle">{{ point.label }}</text>
+                <text :x="point.x" y="215" class="chart-axis-label" text-anchor="middle">{{ point.label }}</text>
               </g>
             </svg>
           </div>
@@ -166,20 +166,19 @@
         </div>
       </div>
 
-      <!-- Recent Movements Row -->
+      <!-- Top Products Row -->
       <div class="card font-card" style="margin-top: 24px;">
-        <h2 class="section-title">🕒 Últimos Movimientos de Inventario</h2>
-        <div v-if="!stats.movimientosRecientes || stats.movimientosRecientes.length === 0" class="empty-state">
-          No se han registrado movimientos de inventario aún.
+        <h2 class="section-title">🏆 Top 5 Productos del Día</h2>
+        <div v-if="!stats.productosMasVendidosDia || stats.productosMasVendidosDia.length === 0" class="empty-state">
+          No se han registrado ventas de productos hoy.
         </div>
         <div v-else class="movements-grid">
-          <div v-for="move in stats.movimientosRecientes" :key="move.id" class="movement-card-item">
+          <div v-for="prod in stats.productosMasVendidosDia" :key="prod.producto" class="movement-card-item">
             <div class="movement-header-row">
-              <span :class="['movement-badge', move.tipo ? move.tipo.toLowerCase() : '']">{{ move.tipo }}</span>
-              <span class="movement-date">{{ new Date(move.fechaCreacion).toLocaleDateString() }}</span>
+              <span class="movement-badge venta">TOP</span>
+              <span class="movement-date">{{ prod.cantidad }} unds vendidas</span>
             </div>
-            <p class="movement-title"><strong>{{ move.nombreProducto }}</strong></p>
-            <p class="movement-desc-txt">{{ move.motivo }} ({{ move.cantidad }} uds)</p>
+            <p class="movement-title" style="margin-top: 8px;"><strong>{{ prod.producto }}</strong></p>
           </div>
         </div>
       </div>
@@ -206,6 +205,7 @@ const stats = ref({
   movimientosRecientes: [],
   ventasHorarias: [],
   metodosPagoDia: [],
+  productosMasVendidosDia: [],
   fechaDiaActual: ''
 })
 
@@ -235,6 +235,7 @@ const fetchStats = async () => {
       movimientosRecientes: data.movimientosRecientes || [],
       ventasHorarias: data.ventasHorarias || [],
       metodosPagoDia: data.metodosPagoDia || [],
+      productosMasVendidosDia: data.productosMasVendidosDia || [],
       fechaDiaActual: data.fechaDiaActual || ''
     }
     // Sync the date in case the backend overrides it
@@ -257,8 +258,8 @@ const hourlyChartPoints = computed(() => {
   if (!stats.value.ventasHorarias || stats.value.ventasHorarias.length === 0) return []
   const count = stats.value.ventasHorarias.length
   return stats.value.ventasHorarias.map((v, index) => {
-    const x = 50 + index * (530 / Math.max(1, count - 1))
-    const y = 150 - (v.total / maxHourlyVenta.value) * 120
+    const x = 50 + index * (730 / Math.max(1, count - 1))
+    const y = 190 - (v.total / maxHourlyVenta.value) * 160
     return { x, y, val: v.total, label: v.hora.substring(0, 5) }
   })
 })
@@ -274,7 +275,7 @@ const hourlyAreaPath = computed(() => {
   if (points.length === 0) return ""
   const startX = points[0].x
   const endX = points[points.length - 1].x
-  return `${points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')} L ${endX} 150 L ${startX} 150 Z`
+  return `${points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')} L ${endX} 190 L ${startX} 190 Z`
 })
 
 // Pie Chart Helpers
@@ -284,7 +285,7 @@ const pieSegmentsDia = computed(() => {
   if (totalAmount === 0) return []
   
   let cumulativePercent = 0
-  const colors = ['#60a5fa', '#fde047', '#86efac', '#f87171']
+  const colors = ['#a3c4f3', '#f1c0e8', '#b9fbc0', '#fbf8cc']
   
   return stats.value.metodosPagoDia.map((m, index) => {
     const percent = m.total / totalAmount
@@ -517,7 +518,7 @@ onMounted(() => {
 /* Hourly Bar Chart styling */
 .line-chart-svg {
   width: 100%;
-  max-height: 250px;
+  max-height: 320px;
 }
 
 .chart-axis-label {
