@@ -79,22 +79,70 @@
       </div>
 
       <!-- Charts Section (New, beautiful SVG charts) -->
-      <div class="grid grid-1 charts-container">
+      <div class="grid grid-2 charts-container">
         <!-- Daily Sales Trend (Hourly Bar Chart) -->
         <div class="card chart-card">
           <h2 class="section-title">📉 Ventas del Día ({{ stats.fechaDiaActual || 'Hoy' }})</h2>
           <div v-if="!stats.ventasHorarias || stats.ventasHorarias.length === 0" class="empty-state">
             Cargando ventas del día...
           </div>
-          <div v-else class="chart-wrapper">
-            <div class="hourly-chart">
-              <div v-for="item in stats.ventasHorarias" :key="item.hora" class="hourly-bar-wrapper">
-                <div class="hourly-bar-container">
-                  <div class="hourly-bar-fill" :style="{ height: getHourlyHeightPercent(item.total) + '%' }">
-                    <span class="bar-tooltip">S/.{{ item.total.toFixed(2) }} ({{ item.cantidad }} vts)</span>
-                  </div>
-                </div>
-                <span class="hourly-label">{{ formatHourLabel(item.hora) }}</span>
+          <div v-else class="chart-wrapper" style="padding-top: 15px;">
+            <svg class="line-chart-svg" viewBox="0 0 600 200">
+              <defs>
+                <linearGradient id="area-grad-hourly" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+              <line x1="50" y1="30" x2="580" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
+              <line x1="50" y1="90" x2="580" y2="90" stroke="#f1f2f5" stroke-dasharray="4" />
+              <line x1="50" y1="150" x2="580" y2="150" stroke="#e2e8f0" stroke-width="1.5" />
+
+              <text x="40" y="35" class="chart-axis-label" text-anchor="end">S/.{{ (maxHourlyVenta).toFixed(0) }}</text>
+              <text x="40" y="95" class="chart-axis-label" text-anchor="end">S/.{{ (maxHourlyVenta / 2).toFixed(0) }}</text>
+              <text x="40" y="155" class="chart-axis-label" text-anchor="end">0</text>
+
+              <path :d="hourlyAreaPath" fill="url(#area-grad-hourly)" />
+              <path :d="hourlyLinePath" fill="none" stroke="var(--primary-hover)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+              <g v-for="(point, idx) in hourlyChartPoints" :key="idx" class="chart-point-group">
+                <circle :cx="point.x" :cy="point.y" r="4.5" fill="#ffffff" stroke="var(--primary-hover)" stroke-width="2.5" class="chart-point" />
+                <text :x="point.x" :y="point.y - 12" class="chart-tooltip-text" text-anchor="middle">S/.{{ point.val.toFixed(0) }}</text>
+                <text :x="point.x" y="172" class="chart-axis-label" text-anchor="middle" v-if="idx % 2 === 0">{{ point.label }}</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Payment Methods Donut Chart -->
+        <div class="card chart-card">
+          <h2 class="section-title">💳 Formas de Pago del Día</h2>
+          <div v-if="!stats.metodosPagoDia || stats.metodosPagoDia.length === 0" class="empty-state">
+            Sin ventas aún...
+          </div>
+          <div v-else class="donut-chart-layout">
+            <div class="donut-wrapper">
+              <svg class="donut-chart-svg" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f2f5" stroke-width="10" />
+                <circle v-for="(seg, idx) in donutSegmentsDia" :key="idx"
+                        cx="60" cy="60" r="50" fill="none"
+                        :stroke="seg.color" stroke-width="10"
+                        :stroke-dasharray="seg.strokeDashArray"
+                        :stroke-dashoffset="seg.strokeDashOffset"
+                        transform="rotate(-90 60 60)"
+                        class="donut-segment" />
+                <g class="donut-center-text">
+                  <text x="60" y="58" text-anchor="middle" class="donut-title">TOTAL</text>
+                  <text x="60" y="74" text-anchor="middle" class="donut-subtitle">S/.{{ (stats.totalIngresos || 0).toFixed(0) }}</text>
+                </g>
+              </svg>
+            </div>
+            <!-- Legend -->
+            <div class="donut-legend">
+              <div v-for="(seg, idx) in donutSegmentsDia" :key="idx" class="legend-item">
+                <span class="legend-dot" :style="{ backgroundColor: seg.color }"></span>
+                <span class="legend-name">{{ seg.metodo }}:</span>
+                <span class="legend-val">S/.{{ seg.total.toFixed(2) }} ({{ seg.percent }}%)</span>
               </div>
             </div>
           </div>
@@ -161,6 +209,7 @@ const stats = ref({
   productosBajoStock: [],
   movimientosRecientes: [],
   ventasHorarias: [],
+  metodosPagoDia: [],
   fechaDiaActual: ''
 })
 
@@ -189,6 +238,7 @@ const fetchStats = async () => {
       productosBajoStock: data.productosBajoStock || [],
       movimientosRecientes: data.movimientosRecientes || [],
       ventasHorarias: data.ventasHorarias || [],
+      metodosPagoDia: data.metodosPagoDia || [],
       fechaDiaActual: data.fechaDiaActual || ''
     }
     // Sync the date in case the backend overrides it
@@ -204,20 +254,57 @@ const fetchStats = async () => {
 const maxHourlyVenta = computed(() => {
   if (!stats.value.ventasHorarias || stats.value.ventasHorarias.length === 0) return 100
   const max = Math.max(...stats.value.ventasHorarias.map(h => h.total))
-  return max === 0 ? 100 : max
+  return max === 0 ? 100 : max * 1.15
 })
 
-const getHourlyHeightPercent = (total) => {
-  return (total / maxHourlyVenta.value) * 100
-}
+const hourlyChartPoints = computed(() => {
+  if (!stats.value.ventasHorarias || stats.value.ventasHorarias.length === 0) return []
+  const count = stats.value.ventasHorarias.length
+  return stats.value.ventasHorarias.map((v, index) => {
+    const x = 50 + index * (530 / Math.max(1, count - 1))
+    const y = 150 - (v.total / maxHourlyVenta.value) * 120
+    return { x, y, val: v.total, label: v.hora.substring(0, 5) }
+  })
+})
 
-const formatHourLabel = (hourStr) => {
-  const hr = parseInt(hourStr.split(':')[0])
-  if (hr % 2 === 0) {
-    return `${hr}h`
-  }
-  return ''
-}
+const hourlyLinePath = computed(() => {
+  const points = hourlyChartPoints.value
+  if (points.length === 0) return ""
+  return points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
+})
+
+const hourlyAreaPath = computed(() => {
+  const points = hourlyChartPoints.value
+  if (points.length === 0) return ""
+  const startX = points[0].x
+  const endX = points[points.length - 1].x
+  return `${points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')} L ${endX} 150 L ${startX} 150 Z`
+})
+
+// Donut Chart Helpers
+const donutSegmentsDia = computed(() => {
+  if (!stats.value.metodosPagoDia || stats.value.metodosPagoDia.length === 0) return []
+  const totalAmount = stats.value.metodosPagoDia.reduce((acc, m) => acc + m.total, 0)
+  if (totalAmount === 0) return []
+  
+  let cumulativePercent = 0
+  const colors = ['#a3c4f3', '#f1c0e8', '#b9fbc0', '#fbf8cc']
+  
+  return stats.value.metodosPagoDia.map((m, index) => {
+    const percent = m.total / totalAmount
+    const strokeDashArray = `${percent * 314.159} 314.159`
+    const strokeDashOffset = -cumulativePercent * 314.159
+    cumulativePercent += percent
+    return {
+      metodo: m.metodo,
+      total: m.total,
+      percent: (percent * 100).toFixed(1),
+      strokeDashArray,
+      strokeDashOffset,
+      color: colors[index % colors.length]
+    }
+  })
+})
 
 const handleLogout = () => {
   authStore.logout()
@@ -393,71 +480,113 @@ onMounted(() => {
 }
 
 /* Hourly Bar Chart styling */
-.hourly-chart {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  height: 180px;
-  padding-top: 10px;
+.line-chart-svg {
   width: 100%;
+  max-height: 250px;
 }
 
-.hourly-bar-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-grow: 1;
-  height: 100%;
+.chart-axis-label {
+  font-size: 11px;
+  fill: var(--text-muted);
+  font-weight: 500;
 }
 
-.hourly-bar-container {
-  width: 8px;
-  height: 80%;
-  background-color: var(--border-color);
-  border-radius: 4px;
-  position: relative;
-  display: flex;
-  align-items: flex-end;
+.chart-tooltip-text {
+  font-size: 10px;
+  fill: var(--text-main);
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
-.hourly-bar-fill {
-  width: 100%;
-  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-hover) 100%);
-  border-radius: 4px;
-  position: relative;
-  transition: height 0.6s ease;
+.chart-point {
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
-.hourly-bar-fill:hover {
-  background: var(--primary-hover);
+.chart-point-group:hover .chart-tooltip-text {
+  opacity: 1;
 }
 
-.bar-tooltip {
-  visibility: hidden;
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: var(--text-main);
-  color: #fff;
-  font-size: 0.75rem;
-  padding: 4px 6px;
-  border-radius: 4px;
-  white-space: nowrap;
-  margin-bottom: 5px;
-  z-index: 10;
+.chart-point-group:hover .chart-point {
+  r: 6.5;
+  fill: var(--primary-hover);
 }
 
-.hourly-bar-fill:hover .bar-tooltip {
-  visibility: visible;
+/* Donut Chart Styling */
+.donut-chart-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-.hourly-label {
-  font-size: 9px;
+.donut-wrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.donut-chart-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.donut-segment {
+  transform-origin: center;
+  transition: stroke-width 0.2s ease;
+  cursor: pointer;
+}
+
+.donut-segment:hover {
+  stroke-width: 12px;
+}
+
+.donut-center-text {
+  user-select: none;
+}
+
+.donut-title {
+  font-size: 8px;
+  font-weight: 700;
+  fill: var(--text-muted);
+}
+
+.donut-subtitle {
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--text-main);
+}
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-name {
   color: var(--text-muted);
+  font-weight: 500;
+}
+
+.legend-val {
+  color: var(--text-main);
   font-weight: 600;
-  margin-top: 6px;
-  height: 15px;
 }
 </style>

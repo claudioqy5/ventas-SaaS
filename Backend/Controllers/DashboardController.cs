@@ -110,7 +110,7 @@ public class DashboardController : ControllerBase
 
         // Distribuir las ventas del dia actual por hora (de 6am a 11pm) para la grafica horaria
 
-        var ventasHorarias = Enumerable.Range(6, 18) // Distribucion horaria para el reporte diario
+        var ventasHorarias = Enumerable.Range(6, 17) // Distribucion horaria para el reporte diario (6am - 10pm)
             .Select(h => new
             {
                 Hora = $"{h:00}:00",
@@ -119,6 +119,16 @@ public class DashboardController : ControllerBase
                     .Sum(s => (double)s.Total),
                 Cantidad = todaySales
                     .Count(s => s.FechaCreacion.ToLocalTime().Hour == h)
+            })
+            .ToList();
+
+        // Agrupar las ventas del dia actual por metodo de pago para la grafica de torta diaria
+        var metodosPagoDia = todaySales
+            .GroupBy(s => s.MetodoPago ?? "Efectivo")
+            .Select(g => new
+            {
+                Metodo = g.Key,
+                Total = g.Sum(s => (double)s.Total)
             })
             .ToList();
 
@@ -142,6 +152,7 @@ public class DashboardController : ControllerBase
             }),
             VentasMensuales = ventasMensuales,
             MetodosPago = metodosPago,
+            MetodosPagoDia = metodosPagoDia,
             ProductosMasVendidos = productosMasVendidos,
             VentasHorarias = ventasHorarias,
             FechaDiaActual = targetDate.ToString("yyyy-MM-dd")
