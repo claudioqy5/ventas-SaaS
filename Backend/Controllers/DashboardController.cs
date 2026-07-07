@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +29,7 @@ public class DashboardController : ControllerBase
 
     // GET api/dashboard — devuelve un resumen completo con KPIs, graficas y alertas para el panel
     [HttpGet]
-    public async Task<IActionResult> GetSummary()
+    public async Task<IActionResult> GetSummary([FromQuery] string? fecha = null)
     {
         if (!_userContext.HasPermission("dashboard"))
             return Forbid();
@@ -49,10 +50,14 @@ public class DashboardController : ControllerBase
             StockMinimo = p.StockMinimo
         }).ToList();
 
-        // Calcular el total de ingresos y la cantidad de ventas realizadas
+        // Calcular fecha objetivo para las ventas del dia
+        DateTime targetDate = string.IsNullOrEmpty(fecha) ? DateTime.Today : DateTime.ParseExact(fecha, "yyyy-MM-dd", null);
+
+        // Calcular el total de ingresos y la cantidad de ventas realizadas (filtrado por el dia objetivo)
         var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId).ToListAsync();
-        var totalIngresos = sales.Sum(s => (double)s.Total);
-        var totalVentasCount = sales.Count;
+        var todaySales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date == targetDate.Date).ToList();
+        var totalIngresos = todaySales.Sum(s => (double)s.Total);
+        var totalVentasCount = todaySales.Count;
 
         // Calcular el total gastado en compras (solo si el usuario tiene permiso para verlo)
         double totalGastosCompras = 0;
@@ -104,10 +109,6 @@ public class DashboardController : ControllerBase
             .ToList();
 
         // Distribuir las ventas del dia actual por hora (de 6am a 11pm) para la grafica horaria
-        var latestSaleDate = sales.Any() ? sales.Max(s => s.FechaCreacion.ToLocalTime().Date) : DateTime.Today;
-        var todaySales = sales
-            .Where(s => s.FechaCreacion.ToLocalTime().Date == latestSaleDate)
-            .ToList();
 
         var ventasHorarias = Enumerable.Range(6, 18) // Distribucion horaria para el reporte diario
             .Select(h => new
@@ -143,7 +144,7 @@ public class DashboardController : ControllerBase
             MetodosPago = metodosPago,
             ProductosMasVendidos = productosMasVendidos,
             VentasHorarias = ventasHorarias,
-            FechaDiaActual = latestSaleDate.ToString("dd/MM/yyyy")
+            FechaDiaActual = targetDate.ToString("yyyy-MM-dd")
         });
     }
 }

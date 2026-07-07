@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
+import BusinessHistory from '../views/BusinessHistory.vue'
 import POS from '../views/POS.vue'
 import SalesHistory from '../views/SalesHistory.vue'
 import Products from '../views/Products.vue'
@@ -17,6 +18,12 @@ const routes = [
     path: '/dashboard', 
     component: Dashboard, 
     name: 'Dashboard',
+    meta: { requiresAuth: true, permission: 'dashboard' } 
+  },
+  { 
+    path: '/business-history', 
+    component: BusinessHistory, 
+    name: 'BusinessHistory',
     meta: { requiresAuth: true, permission: 'dashboard' } 
   },
   { 
