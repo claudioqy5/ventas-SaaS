@@ -121,25 +121,21 @@
             Sin ventas aún...
           </div>
           <div v-else class="donut-chart-layout">
-            <div class="donut-wrapper">
-              <svg class="donut-chart-svg" viewBox="0 0 120 120">
-                <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f2f5" stroke-width="10" />
-                <circle v-for="(seg, idx) in donutSegmentsDia" :key="idx"
-                        cx="60" cy="60" r="50" fill="none"
-                        :stroke="seg.color" stroke-width="10"
-                        :stroke-dasharray="seg.strokeDashArray"
-                        :stroke-dashoffset="seg.strokeDashOffset"
-                        transform="rotate(-90 60 60)"
-                        class="donut-segment" />
-                <g class="donut-center-text">
-                  <text x="60" y="58" text-anchor="middle" class="donut-title">TOTAL</text>
-                  <text x="60" y="74" text-anchor="middle" class="donut-subtitle">S/.{{ (stats.totalIngresos || 0).toFixed(0) }}</text>
-                </g>
+            <div class="pie-wrapper">
+              <svg class="pie-chart-svg" viewBox="-10 -10 140 140">
+                <path v-for="(seg, idx) in pieSegmentsDia" :key="idx"
+                      :d="seg.d"
+                      :fill="seg.color"
+                      stroke="#1e293b"
+                      stroke-width="3"
+                      stroke-linejoin="round"
+                      class="pie-segment"
+                      :style="{ '--dx': seg.dx + 'px', '--dy': seg.dy + 'px' }" />
               </svg>
             </div>
             <!-- Legend -->
             <div class="donut-legend">
-              <div v-for="(seg, idx) in donutSegmentsDia" :key="idx" class="legend-item">
+              <div v-for="(seg, idx) in pieSegmentsDia" :key="idx" class="legend-item">
                 <span class="legend-dot" :style="{ backgroundColor: seg.color }"></span>
                 <span class="legend-name">{{ seg.metodo }}:</span>
                 <span class="legend-val">S/.{{ seg.total.toFixed(2) }} ({{ seg.percent }}%)</span>
@@ -281,26 +277,52 @@ const hourlyAreaPath = computed(() => {
   return `${points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')} L ${endX} 150 L ${startX} 150 Z`
 })
 
-// Donut Chart Helpers
-const donutSegmentsDia = computed(() => {
+// Pie Chart Helpers
+const pieSegmentsDia = computed(() => {
   if (!stats.value.metodosPagoDia || stats.value.metodosPagoDia.length === 0) return []
   const totalAmount = stats.value.metodosPagoDia.reduce((acc, m) => acc + m.total, 0)
   if (totalAmount === 0) return []
   
   let cumulativePercent = 0
-  const colors = ['#a3c4f3', '#f1c0e8', '#b9fbc0', '#fbf8cc']
+  const colors = ['#60a5fa', '#fde047', '#86efac', '#f87171']
   
   return stats.value.metodosPagoDia.map((m, index) => {
     const percent = m.total / totalAmount
-    const strokeDashArray = `${percent * 314.159} 314.159`
-    const strokeDashOffset = -cumulativePercent * 314.159
+    const startAngle = cumulativePercent * 360
+    const endAngle = (cumulativePercent + percent) * 360
+    const midAngle = startAngle + (percent * 360) / 2
+    
     cumulativePercent += percent
+    
+    const startRad = (startAngle - 90) * Math.PI / 180
+    const endRad = (endAngle - 90) * Math.PI / 180
+    const midRad = (midAngle - 90) * Math.PI / 180
+    
+    const x1 = 60 + 50 * Math.cos(startRad)
+    const y1 = 60 + 50 * Math.sin(startRad)
+    const x2 = 60 + 50 * Math.cos(endRad)
+    const y2 = 60 + 50 * Math.sin(endRad)
+    
+    const largeArcFlag = percent > 0.5 ? 1 : 0
+    
+    let d = ""
+    if (percent === 1) {
+      d = `M 60 10 A 50 50 0 1 1 59.9 10 Z`
+    } else {
+      d = `M 60 60 L ${x1} ${y1} A 50 50 0 ${largeArcFlag} 1 ${x2} ${y2} Z`
+    }
+    
+    const explodeDist = 8
+    const dx = Math.cos(midRad) * explodeDist
+    const dy = Math.sin(midRad) * explodeDist
+
     return {
       metodo: m.metodo,
       total: m.total,
       percent: (percent * 100).toFixed(1),
-      strokeDashArray,
-      strokeDashOffset,
+      d,
+      dx,
+      dy,
       color: colors[index % colors.length]
     }
   })
@@ -526,7 +548,7 @@ onMounted(() => {
   fill: var(--primary-hover);
 }
 
-/* Donut Chart Styling */
+/* Pie Chart Styling */
 .donut-chart-layout {
   display: flex;
   flex-direction: column;
@@ -535,41 +557,26 @@ onMounted(() => {
   gap: 20px;
 }
 
-.donut-wrapper {
+.pie-wrapper {
   position: relative;
   width: 150px;
   height: 150px;
 }
 
-.donut-chart-svg {
+.pie-chart-svg {
   width: 100%;
   height: 100%;
+  overflow: visible;
 }
 
-.donut-segment {
-  transform-origin: center;
-  transition: stroke-width 0.2s ease;
+.pie-segment {
+  transform-origin: 60px 60px;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
 }
 
-.donut-segment:hover {
-  stroke-width: 12px;
-}
-
-.donut-center-text {
-  user-select: none;
-}
-
-.donut-title {
-  font-size: 8px;
-  font-weight: 700;
-  fill: var(--text-muted);
-}
-
-.donut-subtitle {
-  font-size: 11px;
-  font-weight: 700;
-  fill: var(--text-main);
+.pie-segment:hover {
+  transform: translate(var(--dx), var(--dy));
 }
 
 .donut-legend {
