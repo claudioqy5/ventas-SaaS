@@ -79,7 +79,7 @@
       </div>
 
       <!-- Charts Section (New, beautiful SVG charts) -->
-      <div class="grid grid-2 charts-container">
+      <div class="charts-layout">
         <!-- Daily Sales Trend (Hourly Bar Chart) -->
         <div class="card chart-card">
           <h2 class="section-title">📉 Ventas del Día ({{ stats.fechaDiaActual || 'Hoy' }})</h2>
@@ -108,7 +108,7 @@
               <g v-for="(point, idx) in hourlyChartPoints" :key="idx" class="chart-point-group">
                 <circle :cx="point.x" :cy="point.y" r="4.5" fill="#ffffff" stroke="var(--primary-hover)" stroke-width="2.5" class="chart-point" />
                 <text :x="point.x" :y="point.y - 12" class="chart-tooltip-text" text-anchor="middle">S/.{{ point.val.toFixed(0) }}</text>
-                <text :x="point.x" y="172" class="chart-axis-label" text-anchor="middle" v-if="idx % 2 === 0">{{ point.label }}</text>
+                <text :x="point.x" y="172" class="chart-axis-label" text-anchor="middle">{{ point.label }}</text>
               </g>
             </svg>
           </div>
@@ -479,6 +479,19 @@ onMounted(() => {
   text-align: center;
 }
 
+/* Custom Charts Layout */
+.charts-layout {
+  display: grid;
+  grid-template-columns: 2.3fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .charts-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Hourly Bar Chart styling */
 .line-chart-svg {
   width: 100%;
@@ -516,10 +529,10 @@ onMounted(() => {
 /* Donut Chart Styling */
 .donut-chart-layout {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   gap: 20px;
-  flex-wrap: wrap;
 }
 
 .donut-wrapper {
