@@ -99,6 +99,7 @@
             </div>
           </div>
         </div>
+      </div>
 
       <!-- Detail Grid -->
       <div class="grid grid-1 detail-container" style="margin-top: 24px;">
