@@ -24,7 +24,7 @@ const routes = [
     path: '/business-history', 
     component: BusinessHistory, 
     name: 'BusinessHistory',
-    meta: { requiresAuth: true, permission: 'dashboard' } 
+    meta: { requiresAuth: true, permission: 'historial_negocio' } 
   },
   { 
     path: '/pos', 

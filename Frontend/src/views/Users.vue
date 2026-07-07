@@ -9,7 +9,7 @@
       </div>
       <nav class="nav-links">
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item">📊 <span class="sidebar-text">Dashboard</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/business-history" class="nav-item">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item">📦 <span class="sidebar-text">Productos</span></router-link>
@@ -169,6 +169,10 @@
                   <span>📊 Dashboard Estadísticas</span>
                 </label>
                 <label class="checkbox-card">
+                  <input type="checkbox" value="historial_negocio" v-model="form.permisos" />
+                  <span>📈 Historial de Negocio</span>
+                </label>
+                <label class="checkbox-card">
                   <input type="checkbox" value="clientes" v-model="form.permisos" />
                   <span>👤 Clientes</span>
                 </label>
@@ -284,7 +288,7 @@ const saveUser = async () => {
       correo: form.correo,
       clave: form.clave || null,
       rol: form.rol,
-      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config'] : form.permisos,
+      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config'] : form.permisos,
       activo: form.activo,
       nombreTienda: form.nombreTienda || null
     }
