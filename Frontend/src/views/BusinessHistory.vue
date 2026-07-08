@@ -24,18 +24,47 @@
 
     <!-- Main Content -->
     <main class="main-content">
-      <header class="content-header">
-        <h1 class="text-title">📈 Historial del Negocio</h1>
-        <p class="text-subtitle">Resumen mensual e histórico de operaciones</p>
+      <header class="content-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <div>
+          <h1 class="text-title">📈 Historial del Negocio</h1>
+          <p class="text-subtitle">Resumen y análisis de ventas por periodo</p>
+        </div>
+        
+        <!-- Period Tabs -->
+        <div class="period-tabs">
+          <button 
+            :class="['tab-btn', { active: selectedPeriod === 'semanal' }]" 
+            @click="setPeriod('semanal')"
+          >
+            📅 Semanal
+          </button>
+          <button 
+            :class="['tab-btn', { active: selectedPeriod === 'mensual' }]" 
+            @click="setPeriod('mensual')"
+          >
+            📊 Mensual
+          </button>
+          <button 
+            :class="['tab-btn', { active: selectedPeriod === 'anual' }]" 
+            @click="setPeriod('anual')"
+          >
+            📈 Anual
+          </button>
+        </div>
       </header>
 
       <!-- Charts Section -->
       <div class="grid grid-2 charts-container">
-        <!-- Monthly Sales Trend (Area Line Chart) -->
+        <!-- Periodic Sales Trend (Area Line Chart) -->
         <div class="card chart-card">
-          <h2 class="section-title">📈 Tendencia de Ingresos Mensuales</h2>
-          <div v-if="!stats.ventasMensuales || stats.ventasMensuales.length === 0" class="empty-state">
-            Cargando datos históricos...
+          <h2 class="section-title">
+            📈 Tendencia de Ventas ({{ selectedPeriodText }})
+          </h2>
+          <div v-if="loading" class="empty-state">
+            Cargando datos del historial...
+          </div>
+          <div v-else-if="!stats.ventasPeriodo || stats.ventasPeriodo.length === 0" class="empty-state">
+            No hay datos de ventas registrados para este periodo.
           </div>
           <div v-else class="chart-wrapper">
             <svg class="line-chart-svg" viewBox="0 0 450 200">
@@ -45,21 +74,27 @@
                   <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0" />
                 </linearGradient>
               </defs>
-              <line x1="50" y1="50" x2="430" y2="50" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="50" y1="105" x2="430" y2="105" stroke="#f1f2f5" stroke-dasharray="4" />
+              <line x1="50" y1="30" x2="430" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
+              <line x1="50" y1="95" x2="430" y2="95" stroke="#f1f2f5" stroke-dasharray="4" />
               <line x1="50" y1="160" x2="430" y2="160" stroke="#e2e8f0" stroke-width="1.5" />
 
-              <text x="40" y="55" class="chart-axis-label text-right">S/.{{ (maxVenta).toFixed(0) }}</text>
-              <text x="40" y="110" class="chart-axis-label text-right">S/.{{ (maxVenta / 2).toFixed(0) }}</text>
+              <text x="40" y="35" class="chart-axis-label text-right">S/.{{ (maxVenta).toFixed(0) }}</text>
+              <text x="40" y="100" class="chart-axis-label text-right">S/.{{ (maxVenta / 2).toFixed(0) }}</text>
               <text x="40" y="165" class="chart-axis-label text-right">0</text>
 
               <path :d="lineChartAreaPath" fill="url(#area-grad)" />
               <path :d="lineChartPath" fill="none" stroke="var(--primary-hover)" stroke-width="3" stroke-linecap="round" />
 
               <g v-for="(point, idx) in chartPoints" :key="idx">
-                <circle :cx="point.x" :cy="point.y" r="5" fill="#ffffff" stroke="var(--primary-hover)" stroke-width="2.5" class="chart-point" />
-                <text :x="point.x" :y="point.y - 12" class="chart-tooltip-text" text-anchor="middle">S/.{{ point.val.toFixed(0) }}</text>
-                <text :x="point.x" y="180" class="chart-axis-label" text-anchor="middle">{{ formatMonthName(point.mes) }}</text>
+                <circle :cx="point.x" :cy="point.y" r="5.5" fill="#ffffff" stroke="var(--primary-hover)" stroke-width="2.5" class="chart-point">
+                  <title>{{ point.etiqueta }}: S/.{{ point.val.toFixed(2) }} ({{ point.cantidad }} ventas)</title>
+                </circle>
+                
+                <!-- Floating tooltip value (only for weekly/yearly or key monthly points to avoid overlap) -->
+                <text v-if="chartPoints.length <= 12" :x="point.x" :y="point.y - 12" class="chart-tooltip-text" text-anchor="middle">S/.{{ point.val.toFixed(0) }}</text>
+                
+                <!-- X Axis Labels -->
+                <text v-if="chartPoints.length <= 12 || idx % 5 === 0" :x="point.x" y="180" class="chart-axis-label" text-anchor="middle">{{ point.etiqueta }}</text>
               </g>
             </svg>
           </div>
@@ -67,9 +102,12 @@
 
         <!-- Payment Methods Donut Chart -->
         <div class="card chart-card">
-          <h2 class="section-title">💳 Métodos de Pago Preferidos</h2>
-          <div v-if="!stats.metodosPago || stats.metodosPago.length === 0" class="empty-state">
+          <h2 class="section-title">💳 Métodos de Pago (Filtrado)</h2>
+          <div v-if="loading" class="empty-state">
             Cargando formas de pago...
+          </div>
+          <div v-else-if="!stats.metodosPago || stats.metodosPago.length === 0" class="empty-state">
+            Sin ventas en este periodo.
           </div>
           <div v-else class="donut-chart-layout">
             <div class="donut-wrapper">
@@ -104,9 +142,12 @@
       <div class="grid grid-1 detail-container" style="margin-top: 24px;">
         <!-- Top Selling Products -->
         <div class="card font-card">
-          <h2 class="section-title">🔥 Productos Más Vendidos</h2>
-          <div v-if="!stats.productosMasVendidos || stats.productosMasVendidos.length === 0" class="empty-state">
-            No hay registros de ventas para procesar.
+          <h2 class="section-title">🔥 Productos Más Vendidos en el Periodo</h2>
+          <div v-if="loading" class="empty-state">
+            Cargando productos...
+          </div>
+          <div v-else-if="!stats.productosMasVendidos || stats.productosMasVendidos.length === 0" class="empty-state">
+            No hay registros de ventas para procesar en este periodo.
           </div>
           <div v-else class="top-products-list">
             <div v-for="(p, idx) in stats.productosMasVendidos" :key="idx" class="top-product-item">
@@ -137,16 +178,31 @@ import { useAuthStore } from '../stores/auth'
 const router = useRouter()
 const authStore = useAuthStore()
 
+const selectedPeriod = ref('mensual')
+const loading = ref(false)
+
 const stats = ref({
   totalIngresos: 0,
-  ventasMensuales: [],
+  ventasPeriodo: [],
   metodosPago: [],
   productosMasVendidos: []
 })
 
+const selectedPeriodText = computed(() => {
+  if (selectedPeriod.value === 'semanal') return 'Últimos 7 días'
+  if (selectedPeriod.value === 'anual') return 'Año Actual'
+  return 'Últimos 30 días'
+})
+
+const setPeriod = (period) => {
+  selectedPeriod.value = period
+  fetchStats()
+}
+
 const fetchStats = async () => {
+  loading.value = true
   try {
-    const res = await fetch(`${API_URL}/api/dashboard`, {
+    const res = await fetch(`${API_URL}/api/dashboard/history?period=${selectedPeriod.value}`, {
       headers: {
         'Authorization': `Bearer ${authStore.token}`
       }
@@ -154,31 +210,32 @@ const fetchStats = async () => {
     if (!res.ok) throw new Error()
     const data = await res.json()
     stats.value = {
-      // Usamos la suma total de metodos de pago como ingresos historicos
-      totalIngresos: (data.metodosPago || []).reduce((acc, m) => acc + m.total, 0),
-      ventasMensuales: data.ventasMensuales || [],
+      totalIngresos: data.totalIngresos || 0,
+      ventasPeriodo: data.ventasPeriodo || [],
       metodosPago: data.metodosPago || [],
       productosMasVendidos: data.productosMasVendidos || []
     }
   } catch (err) {
     console.error('Error fetching business history stats', err)
+  } finally {
+    loading.value = false
   }
 }
 
 // Line Chart Computed Helpers
 const maxVenta = computed(() => {
-  if (!stats.value.ventasMensuales || stats.value.ventasMensuales.length === 0) return 1000
-  const max = Math.max(...stats.value.ventasMensuales.map(v => v.total))
+  if (!stats.value.ventasPeriodo || stats.value.ventasPeriodo.length === 0) return 1000
+  const max = Math.max(...stats.value.ventasPeriodo.map(v => v.total))
   return max === 0 ? 1000 : max * 1.15 // 15% headroom
 })
 
 const chartPoints = computed(() => {
-  if (!stats.value.ventasMensuales || stats.value.ventasMensuales.length === 0) return []
-  const count = stats.value.ventasMensuales.length
-  return stats.value.ventasMensuales.map((v, index) => {
+  if (!stats.value.ventasPeriodo || stats.value.ventasPeriodo.length === 0) return []
+  const count = stats.value.ventasPeriodo.length
+  return stats.value.ventasPeriodo.map((v, index) => {
     const x = 50 + index * (380 / Math.max(1, count - 1))
-    const y = 160 - (v.total / maxVenta.value) * 110
-    return { x, y, val: v.total, mes: v.mes }
+    const y = 160 - (v.total / maxVenta.value) * 120
+    return { x, y, val: v.total, cantidad: v.cantidad, etiqueta: v.etiqueta }
   })
 })
 
@@ -220,16 +277,6 @@ const donutSegments = computed(() => {
     }
   })
 })
-
-// Formatting functions
-const formatMonthName = (yearMonthStr) => {
-  if (!yearMonthStr) return ''
-  const parts = yearMonthStr.split('-')
-  if (parts.length < 2) return yearMonthStr
-  const month = parseInt(parts[1])
-  const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic']
-  return `${months[month - 1]} '${parts[0].substring(2)}`
-}
 
 const getProductWidthPercent = (qty) => {
   if (!stats.value.productosMasVendidos || stats.value.productosMasVendidos.length === 0) return 0
@@ -311,7 +358,7 @@ onMounted(() => {
   cursor: pointer;
 }
 .chart-point:hover {
-  r: 7;
+  r: 8.5;
 }
 
 /* Donut Chart Styling */
@@ -454,5 +501,39 @@ onMounted(() => {
   color: var(--text-muted);
   padding: 30px;
   text-align: center;
+}
+
+/* Period Tabs */
+.period-tabs {
+  display: flex;
+  background: #f1f2f5;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 4px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab-btn:hover {
+  color: var(--text-main);
+}
+
+.tab-btn.active {
+  background: #ffffff;
+  color: var(--primary-hover);
+  box-shadow: var(--shadow-sm);
 }
 </style>

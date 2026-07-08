@@ -172,4 +172,111 @@ public class DashboardController : ControllerBase
             FechaDiaActual = targetDate.ToString("yyyy-MM-dd")
         });
     }
+
+    // GET api/dashboard/history — devuelve datos agrupados por periodo (semanal, mensual, anual)
+    [HttpGet("history")]
+    public async Task<IActionResult> GetHistory([FromQuery] string period = "mensual")
+    {
+        if (!_userContext.HasPermission("historial_negocio"))
+            return Forbid();
+
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId).ToListAsync();
+
+        DateTime limitDate;
+        var nowLocal = DateTime.Today; // local time base
+        object ventasPeriodo;
+        double totalIngresos = 0;
+        List<Sale> filteredSales;
+
+        if (period == "semanal")
+        {
+            // Ventas de los últimos 7 días
+            limitDate = nowLocal.AddDays(-6);
+            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date >= limitDate).ToList();
+            totalIngresos = filteredSales.Sum(s => (double)s.Total);
+
+            var dias = Enumerable.Range(0, 7)
+                .Select(i => limitDate.AddDays(i))
+                .ToList();
+
+            ventasPeriodo = dias.Select(d => new
+            {
+                Etiqueta = d.ToString("dd-MMM"),
+                DiaSemana = d.ToString("ddd"),
+                Total = filteredSales.Where(s => s.FechaCreacion.ToLocalTime().Date == d.Date).Sum(s => (double)s.Total),
+                Cantidad = filteredSales.Count(s => s.FechaCreacion.ToLocalTime().Date == d.Date)
+            }).ToList();
+        }
+        else if (period == "anual")
+        {
+            // Ventas del año actual
+            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Year == nowLocal.Year).ToList();
+            totalIngresos = filteredSales.Sum(s => (double)s.Total);
+
+            ventasPeriodo = Enumerable.Range(1, 12)
+                .Select(m => {
+                    var monthSales = filteredSales.Where(s => s.FechaCreacion.ToLocalTime().Month == m).ToList();
+                    return new
+                    {
+                        Etiqueta = new DateTime(nowLocal.Year, m, 1).ToString("MMM"),
+                        MesNum = m,
+                        Total = monthSales.Sum(s => (double)s.Total),
+                        Cantidad = monthSales.Count()
+                    };
+                }).ToList();
+        }
+        else // mensual
+        {
+            // Ventas de los últimos 30 días
+            limitDate = nowLocal.AddDays(-29);
+            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date >= limitDate).ToList();
+            totalIngresos = filteredSales.Sum(s => (double)s.Total);
+
+            var dias = Enumerable.Range(0, 30)
+                .Select(i => limitDate.AddDays(i))
+                .ToList();
+
+            ventasPeriodo = dias.Select(d => new
+            {
+                Etiqueta = d.ToString("dd-MMM"),
+                Total = filteredSales.Where(s => s.FechaCreacion.ToLocalTime().Date == d.Date).Sum(s => (double)s.Total),
+                Cantidad = filteredSales.Count(s => s.FechaCreacion.ToLocalTime().Date == d.Date)
+            }).ToList();
+        }
+
+        // Métodos de pago en este periodo
+        var metodosPago = filteredSales
+            .GroupBy(s => s.MetodoPago ?? "Efectivo")
+            .Select(g => new
+            {
+                Metodo = g.Key,
+                Total = g.Sum(s => (double)s.Total)
+            })
+            .ToList();
+
+        // Productos más vendidos en este periodo
+        var productosMasVendidos = filteredSales
+            .SelectMany(s => s.Detalles)
+            .GroupBy(d => d.NombreProducto)
+            .Select(g => new
+            {
+                Producto = g.Key,
+                Cantidad = g.Sum(d => d.Cantidad)
+            })
+            .OrderByDescending(x => x.Cantidad)
+            .Take(5)
+            .ToList();
+
+        return Ok(new
+        {
+            Period = period,
+            TotalIngresos = totalIngresos,
+            VentasPeriodo = ventasPeriodo,
+            MetodosPago = metodosPago,
+            ProductosMasVendidos = productosMasVendidos
+        });
+    }
 }

@@ -36,7 +36,7 @@
       </header>
 
       <!-- Metric Grid -->
-      <div class="grid grid-4 metrics-container">
+      <div class="grid grid-3 metrics-container">
         <div class="metric-card blue">
           <div class="metric-info">
             <span class="metric-icon">💰</span>
@@ -63,16 +63,6 @@
             <div>
               <p class="metric-value">{{ stats.totalProductos || 0 }}</p>
               <p class="text-subtitle">Productos Activos</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="metric-card red">
-          <div class="metric-info">
-            <span class="metric-icon">⚠️</span>
-            <div>
-              <p class="metric-value">{{ stats.productosBajoStockCount || 0 }}</p>
-              <p class="text-subtitle">Alertas de Stock</p>
             </div>
           </div>
         </div>
@@ -140,27 +130,6 @@
                 <span class="legend-name">{{ seg.metodo }}:</span>
                 <span class="legend-val">S/.{{ seg.total.toFixed(2) }} ({{ seg.percent }}%)</span>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Detail Grid -->
-      <div class="grid grid-1 detail-container" style="margin-top: 24px;">
-
-        <!-- Low Stock Alerts -->
-        <div class="card font-card">
-          <h2 class="section-title">⚠️ Alertas de Stock</h2>
-          <div v-if="!stats.productosBajoStock || stats.productosBajoStock.length === 0" class="empty-state" style="padding: 20px;">
-            ¡Excelente! Todo el stock está correcto.
-          </div>
-          <div v-else class="stock-alerts-list">
-            <div v-for="prod in stats.productosBajoStock" :key="prod.id" class="stock-alert-item">
-              <div class="alert-product-info">
-                <span class="alert-dot red"></span>
-                <span class="alert-name">{{ prod.nombre }}</span>
-              </div>
-              <span class="alert-badge">{{ prod.stock }} de {{ prod.stockMinimo }} mín</span>
             </div>
           </div>
         </div>
