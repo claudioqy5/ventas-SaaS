@@ -24,10 +24,25 @@
 
     <!-- Main Content -->
     <main class="main-content">
-      <header class="content-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
-        <div>
-          <h1 class="text-title">📈 Historial del Negocio</h1>
-          <p class="text-subtitle">Resumen y análisis de ventas por periodo</p>
+      <header class="content-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 25px;">
+        <!-- Left Side: Title and KPI Cards side by side -->
+        <div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap;">
+          <div>
+            <h1 class="text-title">📈 Historial del Negocio</h1>
+            <p class="text-subtitle">Resumen y análisis de ventas por periodo</p>
+          </div>
+          
+          <!-- KPI Totals Row -->
+          <div class="kpi-totals-row" style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <div class="kpi-total-card bruto" style="background: #eef2ff; border: 1px solid #c7d2fe; padding: 10px 18px; border-radius: var(--radius-md); text-align: left; min-width: 150px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px;">Venta Bruta (Con IGV)</div>
+              <div style="font-size: 1.35rem; font-weight: 800; color: #1e1b4b; margin-top: 2px;">S/. {{ (stats.totalBruto || 0).toFixed(2) }}</div>
+            </div>
+            <div class="kpi-total-card neto" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px 18px; border-radius: var(--radius-md); text-align: left; min-width: 150px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Venta Neta (Sin IGV)</div>
+              <div style="font-size: 1.35rem; font-weight: 800; color: #14532d; margin-top: 2px;">S/. {{ (stats.totalNeto || 0).toFixed(2) }}</div>
+            </div>
+          </div>
         </div>
         
         <!-- Filters & Period Tabs -->
@@ -90,30 +105,12 @@
         </div>
       </header>
 
-      <!-- Rango de fecha y Totales (Venta Bruta y Neta) -->
-      <div class="summary-kpis-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 15px;">
-        <div class="rango-badge" style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); background: #ffffff; border: 1px solid var(--border-color); padding: 10px 18px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 8px;">
-          📅 <span>Periodo:</span> <strong style="color: var(--primary-hover);">{{ stats.rangoTexto || 'Cargando...' }}</strong>
-        </div>
-        
-        <div class="kpi-totals-row" style="display: flex; gap: 15px; flex-wrap: wrap;">
-          <div class="kpi-total-card bruto" style="background: #eef2ff; border: 1px solid #c7d2fe; padding: 12px 20px; border-radius: var(--radius-md); text-align: left; min-width: 180px; box-shadow: var(--shadow-sm);">
-            <div style="font-size: 0.8rem; font-weight: 700; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px;">Venta Bruta (Con IGV)</div>
-            <div style="font-size: 1.5rem; font-weight: 800; color: #1e1b4b; margin-top: 4px;">S/. {{ (stats.totalBruto || 0).toFixed(2) }}</div>
-          </div>
-          <div class="kpi-total-card neto" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px 20px; border-radius: var(--radius-md); text-align: left; min-width: 180px; box-shadow: var(--shadow-sm);">
-            <div style="font-size: 0.8rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Venta Neta (Sin IGV)</div>
-            <div style="font-size: 1.5rem; font-weight: 800; color: #14532d; margin-top: 4px;">S/. {{ (stats.totalNeto || 0).toFixed(2) }}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Charts Section -->
-      <div class="grid grid-2 charts-container">
-        <!-- Periodic Sales Trend (Area Line Chart) -->
+      <!-- Charts Section (Aligned layout like daily dashboard) -->
+      <div class="charts-layout charts-container">
+        <!-- Periodic Sales Trend (Bar Chart) -->
         <div class="card chart-card">
           <h2 class="section-title">
-            📈 Tendencia de Ventas ({{ selectedPeriodText }})
+            📊 Tendencia de Ventas ({{ selectedPeriodText }})
           </h2>
           <div v-if="loading" class="empty-state">
             Cargando datos del historial...
@@ -124,9 +121,9 @@
           <div v-else class="chart-wrapper">
             <svg class="line-chart-svg" viewBox="0 0 450 200">
               <defs>
-                <linearGradient id="area-grad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.4" />
-                  <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0" />
+                <linearGradient id="bar-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="var(--primary-hover)" />
+                  <stop offset="100%" stop-color="var(--primary)" />
                 </linearGradient>
               </defs>
               <line x1="50" y1="30" x2="430" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
@@ -137,19 +134,38 @@
               <text x="40" y="100" class="chart-axis-label text-right">S/.{{ (maxVenta / 2).toFixed(0) }}</text>
               <text x="40" y="165" class="chart-axis-label text-right">0</text>
 
-              <path :d="lineChartAreaPath" fill="url(#area-grad)" />
-              <path :d="lineChartPath" fill="none" stroke="var(--primary-hover)" stroke-width="3" stroke-linecap="round" />
-
+              <!-- Render Bars instead of line -->
               <g v-for="(point, idx) in chartPoints" :key="idx">
-                <circle :cx="point.x" :cy="point.y" r="5.5" fill="#ffffff" stroke="var(--primary-hover)" stroke-width="2.5" class="chart-point">
-                  <title>{{ point.etiqueta }}: S/.{{ point.val.toFixed(2) }} ({{ point.cantidad }} ventas)</title>
-                </circle>
+                <rect
+                  :x="point.x - barWidth / 2"
+                  :y="point.y"
+                  :width="barWidth"
+                  :height="point.height"
+                  rx="3"
+                  fill="url(#bar-grad)"
+                  class="chart-bar"
+                >
+                  <title>{{ point.etiqueta }} {{ point.diaSemana ? '(' + point.diaSemana + ')' : '' }}: S/.{{ point.val.toFixed(2) }} ({{ point.cantidad }} ventas)</title>
+                </rect>
+
+                <!-- Floating value labels on top of bars (only for weekly/yearly to avoid overlap) -->
+                <text v-if="chartPoints.length <= 12 && point.val > 0" :x="point.x" :y="point.y - 6" class="chart-tooltip-text" text-anchor="middle">
+                  S/.{{ point.val.toFixed(0) }}
+                </text>
                 
-                <!-- Floating tooltip value (only for weekly/yearly or key monthly points to avoid overlap) -->
-                <text v-if="chartPoints.length <= 12" :x="point.x" :y="point.y - 12" class="chart-tooltip-text" text-anchor="middle">S/.{{ point.val.toFixed(0) }}</text>
-                
-                <!-- X Axis Labels -->
-                <text v-if="chartPoints.length <= 12 || idx % 5 === 0" :x="point.x" y="180" class="chart-axis-label" text-anchor="middle">{{ point.etiqueta }}</text>
+                <!-- X Axis Labels (Custom weekly format with day name above or below) -->
+                <g v-if="selectedPeriod === 'semanal'">
+                  <!-- Date label -->
+                  <text :x="point.x" y="176" class="chart-axis-label date-lbl" text-anchor="middle">{{ point.etiqueta }}</text>
+                  <!-- Capitalized Day label -->
+                  <text :x="point.x" y="190" class="chart-axis-label day-lbl font-bold" text-anchor="middle" style="fill: var(--primary-hover);">
+                    {{ formatDayName(point.diaSemana) }}
+                  </text>
+                </g>
+                <g v-else>
+                  <!-- Standard date/month label -->
+                  <text v-if="chartPoints.length <= 12 || idx % 5 === 0" :x="point.x" y="180" class="chart-axis-label" text-anchor="middle">{{ point.etiqueta }}</text>
+                </g>
               </g>
             </svg>
           </div>
@@ -320,36 +336,50 @@ const fetchStats = async () => {
   }
 }
 
-// Line Chart Computed Helpers
+// Bar Chart Computed Helpers
 const maxVenta = computed(() => {
   if (!stats.value.ventasPeriodo || stats.value.ventasPeriodo.length === 0) return 1000
   const max = Math.max(...stats.value.ventasPeriodo.map(v => v.total))
   return max === 0 ? 1000 : max * 1.15 // 15% headroom
 })
 
+const barWidth = computed(() => {
+  const count = stats.value.ventasPeriodo.length
+  if (count <= 7) return 32
+  if (count <= 12) return 20
+  return 6
+})
+
 const chartPoints = computed(() => {
   if (!stats.value.ventasPeriodo || stats.value.ventasPeriodo.length === 0) return []
   const count = stats.value.ventasPeriodo.length
+  
+  const chartWidth = 370 // from X=60 to X=430
+  const startX = 60
+  const spacing = count > 1 ? chartWidth / (count - 1) : chartWidth
+  
   return stats.value.ventasPeriodo.map((v, index) => {
-    const x = 50 + index * (380 / Math.max(1, count - 1))
-    const y = 160 - (v.total / maxVenta.value) * 120
-    return { x, y, val: v.total, cantidad: v.cantidad, etiqueta: v.etiqueta }
+    const x = startX + index * spacing
+    const height = (v.total / maxVenta.value) * 120
+    const y = 160 - height
+    return { 
+      x, 
+      y, 
+      height: Math.max(height, 2), 
+      val: v.total, 
+      cantidad: v.cantidad, 
+      etiqueta: v.etiqueta, 
+      diaSemana: v.diaSemana || '' 
+    }
   })
 })
 
-const lineChartPath = computed(() => {
-  const points = chartPoints.value
-  if (points.length === 0) return ""
-  return points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
-})
-
-const lineChartAreaPath = computed(() => {
-  const points = chartPoints.value
-  if (points.length === 0) return ""
-  const startX = points[0].x
-  const endX = points[points.length - 1].x
-  return `${points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')} L ${endX} 160 L ${startX} 160 Z`
-})
+// Formatting functions
+const formatDayName = (dayStr) => {
+  if (!dayStr) return ''
+  const cap = dayStr.charAt(0).toUpperCase() + dayStr.slice(1).toLowerCase()
+  return cap.substring(0, 3) + '.' // e.g. "Lun.", "Mar."
+}
 
 // Donut Chart Computed Helpers
 const donutSegments = computed(() => {
@@ -407,6 +437,18 @@ onMounted(() => {
   margin-bottom: 24px;
 }
 
+.charts-layout {
+  display: grid;
+  grid-template-columns: 2.3fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .charts-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 .chart-card {
   padding: 24px;
   background: #ffffff;
@@ -451,12 +493,15 @@ onMounted(() => {
   font-weight: 700;
 }
 
-.chart-point {
-  transition: r 0.2s ease;
+.chart-bar {
+  transition: all 0.3s ease;
   cursor: pointer;
 }
-.chart-point:hover {
-  r: 8.5;
+
+.chart-bar:hover {
+  fill: var(--primary-hover);
+  filter: drop-shadow(0px 4px 6px rgba(99, 102, 241, 0.4));
+  opacity: 0.95;
 }
 
 /* Donut Chart Styling */
