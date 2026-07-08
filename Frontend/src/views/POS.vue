@@ -17,112 +17,121 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item">👥 <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin" to="/reminders" class="nav-item">📅 <span class="sidebar-text">Recordatorios</span></router-link>
         <router-link v-if="authStore.isEmpresaOwner || authStore.isSuperadmin" to="/users" class="nav-item">👥 <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
       <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
-    <!-- Espacio de trabajo del punto de venta (POS) -->
-    <div class="pos-workspace">
-      <!-- Panel de seleccion de productos disponibles -->
-      <main class="products-area">
-        <header class="search-header">
-          <div class="search-filters">
-            <input v-model="searchQuery" type="text" placeholder="🔍 Buscar por nombre o código de barra..." class="search-input" />
-            <select v-model="selectedCategory" class="category-select">
-              <option value="">🏷️ Todas las Categorías</option>
-              <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
-            </select>
+    <!-- Main Content Area with Header (matching other views) -->
+    <main class="main-content" style="height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 20px;">
+      <header class="content-header" style="margin-bottom: 15px; flex-shrink: 0;">
+        <h1 class="text-title">🛒 Punto de Venta (POS)</h1>
+        <p class="text-subtitle">Registra nuevas ventas de forma rápida y sencilla</p>
+      </header>
+
+      <!-- Espacio de trabajo del punto de venta (POS) - Independent Scroll Layout -->
+      <div class="pos-workspace" style="display: flex; flex-grow: 1; overflow: hidden; min-height: 0; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #ffffff;">
+        <!-- Panel de seleccion de productos disponibles -->
+        <div class="products-area" style="flex-grow: 1; display: flex; flex-direction: column; padding: 20px; overflow: hidden; min-height: 0; background: var(--bg-app);">
+          <header class="search-header" style="margin-bottom: 20px; flex-shrink: 0;">
+            <div class="search-filters">
+              <input v-model="searchQuery" type="text" placeholder="🔍 Buscar por nombre o código de barra..." class="search-input" />
+              <select v-model="selectedCategory" class="category-select">
+                <option value="">🏷️ Todas las Categorías</option>
+                <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
+              </select>
+            </div>
+          </header>
+
+          <div v-if="filteredProducts.length === 0" class="empty-state" style="flex-grow: 1; display: flex; align-items: center; justify-content: center;">
+            No se encontraron productos disponibles.
           </div>
-        </header>
 
-        <div v-if="filteredProducts.length === 0" class="empty-state">
-          No se encontraron productos disponibles.
-        </div>
-
-        <div v-else class="products-grid">
-          <div v-for="product in filteredProducts" :key="product.id" @click="addToCart(product)" class="product-card card">
-            <div class="product-image-container">
-              <img :src="product.imagenUrl || defaultImage" class="product-card-img" alt="product image" />
-              <span :class="['product-card-stock', product.stock <= product.stockMinimo ? 'low' : 'ok']">
-                Stock: {{ product.stock }}
-              </span>
-            </div>
-            <div class="product-info">
-              <h3 class="product-name">{{ product.nombre }}</h3>
-              <p class="product-barcode">Cod: {{ product.codigoBarras }}</p>
-              <span class="product-price">S/. {{ product.precio.toFixed(2) }}</span>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <!-- Panel lateral para el resumen de compra y pago -->
-      <aside class="cart-panel">
-        <div class="cart-header">
-          <h2 class="cart-title">🛒 Carrito de Compra</h2>
-          <span class="sale-code-badge">{{ codigoVenta }}</span>
-        </div>
-
-        <div v-if="cart.length === 0" class="empty-cart">
-          <p>El carrito está vacío.</p>
-          <p class="text-subtitle">Haz clic en los productos para agregarlos.</p>
-        </div>
-
-        <div v-else class="cart-items">
-          <div v-for="item in cart" :key="item.productoId" class="cart-item">
-            <div class="item-details">
-              <p class="item-name">{{ item.nombreProducto }}</p>
-              <p class="item-sub">S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}</p>
-            </div>
-            <div class="item-controls-wrapper">
-              <div class="item-controls">
-                <button @click="updateQty(item, -1)" class="btn-qty">-</button>
-                <span class="item-qty">{{ item.cantidad }}</span>
-                <button @click="updateQty(item, 1)" class="btn-qty">+</button>
+          <div v-else class="products-grid" style="overflow-y: auto; flex-grow: 1; min-height: 0; padding-bottom: 10px;">
+            <div v-for="product in filteredProducts" :key="product.id" @click="addToCart(product)" class="product-card card">
+              <div class="product-image-container">
+                <img :src="product.imagenUrl || defaultImage" class="product-card-img" alt="product image" />
+                <span :class="['product-card-stock', product.stock <= product.stockMinimo ? 'low' : 'ok']">
+                  Stock: {{ product.stock }}
+                </span>
               </div>
-              <button @click="removeFromCart(item.productoId)" class="btn-remove" title="Quitar producto">×</button>
+              <div class="product-info">
+                <h3 class="product-name">{{ product.nombre }}</h3>
+                <p class="product-barcode">Cod: {{ product.codigoBarras }}</p>
+                <span class="product-price">S/. {{ product.precio.toFixed(2) }}</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="cart-summary">
-          <div class="summary-row">
-            <span>Subtotal</span>
-            <span>S/. {{ cartSubtotal.toFixed(2) }}</span>
-          </div>
-          <div class="summary-row">
-            <span>Impuestos (19%)</span>
-            <span>S/. {{ cartTax.toFixed(2) }}</span>
-          </div>
-          <div class="summary-row total">
-            <span>Total a Pagar</span>
-            <span>S/. {{ cartTotal.toFixed(2) }}</span>
+        <!-- Panel lateral para el resumen de compra y pago -->
+        <aside class="cart-panel" style="width: 380px; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; background: #ffffff; border-left: 1px solid var(--border-color); overflow: hidden; min-height: 0;">
+          <div class="cart-header">
+            <h2 class="cart-title">🛒 Carrito de Compra</h2>
+            <span class="sale-code-badge">{{ codigoVenta }}</span>
           </div>
 
-          <div class="payment-method">
-            <label>Método de Pago</label>
-            <select v-model="paymentMethod">
-              <option value="Efectivo">💵 Efectivo</option>
-              <option value="Tarjeta">💳 Tarjeta</option>
-              <option value="Transferencia">🏦 Transferencia</option>
-            </select>
+          <div v-if="cart.length === 0" class="empty-cart">
+            <p>El carrito está vacío.</p>
+            <p class="text-subtitle">Haz clic en los productos para agregarlos.</p>
           </div>
 
-          <div class="client-selection">
-            <label>Cliente (Opcional)</label>
-            <select v-model="selectedClientId">
-              <option value="">👤 Cliente General</option>
-              <option v-for="cli in clients" :key="cli.id" :value="cli.id">👤 {{ cli.nombre }}</option>
-            </select>
+          <div v-else class="cart-items" style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; padding-right: 4px;">
+            <div v-for="item in cart" :key="item.productoId" class="cart-item">
+              <div class="item-details">
+                <p class="item-name">{{ item.nombreProducto }}</p>
+                <p class="item-sub">S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}</p>
+              </div>
+              <div class="item-controls-wrapper">
+                <div class="item-controls">
+                  <button @click="updateQty(item, -1)" class="btn-qty">-</button>
+                  <span class="item-qty">{{ item.cantidad }}</span>
+                  <button @click="updateQty(item, 1)" class="btn-qty">+</button>
+                </div>
+                <button @click="removeFromCart(item.productoId)" class="btn-remove" title="Quitar producto">×</button>
+              </div>
+            </div>
           </div>
 
-          <button @click="checkout" class="btn btn-success w-full checkout-btn" :disabled="cart.length === 0 || loading">
-            {{ loading ? 'Procesando Venta...' : '💵 Confirmar Venta' }}
-          </button>
-        </div>
-      </aside>
-    </div>
+          <div class="cart-summary" style="flex-shrink: 0; border-top: 1px dashed var(--border-color); padding-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>S/. {{ cartSubtotal.toFixed(2) }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Impuestos (19%)</span>
+              <span>S/. {{ cartTax.toFixed(2) }}</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total a Pagar</span>
+              <span>S/. {{ cartTotal.toFixed(2) }}</span>
+            </div>
+
+            <div class="payment-method" style="margin-top: 5px;">
+              <label>Método de Pago</label>
+              <select v-model="paymentMethod" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff;">
+                <option value="Efectivo">💵 Efectivo</option>
+                <option value="Tarjeta">💳 Tarjeta</option>
+                <option value="Transferencia">🏦 Transferencia</option>
+              </select>
+            </div>
+
+            <div class="client-selection" style="margin-top: 5px; margin-bottom: 10px;">
+              <label>Cliente (Opcional)</label>
+              <select v-model="selectedClientId" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff;">
+                <option value="">👤 Cliente General</option>
+                <option v-for="cli in clients" :key="cli.id" :value="cli.id">👤 {{ cli.nombre }}</option>
+              </select>
+            </div>
+
+            <button @click="checkout" class="btn btn-success w-full checkout-btn" :disabled="cart.length === 0 || loading" style="padding: 12px; font-weight: 700;">
+              {{ loading ? 'Procesando Venta...' : '💵 Confirmar Venta' }}
+            </button>
+          </div>
+        </aside>
+      </div>
+    </main>
   </div>
 </template>
 
@@ -160,9 +169,33 @@ const fetchProducts = async () => {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
-    products.value = await res.json()
+    const fetched = await res.json()
+
+    // Fetch popularity stats to sort products by best-sellers first
+    try {
+      const statsRes = await fetch(`${API_URL}/api/dashboard`, {
+        headers: { 'Authorization': `Bearer ${authStore.token}` }
+      })
+      if (statsRes.ok) {
+        const statsData = await statsRes.ok ? await statsRes.json() : null
+        if (statsData) {
+          const topList = statsData.productosMasVendidos || []
+          fetched.sort((a, b) => {
+            const topA = topList.find(item => item.producto === a.nombre)
+            const topB = topList.find(item => item.producto === b.nombre)
+            const qtyA = topA ? topA.cantidad : 0
+            const qtyB = topB ? topB.cantidad : 0
+            return qtyB - qtyA // Best-sellers first
+          })
+        }
+      }
+    } catch (e) {
+      console.warn('Could not sort products by popularity', e)
+    }
+
+    products.value = fetched
   } catch (err) {
-    console.error('Error fetching products for POS')
+    console.error('Error fetching products for POS', err)
   }
 }
 
@@ -174,7 +207,7 @@ const fetchCategories = async () => {
     if (!res.ok) throw new Error()
     categories.value = await res.json()
   } catch (err) {
-    console.error('Error fetching categories for POS')
+    console.error('Error fetching categories for POS', err)
   }
 }
 
@@ -186,7 +219,7 @@ const fetchClients = async () => {
     if (!res.ok) throw new Error()
     clients.value = await res.json()
   } catch (err) {
-    console.error('Error fetching clients for POS')
+    console.error('Error fetching clients for POS', err)
   }
 }
 
@@ -289,29 +322,20 @@ const handleLogout = () => {
 
 onMounted(() => {
   fetchProducts()
+  generarCodigoVenta()
   fetchCategories()
   fetchClients()
-  generarCodigoVenta()
 })
 </script>
 
 <style scoped>
-
-/* Estilos de la interfaz principal del POS */
 .pos-workspace {
   display: flex;
   flex-grow: 1;
-  background-color: var(--bg-app);
-}
-
-.products-area {
-  flex-grow: 1;
-  padding: 40px;
-  overflow-y: auto;
 }
 
 .search-header {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .search-filters {
@@ -324,6 +348,8 @@ onMounted(() => {
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
+  padding: 10px 16px;
+  outline: none;
 }
 
 .category-select {
@@ -340,8 +366,8 @@ onMounted(() => {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
 }
 
 .product-card {
@@ -352,6 +378,7 @@ onMounted(() => {
   overflow: hidden;
   padding: 0;
   transition: transform 0.2s, box-shadow 0.2s;
+  background: #ffffff;
 }
 
 .product-card:hover {
@@ -361,7 +388,7 @@ onMounted(() => {
 
 .product-image-container {
   width: 100%;
-  height: 140px;
+  height: 120px;
   position: relative;
   overflow: hidden;
   background-color: var(--bg-app);
@@ -388,14 +415,14 @@ onMounted(() => {
 .product-card-stock.low { background-color: #f56565; }
 
 .product-info {
-  padding: 12px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
 .product-name {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-main);
   margin-bottom: 2px;
@@ -407,27 +434,20 @@ onMounted(() => {
 }
 
 .product-barcode {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .product-price {
   font-weight: 700;
   color: var(--primary);
-  font-size: 1.1rem;
+  font-size: 1rem;
   margin-top: auto;
 }
 
-/* Estilos del panel de carrito de compras */
+/* Cart Panel styling */
 .cart-panel {
-  width: 30%;
-  background-color: #ffffff;
-  border-left: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  padding: 30px 24px;
-  flex-shrink: 0;
   text-align: left;
 }
 
@@ -435,11 +455,11 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .cart-title {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 700;
   margin: 0;
 }
@@ -464,15 +484,6 @@ onMounted(() => {
   text-align: center;
 }
 
-.cart-items {
-  flex-grow: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
 .cart-item {
   display: flex;
   justify-content: space-between;
@@ -483,31 +494,31 @@ onMounted(() => {
 
 .item-name {
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .item-sub {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
 }
 
 .item-controls-wrapper {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .item-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .btn-remove {
   background: none;
   border: none;
   color: #ef4444;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 600;
   cursor: pointer;
   padding: 0 4px;
@@ -521,8 +532,8 @@ onMounted(() => {
 }
 
 .btn-qty {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: 1px solid var(--border-color);
   background-color: var(--bg-app);
@@ -535,62 +546,19 @@ onMounted(() => {
 
 .item-qty {
   font-weight: 600;
-  font-size: 0.95rem;
-}
-
-/* Estilos del resumen de pago */
-.cart-summary {
-  border-top: 1px dashed var(--border-color);
-  padding-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  font-size: 0.9rem;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
 }
 
 .summary-row.total {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-main);
-  margin-bottom: 10px;
-}
-
-.payment-method {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.payment-method label,
-.client-selection label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.client-selection {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
-.client-selection select {
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
-  background-color: #ffffff;
-  outline: none;
-}
-
-.checkout-btn {
-  padding: 14px;
-  font-size: 1.05rem;
 }
 </style>

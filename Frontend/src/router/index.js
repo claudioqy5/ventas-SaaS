@@ -11,6 +11,7 @@ import Clients from '../views/Clients.vue'
 import Suppliers from '../views/Suppliers.vue'
 import Purchases from '../views/Purchases.vue'
 import Users from '../views/Users.vue'
+import Reminders from '../views/Reminders.vue'
 
 const routes = [
   { path: '/login', component: Login, name: 'Login' },  
@@ -73,6 +74,12 @@ const routes = [
     component: Users, 
     name: 'Users',
     meta: { requiresAuth: true } // Solo accesible para Propietarios y Superadmin
+  },
+  {
+    path: '/reminders',
+    component: Reminders,
+    name: 'Reminders',
+    meta: { requiresAuth: true }
   },
   { path: '/:pathMatch(.*)*', redirect: '/login' }
 ]

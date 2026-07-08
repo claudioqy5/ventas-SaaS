@@ -17,6 +17,7 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item">👥 <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin" to="/reminders" class="nav-item">📅 <span class="sidebar-text">Recordatorios</span></router-link>
         <router-link v-if="authStore.isEmpresaOwner || authStore.isSuperadmin" to="/users" class="nav-item">👥 <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
       <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
@@ -107,7 +108,7 @@
 
       <!-- Charts Section (Aligned layout like daily dashboard) -->
       <div class="charts-layout charts-container">
-        <!-- Periodic Sales Trend (Bar Chart) -->
+        <!-- Periodic Sales Trend (Bar Chart - Enlarged) -->
         <div class="card chart-card">
           <h2 class="section-title">
             📊 Tendencia de Ventas ({{ selectedPeriodText }})
@@ -119,20 +120,20 @@
             No hay datos de ventas registrados para este periodo.
           </div>
           <div v-else class="chart-wrapper">
-            <svg class="line-chart-svg" viewBox="0 0 450 200">
+            <svg class="line-chart-svg" viewBox="0 0 500 240">
               <defs>
                 <linearGradient id="bar-grad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="var(--primary-hover)" />
                   <stop offset="100%" stop-color="var(--primary)" />
                 </linearGradient>
               </defs>
-              <line x1="50" y1="30" x2="430" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="50" y1="95" x2="430" y2="95" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="50" y1="160" x2="430" y2="160" stroke="#e2e8f0" stroke-width="1.5" />
+              <line x1="40" y1="30" x2="480" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
+              <line x1="40" y1="105" x2="480" y2="105" stroke="#f1f2f5" stroke-dasharray="4" />
+              <line x1="40" y1="180" x2="480" y2="180" stroke="#e2e8f0" stroke-width="1.5" />
 
-              <text x="40" y="35" class="chart-axis-label text-right">S/.{{ (maxVenta).toFixed(0) }}</text>
-              <text x="40" y="100" class="chart-axis-label text-right">S/.{{ (maxVenta / 2).toFixed(0) }}</text>
-              <text x="40" y="165" class="chart-axis-label text-right">0</text>
+              <text x="35" y="35" class="chart-axis-label text-right">S/.{{ (maxVenta).toFixed(0) }}</text>
+              <text x="35" y="110" class="chart-axis-label text-right">S/.{{ (maxVenta / 2).toFixed(0) }}</text>
+              <text x="35" y="185" class="chart-axis-label text-right">0</text>
 
               <!-- Render Bars instead of line -->
               <g v-for="(point, idx) in chartPoints" :key="idx">
@@ -141,14 +142,14 @@
                   :y="point.y"
                   :width="barWidth"
                   :height="point.height"
-                  rx="3"
+                  rx="3.5"
                   fill="url(#bar-grad)"
                   class="chart-bar"
                 >
                   <title>{{ point.etiqueta }} {{ point.diaSemana ? '(' + point.diaSemana + ')' : '' }}: S/.{{ point.val.toFixed(2) }} ({{ point.cantidad }} ventas)</title>
                 </rect>
 
-                <!-- Floating value labels on top of bars (only for weekly/yearly to avoid overlap) -->
+                <!-- Floating value labels on top of bars -->
                 <text v-if="chartPoints.length <= 12 && point.val > 0" :x="point.x" :y="point.y - 6" class="chart-tooltip-text" text-anchor="middle">
                   S/.{{ point.val.toFixed(0) }}
                 </text>
@@ -156,22 +157,22 @@
                 <!-- X Axis Labels (Custom weekly format with day name above or below) -->
                 <g v-if="selectedPeriod === 'semanal'">
                   <!-- Date label -->
-                  <text :x="point.x" y="176" class="chart-axis-label date-lbl" text-anchor="middle">{{ point.etiqueta }}</text>
+                  <text :x="point.x" y="196" class="chart-axis-label date-lbl" text-anchor="middle">{{ point.etiqueta }}</text>
                   <!-- Capitalized Day label -->
-                  <text :x="point.x" y="190" class="chart-axis-label day-lbl font-bold" text-anchor="middle" style="fill: var(--primary-hover);">
+                  <text :x="point.x" y="210" class="chart-axis-label day-lbl font-bold" text-anchor="middle" style="fill: var(--primary-hover);">
                     {{ formatDayName(point.diaSemana) }}
                   </text>
                 </g>
                 <g v-else>
                   <!-- Standard date/month label -->
-                  <text v-if="chartPoints.length <= 12 || idx % 5 === 0" :x="point.x" y="180" class="chart-axis-label" text-anchor="middle">{{ point.etiqueta }}</text>
+                  <text v-if="chartPoints.length <= 12 || idx % 5 === 0" :x="point.x" y="198" class="chart-axis-label" text-anchor="middle">{{ point.etiqueta }}</text>
                 </g>
               </g>
             </svg>
           </div>
         </div>
 
-        <!-- Payment Methods Donut Chart -->
+        <!-- Payment Methods Pie Chart -->
         <div class="card chart-card">
           <h2 class="section-title">💳 Métodos de Pago (Filtrado)</h2>
           <div v-if="loading" class="empty-state">
@@ -181,25 +182,21 @@
             Sin ventas en este periodo.
           </div>
           <div v-else class="donut-chart-layout">
-            <div class="donut-wrapper">
-              <svg class="donut-chart-svg" viewBox="0 0 120 120">
-                <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f2f5" stroke-width="10" />
-                <circle v-for="(seg, idx) in donutSegments" :key="idx"
-                        cx="60" cy="60" r="50" fill="none"
-                        :stroke="seg.color" stroke-width="10"
-                        :stroke-dasharray="seg.strokeDashArray"
-                        :stroke-dashoffset="seg.strokeDashOffset"
-                        transform="rotate(-90 60 60)"
-                        class="donut-segment" />
-                <g class="donut-center-text">
-                  <text x="60" y="58" text-anchor="middle" class="donut-title">TOTAL</text>
-                  <text x="60" y="74" text-anchor="middle" class="donut-subtitle">S/.{{ (stats.totalBruto || 0).toFixed(0) }}</text>
-                </g>
+            <div class="pie-wrapper">
+              <svg class="pie-chart-svg" viewBox="-10 -10 140 140">
+                <path v-for="(seg, idx) in pieSegments" :key="idx"
+                      :d="seg.d"
+                      :fill="seg.color"
+                      stroke="#1e293b"
+                      stroke-width="3"
+                      stroke-linejoin="round"
+                      class="pie-segment"
+                      :style="{ '--dx': seg.dx + 'px', '--dy': seg.dy + 'px' }" />
               </svg>
             </div>
             <!-- Legend -->
             <div class="donut-legend">
-              <div v-for="(seg, idx) in donutSegments" :key="idx" class="legend-item">
+              <div v-for="(seg, idx) in pieSegments" :key="idx" class="legend-item">
                 <span class="legend-dot" :style="{ backgroundColor: seg.color }"></span>
                 <span class="legend-name">{{ seg.metodo }}:</span>
                 <span class="legend-val">S/.{{ seg.total.toFixed(2) }} ({{ seg.percent }}%)</span>
@@ -354,14 +351,14 @@ const chartPoints = computed(() => {
   if (!stats.value.ventasPeriodo || stats.value.ventasPeriodo.length === 0) return []
   const count = stats.value.ventasPeriodo.length
   
-  const chartWidth = 370 // from X=60 to X=430
-  const startX = 60
+  const chartWidth = 420 // from X=50 to X=470
+  const startX = 50
   const spacing = count > 1 ? chartWidth / (count - 1) : chartWidth
   
   return stats.value.ventasPeriodo.map((v, index) => {
     const x = startX + index * spacing
-    const height = (v.total / maxVenta.value) * 120
-    const y = 160 - height
+    const height = (v.total / maxVenta.value) * 150 // scaled up height
+    const y = 180 - height
     return { 
       x, 
       y, 
@@ -381,8 +378,8 @@ const formatDayName = (dayStr) => {
   return cap.substring(0, 3) + '.' // e.g. "Lun.", "Mar."
 }
 
-// Donut Chart Computed Helpers
-const donutSegments = computed(() => {
+// Pie Chart Computed Helpers
+const pieSegments = computed(() => {
   if (!stats.value.metodosPago || stats.value.metodosPago.length === 0) return []
   const totalAmount = stats.value.metodosPago.reduce((acc, m) => acc + m.total, 0)
   if (totalAmount === 0) return []
@@ -392,15 +389,41 @@ const donutSegments = computed(() => {
   
   return stats.value.metodosPago.map((m, index) => {
     const percent = m.total / totalAmount
-    const strokeDashArray = `${percent * 314.159} 314.159`
-    const strokeDashOffset = -cumulativePercent * 314.159
+    const startAngle = cumulativePercent * 360
+    const endAngle = (cumulativePercent + percent) * 360
+    const midAngle = startAngle + (percent * 360) / 2
+    
     cumulativePercent += percent
+    
+    const startRad = (startAngle - 90) * Math.PI / 180
+    const endRad = (endAngle - 90) * Math.PI / 180
+    const midRad = (midAngle - 90) * Math.PI / 180
+    
+    const x1 = 60 + 50 * Math.cos(startRad)
+    const y1 = 60 + 50 * Math.sin(startRad)
+    const x2 = 60 + 50 * Math.cos(endRad)
+    const y2 = 60 + 50 * Math.sin(endRad)
+    
+    const largeArcFlag = percent > 0.5 ? 1 : 0
+    
+    let d = ""
+    if (percent === 1) {
+      d = `M 60 10 A 50 50 0 1 1 59.9 10 Z`
+    } else {
+      d = `M 60 60 L ${x1} ${y1} A 50 50 0 ${largeArcFlag} 1 ${x2} ${y2} Z`
+    }
+    
+    const explodeDist = 4
+    const dx = Math.cos(midRad) * explodeDist
+    const dy = Math.sin(midRad) * explodeDist
+
     return {
       metodo: m.metodo,
       total: m.total,
       percent: (percent * 100).toFixed(1),
-      strokeDashArray,
-      strokeDashOffset,
+      d,
+      dx,
+      dy,
       color: colors[index % colors.length]
     }
   })
@@ -478,7 +501,7 @@ onMounted(() => {
 
 .line-chart-svg {
   width: 100%;
-  max-height: 220px;
+  max-height: 280px;
 }
 
 .chart-axis-label {
@@ -504,50 +527,35 @@ onMounted(() => {
   opacity: 0.95;
 }
 
-/* Donut Chart Styling */
+/* Pie Chart Styling */
 .donut-chart-layout {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   gap: 20px;
-  flex-wrap: wrap;
 }
 
-.donut-wrapper {
+.pie-wrapper {
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
 }
 
-.donut-chart-svg {
+.pie-chart-svg {
   width: 100%;
   height: 100%;
+  overflow: visible;
 }
 
-.donut-segment {
-  transform-origin: center;
-  transition: stroke-width 0.2s ease;
+.pie-segment {
+  transform-origin: 60px 60px;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
 }
 
-.donut-segment:hover {
-  stroke-width: 12px;
-}
-
-.donut-center-text {
-  user-select: none;
-}
-
-.donut-title {
-  font-size: 8px;
-  font-weight: 700;
-  fill: var(--text-muted);
-}
-
-.donut-subtitle {
-  font-size: 11px;
-  font-weight: 700;
-  fill: var(--text-main);
+.pie-segment:hover {
+  transform: translate(var(--dx), var(--dy));
 }
 
 .donut-legend {
