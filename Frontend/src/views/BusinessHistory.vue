@@ -24,34 +24,89 @@
 
     <!-- Main Content -->
     <main class="main-content">
-      <header class="content-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+      <header class="content-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
         <div>
           <h1 class="text-title">📈 Historial del Negocio</h1>
           <p class="text-subtitle">Resumen y análisis de ventas por periodo</p>
         </div>
         
-        <!-- Period Tabs -->
-        <div class="period-tabs">
-          <button 
-            :class="['tab-btn', { active: selectedPeriod === 'semanal' }]" 
-            @click="setPeriod('semanal')"
-          >
-            📅 Semanal
-          </button>
-          <button 
-            :class="['tab-btn', { active: selectedPeriod === 'mensual' }]" 
-            @click="setPeriod('mensual')"
-          >
-            📊 Mensual
-          </button>
-          <button 
-            :class="['tab-btn', { active: selectedPeriod === 'anual' }]" 
-            @click="setPeriod('anual')"
-          >
-            📈 Anual
-          </button>
+        <!-- Filters & Period Tabs -->
+        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+          <div v-if="selectedPeriod === 'semanal'" class="date-picker-wrapper" style="display: flex; align-items: center; gap: 8px;">
+            <label for="history-date" style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">Filtrar por Semana:</label>
+            <input 
+              type="date" 
+              id="history-date" 
+              v-model="selectedDate" 
+              @change="fetchStats"
+              class="form-input" 
+              style="padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); max-width: 160px;" 
+            />
+          </div>
+          <div v-if="selectedPeriod === 'mensual'" class="date-picker-wrapper" style="display: flex; align-items: center; gap: 8px;">
+            <label for="history-month" style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">Filtrar por Mes:</label>
+            <input 
+              type="month" 
+              id="history-month" 
+              v-model="selectedMonth" 
+              @change="onMonthChange"
+              class="form-input" 
+              style="padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); max-width: 160px;" 
+            />
+          </div>
+          <div v-if="selectedPeriod === 'anual'" class="date-picker-wrapper" style="display: flex; align-items: center; gap: 8px;">
+            <label for="history-year" style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">Filtrar por Año:</label>
+            <select 
+              id="history-year" 
+              v-model="selectedYear" 
+              @change="onYearChange"
+              class="form-input" 
+              style="padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); max-width: 120px;"
+            >
+              <option v-for="yr in availableYears" :key="yr" :value="yr">{{ yr }}</option>
+            </select>
+          </div>
+
+          <div class="period-tabs">
+            <button 
+              :class="['tab-btn', { active: selectedPeriod === 'semanal' }]" 
+              @click="setPeriod('semanal')"
+            >
+              📅 Semanal
+            </button>
+            <button 
+              :class="['tab-btn', { active: selectedPeriod === 'mensual' }]" 
+              @click="setPeriod('mensual')"
+            >
+              📊 Mensual
+            </button>
+            <button 
+              :class="['tab-btn', { active: selectedPeriod === 'anual' }]" 
+              @click="setPeriod('anual')"
+            >
+              📈 Anual
+            </button>
+          </div>
         </div>
       </header>
+
+      <!-- Rango de fecha y Totales (Venta Bruta y Neta) -->
+      <div class="summary-kpis-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 15px;">
+        <div class="rango-badge" style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); background: #ffffff; border: 1px solid var(--border-color); padding: 10px 18px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 8px;">
+          📅 <span>Periodo:</span> <strong style="color: var(--primary-hover);">{{ stats.rangoTexto || 'Cargando...' }}</strong>
+        </div>
+        
+        <div class="kpi-totals-row" style="display: flex; gap: 15px; flex-wrap: wrap;">
+          <div class="kpi-total-card bruto" style="background: #eef2ff; border: 1px solid #c7d2fe; padding: 12px 20px; border-radius: var(--radius-md); text-align: left; min-width: 180px; box-shadow: var(--shadow-sm);">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px;">Venta Bruta (Con IGV)</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: #1e1b4b; margin-top: 4px;">S/. {{ (stats.totalBruto || 0).toFixed(2) }}</div>
+          </div>
+          <div class="kpi-total-card neto" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px 20px; border-radius: var(--radius-md); text-align: left; min-width: 180px; box-shadow: var(--shadow-sm);">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Venta Neta (Sin IGV)</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: #14532d; margin-top: 4px;">S/. {{ (stats.totalNeto || 0).toFixed(2) }}</div>
+          </div>
+        </div>
+      </div>
 
       <!-- Charts Section -->
       <div class="grid grid-2 charts-container">
@@ -122,7 +177,7 @@
                         class="donut-segment" />
                 <g class="donut-center-text">
                   <text x="60" y="58" text-anchor="middle" class="donut-title">TOTAL</text>
-                  <text x="60" y="74" text-anchor="middle" class="donut-subtitle">S/.{{ (stats.totalIngresos || 0).toFixed(0) }}</text>
+                  <text x="60" y="74" text-anchor="middle" class="donut-subtitle">S/.{{ (stats.totalBruto || 0).toFixed(0) }}</text>
                 </g>
               </svg>
             </div>
@@ -178,31 +233,72 @@ import { useAuthStore } from '../stores/auth'
 const router = useRouter()
 const authStore = useAuthStore()
 
-const selectedPeriod = ref('mensual')
+const selectedPeriod = ref('semanal')
 const loading = ref(false)
 
+const getTodayFormatted = () => {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+const selectedDate = ref(getTodayFormatted())
+const selectedMonth = ref(new Date().toISOString().substring(0, 7)) // "YYYY-MM"
+const selectedYear = ref(new Date().getFullYear())
+
+const availableYears = computed(() => {
+  const current = new Date().getFullYear()
+  return Array.from({ length: 6 }, (_, i) => current - i)
+})
+
 const stats = ref({
-  totalIngresos: 0,
+  totalBruto: 0,
+  totalNeto: 0,
+  rangoTexto: '',
   ventasPeriodo: [],
   metodosPago: [],
   productosMasVendidos: []
 })
 
 const selectedPeriodText = computed(() => {
-  if (selectedPeriod.value === 'semanal') return 'Últimos 7 días'
-  if (selectedPeriod.value === 'anual') return 'Año Actual'
-  return 'Últimos 30 días'
+  if (selectedPeriod.value === 'semanal') return 'Lunes a Domingo'
+  if (selectedPeriod.value === 'anual') return 'Meses del Año'
+  return 'Días del Mes'
 })
 
 const setPeriod = (period) => {
   selectedPeriod.value = period
+  // Sincronizar fecha según periodo
+  if (period === 'semanal') {
+    selectedDate.value = getTodayFormatted()
+  } else if (period === 'mensual') {
+    const d = new Date()
+    selectedMonth.value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    selectedDate.value = `${selectedMonth.value}-01`
+  } else if (period === 'anual') {
+    selectedYear.value = new Date().getFullYear()
+    selectedDate.value = `${selectedYear.value}-01-01`
+  }
   fetchStats()
+}
+
+const onMonthChange = () => {
+  if (selectedMonth.value) {
+    selectedDate.value = `${selectedMonth.value}-01`
+    fetchStats()
+  }
+}
+
+const onYearChange = () => {
+  if (selectedYear.value) {
+    selectedDate.value = `${selectedYear.value}-01-01`
+    fetchStats()
+  }
 }
 
 const fetchStats = async () => {
   loading.value = true
   try {
-    const res = await fetch(`${API_URL}/api/dashboard/history?period=${selectedPeriod.value}`, {
+    const res = await fetch(`${API_URL}/api/dashboard/history?period=${selectedPeriod.value}&fecha=${selectedDate.value}`, {
       headers: {
         'Authorization': `Bearer ${authStore.token}`
       }
@@ -210,7 +306,9 @@ const fetchStats = async () => {
     if (!res.ok) throw new Error()
     const data = await res.json()
     stats.value = {
-      totalIngresos: data.totalIngresos || 0,
+      totalBruto: data.totalBruto || 0,
+      totalNeto: data.totalNeto || 0,
+      rangoTexto: data.rangoTexto || '',
       ventasPeriodo: data.ventasPeriodo || [],
       metodosPago: data.metodosPago || [],
       productosMasVendidos: data.productosMasVendidos || []

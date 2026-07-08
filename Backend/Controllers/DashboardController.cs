@@ -173,9 +173,9 @@ public class DashboardController : ControllerBase
         });
     }
 
-    // GET api/dashboard/history — devuelve datos agrupados por periodo (semanal, mensual, anual)
+    // GET api/dashboard/history — devuelve datos agrupados por periodo (semanal, mensual, anual) con soporte para filtrar fecha
     [HttpGet("history")]
-    public async Task<IActionResult> GetHistory([FromQuery] string period = "mensual")
+    public async Task<IActionResult> GetHistory([FromQuery] string period = "mensual", [FromQuery] string? fecha = null)
     {
         if (!_userContext.HasPermission("historial_negocio"))
             return Forbid();
@@ -185,43 +185,46 @@ public class DashboardController : ControllerBase
 
         var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId).ToListAsync();
 
-        DateTime limitDate;
-        var nowLocal = DateTime.Today; // local time base
+        DateTime targetDate = string.IsNullOrEmpty(fecha) ? DateTime.Today : DateTime.ParseExact(fecha, "yyyy-MM-dd", null);
+
         object ventasPeriodo;
-        double totalIngresos = 0;
         List<Sale> filteredSales;
+        string rangoTexto = "";
 
         if (period == "semanal")
         {
-            // Ventas de los últimos 7 días
-            limitDate = nowLocal.AddDays(-6);
-            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date >= limitDate).ToList();
-            totalIngresos = filteredSales.Sum(s => (double)s.Total);
+            // Calcular lunes y domingo de la semana de la fecha seleccionada
+            int diff = (7 + (targetDate.DayOfWeek - DayOfWeek.Monday)) % 7;
+            DateTime monday = targetDate.AddDays(-1 * diff).Date;
+            DateTime sunday = monday.AddDays(6).Date;
+
+            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date >= monday && s.FechaCreacion.ToLocalTime().Date <= sunday).ToList();
+            rangoTexto = $"{monday:dd/MM/yyyy} al {sunday:dd/MM/yyyy}";
 
             var dias = Enumerable.Range(0, 7)
-                .Select(i => limitDate.AddDays(i))
+                .Select(i => monday.AddDays(i))
                 .ToList();
 
             ventasPeriodo = dias.Select(d => new
             {
                 Etiqueta = d.ToString("dd-MMM"),
-                DiaSemana = d.ToString("ddd"),
+                DiaSemana = d.ToString("dddd"),
                 Total = filteredSales.Where(s => s.FechaCreacion.ToLocalTime().Date == d.Date).Sum(s => (double)s.Total),
                 Cantidad = filteredSales.Count(s => s.FechaCreacion.ToLocalTime().Date == d.Date)
             }).ToList();
         }
         else if (period == "anual")
         {
-            // Ventas del año actual
-            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Year == nowLocal.Year).ToList();
-            totalIngresos = filteredSales.Sum(s => (double)s.Total);
+            // Ventas del año de la fecha seleccionada
+            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Year == targetDate.Year).ToList();
+            rangoTexto = $"Año {targetDate.Year}";
 
             ventasPeriodo = Enumerable.Range(1, 12)
                 .Select(m => {
                     var monthSales = filteredSales.Where(s => s.FechaCreacion.ToLocalTime().Month == m).ToList();
                     return new
                     {
-                        Etiqueta = new DateTime(nowLocal.Year, m, 1).ToString("MMM"),
+                        Etiqueta = new DateTime(targetDate.Year, m, 1).ToString("MMM"),
                         MesNum = m,
                         Total = monthSales.Sum(s => (double)s.Total),
                         Cantidad = monthSales.Count()
@@ -230,13 +233,16 @@ public class DashboardController : ControllerBase
         }
         else // mensual
         {
-            // Ventas de los últimos 30 días
-            limitDate = nowLocal.AddDays(-29);
-            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date >= limitDate).ToList();
-            totalIngresos = filteredSales.Sum(s => (double)s.Total);
+            // Ventas del mes completo de la fecha seleccionada
+            DateTime firstDayOfMonth = new DateTime(targetDate.Year, targetDate.Month, 1);
+            DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
 
-            var dias = Enumerable.Range(0, 30)
-                .Select(i => limitDate.AddDays(i))
+            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date >= firstDayOfMonth && s.FechaCreacion.ToLocalTime().Date <= lastDayOfMonth).ToList();
+            rangoTexto = targetDate.ToString("MMMM yyyy");
+
+            int daysInMonth = DateTime.DaysInMonth(targetDate.Year, targetDate.Month);
+            var dias = Enumerable.Range(0, daysInMonth)
+                .Select(i => firstDayOfMonth.AddDays(i))
                 .ToList();
 
             ventasPeriodo = dias.Select(d => new
@@ -270,10 +276,16 @@ public class DashboardController : ControllerBase
             .Take(5)
             .ToList();
 
+        double totalBruto = filteredSales.Sum(s => (double)s.Total);
+        double totalNeto = filteredSales.Sum(s => (double)s.Subtotal);
+
         return Ok(new
         {
             Period = period,
-            TotalIngresos = totalIngresos,
+            TotalIngresos = totalBruto,
+            TotalBruto = totalBruto,
+            TotalNeto = totalNeto,
+            RangoTexto = rangoTexto,
             VentasPeriodo = ventasPeriodo,
             MetodosPago = metodosPago,
             ProductosMasVendidos = productosMasVendidos
