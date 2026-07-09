@@ -81,7 +81,7 @@
         </div>
 
         <!-- Panel lateral para el resumen de compra y pago -->
-        <aside class="cart-panel" style="width: 450px; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; background: #ffffff; border-left: 1px solid var(--border-color); overflow: hidden; min-height: 0; align-self: stretch; height: 100%;">
+        <aside class="cart-panel" style="width: 480px; display: flex; flex-direction: column; padding: 24px; flex-shrink: 0; background: #ffffff !important; border-left: 1px solid var(--border-color) !important; overflow: hidden !important; min-height: 100% !important; height: 100% !important; align-self: stretch !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important;">
           <div class="cart-header">
             <h2 class="cart-title">🛒 Carrito de Compra</h2>
             <span class="sale-code-badge">{{ codigoVenta }}</span>
