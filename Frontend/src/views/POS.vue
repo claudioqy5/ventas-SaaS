@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar" @mouseenter="isSidebarHovered = true" @mouseleave="isSidebarHovered = false">
-      <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -24,7 +24,7 @@
     </aside>
 
     <!-- Main Content Area with Header (matching other views) -->
-    <main class="main-content" style="height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 20px;">
+    <main class="main-content" style="height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 20px; padding-right: 0;">
       <header class="content-header" style="margin-bottom: 15px; flex-shrink: 0;">
         <h1 class="text-title">🛒 Punto de Venta (POS)</h1>
         <p class="text-subtitle">Registra nuevas ventas de forma rápida y sencilla</p>
@@ -79,74 +79,74 @@
             </div>
           </div>
         </div>
-
-        <!-- Panel lateral para el resumen de compra y pago -->
-        <aside class="cart-panel" style="width: 480px; display: flex; flex-direction: column; padding: 24px; flex-shrink: 0; background: #ffffff !important; border-left: 1px solid var(--border-color) !important; overflow: hidden !important; min-height: 100% !important; height: 100% !important; align-self: stretch !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important;">
-          <div class="cart-header">
-            <h2 class="cart-title">🛒 Carrito de Compra</h2>
-            <span class="sale-code-badge">{{ codigoVenta }}</span>
-          </div>
-
-          <div v-if="cart.length === 0" class="empty-cart">
-            <p>El carrito está vacío.</p>
-            <p class="text-subtitle">Haz clic en los productos para agregarlos.</p>
-          </div>
-
-          <div v-else class="cart-items" style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; padding-right: 4px;">
-            <div v-for="item in cart" :key="item.productoId" class="cart-item">
-              <div class="item-details">
-                <p class="item-name">{{ item.nombreProducto }}</p>
-                <p class="item-sub">S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}</p>
-              </div>
-              <div class="item-controls-wrapper">
-                <div class="item-controls">
-                  <button @click="updateQty(item, -1)" class="btn-qty">-</button>
-                  <span class="item-qty">{{ item.cantidad }}</span>
-                  <button @click="updateQty(item, 1)" class="btn-qty">+</button>
-                </div>
-                <button @click="removeFromCart(item.productoId)" class="btn-remove" title="Quitar producto">×</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="cart-summary" style="flex-shrink: 0; border-top: 1px dashed var(--border-color); padding-top: 15px; display: flex; flex-direction: column; gap: 10px;">
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <span>S/. {{ cartSubtotal.toFixed(2) }}</span>
-            </div>
-            <div class="summary-row">
-              <span>Impuestos (19%)</span>
-              <span>S/. {{ cartTax.toFixed(2) }}</span>
-            </div>
-            <div class="summary-row total">
-              <span>Total a Pagar</span>
-              <span>S/. {{ cartTotal.toFixed(2) }}</span>
-            </div>
-
-            <div class="payment-method" style="margin-top: 5px;">
-              <label>Método de Pago</label>
-              <select v-model="paymentMethod" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff;">
-                <option value="Efectivo">💵 Efectivo</option>
-                <option value="Tarjeta">💳 Tarjeta</option>
-                <option value="Transferencia">🏦 Transferencia</option>
-              </select>
-            </div>
-
-            <div class="client-selection" style="margin-top: 5px; margin-bottom: 10px;">
-              <label>Cliente (Opcional)</label>
-              <select v-model="selectedClientId" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff;">
-                <option value="">👤 Cliente General</option>
-                <option v-for="cli in clients" :key="cli.id" :value="cli.id">👤 {{ cli.nombre }}</option>
-              </select>
-            </div>
-
-            <button @click="checkout" class="btn btn-success w-full checkout-btn" :disabled="cart.length === 0 || loading" style="padding: 12px; font-weight: 700;">
-              {{ loading ? 'Procesando Venta...' : '💵 Confirmar Venta' }}
-            </button>
-          </div>
-        </aside>
       </div>
     </main>
+
+    <!-- Panel del Carrito de Compra — columna fija a la derecha, altura completa desde arriba -->
+    <aside class="cart-panel">
+      <div class="cart-header">
+        <h2 class="cart-title">🛒 Carrito de Compra</h2>
+        <span class="sale-code-badge">{{ codigoVenta }}</span>
+      </div>
+
+      <div v-if="cart.length === 0" class="empty-cart">
+        <p>El carrito está vacío.</p>
+        <p class="text-subtitle">Haz clic en los productos para agregarlos.</p>
+      </div>
+
+      <div v-else class="cart-items">
+        <div v-for="item in cart" :key="item.productoId" class="cart-item">
+          <div class="item-details">
+            <p class="item-name">{{ item.nombreProducto }}</p>
+            <p class="item-sub">S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}</p>
+          </div>
+          <div class="item-controls-wrapper">
+            <div class="item-controls">
+              <button @click="updateQty(item, -1)" class="btn-qty">-</button>
+              <span class="item-qty">{{ item.cantidad }}</span>
+              <button @click="updateQty(item, 1)" class="btn-qty">+</button>
+            </div>
+            <button @click="removeFromCart(item.productoId)" class="btn-remove" title="Quitar producto">×</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>S/. {{ cartSubtotal.toFixed(2) }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Impuestos (19%)</span>
+          <span>S/. {{ cartTax.toFixed(2) }}</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total a Pagar</span>
+          <span>S/. {{ cartTotal.toFixed(2) }}</span>
+        </div>
+
+        <div class="payment-method" style="margin-top: 5px;">
+          <label>Método de Pago</label>
+          <select v-model="paymentMethod" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff;">
+            <option value="Efectivo">💵 Efectivo</option>
+            <option value="Tarjeta">💳 Tarjeta</option>
+            <option value="Transferencia">🏦 Transferencia</option>
+          </select>
+        </div>
+
+        <div class="client-selection" style="margin-top: 5px; margin-bottom: 10px;">
+          <label>Cliente (Opcional)</label>
+          <select v-model="selectedClientId" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff;">
+            <option value="">👤 Cliente General</option>
+            <option v-for="cli in clients" :key="cli.id" :value="cli.id">👤 {{ cli.nombre }}</option>
+          </select>
+        </div>
+
+        <button @click="checkout" class="btn btn-success w-full checkout-btn" :disabled="cart.length === 0 || loading" style="padding: 12px; font-weight: 700;">
+          {{ loading ? 'Procesando Venta...' : '💵 Confirmar Venta' }}
+        </button>
+      </div>
+    </aside>
   </div>
 </template>
 
@@ -429,7 +429,8 @@ onMounted(() => {
 
 .product-image-container {
   width: 100%;
-  height: 120px;
+  height: 13vh;         /* ~120px en 900px de altura — escala con pantalla */
+  min-height: 80px;
   position: relative;
   overflow: hidden;
   background-color: var(--bg-app);
@@ -487,9 +488,39 @@ onMounted(() => {
   margin-top: auto;
 }
 
-/* Cart Panel styling */
+/* Cart Panel styling — columna lateral de altura completa */
 .cart-panel {
+  width: 28vw;          /* ~480px en 1700px — escala con pantalla */
+  min-width: 320px;
+  max-width: 520px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-left: 1px solid var(--border-color);
+  overflow: hidden;
+  height: 100vh;
   text-align: left;
+  padding: 2.5vh 1.5vw;
+}
+
+.cart-items {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-right: 4px;
+}
+
+.cart-summary {
+  flex-shrink: 0;
+  border-top: 1px dashed var(--border-color);
+  padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .cart-header {

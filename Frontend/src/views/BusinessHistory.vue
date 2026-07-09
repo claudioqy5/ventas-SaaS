@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
-      <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -542,12 +542,12 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 200px;
+  min-height: 22vh;      /* ~200px en 900px de altura */
 }
 
 .line-chart-svg {
   width: 100%;
-  max-height: 280px;
+  max-height: 32vh;      /* ~280px en 900px de altura */
 }
 
 .chart-axis-label {
@@ -584,8 +584,10 @@ onMounted(() => {
 
 .pie-wrapper {
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 15vh;           /* ~140px en 900px de altura */
+  height: 15vh;
+  min-width: 110px;
+  min-height: 110px;
 }
 
 .pie-chart-svg {

@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
-      <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -489,7 +489,7 @@ onMounted(() => {
 /* Hourly Bar Chart styling */
 .line-chart-svg {
   width: 100%;
-  max-height: 320px;
+  max-height: 35vh;      /* ~320px en 900px de altura */
 }
 
 .chart-axis-label {
@@ -531,8 +531,10 @@ onMounted(() => {
 
 .pie-wrapper {
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: 16vh;           /* ~150px en 900px de altura — proporcional */
+  height: 16vh;
+  min-width: 120px;
+  min-height: 120px;
 }
 
 .pie-chart-svg {
