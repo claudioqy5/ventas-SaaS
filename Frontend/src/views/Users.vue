@@ -69,12 +69,11 @@
               <td>
                 <div class="permissions-badges">
                   <span v-for="perm in user.permisos" :key="perm" class="perm-badge">
-                    {{ perm }}
+                    {{ formatPermissionName(perm) }}
                   </span>
                   <span v-if="!user.permisos || user.permisos.length === 0" class="perm-badge none">Ninguno</span>
                 </div>
               </td>
-              <td>
                 <span :class="['status-dot', user.activo ? 'active' : 'inactive']">
                   {{ user.activo ? 'Activo' : 'Inactivo' }}
                 </span>
@@ -197,6 +196,10 @@
                   <input type="checkbox" value="historial_ventas" v-model="form.permisos" />
                   <span>📋 Historial de Ventas</span>
                 </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" value="reminders" v-model="form.permisos" />
+                  <span>📅 Recordatorios</span>
+                </label>
               </div>
             </div>
 
@@ -275,6 +278,23 @@ const openEditModal = (user) => {
   showModal.value = true
 }
 
+const formatPermissionName = (perm) => {
+  const mapping = {
+    'dashboard': '📊 Dashboard',
+    'historial_negocio': '📈 Historial Negocio',
+    'ventas': '🛒 POS Ventas',
+    'productos': '📦 Productos',
+    'categorias': '🏷️ Categorías',
+    'clientes': '👥 Clientes',
+    'proveedores': '🏢 Proveedores',
+    'compras': '💵 Compras',
+    'reminders': '📅 Recordatorios',
+    'modificar_productos': '✏️ Editar Prod.',
+    'historial_ventas': '📋 Historial Ventas'
+  }
+  return mapping[perm] || perm
+}
+
 const saveUser = async () => {
   try {
     const url = isEdit.value 
@@ -289,7 +309,7 @@ const saveUser = async () => {
       correo: form.correo,
       clave: form.clave || null,
       rol: form.rol,
-      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config'] : form.permisos,
+      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders'] : form.permisos,
       activo: form.activo,
       nombreTienda: form.nombreTienda || null
     }
