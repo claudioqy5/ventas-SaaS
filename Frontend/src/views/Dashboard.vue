@@ -37,13 +37,23 @@
       </header>
 
       <!-- Metric Grid -->
-      <div class="grid grid-3 metrics-container">
+      <div class="grid grid-4 metrics-container">
         <div class="metric-card blue">
           <div class="metric-info">
             <span class="metric-icon">💰</span>
             <div>
               <p class="metric-value">S/. {{ (stats.totalIngresos || 0).toFixed(2) }}</p>
-              <p class="text-subtitle">Ingresos Totales</p>
+              <p class="text-subtitle">Venta Total (Con IGV)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card green">
+          <div class="metric-info">
+            <span class="metric-icon">💵</span>
+            <div>
+              <p class="metric-value">S/. {{ (stats.totalNetoDia || 0).toFixed(2) }}</p>
+              <p class="text-subtitle">Venta sin IGV</p>
             </div>
           </div>
         </div>
@@ -58,7 +68,7 @@
           </div>
         </div>
 
-        <div class="metric-card green">
+        <div class="metric-card red">
           <div class="metric-info">
             <span class="metric-icon">📦</span>
             <div>
@@ -169,6 +179,7 @@ const stats = ref({
   totalProductos: 0,
   totalVentas: 0,
   totalIngresos: 0,
+  totalNetoDia: 0,
   totalGastosCompras: 0,
   productosBajoStockCount: 0,
   productosBajoStock: [],
@@ -199,6 +210,7 @@ const fetchStats = async () => {
       totalProductos: data.totalProductos || 0,
       totalVentas: data.totalVentas || 0,
       totalIngresos: data.totalIngresos || 0,
+      totalNetoDia: data.totalNetoDia || 0,
       totalGastosCompras: data.totalGastosCompras || 0,
       productosBajoStockCount: data.productosBajoStockCount || 0,
       productosBajoStock: data.productosBajoStock || [],

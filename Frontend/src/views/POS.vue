@@ -48,19 +48,34 @@
             No se encontraron productos disponibles.
           </div>
 
-          <div v-else class="products-grid" style="overflow-y: auto; flex-grow: 1; min-height: 0; padding-bottom: 10px;">
-            <div v-for="product in filteredProducts" :key="product.id" @click="addToCart(product)" class="product-card card">
-              <div class="product-image-container">
-                <img :src="product.imagenUrl || defaultImage" class="product-card-img" alt="product image" />
-                <span :class="['product-card-stock', product.stock <= product.stockMinimo ? 'low' : 'ok']">
-                  Stock: {{ product.stock }}
-                </span>
+          <div v-else style="display: flex; flex-direction: column; flex-grow: 1; min-height: 0;">
+            <div class="products-grid" style="overflow-y: auto; flex-grow: 1; min-height: 0; padding-bottom: 10px;">
+              <div v-for="product in paginatedProducts" :key="product.id" @click="addToCart(product)" class="product-card card">
+                <div class="product-image-container">
+                  <img :src="product.imagenUrl || defaultImage" class="product-card-img" alt="product image" />
+                  <span :class="['product-card-stock', product.stock <= product.stockMinimo ? 'low' : 'ok']">
+                    Stock: {{ product.stock }}
+                  </span>
+                </div>
+                <div class="product-info">
+                  <h3 class="product-name">{{ product.nombre }}</h3>
+                  <p class="product-barcode">Cod: {{ product.codigoBarras }}</p>
+                  <span class="product-price">S/. {{ product.precio.toFixed(2) }}</span>
+                </div>
               </div>
-              <div class="product-info">
-                <h3 class="product-name">{{ product.nombre }}</h3>
-                <p class="product-barcode">Cod: {{ product.codigoBarras }}</p>
-                <span class="product-price">S/. {{ product.precio.toFixed(2) }}</span>
-              </div>
+            </div>
+
+            <!-- Controles de paginación -->
+            <div class="pagination-controls" style="margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 15px; flex-shrink: 0; padding-top: 10px; border-top: 1px solid var(--border-color);">
+              <button @click="currentPage--" :disabled="currentPage === 1" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">
+                ⬅️ Anterior
+              </button>
+              <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-main);">
+                Página {{ currentPage }} de {{ totalPages }}
+              </span>
+              <button @click="currentPage++" :disabled="currentPage >= totalPages" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">
+                Siguiente ➡️
+              </button>
             </div>
           </div>
         </div>
@@ -137,7 +152,7 @@
 
 <script setup>
 import { API_URL } from '../config'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -157,6 +172,21 @@ const categories = ref([])
 const selectedClientId = ref('')
 const clients = ref([])
 const codigoVenta = ref('')
+
+const currentPage = ref(1)
+
+watch([searchQuery, selectedCategory], () => {
+  currentPage.value = 1
+})
+
+const totalPages = computed(() => {
+  return Math.max(1, Math.ceil(filteredProducts.value.length / 15))
+})
+
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * 15
+  return filteredProducts.value.slice(start, start + 15)
+})
 
 const generarCodigoVenta = () => {
   const num = Math.floor(10000 + Math.random() * 90000)
@@ -479,7 +509,8 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 60px;
   color: var(--text-muted);
   text-align: center;
 }

@@ -57,6 +57,7 @@ public class DashboardController : ControllerBase
         var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId).ToListAsync();
         var todaySales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date == targetDate.Date).ToList();
         var totalIngresos = todaySales.Sum(s => (double)s.Total);
+        var totalNetoDia = todaySales.Sum(s => (double)s.Subtotal);
         var totalVentasCount = todaySales.Count;
 
         // Calcular el total gastado en compras (solo si el usuario tiene permiso para verlo)
@@ -151,6 +152,7 @@ public class DashboardController : ControllerBase
             TotalProductos = totalProductos,
             TotalVentas = totalVentasCount,
             TotalIngresos = totalIngresos,
+            TotalNetoDia = totalNetoDia,
             TotalGastosCompras = totalGastosCompras,
             ProductosBajoStockCount = productosBajoStock.Count,
             ProductosBajoStock = productosBajoStock.Take(5),

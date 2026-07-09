@@ -36,11 +36,11 @@
           <!-- KPI Totals Row -->
           <div class="kpi-totals-row" style="display: flex; gap: 12px; flex-wrap: wrap;">
             <div class="kpi-total-card bruto" style="background: #eef2ff; border: 1px solid #c7d2fe; padding: 10px 18px; border-radius: var(--radius-md); text-align: left; min-width: 150px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center;">
-              <div style="font-size: 0.75rem; font-weight: 700; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px;">Venta Bruta (Con IGV)</div>
+              <div style="font-size: 0.75rem; font-weight: 700; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px;">Venta Total (Con IGV)</div>
               <div style="font-size: 1.35rem; font-weight: 800; color: #1e1b4b; margin-top: 2px;">S/. {{ (stats.totalBruto || 0).toFixed(2) }}</div>
             </div>
             <div class="kpi-total-card neto" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px 18px; border-radius: var(--radius-md); text-align: left; min-width: 150px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center;">
-              <div style="font-size: 0.75rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Venta Neta (Sin IGV)</div>
+              <div style="font-size: 0.75rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Venta sin IGV</div>
               <div style="font-size: 1.35rem; font-weight: 800; color: #14532d; margin-top: 2px;">S/. {{ (stats.totalNeto || 0).toFixed(2) }}</div>
             </div>
           </div>
