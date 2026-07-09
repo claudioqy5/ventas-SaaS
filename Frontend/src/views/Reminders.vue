@@ -66,7 +66,10 @@
             <tbody>
               <tr v-for="rem in reminders" :key="rem.id">
                 <td>
-                  <strong>{{ rem.titulo }}</strong>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <strong>{{ rem.titulo }}</strong>
+                    <span v-if="rem.recurrente" title="Repetir mensualmente" style="font-size: 0.85rem; cursor: help;">🔁</span>
+                  </div>
                 </td>
                 <td style="color: var(--text-muted);">{{ rem.descripcion || '-' }}</td>
                 <td>
@@ -84,10 +87,10 @@
                   </span>
                 </td>
                 <td>
-                  <div style="display: flex; gap: 8px; justify-content: flex-start;">
-                    <button v-if="rem.estado === 'Pendiente'" @click="markAsPaid(rem)" class="btn btn-sm btn-success" title="Marcar como Pagado">✓ Pagado</button>
-                    <button @click="openEditModal(rem)" class="btn btn-sm btn-secondary" title="Editar">✏️</button>
-                    <button @click="deleteReminder(rem.id)" class="btn btn-sm btn-danger" title="Eliminar">🗑️</button>
+                  <div class="actions-cell">
+                    <button v-if="rem.estado === 'Pendiente'" @click="markAsPaid(rem)" class="btn-action check" title="Marcar como Pagado" style="color: #16a34a; font-size: 1.1rem; font-weight: bold;">✓</button>
+                    <button @click="openEditModal(rem)" class="btn-action edit" title="Editar">✏️</button>
+                    <button @click="deleteReminder(rem.id)" class="btn-action delete" title="Eliminar">🗑️</button>
                   </div>
                 </td>
               </tr>
@@ -137,6 +140,11 @@
                 <option value="Completado">✓ Completado</option>
               </select>
             </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 6px;">
+              <input type="checkbox" id="recurrente" v-model="form.recurrente" style="width: 18px; height: 18px; cursor: pointer;" />
+              <label for="recurrente" class="font-bold" style="cursor: pointer; user-select: none;">🔁 Repetir mensualmente automáticamente</label>
+            </div>
           </div>
           <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px;">
             <button type="button" @click="closeModal" class="btn btn-secondary">Cancelar</button>
@@ -172,7 +180,8 @@ const form = ref({
   descripcion: '',
   monto: null,
   fechaVencimiento: '',
-  estado: 'Pendiente'
+  estado: 'Pendiente',
+  recurrente: false
 })
 
 const totalPendiente = computed(() => {
@@ -235,7 +244,8 @@ const openAddModal = () => {
     descripcion: '',
     monto: null,
     fechaVencimiento: new Date().toISOString().split('T')[0],
-    estado: 'Pendiente'
+    estado: 'Pendiente',
+    recurrente: false
   }
   showModal.value = true
 }
@@ -248,7 +258,8 @@ const openEditModal = (rem) => {
     descripcion: rem.descripcion,
     monto: rem.monto,
     fechaVencimiento: new Date(rem.fechaVencimiento).toISOString().split('T')[0],
-    estado: rem.estado
+    estado: rem.estado,
+    recurrente: rem.recurrente || false
   }
   showModal.value = true
 }
@@ -274,7 +285,8 @@ const saveReminder = async () => {
         descripcion: form.value.descripcion,
         monto: form.value.monto,
         fechaVencimiento: new Date(form.value.fechaVencimiento).toISOString(),
-        estado: form.value.estado
+        estado: form.value.estado,
+        recurrente: form.value.recurrente
       })
     })
 
@@ -301,7 +313,8 @@ const markAsPaid = async (rem) => {
         descripcion: rem.descripcion,
         monto: rem.monto,
         fechaVencimiento: rem.fechaVencimiento,
-        estado: 'Pagado'
+        estado: 'Pagado',
+        recurrente: rem.recurrente || false
       })
     })
     if (!res.ok) throw new Error()
@@ -453,5 +466,28 @@ onMounted(() => {
   font-size: 1.8rem;
   cursor: pointer;
   color: var(--text-muted);
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+.btn-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-action:hover {
+  background-color: var(--border-color);
+  transform: scale(1.15);
 }
 </style>

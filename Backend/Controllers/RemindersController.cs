@@ -34,6 +34,36 @@ public class RemindersController : ControllerBase
             .SortBy(r => r.FechaVencimiento)
             .ToListAsync();
 
+        var today = DateTime.Today; // Comparar con fecha local
+        bool updatedAny = false;
+
+        foreach (var r in reminders)
+        {
+            // Si es recurrente, está Pagado y ya pasó al menos 1 día de la fecha de vencimiento
+            if (r.Recurrente && r.Estado == "Pagado" && today > r.FechaVencimiento.ToLocalTime().Date)
+            {
+                // Mover al mismo día del mes siguiente
+                r.FechaVencimiento = r.FechaVencimiento.AddMonths(1);
+                r.Estado = "Pendiente";
+
+                var filter = Builders<Reminder>.Filter.Eq(x => x.Id, r.Id);
+                var update = Builders<Reminder>.Update
+                    .Set(x => x.FechaVencimiento, r.FechaVencimiento)
+                    .Set(x => x.Estado, r.Estado);
+
+                await _context.Reminders.UpdateOneAsync(filter, update);
+                updatedAny = true;
+            }
+        }
+
+        // Si se actualizó alguno, volvemos a consultar para retornar los datos frescos y ordenados
+        if (updatedAny)
+        {
+            reminders = await _context.Reminders.Find(r => r.EmpresaId == empresaId)
+                .SortBy(r => r.FechaVencimiento)
+                .ToListAsync();
+        }
+
         return Ok(reminders);
     }
 
@@ -73,7 +103,8 @@ public class RemindersController : ControllerBase
             .Set(r => r.Descripcion, updated.Descripcion)
             .Set(r => r.Monto, updated.Monto)
             .Set(r => r.FechaVencimiento, updated.FechaVencimiento)
-            .Set(r => r.Estado, updated.Estado);
+            .Set(r => r.Estado, updated.Estado)
+            .Set(r => r.Recurrente, updated.Recurrente);
 
         await _context.Reminders.UpdateOneAsync(filter, update);
         return Ok(new { message = "Recordatorio actualizado con éxito." });

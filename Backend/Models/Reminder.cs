@@ -23,6 +23,7 @@ public class Reminder
     public DateTime FechaVencimiento { get; set; } = DateTime.UtcNow;
 
     public string Estado { get; set; } = "Pendiente"; // Pendiente, Pagado, Completado
+    public bool Recurrente { get; set; } = false; // Repetir mensualmente automáticamente al día siguiente del vencimiento
 
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 }

@@ -143,6 +143,45 @@
         </div>
       </div>
     </main>
+
+    <!-- Modal de Alerta de Recordatorios Vencidos / Por Vencer -->
+    <div v-if="showReminderAlert" class="modal-overlay">
+      <div class="modal-content card" style="max-width: 550px; border-left: 5px solid var(--warning);">
+        <div class="modal-header">
+          <h2 style="display: flex; align-items: center; gap: 10px;">📅 Alertas de Cuentas por Pagar</h2>
+          <button @click="showReminderAlert = false" class="close-btn">&times;</button>
+        </div>
+        
+        <div class="modal-body" style="text-align: left; padding: 15px 0;">
+          <p style="margin-bottom: 15px; color: var(--text-muted); font-size: 0.95rem;">
+            Tienes las siguientes cuentas pendientes que requieren atención hoy, mañana o en el transcurso de la semana:
+          </p>
+
+          <div style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 6px;">
+            <div v-for="rem in urgentReminders" :key="rem.id" 
+                 style="background: var(--bg-app); border: 1px solid var(--border-color); padding: 14px; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                <strong style="font-size: 1rem; color: var(--text-main);">{{ rem.titulo }}</strong>
+                <span :class="['date-badge', getDaysRemainingClass(rem)]" style="font-size: 0.75rem; padding: 3px 8px; border-radius: 99px; font-weight: 700;">
+                  {{ getDaysRemainingText(rem) }}
+                </span>
+              </div>
+              <p v-if="rem.descripcion" style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">{{ rem.descripcion }}</p>
+              <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-top: 4px;">
+                Monto: <span style="color: var(--danger-hover);">S/. {{ rem.monto ? rem.monto.toFixed(2) : '0.00' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="modal-actions" style="margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
+          <router-link to="/reminders" @click="showReminderAlert = false" class="btn btn-primary" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+            ⚙️ Ir a Recordatorios
+          </router-link>
+          <button @click="showReminderAlert = false" class="btn btn-secondary">Entendido</button>
+        </footer>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -169,6 +208,70 @@ const stats = ref({
   productosMasVendidosDia: [],
   fechaDiaActual: ''
 })
+
+// Variables para el sistema de alertas de Recordatorios
+const showReminderAlert = ref(false)
+const urgentReminders = ref([])
+
+const getDaysRemainingClass = (rem) => {
+  const diffTime = new Date(rem.fechaVencimiento) - new Date()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  if (diffDays < 0) return 'date-expired'
+  if (diffDays <= 3) return 'date-urgent'
+  return 'date-ok'
+}
+
+const getDaysRemainingText = (rem) => {
+  const diffTime = new Date(rem.fechaVencimiento) - new Date()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  if (diffDays < 0) return `Vencido`
+  if (diffDays === 0) return 'Vence hoy'
+  if (diffDays === 1) return 'Vence mañana'
+  return `Vence en ${diffDays} días`
+}
+
+const checkUrgentReminders = async () => {
+  try {
+    const todayStr = new Date().toDateString()
+    const lastCheck = localStorage.getItem('last_reminder_check_date')
+    
+    // Si ya se hizo el chequeo diario hoy, no volvemos a molestar
+    if (lastCheck === todayStr) return
+
+    const res = await fetch(`${API_URL}/api/reminders`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (!res.ok) throw new Error()
+    const allReminders = await res.json()
+
+    // Filtrar los que estén Pendientes y expiren en: hoy (0), mañana (1) o 1 semana (7) o ya estén vencidos
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+
+    const urgent = allReminders.filter(rem => {
+      if (rem.estado !== 'Pendiente') return false
+      
+      const targetDate = new Date(rem.fechaVencimiento)
+      targetDate.setHours(0, 0, 0, 0)
+      
+      const diffTime = targetDate - now
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+      // Coincide si está vencido, vence hoy (0), mañana (1), o exactamente en 7 días (o en el rango de la semana)
+      return diffDays <= 7
+    })
+
+    if (urgent.length > 0) {
+      urgentReminders.value = urgent
+      showReminderAlert.value = true
+    }
+
+    // Marcar como chequeado para el día de hoy
+    localStorage.setItem('last_reminder_check_date', todayStr)
+  } catch (err) {
+    console.error('Error checking urgent reminders:', err)
+  }
+}
 
 const getTodayFormatted = () => {
   const d = new Date()
@@ -298,6 +401,7 @@ const handleLogout = () => {
 
 onMounted(() => {
   fetchStats()
+  checkUrgentReminders()
 })
 </script>
 
@@ -582,5 +686,71 @@ onMounted(() => {
 .legend-val {
   color: var(--text-main);
   font-weight: 600;
+}
+
+/* Modal Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 500px;
+  padding: 24px;
+  position: relative;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.date-badge {
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.date-badge.date-ok {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.date-badge.date-urgent {
+  background-color: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fef3c7;
+}
+
+.date-badge.date-expired {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fee2e2;
 }
 </style>
