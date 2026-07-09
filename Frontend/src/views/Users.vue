@@ -74,6 +74,7 @@
                   <span v-if="!user.permisos || user.permisos.length === 0" class="perm-badge none">Ninguno</span>
                 </div>
               </td>
+              <td>
                 <span :class="['status-dot', user.activo ? 'active' : 'inactive']">
                   {{ user.activo ? 'Activo' : 'Inactivo' }}
                 </span>
