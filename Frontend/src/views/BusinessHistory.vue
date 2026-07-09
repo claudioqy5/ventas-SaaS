@@ -163,6 +163,13 @@
                     {{ formatDayName(point.diaSemana) }}
                   </text>
                 </g>
+                <g v-else-if="selectedPeriod === 'mensual'">
+                  <!-- Weekly label for month -->
+                  <text :x="point.x" y="206" class="chart-axis-label date-lbl font-bold" text-anchor="middle">{{ point.etiqueta }}</text>
+                  <text :x="point.x" y="220" class="chart-axis-label" text-anchor="middle" style="fill: var(--text-muted); font-size: 10px;">
+                    {{ point.rango }}
+                  </text>
+                </g>
                 <g v-else>
                   <!-- Standard date/month label -->
                   <text v-if="chartPoints.length <= 12 || idx % 5 === 0" :x="point.x" y="208" class="chart-axis-label" text-anchor="middle">{{ formatEtiqueta(point.etiqueta) }}</text>
@@ -275,7 +282,7 @@ const stats = ref({
 const selectedPeriodText = computed(() => {
   if (selectedPeriod.value === 'semanal') return 'Lunes a Domingo'
   if (selectedPeriod.value === 'anual') return 'Meses del Año'
-  return 'Días del Mes'
+  return 'Semanas del Mes'
 })
 
 const setPeriod = (period) => {
@@ -333,29 +340,74 @@ const fetchStats = async () => {
   }
 }
 
+const processedVentasPeriodo = computed(() => {
+  if (!stats.value.ventasPeriodo || stats.value.ventasPeriodo.length === 0) return []
+  if (selectedPeriod.value !== 'mensual') return stats.value.ventasPeriodo
+
+  const weeks = [
+    { etiqueta: 'Semana 1', total: 0, cantidad: 0, rango: '01 al 07' },
+    { etiqueta: 'Semana 2', total: 0, cantidad: 0, rango: '08 al 14' },
+    { etiqueta: 'Semana 3', total: 0, cantidad: 0, rango: '15 al 21' },
+    { etiqueta: 'Semana 4', total: 0, cantidad: 0, rango: '22 al 28' },
+    { etiqueta: 'Semana 5', total: 0, cantidad: 0, rango: '29 en adelante' }
+  ]
+
+  stats.value.ventasPeriodo.forEach((v) => {
+    const parts = v.etiqueta.split('-')
+    const day = parseInt(parts[0], 10)
+    if (!isNaN(day)) {
+      if (day <= 7) {
+        weeks[0].total += v.total
+        weeks[0].cantidad += v.cantidad
+      } else if (day <= 14) {
+        weeks[1].total += v.total
+        weeks[1].cantidad += v.cantidad
+      } else if (day <= 21) {
+        weeks[2].total += v.total
+        weeks[2].cantidad += v.cantidad
+      } else if (day <= 28) {
+        weeks[3].total += v.total
+        weeks[3].cantidad += v.cantidad
+      } else {
+        weeks[4].total += v.total
+        weeks[4].cantidad += v.cantidad
+      }
+    }
+  })
+
+  // Si el mes tiene menos de 29 días, quitamos la Semana 5
+  if (stats.value.ventasPeriodo.length < 29) {
+    return weeks.slice(0, 4)
+  }
+  return weeks
+})
+
 // Bar Chart Computed Helpers
 const maxVenta = computed(() => {
-  if (!stats.value.ventasPeriodo || stats.value.ventasPeriodo.length === 0) return 1000
-  const max = Math.max(...stats.value.ventasPeriodo.map(v => v.total))
+  const list = processedVentasPeriodo.value
+  if (!list || list.length === 0) return 1000
+  const max = Math.max(...list.map(v => v.total))
   return max === 0 ? 1000 : max * 1.15 // 15% headroom
 })
 
 const barWidth = computed(() => {
-  const count = stats.value.ventasPeriodo.length
+  const count = processedVentasPeriodo.value.length
+  if (count <= 5) return 40
   if (count <= 7) return 32
   if (count <= 12) return 20
   return 6
 })
 
 const chartPoints = computed(() => {
-  if (!stats.value.ventasPeriodo || stats.value.ventasPeriodo.length === 0) return []
-  const count = stats.value.ventasPeriodo.length
+  const list = processedVentasPeriodo.value
+  if (!list || list.length === 0) return []
+  const count = list.length
   
-  const chartWidth = 730 // from X=50 to X=780
-  const startX = 50
+  const chartWidth = 700 // from X=60 to X=760
+  const startX = 60
   const spacing = count > 1 ? chartWidth / (count - 1) : chartWidth
   
-  return stats.value.ventasPeriodo.map((v, index) => {
+  return list.map((v, index) => {
     const x = startX + index * spacing
     const height = (v.total / maxVenta.value) * 160 // scaled up height
     const y = 190 - height
@@ -366,6 +418,7 @@ const chartPoints = computed(() => {
       val: v.total, 
       cantidad: v.cantidad, 
       etiqueta: v.etiqueta, 
+      rango: v.rango || '',
       diaSemana: v.diaSemana || '' 
     }
   })

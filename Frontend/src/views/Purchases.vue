@@ -176,8 +176,16 @@ const form = reactive({
 })
 
 const searchQuery = ref('')
-const startDate = ref('')
-const endDate = ref('')
+const getTodayDateString = () => {
+  const d = new Date()
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+const startDate = ref(getTodayDateString())
+const endDate = ref(getTodayDateString())
 
 const filteredPurchases = computed(() => {
   const q = searchQuery.value.toLowerCase()
