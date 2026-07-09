@@ -106,20 +106,21 @@
         </div>
       </header>
 
-      <!-- Charts Section (Aligned layout like daily dashboard) -->
-      <div class="charts-layout charts-container">
-        <!-- Periodic Sales Trend (Bar Chart - Enlarged) -->
-        <div class="card chart-card">
-          <h2 class="section-title">
-            📊 Tendencia de Ventas ({{ selectedPeriodText }})
-          </h2>
-          <div v-if="loading" class="empty-state">
-            Cargando datos del historial...
-          </div>
-          <div v-else-if="!stats.ventasPeriodo || stats.ventasPeriodo.length === 0" class="empty-state">
-            No hay datos de ventas registrados para este periodo.
-          </div>
-          <div v-else class="chart-wrapper">
+      <!-- Loading state -->
+      <HamsterLoader v-if="loading" label="Analizando datos del historial..." />
+
+      <template v-else>
+        <!-- Charts Section (Aligned layout like daily dashboard) -->
+        <div class="charts-layout charts-container">
+          <!-- Periodic Sales Trend (Bar Chart - Enlarged) -->
+          <div class="card chart-card">
+            <h2 class="section-title">
+              📊 Tendencia de Ventas ({{ selectedPeriodText }})
+            </h2>
+            <div v-if="!stats.ventasPeriodo || stats.ventasPeriodo.length === 0" class="empty-state">
+              No hay datos de ventas registrados para este periodo.
+            </div>
+            <div v-else class="chart-wrapper">
             <svg class="line-chart-svg" viewBox="0 0 800 250">
               <defs>
                 <linearGradient id="bar-grad" x1="0" y1="0" x2="0" y2="1">
@@ -182,10 +183,7 @@
         <!-- Payment Methods Pie Chart -->
         <div class="card chart-card">
           <h2 class="section-title">💳 Métodos de Pago (Filtrado)</h2>
-          <div v-if="loading" class="empty-state">
-            Cargando formas de pago...
-          </div>
-          <div v-else-if="!stats.metodosPago || stats.metodosPago.length === 0" class="empty-state">
+          <div v-if="!stats.metodosPago || stats.metodosPago.length === 0" class="empty-state">
             Sin ventas en este periodo.
           </div>
           <div v-else class="donut-chart-layout">
@@ -218,10 +216,7 @@
         <!-- Top Selling Products -->
         <div class="card font-card">
           <h2 class="section-title">🔥 Productos Más Vendidos en el Periodo</h2>
-          <div v-if="loading" class="empty-state">
-            Cargando productos...
-          </div>
-          <div v-else-if="!stats.productosMasVendidos || stats.productosMasVendidos.length === 0" class="empty-state">
+          <div v-if="!stats.productosMasVendidos || stats.productosMasVendidos.length === 0" class="empty-state">
             No hay registros de ventas para procesar en este periodo.
           </div>
           <div v-else class="top-products-list">
@@ -240,6 +235,7 @@
           </div>
         </div>
       </div>
+      </template>
     </main>
   </div>
 </template>
@@ -249,6 +245,7 @@ import { API_URL } from '../config'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import HamsterLoader from '../components/HamsterLoader.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

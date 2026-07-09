@@ -47,7 +47,7 @@
 
       <!-- Table Section -->
       <div class="card font-card">
-        <div v-if="loading" class="empty-state">Cargando recordatorios...</div>
+        <HamsterLoader v-if="loading" label="Cargando recordatorios..." />
         <div v-else-if="reminders.length === 0" class="empty-state">
           No tienes recordatorios o cuentas registradas. ¡Haz clic en "Agregar Cuenta / Recordatorio" para registrar uno!
         </div>
@@ -155,6 +155,7 @@ import { ref, computed, onMounted } from 'vue'
 import { API_URL } from '../config'
 import { useAuthStore } from '../stores/auth'
 import { useRouter } from 'vue-router'
+import HamsterLoader from '../components/HamsterLoader.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
