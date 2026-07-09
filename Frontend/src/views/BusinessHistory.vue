@@ -120,20 +120,20 @@
             No hay datos de ventas registrados para este periodo.
           </div>
           <div v-else class="chart-wrapper">
-            <svg class="line-chart-svg" viewBox="0 0 500 240">
+            <svg class="line-chart-svg" viewBox="0 0 800 250">
               <defs>
                 <linearGradient id="bar-grad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="var(--primary-hover)" />
                   <stop offset="100%" stop-color="var(--primary)" />
                 </linearGradient>
               </defs>
-              <line x1="40" y1="30" x2="480" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="40" y1="105" x2="480" y2="105" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="40" y1="180" x2="480" y2="180" stroke="#e2e8f0" stroke-width="1.5" />
+              <line x1="50" y1="30" x2="780" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
+              <line x1="50" y1="110" x2="780" y2="110" stroke="#f1f2f5" stroke-dasharray="4" />
+              <line x1="50" y1="190" x2="780" y2="190" stroke="#e2e8f0" stroke-width="1.5" />
 
-              <text x="35" y="35" class="chart-axis-label text-right">S/.{{ (maxVenta).toFixed(0) }}</text>
-              <text x="35" y="110" class="chart-axis-label text-right">S/.{{ (maxVenta / 2).toFixed(0) }}</text>
-              <text x="35" y="185" class="chart-axis-label text-right">0</text>
+              <text x="40" y="35" class="chart-axis-label text-right">S/.{{ (maxVenta).toFixed(0) }}</text>
+              <text x="40" y="115" class="chart-axis-label text-right">S/.{{ (maxVenta / 2).toFixed(0) }}</text>
+              <text x="40" y="195" class="chart-axis-label text-right">0</text>
 
               <!-- Render Bars instead of line -->
               <g v-for="(point, idx) in chartPoints" :key="idx">
@@ -146,7 +146,7 @@
                   fill="url(#bar-grad)"
                   class="chart-bar"
                 >
-                  <title>{{ point.etiqueta }} {{ point.diaSemana ? '(' + point.diaSemana + ')' : '' }}: S/.{{ point.val.toFixed(2) }} ({{ point.cantidad }} ventas)</title>
+                  <title>{{ formatEtiqueta(point.etiqueta) }} {{ point.diaSemana ? '(' + formatDayName(point.diaSemana) + ')' : '' }}: S/.{{ point.val.toFixed(2) }} ({{ point.cantidad }} ventas)</title>
                 </rect>
 
                 <!-- Floating value labels on top of bars -->
@@ -157,15 +157,15 @@
                 <!-- X Axis Labels (Custom weekly format with day name above or below) -->
                 <g v-if="selectedPeriod === 'semanal'">
                   <!-- Date label -->
-                  <text :x="point.x" y="196" class="chart-axis-label date-lbl" text-anchor="middle">{{ point.etiqueta }}</text>
+                  <text :x="point.x" y="206" class="chart-axis-label date-lbl" text-anchor="middle">{{ formatEtiqueta(point.etiqueta) }}</text>
                   <!-- Capitalized Day label -->
-                  <text :x="point.x" y="210" class="chart-axis-label day-lbl font-bold" text-anchor="middle" style="fill: var(--primary-hover);">
+                  <text :x="point.x" y="220" class="chart-axis-label day-lbl font-bold" text-anchor="middle" style="fill: var(--primary-hover);">
                     {{ formatDayName(point.diaSemana) }}
                   </text>
                 </g>
                 <g v-else>
                   <!-- Standard date/month label -->
-                  <text v-if="chartPoints.length <= 12 || idx % 5 === 0" :x="point.x" y="198" class="chart-axis-label" text-anchor="middle">{{ point.etiqueta }}</text>
+                  <text v-if="chartPoints.length <= 12 || idx % 5 === 0" :x="point.x" y="208" class="chart-axis-label" text-anchor="middle">{{ formatEtiqueta(point.etiqueta) }}</text>
                 </g>
               </g>
             </svg>
@@ -351,14 +351,14 @@ const chartPoints = computed(() => {
   if (!stats.value.ventasPeriodo || stats.value.ventasPeriodo.length === 0) return []
   const count = stats.value.ventasPeriodo.length
   
-  const chartWidth = 420 // from X=50 to X=470
+  const chartWidth = 730 // from X=50 to X=780
   const startX = 50
   const spacing = count > 1 ? chartWidth / (count - 1) : chartWidth
   
   return stats.value.ventasPeriodo.map((v, index) => {
     const x = startX + index * spacing
-    const height = (v.total / maxVenta.value) * 150 // scaled up height
-    const y = 180 - height
+    const height = (v.total / maxVenta.value) * 160 // scaled up height
+    const y = 190 - height
     return { 
       x, 
       y, 
@@ -374,8 +374,54 @@ const chartPoints = computed(() => {
 // Formatting functions
 const formatDayName = (dayStr) => {
   if (!dayStr) return ''
-  const cap = dayStr.charAt(0).toUpperCase() + dayStr.slice(1).toLowerCase()
-  return cap.substring(0, 3) + '.' // e.g. "Lun.", "Mar."
+  const lower = dayStr.toLowerCase().trim()
+  const mapping = {
+    'monday': 'Lun.',
+    'tuesday': 'Mar.',
+    'wednesday': 'Mié.',
+    'thursday': 'Jue.',
+    'friday': 'Vie.',
+    'saturday': 'Sáb.',
+    'sunday': 'Dom.',
+    'lunes': 'Lun.',
+    'martes': 'Mar.',
+    'miércoles': 'Mié.',
+    'miercoles': 'Mié.',
+    'jueves': 'Jue.',
+    'viernes': 'Vie.',
+    'sábado': 'Sáb.',
+    'sabado': 'Sáb.',
+    'domingo': 'Dom.'
+  }
+  return mapping[lower] || dayStr.substring(0, 3) + '.'
+}
+
+const formatEtiqueta = (etiquetaStr) => {
+  if (!etiquetaStr) return ''
+  const months = {
+    'jan': 'Ene',
+    'feb': 'Feb',
+    'mar': 'Mar',
+    'apr': 'Abr',
+    'may': 'May',
+    'jun': 'Jun',
+    'jul': 'Jul',
+    'aug': 'Ago',
+    'sep': 'Sep',
+    'oct': 'Oct',
+    'nov': 'Nov',
+    'dec': 'Dic'
+  }
+  let res = etiquetaStr.toLowerCase()
+  Object.keys(months).forEach(eng => {
+    res = res.replace(eng, months[eng])
+  })
+  return res.split('-').map(part => {
+    if (isNaN(part)) {
+      return part.charAt(0).toUpperCase() + part.slice(1)
+    }
+    return part
+  }).join('-')
 }
 
 // Pie Chart Computed Helpers

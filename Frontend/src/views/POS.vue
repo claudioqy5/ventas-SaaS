@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
-    <aside class="sidebar">
+    <aside class="sidebar" @mouseenter="isSidebarHovered = true" @mouseleave="isSidebarHovered = false">
       <div class="sidebar-brand">🍦 <span class="sidebar-text">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
@@ -49,7 +49,7 @@
           </div>
 
           <div v-else style="display: flex; flex-direction: column; flex-grow: 1; min-height: 0;">
-            <div class="products-grid" style="overflow-y: auto; flex-grow: 1; min-height: 0; padding-bottom: 10px;">
+            <div class="products-grid" :class="{ 'sidebar-hovered': isSidebarHovered }" style="overflow-y: auto; flex-grow: 1; min-height: 0; padding-bottom: 10px;">
               <div v-for="product in paginatedProducts" :key="product.id" @click="addToCart(product)" class="product-card card">
                 <div class="product-image-container">
                   <img :src="product.imagenUrl || defaultImage" class="product-card-img" alt="product image" />
@@ -81,7 +81,7 @@
         </div>
 
         <!-- Panel lateral para el resumen de compra y pago -->
-        <aside class="cart-panel" style="width: 380px; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; background: #ffffff; border-left: 1px solid var(--border-color); overflow: hidden; min-height: 0;">
+        <aside class="cart-panel" style="width: 450px; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; background: #ffffff; border-left: 1px solid var(--border-color); overflow: hidden; min-height: 0; align-self: stretch; height: 100%;">
           <div class="cart-header">
             <h2 class="cart-title">🛒 Carrito de Compra</h2>
             <span class="sale-code-badge">{{ codigoVenta }}</span>
@@ -173,19 +173,24 @@ const selectedClientId = ref('')
 const clients = ref([])
 const codigoVenta = ref('')
 
+const isSidebarHovered = ref(false)
 const currentPage = ref(1)
 
 watch([searchQuery, selectedCategory], () => {
   currentPage.value = 1
 })
 
+const itemsPerPage = computed(() => {
+  return isSidebarHovered.value ? 12 : 15
+})
+
 const totalPages = computed(() => {
-  return Math.max(1, Math.ceil(filteredProducts.value.length / 15))
+  return Math.max(1, Math.ceil(filteredProducts.value.length / itemsPerPage.value))
 })
 
 const paginatedProducts = computed(() => {
-  const start = (currentPage.value - 1) * 15
-  return filteredProducts.value.slice(start, start + 15)
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  return filteredProducts.value.slice(start, start + itemsPerPage.value)
 })
 
 const generarCodigoVenta = () => {
@@ -396,8 +401,14 @@ onMounted(() => {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.products-grid.sidebar-hovered {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
 }
 
 .product-card {
