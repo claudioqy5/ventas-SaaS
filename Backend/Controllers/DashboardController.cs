@@ -60,6 +60,21 @@ public class DashboardController : ControllerBase
         var totalNetoDia = todaySales.Sum(s => (double)s.Subtotal);
         var totalVentasCount = todaySales.Count;
 
+        // Mapear costos de productos para calcular la ganancia bruta
+        var productCostMap = products.ToDictionary(p => p.Id, p => p.PrecioCosto);
+        double totalCostoHoy = 0;
+        foreach (var s in todaySales)
+        {
+            foreach (var item in s.Detalles)
+            {
+                if (productCostMap.TryGetValue(item.ProductoId, out var costPrice))
+                {
+                    totalCostoHoy += (double)(item.Cantidad * costPrice);
+                }
+            }
+        }
+        double gananciaBrutaHoy = totalIngresos - totalCostoHoy;
+
         // Calcular el total gastado en compras (solo si el usuario tiene permiso para verlo)
         double totalGastosCompras = 0;
         if (_userContext.HasPermission("compras"))
@@ -153,6 +168,7 @@ public class DashboardController : ControllerBase
             TotalVentas = totalVentasCount,
             TotalIngresos = totalIngresos,
             TotalNetoDia = totalNetoDia,
+            GananciaBruta = gananciaBrutaHoy,
             TotalGastosCompras = totalGastosCompras,
             ProductosBajoStockCount = productosBajoStock.Count,
             ProductosBajoStock = productosBajoStock.Take(5),
@@ -281,12 +297,29 @@ public class DashboardController : ControllerBase
         double totalBruto = filteredSales.Sum(s => (double)s.Total);
         double totalNeto = filteredSales.Sum(s => (double)s.Subtotal);
 
+        // Mapear costos de productos para calcular la ganancia bruta de este periodo
+        var products = await _context.Products.Find(p => p.EmpresaId == empresaId).ToListAsync();
+        var productCostMap = products.ToDictionary(p => p.Id, p => p.PrecioCosto);
+        double totalCostoPeriodo = 0;
+        foreach (var s in filteredSales)
+        {
+            foreach (var item in s.Detalles)
+            {
+                if (productCostMap.TryGetValue(item.ProductoId, out var costPrice))
+                {
+                    totalCostoPeriodo += (double)(item.Cantidad * costPrice);
+                }
+            }
+        }
+        double gananciaBrutaPeriodo = totalBruto - totalCostoPeriodo;
+
         return Ok(new
         {
             Period = period,
             TotalIngresos = totalBruto,
             TotalBruto = totalBruto,
             TotalNeto = totalNeto,
+            GananciaBruta = gananciaBrutaPeriodo,
             RangoTexto = rangoTexto,
             VentasPeriodo = ventasPeriodo,
             MetodosPago = metodosPago,

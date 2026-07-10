@@ -61,8 +61,8 @@
         </div>
 
         <div class="kpi-total-card neto" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px 24px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center; cursor: pointer;">
-          <div style="font-size: 0.75rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Venta sin IGV</div>
-          <div style="font-size: 1.8rem; font-weight: 800; color: #14532d; margin-top: 4px;">S/. {{ (stats.totalNetoDia || 0).toFixed(2) }}</div>
+          <div style="font-size: 0.75rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Ganancia Bruta (Pre-Impuesto)</div>
+          <div style="font-size: 1.8rem; font-weight: 800; color: #14532d; margin-top: 4px;">S/. {{ (stats.gananciaBruta || 0).toFixed(2) }}</div>
         </div>
 
         <div class="kpi-total-card realizadas" style="background: #fff0f6; border: 1px solid #ffd8e8; padding: 20px 24px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center; cursor: pointer;">
