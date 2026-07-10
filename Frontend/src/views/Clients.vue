@@ -138,7 +138,7 @@
         </div>
 
         <!-- Tabla Resumen de Top Clientes -->
-        <div v-else-if="!loadingTop && topClientes.length > 0" class="card font-card">
+        <div v-if="!loadingTop && topClientes.length > 0" class="card font-card">
           <div v-if="filteredTopClientes.length === 0" class="empty-state" style="padding: 24px;">
             No se encontraron clientes que coincidan con la búsqueda.
           </div>
