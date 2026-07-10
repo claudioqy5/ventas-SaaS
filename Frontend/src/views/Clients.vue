@@ -660,12 +660,12 @@ const printSaleTicket = (sale) => {
         <div class="text-center" style="margin-top: 30px;">
           <p>¡Gracias por su preferencia!</p>
         </div>
-        <script>
+        <${'script'}>
           window.onload = function() {
             window.print();
             setTimeout(function() { window.close(); }, 500);
           }
-        <\/script>
+        </${'script'}>
       </body>
     </html>
   `
@@ -775,12 +775,12 @@ const printCompleteClientReport = () => {
           </tbody>
         </table>
 
-        <script>
+        <${'script'}>
           window.onload = function() {
             window.print();
             setTimeout(function() { window.close(); }, 500);
           }
-        <\/script>
+        </${'script'}>
       </body>
     </html>
   `
