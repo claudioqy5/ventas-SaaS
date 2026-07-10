@@ -215,11 +215,23 @@
             <!-- Sparkline SVG de tendencia de los últimos 6 meses -->
             <div class="sparkline-wrapper" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px;">
               <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">📈 Tendencia de Compras (Últimos 6 meses)</span>
-              <svg class="sparkline" viewBox="0 0 200 50" preserveAspectRatio="none" style="width: 100%; height: 60px;">
-                <polyline
-                  :points="buildSparkline(selectedClient.tendenciaMensual)"
+              <svg class="sparkline" viewBox="0 0 200 50" preserveAspectRatio="none" style="width: 100%; height: 70px; background: transparent; border: none; overflow: visible;">
+                <defs>
+                  <linearGradient :id="'sparkGrad-' + selectedClient.clienteId" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#6366f1" stop-opacity="0.25" />
+                    <stop offset="100%" stop-color="#6366f1" stop-opacity="0.0" />
+                  </linearGradient>
+                </defs>
+                <!-- Área de relleno con degradado -->
+                <path
+                  :d="buildSparklinePath(selectedClient.tendenciaMensual)"
+                  :fill="'url(#sparkGrad-' + selectedClient.clienteId + ')'"
+                />
+                <!-- Línea de la tendencia -->
+                <path
+                  :d="buildSparklineLine(selectedClient.tendenciaMensual)"
                   fill="none"
-                  stroke="#a3c4f3"
+                  stroke="#4f46e5"
                   stroke-width="2.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -231,7 +243,9 @@
                   :cx="pt.x"
                   :cy="pt.y"
                   r="3.5"
-                  fill="#90b3e2"
+                  fill="#4f46e5"
+                  stroke="#ffffff"
+                  stroke-width="1"
                 />
               </svg>
               <div class="sparkline-months" style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; font-weight: 600;">
@@ -471,8 +485,17 @@ const sparklinePoints = (tendencia) => {
   }))
 }
 
-const buildSparkline = (tendencia) => {
-  return sparklinePoints(tendencia).map(p => `${p.x},${p.y}`).join(' ')
+const buildSparklineLine = (tendencia) => {
+  const pts = sparklinePoints(tendencia)
+  if (pts.length === 0) return 'M 0,0'
+  return 'M ' + pts.map(p => `${p.x},${p.y}`).join(' L ')
+}
+
+const buildSparklinePath = (tendencia) => {
+  const pts = sparklinePoints(tendencia)
+  if (pts.length === 0) return 'M 0,50 Z'
+  const linePoints = pts.map(p => `${p.x},${p.y}`).join(' L ')
+  return `M ${pts[0].x},50 L ${linePoints} L ${pts[pts.length - 1].x},50 Z`
 }
 
 // Mensaje de WhatsApp para clientes inactivos (reactivación con oferta)
@@ -861,11 +884,6 @@ onMounted(() => {
 .sparkline {
   width: 100%;
   height: 50px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-app);
-  border: 1px solid var(--border-color);
-  padding: 4px;
-  box-sizing: border-box;
 }
 
 .sparkline-months {
