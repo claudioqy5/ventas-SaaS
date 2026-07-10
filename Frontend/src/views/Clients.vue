@@ -212,123 +212,125 @@
               </div>
             </div>
 
-            <!-- Sparkline SVG de tendencia de los últimos 6 meses -->
-            <div class="sparkline-wrapper" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px;">
-              <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">📈 Tendencia de Compras (Últimos 6 meses)</span>
-              <svg class="line-chart-svg" viewBox="0 0 500 150" style="width: 100%; height: 160px; background: transparent; overflow: visible;">
-                <defs>
-                  <linearGradient :id="'sparkGrad-' + selectedClient.clienteId" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.3" />
-                    <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0" />
-                  </linearGradient>
-                </defs>
-                <!-- Grid Lines (Horizontal) -->
-                <line x1="60" y1="20" x2="480" y2="20" stroke="#f1f2f5" stroke-dasharray="4" />
-                <line x1="60" y1="70" x2="480" y2="70" stroke="#f1f2f5" stroke-dasharray="4" />
-                <line x1="60" y1="120" x2="480" y2="120" stroke="#e2e8f0" stroke-width="1.5" />
+            <!-- Panel de Análisis en 2 Columnas (Gráfico a la izquierda, Historial y Productos a la derecha) -->
+            <div class="analysis-columns-grid" style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; margin-bottom: 24px; align-items: start;">
+              <!-- Columna Izquierda: Tendencia de Compras -->
+              <div class="sparkline-wrapper" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md);">
+                <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">📈 Tendencia de Compras (Últimos 6 meses)</span>
+                <svg class="line-chart-svg" viewBox="0 0 500 150" style="width: 100%; height: 160px; background: transparent; overflow: visible;">
+                  <defs>
+                    <linearGradient :id="'sparkGrad-' + selectedClient.clienteId" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.3" />
+                      <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Grid Lines (Horizontal) -->
+                  <line x1="60" y1="20" x2="480" y2="20" stroke="#f1f2f5" stroke-dasharray="4" />
+                  <line x1="60" y1="70" x2="480" y2="70" stroke="#f1f2f5" stroke-dasharray="4" />
+                  <line x1="60" y1="120" x2="480" y2="120" stroke="#e2e8f0" stroke-width="1.5" />
 
-                <!-- Y Axis Labels -->
-                <text x="50" y="24" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.{{ clientMaxVal(selectedClient.tendenciaMensual).toFixed(0) }}</text>
-                <text x="50" y="74" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.{{ (clientMaxVal(selectedClient.tendenciaMensual) / 2).toFixed(0) }}</text>
-                <text x="50" y="124" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.0</text>
+                  <!-- Y Axis Labels -->
+                  <text x="50" y="24" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.{{ clientMaxVal(selectedClient.tendenciaMensual).toFixed(0) }}</text>
+                  <text x="50" y="74" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.{{ (clientMaxVal(selectedClient.tendenciaMensual) / 2).toFixed(0) }}</text>
+                  <text x="50" y="124" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.0</text>
 
-                <!-- Gradient Area Fill -->
-                <path
-                  :d="buildClientChartPath(selectedClient.tendenciaMensual)"
-                  :fill="'url(#sparkGrad-' + selectedClient.clienteId + ')'"
-                />
-                <!-- Trend Stroke Line -->
-                <path
-                  :d="buildClientChartLine(selectedClient.tendenciaMensual)"
-                  fill="none"
-                  stroke="var(--primary-hover)"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <!-- Data Points (Circles with hover tooltips and selection highlight) -->
-                <circle
-                  v-for="(pt, idx) in clientChartPoints(selectedClient.tendenciaMensual)"
-                  :key="idx"
-                  :cx="pt.x"
-                  :cy="pt.y"
-                  :r="selectedMonth?.mesNum === selectedClient.tendenciaMensual[idx].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[idx].anio ? 6 : 4.5"
-                  :fill="selectedMonth?.mesNum === selectedClient.tendenciaMensual[idx].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[idx].anio ? '#4f46e5' : 'var(--primary-hover)'"
-                  stroke="#ffffff"
-                  :stroke-width="selectedMonth?.mesNum === selectedClient.tendenciaMensual[idx].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[idx].anio ? 2.5 : 1.5"
-                  style="cursor: pointer; transition: all 0.2s;"
-                  @click="selectMonth(selectedClient.tendenciaMensual[idx])"
-                >
-                  <title>{{ pt.mes }}: S/. {{ pt.val.toFixed(2) }} (Haz clic para ver compras)</title>
-                </circle>
+                  <!-- Gradient Area Fill -->
+                  <path
+                    :d="buildClientChartPath(selectedClient.tendenciaMensual)"
+                    :fill="'url(#sparkGrad-' + selectedClient.clienteId + ')'"
+                  />
+                  <!-- Trend Stroke Line -->
+                  <path
+                    :d="buildClientChartLine(selectedClient.tendenciaMensual)"
+                    fill="none"
+                    stroke="var(--primary-hover)"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <!-- Data Points (Circles with hover tooltips and selection highlight) -->
+                  <circle
+                    v-for="(pt, idx) in clientChartPoints(selectedClient.tendenciaMensual)"
+                    :key="idx"
+                    :cx="pt.x"
+                    :cy="pt.y"
+                    :r="selectedMonth?.mesNum === selectedClient.tendenciaMensual[idx].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[idx].anio ? 6 : 4.5"
+                    :fill="selectedMonth?.mesNum === selectedClient.tendenciaMensual[idx].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[idx].anio ? '#4f46e5' : 'var(--primary-hover)'"
+                    stroke="#ffffff"
+                    :stroke-width="selectedMonth?.mesNum === selectedClient.tendenciaMensual[idx].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[idx].anio ? 2.5 : 1.5"
+                    style="cursor: pointer; transition: all 0.2s;"
+                    @click="selectMonth(selectedClient.tendenciaMensual[idx])"
+                  >
+                    <title>{{ pt.mes }}: S/. {{ pt.val.toFixed(2) }} (Haz clic para ver compras)</title>
+                  </circle>
 
-                <!-- X Axis Month Labels -->
-                <text
-                  v-for="(pt, i) in clientChartPoints(selectedClient.tendenciaMensual)"
-                  :key="'lbl-' + i"
-                  :x="pt.x"
-                  y="142"
-                  text-anchor="middle"
-                  :style="{
-                    fontSize: '0.7rem',
-                    fontWeight: '700',
-                    fill: selectedMonth?.mesNum === selectedClient.tendenciaMensual[i].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[i].anio ? '#4f46e5' : 'var(--text-muted)',
-                    cursor: 'pointer'
-                  }"
-                  @click="selectMonth(selectedClient.tendenciaMensual[i])"
-                >
-                  {{ pt.mes }}
-                </text>
-              </svg>
+                  <!-- X Axis Month Labels -->
+                  <text
+                    v-for="(pt, i) in clientChartPoints(selectedClient.tendenciaMensual)"
+                    :key="'lbl-' + i"
+                    :x="pt.x"
+                    y="142"
+                    text-anchor="middle"
+                    :style="{
+                      fontSize: '0.7rem',
+                      fontWeight: '700',
+                      fill: selectedMonth?.mesNum === selectedClient.tendenciaMensual[i].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[i].anio ? '#4f46e5' : 'var(--text-muted)',
+                      cursor: 'pointer'
+                    }"
+                    @click="selectMonth(selectedClient.tendenciaMensual[i])"
+                  >
+                    {{ pt.mes }}
+                  </text>
+                </svg>
+              </div>
+
+              <!-- Columna Derecha: Historial Mensual y Top Productos -->
+              <div style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Listado de compras del mes seleccionado -->
+                <div class="selected-month-sales" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); background: #fafafa; margin-bottom: 0;">
+                  <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-top: 0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>🛒 Compras de: <strong style="color: #4f46e5;">{{ selectedMonth?.mes }} {{ selectedMonth?.anio }}</strong></span>
+                    <span class="badge badge-info" style="font-size: 0.72rem; background-color: #e0f2fe; color: #0369a1;">S/. {{ selectedMonth?.total.toFixed(2) }}</span>
+                  </h4>
+
+                  <div v-if="filteredSalesByMonth.length === 0" class="text-muted" style="text-align: center; padding: 24px; font-size: 0.85rem;">
+                    No hay compras registradas en este mes.
+                  </div>
+                  <div v-else style="max-height: 180px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;">
+                    <table class="data-table" style="font-size: 0.82rem; width: 100%;">
+                      <thead>
+                        <tr style="background: var(--bg-app);">
+                          <th style="padding: 8px; text-align: left;">Fecha y Hora</th>
+                          <th style="padding: 8px; text-align: right;">Total</th>
+                          <th style="padding: 8px; text-align: center;">Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="sale in filteredSalesByMonth" :key="sale.id" style="border-bottom: 1px solid var(--border-color);">
+                          <td style="padding: 8px; text-align: left; font-size: 0.75rem;">{{ formatDate(sale.fechaCreacion) }}</td>
+                          <td style="padding: 8px; text-align: right; font-weight: 700; color: var(--text-main);">S/. {{ sale.total.toFixed(2) }}</td>
+                          <td style="padding: 8px; text-align: center;">
+                            <button @click="openSaleDetail(sale)" class="btn btn-primary btn-sm" style="padding: 2px 6px; font-size: 0.7rem;">📄 Boleta</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Top productos de este cliente -->
+                <div v-if="selectedClient.topProductos?.length > 0" class="top-products" style="margin-bottom: 0; padding-top: 12px; border-top: 1px dashed var(--border-color);">
+                  <p class="top-products-title" style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 10px;">🛒 Productos más comprados históricamente:</p>
+                  <div class="top-products-list" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                    <span v-for="(p, pi) in selectedClient.topProductos" :key="pi" class="product-chip" style="background: #e2e8f0; color: #1e293b; padding: 4px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;">
+                      {{ p.producto }} <strong style="color: #6366f1;">x{{ p.cantidad }}</strong>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <!-- Listado de compras del mes seleccionado -->
-            <div class="selected-month-sales" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px; background: #fafafa;">
-              <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-top: 0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                <span>🛒 Historial del mes: <strong style="color: #4f46e5;">{{ selectedMonth?.mes }} {{ selectedMonth?.anio }}</strong></span>
-                <span class="badge badge-info" style="font-size: 0.75rem;">Total Mes: S/. {{ selectedMonth?.total.toFixed(2) }}</span>
-              </h4>
-
-              <div v-if="filteredSalesByMonth.length === 0" class="text-muted" style="text-align: center; padding: 24px; font-size: 0.85rem;">
-                No hay compras registradas en este mes.
-              </div>
-              <div v-else style="max-height: 180px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;">
-                <table class="data-table" style="font-size: 0.85rem; width: 100%;">
-                  <thead>
-                    <tr style="background: var(--bg-app);">
-                      <th style="padding: 10px;">Fecha y Hora</th>
-                      <th style="padding: 10px;">Total Pago</th>
-                      <th style="padding: 10px;">Método Pago</th>
-                      <th style="padding: 10px;">Vendedor</th>
-                      <th style="padding: 10px; text-align: center;">Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="sale in filteredSalesByMonth" :key="sale.id" style="border-bottom: 1px solid var(--border-color);">
-                      <td style="padding: 10px;">{{ formatDate(sale.fechaCreacion) }}</td>
-                      <td style="padding: 10px; font-weight: 700; color: var(--text-main);">S/. {{ sale.total.toFixed(2) }}</td>
-                      <td style="padding: 10px;"><span class="badge badge-info">{{ sale.metodoPago }}</span></td>
-                      <td style="padding: 10px;">{{ sale.creadoPorNombre }}</td>
-                      <td style="padding: 10px; text-align: center;">
-                        <button @click="openSaleDetail(sale)" class="btn btn-primary btn-sm" style="padding: 4px 8px; font-size: 0.75rem;">📄 Ver Boleta</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- Top productos de este cliente -->
-            <div v-if="selectedClient.topProductos?.length > 0" class="top-products" style="margin-bottom: 12px;">
-              <p class="top-products-title" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">🛒 Productos más comprados históricamente:</p>
-              <div class="top-products-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                <span v-for="(p, pi) in selectedClient.topProductos" :key="pi" class="product-chip" style="background: #e2e8f0; color: #1e293b; padding: 4px 10px; border-radius: 99px; font-size: 0.8rem; font-weight: 600;">
-                  {{ p.producto }} <strong style="color: #6366f1;">x{{ p.cantidad }}</strong>
-                </span>
-              </div>
-            </div>
-
-            <div class="modal-actions" style="display: flex; justify-content: flex-end; margin-top: 24px;">
+            <div class="modal-actions" style="display: flex; justify-content: flex-end; margin-top: 12px;">
               <button @click="showDetailModal = false" class="btn btn-secondary">Cerrar</button>
             </div>
           </div>
@@ -1115,6 +1117,6 @@ onMounted(() => {
 .rank-3 { background-color: #ffedd5; color: #ea580c; }
 
 .detail-modal-card {
-  max-width: 650px !important;
+  max-width: 950px !important;
 }
 </style>
