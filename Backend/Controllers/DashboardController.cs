@@ -55,7 +55,7 @@ public class DashboardController : ControllerBase
 
         // Calcular el total de ingresos y la cantidad de ventas realizadas (filtrado por el dia objetivo)
         var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId).ToListAsync();
-        var todaySales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date == targetDate.Date).ToList();
+        var todaySales = sales.Where(s => s.FechaCreacion.AddHours(-5).Date == targetDate.Date).ToList();
         var totalIngresos = todaySales.Sum(s => (double)s.Total);
         var totalNetoDia = todaySales.Sum(s => (double)s.Subtotal);
         var totalVentasCount = todaySales.Count;
@@ -116,10 +116,10 @@ public class DashboardController : ControllerBase
             {
                 Hora = $"{h:00}:00",
                 Total = todaySales
-                    .Where(s => s.FechaCreacion.ToLocalTime().Hour == h)
+                    .Where(s => s.FechaCreacion.AddHours(-5).Hour == h)
                     .Sum(s => (double)s.Total),
                 Cantidad = todaySales
-                    .Count(s => s.FechaCreacion.ToLocalTime().Hour == h)
+                    .Count(s => s.FechaCreacion.AddHours(-5).Hour == h)
             })
             .ToList();
 
@@ -200,7 +200,7 @@ public class DashboardController : ControllerBase
             DateTime monday = targetDate.AddDays(-1 * diff).Date;
             DateTime sunday = monday.AddDays(6).Date;
 
-            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date >= monday && s.FechaCreacion.ToLocalTime().Date <= sunday).ToList();
+            filteredSales = sales.Where(s => s.FechaCreacion.AddHours(-5).Date >= monday && s.FechaCreacion.AddHours(-5).Date <= sunday).ToList();
             rangoTexto = $"{monday:dd/MM/yyyy} al {sunday:dd/MM/yyyy}";
 
             var dias = Enumerable.Range(0, 7)
@@ -211,19 +211,19 @@ public class DashboardController : ControllerBase
             {
                 Etiqueta = d.ToString("dd-MMM"),
                 DiaSemana = d.ToString("dddd"),
-                Total = filteredSales.Where(s => s.FechaCreacion.ToLocalTime().Date == d.Date).Sum(s => (double)s.Total),
-                Cantidad = filteredSales.Count(s => s.FechaCreacion.ToLocalTime().Date == d.Date)
+                Total = filteredSales.Where(s => s.FechaCreacion.AddHours(-5).Date == d.Date).Sum(s => (double)s.Total),
+                Cantidad = filteredSales.Count(s => s.FechaCreacion.AddHours(-5).Date == d.Date)
             }).ToList();
         }
         else if (period == "anual")
         {
             // Ventas del año de la fecha seleccionada
-            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Year == targetDate.Year).ToList();
+            filteredSales = sales.Where(s => s.FechaCreacion.AddHours(-5).Year == targetDate.Year).ToList();
             rangoTexto = $"Año {targetDate.Year}";
 
             ventasPeriodo = Enumerable.Range(1, 12)
                 .Select(m => {
-                    var monthSales = filteredSales.Where(s => s.FechaCreacion.ToLocalTime().Month == m).ToList();
+                    var monthSales = filteredSales.Where(s => s.FechaCreacion.AddHours(-5).Month == m).ToList();
                     return new
                     {
                         Etiqueta = new DateTime(targetDate.Year, m, 1).ToString("MMM"),
@@ -239,7 +239,7 @@ public class DashboardController : ControllerBase
             DateTime firstDayOfMonth = new DateTime(targetDate.Year, targetDate.Month, 1);
             DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
 
-            filteredSales = sales.Where(s => s.FechaCreacion.ToLocalTime().Date >= firstDayOfMonth && s.FechaCreacion.ToLocalTime().Date <= lastDayOfMonth).ToList();
+            filteredSales = sales.Where(s => s.FechaCreacion.AddHours(-5).Date >= firstDayOfMonth && s.FechaCreacion.AddHours(-5).Date <= lastDayOfMonth).ToList();
             rangoTexto = targetDate.ToString("MMMM yyyy");
 
             int daysInMonth = DateTime.DaysInMonth(targetDate.Year, targetDate.Month);
@@ -250,8 +250,8 @@ public class DashboardController : ControllerBase
             ventasPeriodo = dias.Select(d => new
             {
                 Etiqueta = d.ToString("dd-MMM"),
-                Total = filteredSales.Where(s => s.FechaCreacion.ToLocalTime().Date == d.Date).Sum(s => (double)s.Total),
-                Cantidad = filteredSales.Count(s => s.FechaCreacion.ToLocalTime().Date == d.Date)
+                Total = filteredSales.Where(s => s.FechaCreacion.AddHours(-5).Date == d.Date).Sum(s => (double)s.Total),
+                Cantidad = filteredSales.Count(s => s.FechaCreacion.AddHours(-5).Date == d.Date)
             }).ToList();
         }
 

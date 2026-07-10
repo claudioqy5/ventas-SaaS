@@ -155,6 +155,7 @@ const formatDateTime = (dateStr) => {
   if (!dateStr) return '-'
   const date = new Date(dateStr)
   return date.toLocaleString('es-PE', {
+    timeZone: 'America/Lima',
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',

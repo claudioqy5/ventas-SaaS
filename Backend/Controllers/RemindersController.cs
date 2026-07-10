@@ -40,7 +40,7 @@ public class RemindersController : ControllerBase
         foreach (var r in reminders)
         {
             // Si es recurrente, está Pagado y ya pasó al menos 1 día de la fecha de vencimiento
-            if (r.Recurrente && r.Estado == "Pagado" && today > r.FechaVencimiento.ToLocalTime().Date)
+            if (r.Recurrente && r.Estado == "Pagado" && today > r.FechaVencimiento.AddHours(-5).Date)
             {
                 // Mover al mismo día del mes siguiente
                 r.FechaVencimiento = r.FechaVencimiento.AddMonths(1);

@@ -258,6 +258,7 @@ const formatDateTime = (dateStr) => {
   if (!dateStr) return '-'
   const date = new Date(dateStr)
   return date.toLocaleString('es-PE', {
+    timeZone: 'America/Lima',
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
@@ -277,7 +278,7 @@ const whatsappSaleUrl = computed(() => {
   const sale = selectedSale.value
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
   const items = (sale.detalles || []).map(i => `  • ${i.nombreProducto} x${i.cantidad} = S/. ${(i.cantidad * i.precioUnitario).toFixed(2)}`).join('%0A')
-  const msg = `¡Hola! Gracias por tu compra en *${store}* 🛒%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE')}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
+  const msg = `¡Hola! Gracias por tu compra en *${store}* 🛒%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE', { timeZone: 'America/Lima' })}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
   const phone = sale.clienteTelefono.replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${msg}`
 })

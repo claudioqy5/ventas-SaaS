@@ -251,6 +251,10 @@ watch([searchQuery, selectedCategory], () => {
   currentPage.value = 1
 })
 
+watch(cart, () => {
+  computeCrossSell()
+}, { deep: true })
+
 const itemsPerPage = computed(() => {
   return isSidebarHovered.value ? 12 : 15
 })
@@ -881,10 +885,26 @@ onUnmounted(() => {
 }
 
 /* ── Success modal ── */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
 .success-modal {
   max-width: 480px;
-  width: 100%;
-  padding: 36px;
+  width: 90%;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
   text-align: center;
 }
 

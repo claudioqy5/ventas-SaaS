@@ -136,7 +136,7 @@
           <tbody>
             <tr v-for="(pur, index) in filteredPurchases" :key="pur.id">
               <td><strong>{{ index + 1 }}</strong></td>
-              <td><code>{{ new Date(pur.fechaCreacion).toLocaleDateString() }}</code></td>
+              <td><code>{{ new Date(pur.fechaCreacion).toLocaleDateString('es-PE', { timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric' }) }}</code></td>
               <td><strong>{{ pur.nombreProveedor }}</strong></td>
               <td>
                 <ul class="items-list">
