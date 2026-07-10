@@ -504,11 +504,65 @@ const loadingTop = ref(false)
 
 const selectedClient = ref(null)
 const showDetailModal = ref(false)
+const selectedMonth = ref(null)
+const clientSales = ref([])
+const showSaleDetailModal = ref(false)
+const selectedSale = ref(null)
 
-const openDetailModal = (client) => {
-  selectedClient.value = client
-  showDetailModal.value = true
+const selectMonth = (monthObj) => {
+  selectedMonth.value = monthObj
 }
+
+const openSaleDetail = (sale) => {
+  selectedSale.value = sale
+  showSaleDetailModal.value = true
+}
+
+const fetchClientSales = async (clientId) => {
+  try {
+    const res = await fetch(`${API_URL}/api/clientanalytics/client/${clientId}/sales`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (res.ok) {
+      clientSales.value = await res.json()
+    }
+  } catch (err) {
+    console.error('Error fetching client sales', err)
+  }
+}
+
+const openDetailModal = async (client) => {
+  selectedClient.value = client
+  selectedMonth.value = null
+  clientSales.value = []
+  showDetailModal.value = true
+  await fetchClientSales(client.clienteId)
+  if (client.tendenciaMensual && client.tendenciaMensual.length > 0) {
+    selectedMonth.value = client.tendenciaMensual[client.tendenciaMensual.length - 1]
+  }
+}
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return 'N/A'
+  const d = new Date(dateStr)
+  // Ajuste de zona horaria para Perú (UTC-5)
+  const local = new Date(d.getTime() - (5 * 60 * 60 * 1000))
+  return local.toLocaleDateString('es-PE', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  })
+}
+
+const filteredSalesByMonth = computed(() => {
+  if (!selectedMonth.value || !clientSales.value) return []
+  return clientSales.value.filter(sale => {
+    const saleDate = new Date(sale.fechaCreacion)
+    const localDate = new Date(saleDate.getTime() - (5 * 60 * 60 * 1000))
+    const monthNum = localDate.getMonth() + 1
+    const year = localDate.getFullYear()
+    return monthNum === selectedMonth.value.mesNum && year === selectedMonth.value.anio
+  })
+})
 
 const clientesInactivos = computed(() => topClientes.value.filter(c => c.inactivo))
 
