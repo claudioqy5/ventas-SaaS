@@ -132,72 +132,125 @@
           📊 Aún no hay suficientes datos de compras vinculadas a clientes. Selecciona un cliente en el POS al registrar ventas.
         </div>
 
-        <!-- Grid de Top Clientes -->
-        <div v-else class="top-grid">
-          <div v-for="(cli, idx) in topClientes" :key="cli.clienteId" class="top-card card">
+        <!-- Tabla Resumen de Top Clientes -->
+        <div v-else class="card font-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">Posición</th>
+                <th>Cliente</th>
+                <th>Total Gastado</th>
+                <th>Compras</th>
+                <th>Última Compra</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(cli, idx) in sortedTopClientes" :key="cli.clienteId" class="clickable-row" @click="openDetailModal(cli)" style="cursor: pointer;">
+                <td>
+                  <span :class="['rank-badge', 'rank-' + (idx + 1)]" style="font-weight: bold; font-size: 0.9rem;">
+                    {{ idx === 0 ? '🥇 1' : idx === 1 ? '🥈 2' : idx === 2 ? '🥉 3' : '#' + (idx + 1) }}
+                  </span>
+                </td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="top-avatar-sm">{{ cli.nombre?.charAt(0).toUpperCase() }}</div>
+                    <div>
+                      <strong>{{ cli.nombre }}</strong>
+                      <div class="text-muted" style="font-size: 0.8rem; margin-top: 2px;">{{ cli.numeroDocumento || cli.correo || 'Sin documento' }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-weight: 800; color: var(--text-main);">S/. {{ cli.totalGastado?.toFixed(2) }}</td>
+                <td><strong>{{ cli.numCompras }}</strong> compras</td>
+                <td>
+                  <span :class="['status-badge', cli.inactivo ? 'disabled' : 'ok']">
+                    Hace {{ cli.diasDesdeUltimaCompra }} días
+                  </span>
+                </td>
+                <td>
+                  <div class="actions-cell" @click.stop>
+                    <button @click="openDetailModal(cli)" class="btn btn-primary btn-sm">🔍 Ver Análisis</button>
+                    <a v-if="cli.telefono" :href="buildWhatsappPromo(cli)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm">📱 WhatsApp</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-            <!-- Cabecera de la card -->
-            <div class="top-card-header">
-              <div class="top-rank" :class="['rank-' + (idx + 1)]">{{ idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '#' + (idx + 1) }}</div>
-              <div class="top-avatar">{{ cli.nombre?.charAt(0).toUpperCase() }}</div>
-              <div class="top-info">
-                <h3 class="top-name">{{ cli.nombre }}</h3>
-                <span class="top-doc">{{ cli.numeroDocumento || cli.correo || 'Sin documento' }}</span>
+        <!-- Modal de Análisis Detallado de Cliente -->
+        <div v-if="showDetailModal && selectedClient" class="modal-overlay">
+          <div class="modal-card card detail-modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+              <h2 class="modal-title" style="margin-bottom: 0;">📊 Análisis de Cliente</h2>
+              <button @click="showDetailModal = false" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); font-weight: bold;">&times;</button>
+            </div>
+            
+            <div class="top-card-header" style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+              <div class="top-avatar">{{ selectedClient.nombre?.charAt(0).toUpperCase() }}</div>
+              <div class="top-info" style="flex-grow: 1;">
+                <h3 class="top-name" style="font-size: 1.2rem; font-weight: 700; color: var(--text-main);">{{ selectedClient.nombre }}</h3>
+                <span class="top-doc" style="font-size: 0.85rem; color: var(--text-muted);">{{ selectedClient.numeroDocumento || selectedClient.correo || 'Sin documento' }}</span>
               </div>
-              <a v-if="cli.telefono" :href="buildWhatsappPromo(cli)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm">📱 WhatsApp</a>
+              <a v-if="selectedClient.telefono" :href="buildWhatsappPromo(selectedClient)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm">📱 Enviar Oferta</a>
             </div>
 
             <!-- Métricas clave -->
-            <div class="top-metrics">
-              <div class="metric">
-                <span class="metric-val">S/. {{ cli.totalGastado?.toFixed(2) }}</span>
-                <span class="metric-lbl">Total Gastado</span>
+            <div class="top-metrics" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; text-align: center; background: var(--bg-app); padding: 16px; border-radius: var(--radius-md);">
+              <div class="metric" style="display: flex; flex-direction: column; gap: 4px;">
+                <span class="metric-val" style="font-size: 1.2rem; font-weight: 800; color: var(--text-main);">S/. {{ selectedClient.totalGastado?.toFixed(2) }}</span>
+                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Total Gastado</span>
               </div>
-              <div class="metric">
-                <span class="metric-val">{{ cli.numCompras }}</span>
-                <span class="metric-lbl">Compras</span>
+              <div class="metric" style="display: flex; flex-direction: column; gap: 4px; border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color);">
+                <span class="metric-val" style="font-size: 1.2rem; font-weight: 800; color: var(--text-main);">{{ selectedClient.numCompras }}</span>
+                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Compras</span>
               </div>
-              <div class="metric">
-                <span class="metric-val" :class="cli.inactivo ? 'val-danger' : 'val-ok'">{{ cli.diasDesdeUltimaCompra }}d</span>
-                <span class="metric-lbl">Desde última compra</span>
+              <div class="metric" style="display: flex; flex-direction: column; gap: 4px;">
+                <span class="metric-val" :class="selectedClient.inactivo ? 'val-danger' : 'val-ok'" style="font-size: 1.2rem; font-weight: 800;">Hace {{ selectedClient.diasDesdeUltimaCompra }}d</span>
+                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Última compra</span>
               </div>
             </div>
 
             <!-- Sparkline SVG de tendencia de los últimos 6 meses -->
-            <div class="sparkline-wrapper">
-              <span class="sparkline-label">📈 Tendencia 6 meses</span>
-              <svg class="sparkline" viewBox="0 0 200 50" preserveAspectRatio="none">
+            <div class="sparkline-wrapper" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px;">
+              <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">📈 Tendencia de Compras (Últimos 6 meses)</span>
+              <svg class="sparkline" viewBox="0 0 200 50" preserveAspectRatio="none" style="width: 100%; height: 60px;">
                 <polyline
-                  :points="buildSparkline(cli.tendenciaMensual)"
+                  :points="buildSparkline(selectedClient.tendenciaMensual)"
                   fill="none"
-                  stroke="#6366f1"
-                  stroke-width="2"
+                  stroke="#a3c4f3"
+                  stroke-width="2.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
                 <!-- Puntos de datos -->
                 <circle
-                  v-for="(pt, i) in sparklinePoints(cli.tendenciaMensual)"
+                  v-for="(pt, i) in sparklinePoints(selectedClient.tendenciaMensual)"
                   :key="i"
                   :cx="pt.x"
                   :cy="pt.y"
-                  r="3"
-                  fill="#6366f1"
+                  r="3.5"
+                  fill="#90b3e2"
                 />
               </svg>
-              <div class="sparkline-months">
-                <span v-for="m in cli.tendenciaMensual" :key="m.mes">{{ m.mes }}</span>
+              <div class="sparkline-months" style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; font-weight: 600;">
+                <span v-for="m in selectedClient.tendenciaMensual" :key="m.mes">{{ m.mes }}</span>
               </div>
             </div>
 
             <!-- Top productos de este cliente -->
-            <div v-if="cli.topProductos?.length > 0" class="top-products">
-              <p class="top-products-title">🛒 Productos más comprados:</p>
-              <div class="top-products-list">
-                <span v-for="(p, pi) in cli.topProductos.slice(0, 3)" :key="pi" class="product-chip">
-                  {{ p.producto }} <strong>x{{ p.cantidad }}</strong>
+            <div v-if="selectedClient.topProductos?.length > 0" class="top-products" style="margin-bottom: 12px;">
+              <p class="top-products-title" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">🛒 Productos más comprados:</p>
+              <div class="top-products-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <span v-for="(p, pi) in selectedClient.topProductos" :key="pi" class="product-chip" style="background: #e2e8f0; color: #1e293b; padding: 4px 10px; border-radius: 99px; font-size: 0.8rem; font-weight: 600;">
+                  {{ p.producto }} <strong style="color: #6366f1;">x{{ p.cantidad }}</strong>
                 </span>
               </div>
+            </div>
+
+            <div class="modal-actions" style="display: flex; justify-content: flex-end; margin-top: 24px;">
+              <button @click="showDetailModal = false" class="btn btn-secondary">Cerrar</button>
             </div>
           </div>
         </div>
@@ -370,7 +423,20 @@ const activeTab = ref('directorio')
 const topClientes = ref([])
 const loadingTop = ref(false)
 
+const selectedClient = ref(null)
+const showDetailModal = ref(false)
+
+const openDetailModal = (client) => {
+  selectedClient.value = client
+  showDetailModal.value = true
+}
+
 const clientesInactivos = computed(() => topClientes.value.filter(c => c.inactivo))
+
+// Ordenar por recencia: los que tienen menor diasDesdeUltimaCompra primero
+const sortedTopClientes = computed(() => {
+  return [...topClientes.value].sort((a, b) => a.diasDesdeUltimaCompra - b.diasDesdeUltimaCompra)
+})
 
 const switchToTop = () => {
   activeTab.value = 'top'
@@ -859,5 +925,40 @@ onMounted(() => {
 .btn-whatsapp-sm:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(37, 211, 102, 0.35);
+}
+
+/* ── Estilos de la tabla resumen de Top Clientes y Modal ── */
+.clickable-row:hover {
+  background-color: var(--bg-app);
+}
+
+.top-avatar-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a3c4f3, #90b3e2);
+  color: #1e3a8a;
+  font-weight: 800;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rank-badge {
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.rank-1 { background-color: #fef3c7; color: #d97706; }
+.rank-2 { background-color: #f1f5f9; color: #475569; }
+.rank-3 { background-color: #ffedd5; color: #ea580c; }
+
+.detail-modal-card {
+  max-width: 650px !important;
 }
 </style>

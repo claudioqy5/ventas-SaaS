@@ -172,9 +172,9 @@
           </select>
         </div>
 
-        <div class="fiado-toggle" style="margin-top: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-          <input type="checkbox" v-model="isFiado" id="fiadoCheck" />
-          <label for="fiadoCheck" style="font-weight: 700; color: var(--text-main); cursor: pointer;">📒 Vender como Fiado (Crédito)</label>
+        <div class="fiado-toggle" style="margin-top: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; background: #fff8eb; padding: 10px 14px; border: 1px solid #ffe8cc; border-radius: var(--radius-sm);">
+          <input type="checkbox" v-model="isFiado" id="fiadoCheck" style="width: 16px; height: 16px; cursor: pointer; accent-color: #f59e0b;" />
+          <label for="fiadoCheck" style="font-weight: 700; font-size: 0.85rem; color: #b45309; cursor: pointer; user-select: none;">📒 Vender como Fiado (Crédito)</label>
         </div>
 
         <div class="client-selection" style="margin-top: 5px; margin-bottom: 10px;">
