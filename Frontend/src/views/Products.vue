@@ -12,7 +12,7 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item active">📦 <span class="sidebar-text">Productos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item active">📦 <span class="sidebar-text">Inventario</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item">🏷️ <span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item">👥 <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 <span class="sidebar-text">Proveedores</span></router-link>
@@ -29,9 +29,22 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">📦 Gestión de Productos</h1>
+            <h1 class="text-title">📦 Inventario</h1>
             <p class="text-subtitle">Registra nuevos productos y ajusta el stock</p>
           </div>
+          
+          <div v-if="inventoryStats" class="inventory-stats-card">
+            <div class="stat-item">
+              <span class="stat-label">Valor del Inventario (Costo)</span>
+              <span class="stat-value">S/. {{ inventoryStats.valorTotal?.toFixed(2) }}</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-label">Productos Activos</span>
+              <span class="stat-value">{{ inventoryStats.cantidadProductos }}</span>
+            </div>
+          </div>
+
           <button v-if="authStore.hasPermission('modificar_productos')" @click="openAddModal" class="btn btn-primary">➕ Agregar Producto</button>
         </div>
       </header>
@@ -364,6 +377,20 @@ const confirmDelete = async (id) => {
   }
 }
 
+const inventoryStats = ref(null)
+
+const fetchInventoryStats = async () => {
+  try {
+    const res = await fetch(`${API_URL}/api/clientanalytics/inventoryvalue`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (!res.ok) throw new Error()
+    inventoryStats.value = await res.json()
+  } catch (err) {
+    console.error('Error fetching inventory stats', err)
+  }
+}
+
 const handleLogout = () => {
   authStore.logout()
   router.push('/login')
@@ -372,6 +399,7 @@ const handleLogout = () => {
 onMounted(() => {
   fetchProducts()
   fetchCategories()
+  fetchInventoryStats()
 })
 </script>
 
@@ -405,6 +433,41 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
+}
+
+.inventory-stats-card {
+  display: flex;
+  background: linear-gradient(to right, #1e293b, #334155);
+  color: white;
+  border-radius: var(--radius-md);
+  padding: 12px 24px;
+  gap: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.stat-divider {
+  width: 1px;
+  background-color: #475569;
 }
 
 .empty-state {
