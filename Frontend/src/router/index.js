@@ -12,6 +12,7 @@ import Suppliers from '../views/Suppliers.vue'
 import Purchases from '../views/Purchases.vue'
 import Users from '../views/Users.vue'
 import Reminders from '../views/Reminders.vue'
+import StockMovements from '../views/StockMovements.vue'
 
 const routes = [
   { path: '/login', component: Login, name: 'Login' },  
@@ -68,6 +69,12 @@ const routes = [
     component: Purchases, 
     name: 'Purchases',
     meta: { requiresAuth: true, permission: 'compras' } 
+  },
+  { 
+    path: '/stock-movements', 
+    component: StockMovements, 
+    name: 'StockMovements',
+    meta: { requiresAuth: true, permission: 'movimientos' } 
   },
   { 
     path: '/users', 

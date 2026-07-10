@@ -17,6 +17,7 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item">👥 <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item">🔄 <span class="sidebar-text">Movimientos</span></router-link>
         <router-link v-if="!authStore.isSuperadmin" to="/reminders" class="nav-item">📅 <span class="sidebar-text">Recordatorios</span></router-link>
         <router-link v-if="authStore.isEmpresaOwner || authStore.isSuperadmin" to="/users" class="nav-item active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
@@ -201,6 +202,10 @@
                   <input type="checkbox" value="reminders" v-model="form.permisos" />
                   <span>📅 Recordatorios</span>
                 </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" value="movimientos" v-model="form.permisos" />
+                  <span>🔄 Movimientos de Inventario</span>
+                </label>
               </div>
             </div>
 
@@ -290,6 +295,7 @@ const formatPermissionName = (perm) => {
     'proveedores': '🏢 Proveedores',
     'compras': '💵 Compras',
     'reminders': '📅 Recordatorios',
+    'movimientos': '🔄 Movimientos',
     'modificar_productos': '✏️ Editar Prod.',
     'historial_ventas': '📋 Historial Ventas'
   }
