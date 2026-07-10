@@ -132,9 +132,17 @@
           📊 Aún no hay suficientes datos de compras vinculadas a clientes. Selecciona un cliente en el POS al registrar ventas.
         </div>
 
+        <!-- Buscador de Top Clientes -->
+        <div v-if="!loadingTop && topClientes.length > 0" class="filters-container card" style="text-align: left; padding: 15px; margin-bottom: 20px;">
+          <input v-model="topSearchQuery" type="text" placeholder="Buscar cliente en el ranking..." class="filter-input" />
+        </div>
+
         <!-- Tabla Resumen de Top Clientes -->
-        <div v-else class="card font-card">
-          <table class="data-table">
+        <div v-else-if="!loadingTop && topClientes.length > 0" class="card font-card">
+          <div v-if="filteredTopClientes.length === 0" class="empty-state" style="padding: 24px;">
+            No se encontraron clientes que coincidan con la búsqueda.
+          </div>
+          <table v-else class="data-table">
             <thead>
               <tr>
                 <th style="width: 80px;">Posición</th>
@@ -146,10 +154,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(cli, idx) in sortedTopClientes" :key="cli.clienteId" class="clickable-row" @click="openDetailModal(cli)" style="cursor: pointer;">
+              <tr v-for="cli in filteredTopClientes" :key="cli.clienteId" class="clickable-row" @click="openDetailModal(cli)" style="cursor: pointer;">
                 <td>
-                  <span :class="['rank-badge', 'rank-' + (idx + 1)]" style="font-weight: bold; font-size: 0.9rem;">
-                    {{ idx === 0 ? '🥇 1' : idx === 1 ? '🥈 2' : idx === 2 ? '🥉 3' : '#' + (idx + 1) }}
+                  <span :class="['rank-badge', 'rank-' + cli.originalRank]" style="font-weight: bold; font-size: 0.9rem;">
+                    {{ cli.originalRank === 1 ? '🥇 1' : cli.originalRank === 2 ? '🥈 2' : cli.originalRank === 3 ? '🥉 3' : '#' + cli.originalRank }}
                   </span>
                 </td>
                 <td>
@@ -193,7 +201,10 @@
                 <h3 class="top-name" style="font-size: 1.2rem; font-weight: 700; color: var(--text-main);">{{ selectedClient.nombre }}</h3>
                 <span class="top-doc" style="font-size: 0.85rem; color: var(--text-muted);">{{ selectedClient.numeroDocumento || selectedClient.correo || 'Sin documento' }}</span>
               </div>
-              <a v-if="selectedClient.telefono" :href="buildWhatsappPromo(selectedClient)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm">📱 Enviar Oferta</a>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button @click="printCompleteClientReport" class="btn btn-primary" style="background-color: #6366f1; border: none; font-size: 0.78rem; font-weight: 700; padding: 6px 12px; border-radius: 99px;">📥 Exportar Reporte</button>
+                <a v-if="selectedClient.telefono" :href="buildWhatsappPromo(selectedClient)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm" style="margin-top: 0;">📱 Enviar Oferta</a>
+              </div>
             </div>
 
             <!-- Métricas clave -->
@@ -217,7 +228,7 @@
               <!-- Columna Izquierda: Tendencia de Compras -->
               <div class="sparkline-wrapper" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md);">
                 <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">📈 Tendencia de Compras (Últimos 6 meses)</span>
-                <svg class="line-chart-svg" viewBox="0 0 500 150" style="width: 100%; height: 160px; background: transparent; overflow: visible;">
+                <svg class="line-chart-svg" viewBox="0 0 500 150" style="width: 100%; height: 230px; background: transparent; overflow: visible;">
                   <defs>
                     <linearGradient :id="'sparkGrad-' + selectedClient.clienteId" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.3" />
@@ -296,7 +307,7 @@
                   <div v-if="filteredSalesByMonth.length === 0" class="text-muted" style="text-align: center; padding: 24px; font-size: 0.85rem;">
                     No hay compras registradas en este mes.
                   </div>
-                  <div v-else style="max-height: 180px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;">
+                  <div v-else style="max-height: 260px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;">
                     <table class="data-table" style="font-size: 0.82rem; width: 100%;">
                       <thead>
                         <tr style="background: var(--bg-app);">
@@ -391,6 +402,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
+              <button @click="printSaleTicket(selectedSale)" class="btn btn-primary" style="background-color: #10b981; border: none; font-size: 0.8rem; font-weight: 700; padding: 8px 16px;">🖨️ Imprimir Ticket</button>
               <button @click="showSaleDetailModal = false" class="btn btn-secondary">Cerrar</button>
             </div>
           </div>
@@ -580,6 +592,202 @@ const openSaleDetail = (sale) => {
   showSaleDetailModal.value = true
 }
 
+const printSaleTicket = (sale) => {
+  const printWindow = window.open('', '_blank', 'width=600,height=600')
+  const html = `
+    <html>
+      <head>
+        <title>Boleta_${sale.id}</title>
+        <style>
+          body { font-family: 'Courier New', Courier, monospace; padding: 20px; color: #000; font-size: 14px; }
+          .text-center { text-align: center; }
+          .text-right { text-align: right; }
+          .header { margin-bottom: 20px; }
+          .divider { border-top: 1px dashed #000; margin: 10px 0; }
+          table { width: 100%; border-collapse: collapse; }
+          th, td { padding: 4px 0; }
+          .total-row { font-weight: bold; }
+        </style>
+      </head>
+      <body>
+        <div class="text-center header">
+          <h2>🍦 ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
+          <p>Punto de Venta - Boleta de Compra</p>
+        </div>
+        <div class="divider"></div>
+        <p><strong>ID Venta:</strong> ${sale.id}</p>
+        <p><strong>Fecha:</strong> ${formatDate(sale.fechaCreacion)}</p>
+        <p><strong>Cliente:</strong> ${selectedClient.value?.nombre}</p>
+        <p><strong>Vendedor:</strong> ${sale.creadoPorNombre}</p>
+        <p><strong>Método de Pago:</strong> ${sale.metodoPago}</p>
+        <div class="divider"></div>
+        <table>
+          <thead>
+            <tr>
+              <th align="left">Prod</th>
+              <th align="center">Cant</th>
+              <th align="right">P.U</th>
+              <th align="right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sale.detalles.map(item => `
+              <tr>
+                <td>${item.nombreProducto}</td>
+                <td align="center">${item.cantidad}</td>
+                <td align="right">S/. ${item.precioUnitario.toFixed(2)}</td>
+                <td align="right">S/. ${(item.cantidad * item.precioUnitario).toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="divider"></div>
+        <table style="width: 200px; margin-left: auto;">
+          <tr>
+            <td>Subtotal:</td>
+            <td align="right">S/. ${(sale.subtotal || 0).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>IGV (19%):</td>
+            <td align="right">S/. ${(sale.impuesto || 0).toFixed(2)}</td>
+          </tr>
+          <tr class="total-row">
+            <td>TOTAL:</td>
+            <td align="right">S/. ${(sale.total || 0).toFixed(2)}</td>
+          </tr>
+        </table>
+        <div class="divider"></div>
+        <div class="text-center" style="margin-top: 30px;">
+          <p>¡Gracias por su preferencia!</p>
+        </div>
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+          }
+        <\/script>
+      </body>
+    </html>
+  `
+  printWindow.document.write(html)
+  printWindow.document.close()
+}
+
+const printCompleteClientReport = () => {
+  const client = selectedClient.value
+  if (!client) return
+
+  const printWindow = window.open('', '_blank', 'width=800,height=800')
+  const html = `
+    <html>
+      <head>
+        <title>Reporte_Cliente_${client.nombre.replace(/\s+/g, '_')}</title>
+        <style>
+          body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 30px; color: #333; }
+          .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #6366f1; padding-bottom: 15px; margin-bottom: 30px; }
+          .brand { font-size: 24px; font-weight: bold; color: #4f46e5; }
+          .title { font-size: 20px; font-weight: bold; color: #1f2937; }
+          .subtitle { font-size: 14px; color: #6b7280; }
+          .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+          .card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 8px; text-align: center; background: #f9fafb; }
+          .card-val { font-size: 20px; font-weight: bold; color: #111827; margin-bottom: 5px; }
+          .card-lbl { font-size: 12px; color: #6b7280; font-weight: 600; text-transform: uppercase; }
+          h3 { color: #111827; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-top: 30px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+          th { background: #f3f4f6; color: #374151; font-weight: 600; text-align: left; padding: 10px; font-size: 14px; border-bottom: 2px solid #e5e7eb; }
+          td { padding: 10px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+          .product-chip { display: inline-block; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 3px 10px; border-radius: 99px; font-size: 12px; margin: 4px; font-weight: 600; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div>
+            <div class="brand">🍦 ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</div>
+            <div class="subtitle">Reporte Consolidado de Cliente</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="title">${client.nombre}</div>
+            <div class="subtitle">Doc: ${client.numeroDocumento || 'Sin doc'} | Tel: ${client.telefono || 'Sin tel'}</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-val">S/. ${client.totalGastado.toFixed(2)}</div>
+            <div class="card-lbl">Total Gastado</div>
+          </div>
+          <div class="card">
+            <div class="card-val">${client.numCompras}</div>
+            <div class="card-lbl">Total Compras</div>
+          </div>
+          <div class="card">
+            <div class="card-val">Hace ${client.diasDesdeUltimaCompra} días</div>
+            <div class="card-lbl">Última Compra</div>
+          </div>
+        </div>
+
+        <h3>📦 Productos Más Comprados</h3>
+        <div style="margin-top: 10px;">
+          ${(client.topProductos || []).map(p => `
+            <span class="product-chip">${p.producto} (x${p.cantidad})</span>
+          `).join('') || '<p>No hay productos registrados.</p>'}
+        </div>
+
+        <h3>📈 Historial Mensual (Últimos 6 Meses)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Mes</th>
+              <th>Total Comprado</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${(client.tendenciaMensual || []).map(t => `
+              <tr>
+                <td><strong>${t.mes} ${t.anio}</strong></td>
+                <td>S/. ${t.total.toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <h3>📋 Detalle Completo de Transacciones</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha y Hora</th>
+              <th>ID Venta</th>
+              <th>Vendedor</th>
+              <th>Método Pago</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${clientSales.value.map(sale => `
+              <tr>
+                <td>${formatDate(sale.fechaCreacion)}</td>
+                <td><code>${sale.id}</code></td>
+                <td>${sale.creadoPorNombre}</td>
+                <td>${sale.metodoPago}</td>
+                <td><strong>S/. ${sale.total.toFixed(2)}</strong></td>
+              </tr>
+            `).join('') || '<tr><td colspan="5" align="center">No hay transacciones registradas.</td></tr>'}
+          </tbody>
+        </table>
+
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+          }
+        <\/script>
+      </body>
+    </html>
+  `
+  printWindow.document.write(html)
+  printWindow.document.close()
+}
+
 const fetchClientSales = async (clientId) => {
   try {
     const res = await fetch(`${API_URL}/api/clientanalytics/client/${clientId}/sales`, {
@@ -631,6 +839,22 @@ const clientesInactivos = computed(() => topClientes.value.filter(c => c.inactiv
 // Ordenar por recencia: los que tienen menor diasDesdeUltimaCompra primero
 const sortedTopClientes = computed(() => {
   return [...topClientes.value].sort((a, b) => a.diasDesdeUltimaCompra - b.diasDesdeUltimaCompra)
+})
+
+const topSearchQuery = ref('')
+
+const filteredTopClientes = computed(() => {
+  const listWithRank = sortedTopClientes.value.map((c, i) => ({
+    ...c,
+    originalRank: i + 1
+  }))
+  if (!topSearchQuery.value) return listWithRank
+  const query = topSearchQuery.value.toLowerCase().trim()
+  return listWithRank.filter(c => {
+    return (c.nombre || '').toLowerCase().includes(query) ||
+           (c.numeroDocumento || '').toLowerCase().includes(query) ||
+           (c.telefono || '').toLowerCase().includes(query)
+  })
 })
 
 const switchToTop = () => {
