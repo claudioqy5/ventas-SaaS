@@ -18,6 +18,8 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item">🏢 <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item">💵 <span class="sidebar-text">Compras</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item">🔄 <span class="sidebar-text">Movimientos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/credit-sales" class="nav-item">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isEmpresaOwner || authStore.isSuperadmin" to="/payment-methods" class="nav-item">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
         <router-link v-if="!authStore.isSuperadmin" to="/reminders" class="nav-item">📅 <span class="sidebar-text">Recordatorios</span></router-link>
         <router-link v-if="authStore.isEmpresaOwner || authStore.isSuperadmin" to="/users" class="nav-item">👥 <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
@@ -438,12 +440,12 @@ onMounted(() => {
 
 .inventory-stats-card {
   display: flex;
-  background: linear-gradient(to right, #1e293b, #334155);
-  color: white;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 12px 24px;
   gap: 24px;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .stat-item {
@@ -453,8 +455,8 @@ onMounted(() => {
 
 .stat-label {
   font-size: 0.75rem;
-  color: #94a3b8;
-  font-weight: 600;
+  color: var(--text-muted);
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -462,12 +464,12 @@ onMounted(() => {
 .stat-value {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #f8fafc;
+  color: var(--primary);
 }
 
 .stat-divider {
   width: 1px;
-  background-color: #475569;
+  background-color: var(--border-color);
 }
 
 .empty-state {

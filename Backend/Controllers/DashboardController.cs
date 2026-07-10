@@ -53,8 +53,8 @@ public class DashboardController : ControllerBase
         // Calcular fecha objetivo para las ventas del dia
         DateTime targetDate = string.IsNullOrEmpty(fecha) ? DateTime.Today : DateTime.ParseExact(fecha, "yyyy-MM-dd", null);
 
-        // Calcular el total de ingresos y la cantidad de ventas realizadas (filtrado por el dia objetivo)
-        var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId).ToListAsync();
+        // Calcular el total de ingresos y la cantidad de ventas realizadas (filtrado por el dia objetivo y excluyendo fiados)
+        var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId && s.EstadoPago != "Fiado").ToListAsync();
         var todaySales = sales.Where(s => s.FechaCreacion.AddHours(-5).Date == targetDate.Date).ToList();
         var totalIngresos = todaySales.Sum(s => (double)s.Total);
         var totalNetoDia = todaySales.Sum(s => (double)s.Subtotal);
@@ -185,7 +185,7 @@ public class DashboardController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
-        var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId).ToListAsync();
+        var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId && s.EstadoPago != "Fiado").ToListAsync();
 
         DateTime targetDate = string.IsNullOrEmpty(fecha) ? DateTime.Today : DateTime.ParseExact(fecha, "yyyy-MM-dd", null);
 

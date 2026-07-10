@@ -37,7 +37,16 @@ public class Sale
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Total { get; set; }
 
-    public string MetodoPago { get; set; } = "Efectivo"; // Opciones de pago: Efectivo, Tarjeta, Transferencia
+    public string MetodoPago { get; set; } = "Efectivo"; // Opciones de pago: Efectivo, Tarjeta, Transferencia, etc.
+
+    // Estado de pago para soportar ventas "Fiadas" (a crédito)
+    public string EstadoPago { get; set; } = "Pagado"; // "Pagado" o "Fiado"
+    
+    // Indicador permanente si la venta inicio como fiado, util para el historico
+    public bool FueFiado { get; set; } = false;
+
+    // Fecha en la que la deuda (fiado) fue cancelada
+    public DateTime? FechaPago { get; set; }
 
     [BsonRepresentation(BsonType.ObjectId)]
     public string CreadoPor { get; set; } = string.Empty; // ID del usuario responsable

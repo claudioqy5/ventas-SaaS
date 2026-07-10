@@ -38,8 +38,8 @@ public class SalesController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
-        // Ordeno las ventas de la mas reciente a la mas antigua
-        var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId)
+        // Ordeno las ventas de la mas reciente a la mas antigua, excluyendo los fiados no pagados
+        var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId && s.EstadoPago != "Fiado")
             .SortByDescending(s => s.FechaCreacion)
             .ToListAsync();
 
@@ -124,6 +124,12 @@ public class SalesController : ControllerBase
         sale.Total = computedTotal;
         sale.Subtotal = computedTotal / 1.19m; // Calculo considerando el porcentaje de impuesto estandar
         sale.Impuesto = computedTotal - sale.Subtotal;
+
+        if (sale.EstadoPago == "Fiado")
+        {
+            sale.FueFiado = true;
+            sale.MetodoPago = "Ninguno (Pendiente)";
+        }
 
         await _context.Sales.InsertOneAsync(sale);
         return CreatedAtAction(nameof(GetAll), new { id = sale.Id }, sale);

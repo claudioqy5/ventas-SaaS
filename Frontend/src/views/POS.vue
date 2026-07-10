@@ -148,13 +148,17 @@
           <span>S/. {{ cartTotal.toFixed(2) }}</span>
         </div>
 
-        <div class="payment-method" style="margin-top: 5px;">
+        <div class="payment-method" style="margin-top: 5px;" v-if="!isFiado">
           <label>Método de Pago</label>
           <select v-model="paymentMethod" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff;">
-            <option value="Efectivo">💵 Efectivo</option>
-            <option value="Tarjeta">💳 Tarjeta</option>
-            <option value="Transferencia">🏦 Transferencia</option>
+            <option value="" disabled>Seleccione...</option>
+            <option v-for="pm in activePaymentMethods" :key="pm.id" :value="pm.nombre">💳 {{ pm.nombre }}</option>
           </select>
+        </div>
+
+        <div class="fiado-toggle" style="margin-top: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" v-model="isFiado" id="fiadoCheck" />
+          <label for="fiadoCheck" style="font-weight: 700; color: var(--text-main); cursor: pointer;">📒 Vender como Fiado (Crédito)</label>
         </div>
 
         <div class="client-selection" style="margin-top: 5px; margin-bottom: 10px;">
@@ -218,7 +222,10 @@ const authStore = useAuthStore()
 const products = ref([])
 const cart = ref([])
 const searchQuery = ref('')
-const paymentMethod = ref('Efectivo')
+const paymentMethodsList = ref([])
+const activePaymentMethods = computed(() => paymentMethodsList.value.filter(m => m.activo))
+const paymentMethod = ref('')
+const isFiado = ref(false)
 const loading = ref(false)
 
 const defaultImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><rect width='100%25' height='100%25' fill='%23f1f5f9'/><path d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M11 11.5L5 17h14l-4.5-6-3.5 4.5z'/></svg>"
@@ -307,6 +314,19 @@ const fetchProducts = async () => {
   } catch (err) {
     console.error('Error fetching products for POS', err)
   }
+}
+
+const fetchPaymentMethods = async () => {
+  try {
+    const res = await fetch(`${API_URL}/api/paymentmethods`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (!res.ok) throw new Error()
+    paymentMethodsList.value = await res.json()
+    if (activePaymentMethods.value.length > 0) {
+      paymentMethod.value = activePaymentMethods.value[0].nombre
+    }
+  } catch (err) {}
 }
 
 const fetchCategories = async () => {
@@ -472,7 +492,8 @@ const checkout = async () => {
       },
       body: JSON.stringify({
         detalles: cart.value,
-        metodoPago: paymentMethod.value,
+        metodoPago: isFiado.value ? "Fiado" : paymentMethod.value,
+        estadoPago: isFiado.value ? "Fiado" : "Pagado",
         clienteId: clienteId,
         nombreCliente: nombreCliente
       })
@@ -493,6 +514,7 @@ const checkout = async () => {
     cart.value = []
     crossSellSuggestions.value = []
     selectedClientId.value = ''
+    isFiado.value = false
     generarCodigoVenta()
     fetchProducts()
     fetchSalesHistory()
@@ -525,6 +547,7 @@ onMounted(() => {
   generarCodigoVenta()
   fetchCategories()
   fetchClients()
+  fetchPaymentMethods()
   fetchSalesHistory()
   document.addEventListener('keypress', handleBarcodeKeypress)
 })

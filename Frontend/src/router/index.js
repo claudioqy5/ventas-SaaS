@@ -13,6 +13,8 @@ import Purchases from '../views/Purchases.vue'
 import Users from '../views/Users.vue'
 import Reminders from '../views/Reminders.vue'
 import StockMovements from '../views/StockMovements.vue'
+import CreditSales from '../views/CreditSales.vue'
+import PaymentMethods from '../views/PaymentMethods.vue'
 
 const routes = [
   { path: '/login', component: Login, name: 'Login' },  
@@ -86,6 +88,18 @@ const routes = [
     path: '/reminders',
     component: Reminders,
     name: 'Reminders',
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/credit-sales',
+    component: CreditSales,
+    name: 'CreditSales',
+    meta: { requiresAuth: true, permission: 'historial_ventas' }
+  },
+  {
+    path: '/payment-methods',
+    component: PaymentMethods,
+    name: 'PaymentMethods',
     meta: { requiresAuth: true }
   },
   { path: '/:pathMatch(.*)*', redirect: '/login' }

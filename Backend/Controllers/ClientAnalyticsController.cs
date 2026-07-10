@@ -50,9 +50,9 @@ public class ClientAnalyticsController : ControllerBase
         if (string.IsNullOrEmpty(empresaId))
             return BadRequest(new { message = "Falta el identificador de la empresa." });
 
-        // Cargar todas las ventas de la empresa que tengan cliente asignado
+        // Cargar todas las ventas de la empresa que tengan cliente asignado y que no sean fiados pendientes
         var todasLasVentas = await _context.Sales
-            .Find(s => s.EmpresaId == empresaId && s.ClienteId != null && s.ClienteId != string.Empty)
+            .Find(s => s.EmpresaId == empresaId && s.ClienteId != null && s.EstadoPago != "Fiado")
             .ToListAsync();
 
         // Cargar la lista de clientes de la empresa para cruzar los datos
@@ -80,7 +80,7 @@ public class ClientAnalyticsController : ControllerBase
 
                 // Top 5 productos más comprados por este cliente
                 var topProductos = ventasDelCliente
-                    .SelectMany(v => v.Detalles)
+                    .SelectMany(v => v.Detalles ?? new List<SaleItem>())
                     .GroupBy(d => d.NombreProducto)
                     .Select(pg => new
                     {

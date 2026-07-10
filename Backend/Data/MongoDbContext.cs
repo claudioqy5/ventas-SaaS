@@ -32,4 +32,5 @@ public class MongoDbContext
     public IMongoCollection<Purchase> Purchases => _database.GetCollection<Purchase>("Purchases");
     public IMongoCollection<StockMovement> StockMovements => _database.GetCollection<StockMovement>("StockMovements");
     public IMongoCollection<Reminder> Reminders => _database.GetCollection<Reminder>("Reminders");
+    public IMongoCollection<PaymentMethod> PaymentMethods => _database.GetCollection<PaymentMethod>("PaymentMethods");
 }
