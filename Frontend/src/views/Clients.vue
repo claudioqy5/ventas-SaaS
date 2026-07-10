@@ -246,18 +246,20 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
-                <!-- Data Points (Circles with hover tooltips) -->
+                <!-- Data Points (Circles with hover tooltips and selection highlight) -->
                 <circle
-                  v-for="(pt, i) in clientChartPoints(selectedClient.tendenciaMensual)"
-                  :key="i"
+                  v-for="(pt, idx) in clientChartPoints(selectedClient.tendenciaMensual)"
+                  :key="idx"
                   :cx="pt.x"
                   :cy="pt.y"
-                  r="4"
-                  fill="var(--primary-hover)"
+                  :r="selectedMonth?.mesNum === selectedClient.tendenciaMensual[idx].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[idx].anio ? 6 : 4.5"
+                  :fill="selectedMonth?.mesNum === selectedClient.tendenciaMensual[idx].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[idx].anio ? '#4f46e5' : 'var(--primary-hover)'"
                   stroke="#ffffff"
-                  stroke-width="1.5"
+                  :stroke-width="selectedMonth?.mesNum === selectedClient.tendenciaMensual[idx].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[idx].anio ? 2.5 : 1.5"
+                  style="cursor: pointer; transition: all 0.2s;"
+                  @click="selectMonth(selectedClient.tendenciaMensual[idx])"
                 >
-                  <title>{{ pt.mes }}: S/. {{ pt.val.toFixed(2) }}</title>
+                  <title>{{ pt.mes }}: S/. {{ pt.val.toFixed(2) }} (Haz clic para ver compras)</title>
                 </circle>
 
                 <!-- X Axis Month Labels -->
@@ -267,16 +269,58 @@
                   :x="pt.x"
                   y="142"
                   text-anchor="middle"
-                  style="font-size: 0.7rem; font-weight: 700; fill: var(--text-muted);"
+                  :style="{
+                    fontSize: '0.7rem',
+                    fontWeight: '700',
+                    fill: selectedMonth?.mesNum === selectedClient.tendenciaMensual[i].mesNum && selectedMonth?.anio === selectedClient.tendenciaMensual[i].anio ? '#4f46e5' : 'var(--text-muted)',
+                    cursor: 'pointer'
+                  }"
+                  @click="selectMonth(selectedClient.tendenciaMensual[i])"
                 >
                   {{ pt.mes }}
                 </text>
               </svg>
             </div>
 
+            <!-- Listado de compras del mes seleccionado -->
+            <div class="selected-month-sales" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px; background: #fafafa;">
+              <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-top: 0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span>🛒 Historial del mes: <strong style="color: #4f46e5;">{{ selectedMonth?.mes }} {{ selectedMonth?.anio }}</strong></span>
+                <span class="badge badge-info" style="font-size: 0.75rem;">Total Mes: S/. {{ selectedMonth?.total.toFixed(2) }}</span>
+              </h4>
+
+              <div v-if="filteredSalesByMonth.length === 0" class="text-muted" style="text-align: center; padding: 24px; font-size: 0.85rem;">
+                No hay compras registradas en este mes.
+              </div>
+              <div v-else style="max-height: 180px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;">
+                <table class="data-table" style="font-size: 0.85rem; width: 100%;">
+                  <thead>
+                    <tr style="background: var(--bg-app);">
+                      <th style="padding: 10px;">Fecha y Hora</th>
+                      <th style="padding: 10px;">Total Pago</th>
+                      <th style="padding: 10px;">Método Pago</th>
+                      <th style="padding: 10px;">Vendedor</th>
+                      <th style="padding: 10px; text-align: center;">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="sale in filteredSalesByMonth" :key="sale.id" style="border-bottom: 1px solid var(--border-color);">
+                      <td style="padding: 10px;">{{ formatDate(sale.fechaCreacion) }}</td>
+                      <td style="padding: 10px; font-weight: 700; color: var(--text-main);">S/. {{ sale.total.toFixed(2) }}</td>
+                      <td style="padding: 10px;"><span class="badge badge-info">{{ sale.metodoPago }}</span></td>
+                      <td style="padding: 10px;">{{ sale.creadoPorNombre }}</td>
+                      <td style="padding: 10px; text-align: center;">
+                        <button @click="openSaleDetail(sale)" class="btn btn-primary btn-sm" style="padding: 4px 8px; font-size: 0.75rem;">📄 Ver Boleta</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
             <!-- Top productos de este cliente -->
             <div v-if="selectedClient.topProductos?.length > 0" class="top-products" style="margin-bottom: 12px;">
-              <p class="top-products-title" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">🛒 Productos más comprados:</p>
+              <p class="top-products-title" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">🛒 Productos más comprados históricamente:</p>
               <div class="top-products-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <span v-for="(p, pi) in selectedClient.topProductos" :key="pi" class="product-chip" style="background: #e2e8f0; color: #1e293b; padding: 4px 10px; border-radius: 99px; font-size: 0.8rem; font-weight: 600;">
                   {{ p.producto }} <strong style="color: #6366f1;">x{{ p.cantidad }}</strong>

@@ -52,60 +52,123 @@
         </div>
       </header>
 
-      <!-- Lista de colaboradores -->
-      <div class="card font-card">
-        <div v-if="users.length === 0" class="empty-state">
-          No tienes trabajadores registrados todavía.
-        </div>
-        <table v-else class="data-table">
-          <thead>
-            <tr>
-              <th style="width: 50px;">N°</th>
-              <th>Nombre</th>
-              <th v-if="authStore.isSuperadmin">Tienda / Negocio</th>
-              <th>Correo Electrónico</th>
-              <th>Rol</th>
-              <th>Módulos Permitidos</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(user, index) in users" :key="user.id">
-              <td><strong>{{ index + 1 }}</strong></td>
-              <td><strong>{{ user.nombre }}</strong></td>
-              <td v-if="authStore.isSuperadmin">
-                <span class="store-badge">{{ user.nombreEmpresa || 'Sin Tienda' }}</span>
-              </td>
-              <td>{{ user.correo }}</td>
-              <td>
-                <span :class="['role-badge', user.rol === 'Superadmin' ? 'superadmin' : (user.rol === 'EmpresaOwner' ? 'owner' : 'employee')]">
-                  {{ user.rol === 'Superadmin' ? 'Súper Administrador' : (user.rol === 'EmpresaOwner' ? 'Administrador' : 'Empleado') }}
-                </span>
-              </td>
-              <td>
-                <div class="permissions-badges">
-                  <span v-for="perm in user.permisos" :key="perm" class="perm-badge">
-                    {{ formatPermissionName(perm) }}
-                  </span>
-                  <span v-if="!user.permisos || user.permisos.length === 0" class="perm-badge none">Ninguno</span>
-                </div>
-              </td>
-              <td>
-                <span :class="['status-dot', user.activo ? 'active' : 'inactive']">
-                  {{ user.activo ? 'Activo' : 'Inactivo' }}
-                </span>
-              </td>
-              <td>
-                <div class="actions-cell">
-                  <button @click="openEditModal(user)" class="btn-action edit" title="Editar">✏️</button>
-                  <button @click="confirmDelete(user.id)" class="btn-action delete" title="Eliminar">🗑️</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Sistema de Tabs (Solo visible para Superadmin) -->
+      <div v-if="authStore.isSuperadmin" class="tabs-nav" style="display: flex; gap: 6px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color);">
+        <button :class="['tab-btn', activeTab === 'colaboradores' ? 'active' : '']" @click="activeTab = 'colaboradores'" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: var(--transition);">👥 Cuentas y Colaboradores</button>
+        <button :class="['tab-btn', activeTab === 'solicitudes' ? 'active' : '']" @click="switchToSolicitudes" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: var(--transition);">📋 Solicitudes de Registro</button>
       </div>
+
+      <!-- TAB 1: Colaboradores -->
+      <template v-if="activeTab === 'colaboradores'">
+        <div class="card font-card">
+          <div v-if="users.length === 0" class="empty-state">
+            No tienes trabajadores registrados todavía.
+          </div>
+          <table v-else class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">N°</th>
+                <th>Nombre</th>
+                <th v-if="authStore.isSuperadmin">Tienda / Negocio</th>
+                <th>Correo Electrónico</th>
+                <th>Rol</th>
+                <th>Módulos Permitidos</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(user, index) in users" :key="user.id">
+                <td><strong>{{ index + 1 }}</strong></td>
+                <td><strong>{{ user.nombre }}</strong></td>
+                <td v-if="authStore.isSuperadmin">
+                  <span class="store-badge">{{ user.nombreEmpresa || 'Sin Tienda' }}</span>
+                </td>
+                <td>{{ user.correo }}</td>
+                <td>
+                  <span :class="['role-badge', user.rol === 'Superadmin' ? 'superadmin' : (user.rol === 'EmpresaOwner' ? 'owner' : 'employee')]">
+                    {{ user.rol === 'Superadmin' ? 'Súper Administrador' : (user.rol === 'EmpresaOwner' ? 'Administrador' : 'Empleado') }}
+                  </span>
+                </td>
+                <td>
+                  <div class="permissions-badges">
+                    <span v-for="perm in user.permisos" :key="perm" class="perm-badge">
+                      {{ formatPermissionName(perm) }}
+                    </span>
+                    <span v-if="!user.permisos || user.permisos.length === 0" class="perm-badge none">Ninguno</span>
+                  </div>
+                </td>
+                <td>
+                  <span :class="['status-dot', user.activo ? 'active' : 'inactive']">
+                    {{ user.activo ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="actions-cell">
+                    <button @click="openEditModal(user)" class="btn-action edit" title="Editar">✏️</button>
+                    <button @click="confirmDelete(user.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </template>
+
+      <!-- TAB 2: Solicitudes de Registro (Solo Superadmin) -->
+      <template v-else-if="activeTab === 'solicitudes' && authStore.isSuperadmin">
+        <div class="card font-card">
+          <div v-if="loadingRequests" class="empty-state">Cargando solicitudes…</div>
+          <div v-else-if="registerRequests.length === 0" class="empty-state">
+            No hay solicitudes de registro recibidas.
+          </div>
+          <table v-else class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">N°</th>
+                <th>Fecha</th>
+                <th>Empresa Solicitada</th>
+                <th>Propietario</th>
+                <th>Contacto</th>
+                <th>Mensaje / Comentario</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(req, index) in registerRequests" :key="req.id">
+                <td><strong>{{ index + 1 }}</strong></td>
+                <td>{{ formatDate(req.fechaCreacion) }}</td>
+                <td><strong>{{ req.nombreEmpresa }}</strong></td>
+                <td><strong>{{ req.nombrePropietario }}</strong></td>
+                <td>
+                  <div style="font-size: 0.85rem; line-height: 1.4;">
+                    📞 {{ req.telefono }}<br>
+                    ✉️ {{ req.correoPropietario }}
+                  </div>
+                </td>
+                <td>
+                  <p style="font-size: 0.85rem; color: var(--text-muted); max-width: 250px; white-space: normal; word-break: break-word; margin: 0;">
+                    {{ req.mensaje || 'Sin comentario' }}
+                  </p>
+                </td>
+                <td>
+                  <span :class="['badge', req.estado === 'Pendiente' ? 'badge-danger' : (req.estado === 'Contactado' ? 'badge-warning' : 'badge-success')]">
+                    {{ req.estado }}
+                  </span>
+                </td>
+                <td>
+                  <div class="actions-cell" style="gap: 6px;">
+                    <button v-if="req.estado === 'Pendiente'" @click="updateRequestStatus(req.id, 'Contactado')" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 4px 8px;">📞 Contactar</button>
+                    <button v-if="req.estado !== 'Aprobado'" @click="approveAndPreFill(req)" class="btn btn-success btn-sm" style="font-size: 0.75rem; padding: 4px 8px; background-color: #10b981; color: white;">✅ Aprobar</button>
+                    <button v-if="req.estado !== 'Rechazado' && req.estado !== 'Aprobado'" @click="updateRequestStatus(req.id, 'Rechazado')" class="btn btn-danger btn-sm" style="font-size: 0.75rem; padding: 4px 8px; background-color: #ef4444; color: white;">❌ Rechazar</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </template>
 
       <!-- Modal para agregar/editar colaboradores -->
       <div v-if="showModal" class="modal-overlay">
@@ -247,6 +310,68 @@ const authStore = useAuthStore()
 
 const users = ref([])
 const showModal = ref(false)
+
+// Estados para solicitudes de registro
+const activeTab = ref('colaboradores')
+const registerRequests = ref([])
+const loadingRequests = ref(false)
+
+const fetchRegisterRequests = async () => {
+  loadingRequests.value = true
+  try {
+    const res = await fetch(`${API_URL}/api/registerrequests`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (res.ok) {
+      registerRequests.value = await res.json()
+    }
+  } catch (err) {
+    console.error('Error fetching register requests', err)
+  } finally {
+    loadingRequests.value = false
+  }
+}
+
+const switchToSolicitudes = () => {
+  activeTab.value = 'solicitudes'
+  fetchRegisterRequests()
+}
+
+const updateRequestStatus = async (requestId, newStatus) => {
+  try {
+    const res = await fetch(`${API_URL}/api/registerrequests/${requestId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.token}`
+      },
+      body: JSON.stringify({ estado: newStatus })
+    })
+    if (!res.ok) throw new Error()
+    alert(`Estado de la solicitud cambiado a: ${newStatus}`)
+    fetchRegisterRequests()
+  } catch (err) {
+    alert('Error al cambiar el estado de la solicitud.')
+  }
+}
+
+const approveAndPreFill = async (req) => {
+  if (confirm(`¿Estás seguro de que deseas APROBAR la solicitud de ${req.nombreEmpresa}? Esto cambiará su estado a Aprobado.`)) {
+    await updateRequestStatus(req.id, 'Aprobado')
+    openCreateModal()
+    form.nombreTienda = req.nombreEmpresa
+    form.nombre = req.nombrePropietario
+    form.correo = req.correoPropietario
+  }
+}
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return 'N/A'
+  return new Date(dateStr).toLocaleDateString('es-PE', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  })
+}
 const isEdit = ref(false)
 const currentUserId = ref(null)
 
@@ -409,7 +534,10 @@ const handleLogout = () => {
 
 onMounted(() => {
   fetchUsers()
-  fetchEmpresas()
+  if (authStore.isSuperadmin) {
+    fetchEmpresas()
+    fetchRegisterRequests()
+  }
 })
 </script>
 

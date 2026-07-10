@@ -139,6 +139,28 @@ public class ClientAnalyticsController : ControllerBase
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // GET api/clientanalytics/client/{clienteId}/sales
+    // Retorna todas las ventas asociadas a un cliente específico de la empresa.
+    // ─────────────────────────────────────────────────────────────────────────
+    [HttpGet("client/{clienteId}/sales")]
+    public async Task<IActionResult> GetClientSales(string clienteId)
+    {
+        if (!_userContext.HasPermission("clientes"))
+            return Forbid();
+
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId))
+            return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        var sales = await _context.Sales
+            .Find(s => s.EmpresaId == empresaId && s.ClienteId == clienteId)
+            .SortByDescending(s => s.FechaCreacion)
+            .ToListAsync();
+
+        return Ok(sales);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // GET api/clientanalytics/inventoryvalue
     // Calcula el valor total del inventario a precio de costo.
     // Retorna el valor total (costo × stock), cantidad de productos activos

@@ -3,7 +3,7 @@
     <div class="login-card card">
       <div class="header">
         <h1 class="brand-title">🍦 VentasSaaS</h1>
-        <p class="text-subtitle">{{ isRegister ? 'Registra tu negocio e inventario' : 'Inicia sesión en tu punto de venta' }}</p>
+        <p class="text-subtitle">{{ isRegister ? 'Solicita tu cuenta de negocio' : 'Inicia sesión en tu punto de venta' }}</p>
       </div>
 
       <form @submit.prevent="handleSubmit" class="grid">
@@ -17,6 +17,10 @@
             <label>Tu Nombre Completo</label>
             <input v-model="form.nombrePropietario" type="text" placeholder="Juan Pérez" required />
           </div>
+          <div class="field">
+            <label>Teléfono de Contacto</label>
+            <input v-model="form.telefono" type="text" placeholder="987654321" required />
+          </div>
         </template>
 
         <!-- Campos generales de acceso -->
@@ -25,14 +29,19 @@
           <input v-model="form.correo" type="email" placeholder="ejemplo@correo.com" required />
         </div>
 
-        <div class="field">
+        <div v-if="!isRegister" class="field">
           <label>Contraseña</label>
           <input v-model="form.clave" type="password" placeholder="••••••••" required />
         </div>
 
+        <div v-if="isRegister" class="field">
+          <label>Cuéntanos sobre tu negocio (Opcional)</label>
+          <textarea v-model="form.mensaje" placeholder="Mensaje para el administrador..." rows="3" style="width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border-color); padding: 8px 12px; font-family: var(--font-family);"></textarea>
+        </div>
+
         <div class="actions">
           <button type="submit" class="btn btn-primary w-full" :disabled="loading">
-            {{ loading ? 'Procesando...' : (isRegister ? 'Crear Cuenta SaaS' : 'Iniciar Sesión') }}
+            {{ loading ? 'Procesando...' : (isRegister ? 'Enviar Solicitud de Registro' : 'Iniciar Sesión') }}
           </button>
         </div>
       </form>
@@ -41,13 +50,6 @@
         <a href="#" @click.prevent="isRegister = !isRegister">
           {{ isRegister ? '¿Ya tienes cuenta? Inicia Sesión' : '¿Quieres usarlo en tu tienda? Regístrate aquí' }}
         </a>
-      </div>
-      
-      <!-- Boton de ayuda para la carga inicial de datos en desarrollo -->
-      <div v-if="!isRegister" class="seed-helper">
-        <button @click="seedSuperadmin" class="btn btn-secondary w-full" style="font-size: 0.8rem; margin-top: 10px; padding: 6px;">
-          Seed Superadmin Inicial (Dev)
-        </button>
       </div>
     </div>
   </div>
@@ -67,23 +69,37 @@ const loading = ref(false)
 const form = reactive({
   nombreEmpresa: '',
   nombrePropietario: '',
+  telefono: '',
   correo: '',
-  clave: ''
+  clave: '',
+  mensaje: ''
 })
 
 const handleSubmit = async () => {
   loading.value = true
   try {
     if (isRegister.value) {
-      await authStore.registerEmpresa(
-        form.nombreEmpresa,
-        'Premium',
-        form.nombrePropietario,
-        form.correo,
-        form.clave
-      )
-      alert('¡Negocio registrado con éxito! Ahora inicia sesión.')
+      const res = await fetch(`${API_URL}/api/registerrequests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombreEmpresa: form.nombreEmpresa,
+          nombrePropietario: form.nombrePropietario,
+          correoPropietario: form.correo,
+          telefono: form.telefono,
+          mensaje: form.mensaje
+        })
+      })
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.message || 'Error al enviar la solicitud.')
+      }
+      alert('¡Tu solicitud de registro ha sido enviada con éxito! Nos pondremos en contacto contigo pronto.')
       isRegister.value = false
+      form.nombreEmpresa = ''
+      form.nombrePropietario = ''
+      form.telefono = ''
+      form.mensaje = ''
     } else {
       await authStore.login(form.correo, form.clave)
       router.push('/dashboard')
@@ -92,20 +108,6 @@ const handleSubmit = async () => {
     alert(err.message || 'Ocurrió un error.')
   } finally {
     loading.value = false
-  }
-}
-
-const seedSuperadmin = async () => {
-  try {
-    const res = await fetch(`${API_URL}/api/auth/seed-superadmin`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ correo: 'admin@ventassaas.com', clave: 'Password123!' })
-    })
-    const data = await res.json()
-    alert(data.message)
-  } catch (err) {
-    alert('Error al realizar el seed.')
   }
 }
 </script>
