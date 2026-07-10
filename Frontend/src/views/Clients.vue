@@ -335,6 +335,66 @@
             </div>
           </div>
         </div>
+
+        <!-- Modal Anidado: Detalle de Boleta / Compra Completa -->
+        <div v-if="showSaleDetailModal && selectedSale" class="modal-overlay" style="z-index: 1100; background-color: rgba(0, 0, 0, 0.45);">
+          <div class="modal-card card" style="max-width: 500px; border-top: 4px solid var(--primary); text-align: left; padding: 24px; color: var(--text-main);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+              <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0; color: var(--text-main);">📄 Detalles de Compra</h3>
+              <button @click="showSaleDetailModal = false" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-muted); font-weight: bold;">&times;</button>
+            </div>
+
+            <div style="font-size: 0.85rem; line-height: 1.6; color: var(--text-main); margin-bottom: 20px;">
+              <p style="margin: 4px 0;"><strong>ID Venta:</strong> <code>{{ selectedSale.id }}</code></p>
+              <p style="margin: 4px 0;"><strong>Fecha y Hora:</strong> {{ formatDate(selectedSale.fechaCreacion) }}</p>
+              <p style="margin: 4px 0;"><strong>Atendido por:</strong> {{ selectedSale.creadoPorNombre }}</p>
+              <p style="margin: 4px 0;"><strong>Método de Pago:</strong> <span class="badge badge-info">{{ selectedSale.metodoPago }}</span></p>
+              <p style="margin: 4px 0;"><strong>Estado de Venta:</strong> <span class="badge badge-info" style="background-color: #e0f2fe; color: #0369a1;">{{ selectedSale.estadoPago }}</span></p>
+            </div>
+
+            <!-- Tabla de items comprados -->
+            <div style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 20px;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                <thead style="background: var(--bg-app); border-bottom: 1px solid var(--border-color);">
+                  <tr>
+                    <th style="padding: 8px; text-align: left; font-weight: 600; color: var(--text-muted);">Producto</th>
+                    <th style="padding: 8px; text-align: center; width: 60px; font-weight: 600; color: var(--text-muted);">Cant.</th>
+                    <th style="padding: 8px; text-align: right; width: 80px; font-weight: 600; color: var(--text-muted);">P. Unit.</th>
+                    <th style="padding: 8px; text-align: right; width: 80px; font-weight: 600; color: var(--text-muted);">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, idx) in selectedSale.detalles" :key="idx" style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 8px; color: var(--text-main);">{{ item.nombreProducto }}</td>
+                    <td style="padding: 8px; text-align: center; color: var(--text-main);">{{ item.cantidad }}</td>
+                    <td style="padding: 8px; text-align: right; color: var(--text-main);">S/. {{ item.precioUnitario.toFixed(2) }}</td>
+                    <td style="padding: 8px; text-align: right; font-weight: 700; color: var(--text-main);">S/. {{ (item.cantidad * item.precioUnitario).toFixed(2) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Cuentas finales -->
+            <div style="display: flex; flex-direction: column; align-items: flex-end; font-size: 0.9rem; gap: 6px; margin-bottom: 24px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
+              <div style="display: flex; justify-content: space-between; width: 200px;">
+                <span style="color: var(--text-muted);">Subtotal:</span>
+                <span style="color: var(--text-main);">S/. {{ selectedSale.subtotal?.toFixed(2) || '0.00' }}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; width: 200px;">
+                <span style="color: var(--text-muted);">IGV (19%):</span>
+                <span style="color: var(--text-main);">S/. {{ selectedSale.impuesto?.toFixed(2) || '0.00' }}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; width: 200px; font-weight: bold; font-size: 1.05rem; color: var(--text-main);">
+                <span>Total Compra:</span>
+                <span>S/. {{ selectedSale.total?.toFixed(2) || '0.00' }}</span>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+              <button @click="showSaleDetailModal = false" class="btn btn-secondary">Cerrar</button>
+            </div>
+          </div>
+        </div>
       </template>
 
       <!-- Formulario modal de creacion/edicion -->
