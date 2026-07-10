@@ -215,42 +215,63 @@
             <!-- Sparkline SVG de tendencia de los últimos 6 meses -->
             <div class="sparkline-wrapper" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px;">
               <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">📈 Tendencia de Compras (Últimos 6 meses)</span>
-              <svg class="sparkline" viewBox="0 0 200 50" preserveAspectRatio="none" style="width: 100%; height: 70px; background: transparent; border: none; overflow: visible;">
+              <svg class="line-chart-svg" viewBox="0 0 500 150" style="width: 100%; height: 160px; background: transparent; overflow: visible;">
                 <defs>
                   <linearGradient :id="'sparkGrad-' + selectedClient.clienteId" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#6366f1" stop-opacity="0.25" />
-                    <stop offset="100%" stop-color="#6366f1" stop-opacity="0.0" />
+                    <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.3" />
+                    <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0" />
                   </linearGradient>
                 </defs>
-                <!-- Área de relleno con degradado -->
+                <!-- Grid Lines (Horizontal) -->
+                <line x1="60" y1="20" x2="480" y2="20" stroke="#f1f2f5" stroke-dasharray="4" />
+                <line x1="60" y1="70" x2="480" y2="70" stroke="#f1f2f5" stroke-dasharray="4" />
+                <line x1="60" y1="120" x2="480" y2="120" stroke="#e2e8f0" stroke-width="1.5" />
+
+                <!-- Y Axis Labels -->
+                <text x="50" y="24" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.{{ clientMaxVal(selectedClient.tendenciaMensual).toFixed(0) }}</text>
+                <text x="50" y="74" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.{{ (clientMaxVal(selectedClient.tendenciaMensual) / 2).toFixed(0) }}</text>
+                <text x="50" y="124" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.0</text>
+
+                <!-- Gradient Area Fill -->
                 <path
-                  :d="buildSparklinePath(selectedClient.tendenciaMensual)"
+                  :d="buildClientChartPath(selectedClient.tendenciaMensual)"
                   :fill="'url(#sparkGrad-' + selectedClient.clienteId + ')'"
                 />
-                <!-- Línea de la tendencia -->
+                <!-- Trend Stroke Line -->
                 <path
-                  :d="buildSparklineLine(selectedClient.tendenciaMensual)"
+                  :d="buildClientChartLine(selectedClient.tendenciaMensual)"
                   fill="none"
-                  stroke="#4f46e5"
+                  stroke="var(--primary-hover)"
                   stroke-width="2.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
-                <!-- Puntos de datos -->
+                <!-- Data Points (Circles with hover tooltips) -->
                 <circle
-                  v-for="(pt, i) in sparklinePoints(selectedClient.tendenciaMensual)"
+                  v-for="(pt, i) in clientChartPoints(selectedClient.tendenciaMensual)"
                   :key="i"
                   :cx="pt.x"
                   :cy="pt.y"
-                  r="3.5"
-                  fill="#4f46e5"
+                  r="4"
+                  fill="var(--primary-hover)"
                   stroke="#ffffff"
-                  stroke-width="1"
-                />
+                  stroke-width="1.5"
+                >
+                  <title>{{ pt.mes }}: S/. {{ pt.val.toFixed(2) }}</title>
+                </circle>
+
+                <!-- X Axis Month Labels -->
+                <text
+                  v-for="(pt, i) in clientChartPoints(selectedClient.tendenciaMensual)"
+                  :key="'lbl-' + i"
+                  :x="pt.x"
+                  y="142"
+                  text-anchor="middle"
+                  style="font-size: 0.7rem; font-weight: 700; fill: var(--text-muted);"
+                >
+                  {{ pt.mes }}
+                </text>
               </svg>
-              <div class="sparkline-months" style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; font-weight: 600;">
-                <span v-for="m in selectedClient.tendenciaMensual" :key="m.mes">{{ m.mes }}</span>
-              </div>
             </div>
 
             <!-- Top productos de este cliente -->
@@ -472,30 +493,49 @@ const fetchTopClients = async () => {
   }
 }
 
-// Construye los puntos de la línea de tendencia SVG (sparkline)
-const sparklinePoints = (tendencia) => {
-  if (!tendencia || tendencia.length === 0) return []
-  const maxVal = Math.max(...tendencia.map(t => t.total), 1)
-  const width = 200
-  const height = 50
-  const pad = 5
-  return tendencia.map((t, i) => ({
-    x: pad + (i / (tendencia.length - 1 || 1)) * (width - pad * 2),
-    y: height - pad - ((t.total / maxVal) * (height - pad * 2))
-  }))
+// Helper to get max value of trend
+const clientMaxVal = (tendencia) => {
+  if (!tendencia || tendencia.length === 0) return 1
+  return Math.max(...tendencia.map(t => t.total), 1)
 }
 
-const buildSparklineLine = (tendencia) => {
-  const pts = sparklinePoints(tendencia)
-  if (pts.length === 0) return 'M 0,0'
+// Construye los puntos de la línea de tendencia del cliente (500x150)
+const clientChartPoints = (tendencia) => {
+  if (!tendencia || tendencia.length === 0) return []
+  const maxVal = clientMaxVal(tendencia)
+  const width = 500
+  const height = 150
+  const padLeft = 60
+  const padRight = 20
+  const padTop = 20
+  const padBottom = 30
+  
+  const chartW = width - padLeft - padRight
+  const chartH = height - padTop - padBottom
+  
+  return tendencia.map((t, i) => {
+    const x = padLeft + (i / (tendencia.length - 1 || 1)) * chartW
+    const y = padTop + chartH - ((t.total / maxVal) * chartH)
+    return {
+      x,
+      y,
+      val: t.total,
+      mes: t.mes
+    }
+  })
+}
+
+const buildClientChartLine = (tendencia) => {
+  const pts = clientChartPoints(tendencia)
+  if (pts.length === 0) return 'M 60,120'
   return 'M ' + pts.map(p => `${p.x},${p.y}`).join(' L ')
 }
 
-const buildSparklinePath = (tendencia) => {
-  const pts = sparklinePoints(tendencia)
-  if (pts.length === 0) return 'M 0,50 Z'
+const buildClientChartPath = (tendencia) => {
+  const pts = clientChartPoints(tendencia)
+  if (pts.length === 0) return 'M 60,120 Z'
   const linePoints = pts.map(p => `${p.x},${p.y}`).join(' L ')
-  return `M ${pts[0].x},50 L ${linePoints} L ${pts[pts.length - 1].x},50 Z`
+  return `M ${pts[0].x},120 L ${linePoints} L ${pts[pts.length - 1].x},120 Z`
 }
 
 // Mensaje de WhatsApp para clientes inactivos (reactivación con oferta)
