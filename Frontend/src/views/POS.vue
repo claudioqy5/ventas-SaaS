@@ -43,6 +43,10 @@
                 <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
               </select>
             </div>
+            <!-- Indicador de modo lector de código de barra -->
+            <div v-if="barcodeBuffer" class="barcode-indicator">
+              🔍 Escaneando: <strong>{{ barcodeBuffer }}</strong>
+            </div>
           </header>
 
           <div v-if="filteredProducts.length === 0" class="empty-state" style="flex-grow: 1; display: flex; align-items: center; justify-content: center;">
@@ -77,6 +81,24 @@
               <button @click="currentPage++" :disabled="currentPage >= totalPages" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">
                 Siguiente ➡️
               </button>
+            </div>
+          </div>
+
+          <!-- Panel de sugerencias de venta cruzada (Cross-Selling) -->
+          <div v-if="crossSellSuggestions.length > 0" class="cross-sell-panel">
+            <p class="cross-sell-title">💡 También se llevan frecuentemente con los productos del carrito:</p>
+            <div class="cross-sell-items">
+              <div
+                v-for="sug in crossSellSuggestions"
+                :key="sug.id"
+                class="cross-sell-chip"
+                @click="addToCart(sug)"
+                :title="`S/. ${sug.precio.toFixed(2)}`"
+              >
+                <img :src="sug.imagenUrl || defaultImage" class="cross-sell-img" alt="" />
+                <span>{{ sug.nombre }}</span>
+                <span class="cross-sell-price">S/. {{ sug.precio.toFixed(2) }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -149,11 +171,44 @@
       </div>
     </aside>
   </div>
+
+  <!-- Modal de venta exitosa con opción de WhatsApp -->
+  <div v-if="showSuccessModal" class="modal-overlay" style="z-index: 2000;">
+    <div class="modal-card card success-modal">
+      <div class="success-icon">🎉</div>
+      <h2 class="modal-title" style="text-align:center;">¡Venta Exitosa!</h2>
+      <p class="success-code">Código: <strong>{{ lastSaleCode }}</strong></p>
+
+      <div class="success-summary">
+        <div v-for="item in lastSaleCart" :key="item.productoId" class="success-item">
+          <span>{{ item.nombreProducto }}</span>
+          <span>x{{ item.cantidad }} — S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}</span>
+        </div>
+        <div class="success-total-row">
+          <span>Total Cobrado</span>
+          <span>S/. {{ lastSaleTotal.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div class="success-actions">
+        <a
+          v-if="lastClientPhone"
+          :href="whatsappUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-whatsapp"
+        >
+          📱 Enviar Comprobante por WhatsApp
+        </a>
+        <button @click="showSuccessModal = false" class="btn btn-secondary">Cerrar</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { API_URL } from '../config'
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -176,6 +231,21 @@ const codigoVenta = ref('')
 
 const isSidebarHovered = ref(false)
 const currentPage = ref(1)
+
+// ── Cross-selling ──
+const crossSellSuggestions = ref([])
+const allSalesHistory = ref([])
+
+// ── Barcode scanner ──
+const barcodeBuffer = ref('')
+let barcodeTimer = null
+
+// ── Sale success modal ──
+const showSuccessModal = ref(false)
+const lastSaleCode = ref('')
+const lastSaleCart = ref([])
+const lastSaleTotal = ref(0)
+const lastClientPhone = ref('')
 
 watch([searchQuery, selectedCategory], () => {
   currentPage.value = 1
@@ -290,6 +360,67 @@ const addToCart = (product) => {
       precioUnitario: product.precio
     })
   }
+  computeCrossSell()
+}
+
+// ── Cross-Selling: calcula productos frecuentemente comprados juntos ──
+const computeCrossSell = () => {
+  if (cart.value.length === 0 || allSalesHistory.value.length === 0) {
+    crossSellSuggestions.value = []
+    return
+  }
+
+  const cartIds = new Set(cart.value.map(i => i.productoId))
+  const coOccurrence = {}
+
+  for (const sale of allSalesHistory.value) {
+    const saleIds = (sale.detalles || []).map(d => d.productoId)
+    const hasCartItem = saleIds.some(id => cartIds.has(id))
+    if (!hasCartItem) continue
+
+    for (const id of saleIds) {
+      if (cartIds.has(id)) continue
+      coOccurrence[id] = (coOccurrence[id] || 0) + 1
+    }
+  }
+
+  const sorted = Object.entries(coOccurrence)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([id]) => products.value.find(p => p.id === id))
+    .filter(Boolean)
+
+  crossSellSuggestions.value = sorted
+}
+
+// ── Barcode scanner: captura entrada rápida de pistola lectora ──
+const handleBarcodeKeypress = (e) => {
+  // Ignorar si el foco está en un input/select/textarea del usuario
+  const tag = e.target?.tagName?.toLowerCase()
+  if (tag === 'input' || tag === 'select' || tag === 'textarea') return
+
+  if (e.key === 'Enter') {
+    const code = barcodeBuffer.value.trim()
+    barcodeBuffer.value = ''
+    clearTimeout(barcodeTimer)
+    if (!code) return
+    const product = products.value.find(p => p.codigoBarras === code)
+    if (product) {
+      addToCart(product)
+    } else {
+      // Si no coincide exactamente, buscar por nombre parcial
+      searchQuery.value = code
+    }
+    return
+  }
+
+  // Solo caracteres imprimibles
+  if (e.key.length === 1) {
+    barcodeBuffer.value += e.key
+    clearTimeout(barcodeTimer)
+    // Limpiar buffer si no llega el Enter en 800ms (escribió manualmente)
+    barcodeTimer = setTimeout(() => { barcodeBuffer.value = '' }, 800)
+  }
 }
 
 const updateQty = (item, amount) => {
@@ -312,6 +443,15 @@ const removeFromCart = (productoId) => {
 const cartSubtotal = computed(() => cart.value.reduce((sum, item) => sum + (item.precioUnitario * item.cantidad), 0) / 1.19)
 const cartTax = computed(() => cartTotal.value - cartSubtotal.value)
 const cartTotal = computed(() => cart.value.reduce((sum, item) => sum + (item.precioUnitario * item.cantidad), 0))
+
+const whatsappUrl = computed(() => {
+  if (!lastClientPhone.value) return '#'
+  const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
+  const items = lastSaleCart.value.map(i => `  • ${i.nombreProducto} x${i.cantidad} = S/. ${(i.precioUnitario * i.cantidad).toFixed(2)}`).join('%0A')
+  const msg = `¡Hola! Gracias por tu compra en *${store}* 🛒%0A%0AComprobante: *${lastSaleCode.value}*%0A%0A${items}%0A%0A*Total: S/. ${lastSaleTotal.value.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
+  const phone = lastClientPhone.value.replace(/[^0-9]/g, '')
+  return `https://api.whatsapp.com/send?phone=${phone}&text=${msg}`
+})
 
 const checkout = async () => {
   loading.value = true
@@ -339,15 +479,35 @@ const checkout = async () => {
       throw new Error(err.message || 'Error al procesar la venta.')
     }
 
-    alert(`¡Venta realizada con éxito! Código: ${codigoVenta.value}`)
+    // Mostrar modal de éxito en vez de un alert
+    lastSaleCode.value = codigoVenta.value
+    lastSaleCart.value = [...cart.value]
+    lastSaleTotal.value = cartTotal.value
+    lastClientPhone.value = client?.telefono || ''
+    showSuccessModal.value = true
+
     cart.value = []
+    crossSellSuggestions.value = []
     selectedClientId.value = ''
     generarCodigoVenta()
     fetchProducts()
+    fetchSalesHistory()
   } catch (err) {
     alert(err.message)
   } finally {
     loading.value = false
+  }
+}
+
+const fetchSalesHistory = async () => {
+  try {
+    const res = await fetch(`${API_URL}/api/sales`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (!res.ok) return
+    allSalesHistory.value = await res.json()
+  } catch (e) {
+    console.warn('No se pudo cargar historial para cross-selling', e)
   }
 }
 
@@ -361,6 +521,13 @@ onMounted(() => {
   generarCodigoVenta()
   fetchCategories()
   fetchClients()
+  fetchSalesHistory()
+  document.addEventListener('keypress', handleBarcodeKeypress)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keypress', handleBarcodeKeypress)
+  clearTimeout(barcodeTimer)
 })
 </script>
 
@@ -634,5 +801,164 @@ onMounted(() => {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-main);
+}
+
+/* ── Barcode scanner indicator ── */
+.barcode-indicator {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: #1e40af;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  animation: pulse-barcode 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-barcode {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+/* ── Cross-selling panel ── */
+.cross-sell-panel {
+  flex-shrink: 0;
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #fefce8, #fef9c3);
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-md);
+}
+
+.cross-sell-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #92400e;
+  margin: 0 0 10px 0;
+}
+
+.cross-sell-items {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cross-sell-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: #ffffff;
+  border: 1px solid #fde68a;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.cross-sell-chip:hover {
+  background: #fef08a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(234, 179, 8, 0.25);
+}
+
+.cross-sell-img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cross-sell-price {
+  font-weight: 700;
+  color: #d97706;
+}
+
+/* ── Success modal ── */
+.success-modal {
+  max-width: 480px;
+  width: 100%;
+  padding: 36px;
+  text-align: center;
+}
+
+.success-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+  animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes pop-in {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.success-code {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.success-summary {
+  background: var(--bg-app);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 24px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.success-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.success-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  border-top: 1px dashed var(--border-color);
+  padding-top: 10px;
+  margin-top: 6px;
+}
+
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── WhatsApp button ── */
+.btn-whatsapp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: var(--transition);
+  border: none;
+}
+
+.btn-whatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
 }
 </style>

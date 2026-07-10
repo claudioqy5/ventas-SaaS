@@ -60,6 +60,7 @@
               <th>Precio Venta</th>
               <th>Stock</th>
               <th>Estado</th>
+              <th>Análisis 🧠</th>
               <th v-if="authStore.hasPermission('modificar_productos')">Acciones</th>
             </tr>
           </thead>
@@ -83,6 +84,18 @@
               <td>
                 <span v-if="prod.stock <= prod.stockMinimo" class="status-indicator low">⚠️ Reabastecer</span>
                 <span v-else class="status-indicator ok">✅ Activo</span>
+              </td>
+              <td>
+                <div v-if="productAnalysis[prod.id]" class="analysis-cell">
+                  <span class="analysis-rate">⚡ {{ productAnalysis[prod.id].promedioDiario.toFixed(1) }}/día</span>
+                  <span :class="['analysis-days', productAnalysis[prod.id].diasRestantes <= 7 ? 'danger' : productAnalysis[prod.id].diasRestantes <= 20 ? 'warning' : 'ok']">
+                    {{ productAnalysis[prod.id].diasRestantes === Infinity ? '✅ Sin riesgo' : `🕒 ~${Math.ceil(productAnalysis[prod.id].diasRestantes)}d` }}
+                  </span>
+                  <span v-if="productAnalysis[prod.id].sugerido > 0" class="analysis-suggest">
+                    🛒 Pedir +{{ productAnalysis[prod.id].sugerido }}u
+                  </span>
+                </div>
+                <span v-else class="analysis-no-data">Sin ventas</span>
               </td>
               <td v-if="authStore.hasPermission('modificar_productos')">
                 <div class="actions-cell">
@@ -187,6 +200,7 @@ const currentProductId = ref(null)
 
 const searchQuery = ref('')
 const selectedCategory = ref('')
+const productAnalysis = ref({})
 
 const defaultImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><rect width='100%25' height='100%25' fill='%23f1f5f9'/><path d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M11 11.5L5 17h14l-4.5-6-3.5 4.5z'/></svg>"
 
@@ -220,8 +234,44 @@ const fetchProducts = async () => {
     })
     if (!res.ok) throw new Error()
     products.value = await res.json()
+    computeStockAnalysis()
   } catch (err) {
     console.error('Error fetching inventory products')
+  }
+}
+
+const computeStockAnalysis = async () => {
+  try {
+    const res = await fetch(`${API_URL}/api/sales`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (!res.ok) return
+    const allSales = await res.json()
+
+    // Filtrar ventas de los últimos 30 días
+    const since = new Date()
+    since.setDate(since.getDate() - 30)
+
+    const unitsSold = {}
+    for (const sale of allSales) {
+      const saleDate = new Date(sale.fechaCreacion)
+      if (saleDate < since) continue
+      for (const item of (sale.detalles || [])) {
+        unitsSold[item.productoId] = (unitsSold[item.productoId] || 0) + item.cantidad
+      }
+    }
+
+    const analysis = {}
+    for (const prod of products.value) {
+      const totalVendido = unitsSold[prod.id] || 0
+      const promedioDiario = totalVendido / 30
+      const diasRestantes = promedioDiario > 0 ? prod.stock / promedioDiario : Infinity
+      const sugerido = promedioDiario > 0 ? Math.max(0, Math.ceil(promedioDiario * 30) - prod.stock) : 0
+      analysis[prod.id] = { promedioDiario, diasRestantes, sugerido }
+    }
+    productAnalysis.value = analysis
+  } catch (e) {
+    console.warn('No se pudo calcular análisis de stock', e)
   }
 }
 
@@ -543,5 +593,53 @@ onMounted(() => {
   justify-content: flex-end;
   gap: 12px;
   margin-top: 24px;
+}
+
+/* ── Análisis de stock por IA ── */
+.analysis-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.analysis-rate {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+.analysis-days {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  display: inline-block;
+}
+
+.analysis-days.ok {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.analysis-days.warning {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.analysis-days.danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.analysis-suggest {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0369a1;
+}
+
+.analysis-no-data {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
 }
 </style>

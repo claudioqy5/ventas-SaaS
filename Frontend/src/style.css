@@ -211,7 +211,6 @@ input:focus, select:focus, textarea:focus {
   width: 18vw;             /* Expanded state — ~280px en 1600px */
   min-width: 220px;
   padding: 2vh 1.5vw;
-  overflow-y: auto;        /* Permite scroll solo cuando está expandido */
 }
 
 .sidebar-brand {
@@ -297,24 +296,35 @@ input:focus, select:focus, textarea:focus {
 .nav-links {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  flex-grow: 1;            /* Ocupa el espacio restante entre brand y logout */
-  overflow-y: auto;        /* Scroll vertical si hay demasiados ítems */
+  gap: 6px;
+  flex-grow: 1;
+  overflow-y: hidden;      /* Oculto por defecto cuando está colapsado */
   overflow-x: hidden;
-  min-height: 0;           /* Necesario para que flex+overflow funcionen */
-  padding-right: 2px;      /* Espacio para la barra de scroll */
+  min-height: 0;
+  padding-right: 4px;
 }
 
-/* Personalizar scrollbar del nav para que sea elegante */
-.nav-links::-webkit-scrollbar {
-  width: 3px;
+.sidebar:hover .nav-links {
+  overflow-y: auto;        /* Habilitar scroll solo cuando está expandido */
 }
+
+/* Personalizar scrollbar del nav para que sea sumamente elegante */
+.nav-links::-webkit-scrollbar {
+  width: 5px;
+}
+
 .nav-links::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .nav-links::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: #cbd5e1;
   border-radius: 99px;
+  transition: background 0.2s;
+}
+
+.nav-links::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .nav-item {

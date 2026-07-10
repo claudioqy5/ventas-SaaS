@@ -159,6 +159,15 @@
           </div>
 
           <footer class="modal-actions">
+            <a
+              v-if="selectedSale?.clienteTelefono"
+              :href="whatsappSaleUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-whatsapp"
+            >
+              📱 Enviar Comprobante por WhatsApp
+            </a>
             <button @click="selectedSale = null" class="btn btn-secondary w-full">Cerrar</button>
           </footer>
         </div>
@@ -262,6 +271,16 @@ const handleLogout = () => {
   authStore.logout()
   router.push('/login')
 }
+
+const whatsappSaleUrl = computed(() => {
+  if (!selectedSale.value?.clienteTelefono) return '#'
+  const sale = selectedSale.value
+  const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
+  const items = (sale.detalles || []).map(i => `  • ${i.nombreProducto} x${i.cantidad} = S/. ${(i.cantidad * i.precioUnitario).toFixed(2)}`).join('%0A')
+  const msg = `¡Hola! Gracias por tu compra en *${store}* 🛒%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE')}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
+  const phone = sale.clienteTelefono.replace(/[^0-9]/g, '')
+  return `https://api.whatsapp.com/send?phone=${phone}&text=${msg}`
+})
 
 onMounted(() => {
   fetchSales()
@@ -497,5 +516,35 @@ onMounted(() => {
 
 .max-width-600 {
   max-width: 600px;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── WhatsApp button ── */
+.btn-whatsapp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: var(--transition);
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-whatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
 }
 </style>
