@@ -31,7 +31,7 @@ public class CreditSalesController : ControllerBase
         if (string.IsNullOrEmpty(empresaId)) return BadRequest();
 
         var pending = await _context.Sales
-            .Find(s => s.EmpresaId == empresaId && s.EstadoPago == "Fiado")
+            .Find(s => s.EmpresaId == empresaId && s.EstadoPago == "Fiado" && s.Revertida != true)
             .SortByDescending(s => s.FechaCreacion)
             .ToListAsync();
 
@@ -45,7 +45,7 @@ public class CreditSalesController : ControllerBase
         if (string.IsNullOrEmpty(empresaId)) return BadRequest();
 
         var history = await _context.Sales
-            .Find(s => s.EmpresaId == empresaId && s.FueFiado == true && s.EstadoPago == "Pagado")
+            .Find(s => s.EmpresaId == empresaId && s.FueFiado == true && s.EstadoPago == "Pagado" && s.Revertida != true)
             .SortByDescending(s => s.FechaPago)
             .ToListAsync();
 
@@ -59,7 +59,7 @@ public class CreditSalesController : ControllerBase
         if (string.IsNullOrEmpty(empresaId)) return BadRequest();
 
         var allFiados = await _context.Sales
-            .Find(s => s.EmpresaId == empresaId && (s.EstadoPago == "Fiado" || s.FueFiado == true))
+            .Find(s => s.EmpresaId == empresaId && (s.EstadoPago == "Fiado" || s.FueFiado == true) && s.Revertida != true)
             .ToListAsync();
 
         var totalPendiente = allFiados.Where(s => s.EstadoPago == "Fiado").Sum(s => s.Total);

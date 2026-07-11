@@ -121,23 +121,58 @@
           <div v-else class="donut-chart-layout">
             <div class="pie-wrapper">
               <svg class="pie-chart-svg" viewBox="-10 -10 140 140">
-                <path v-for="(seg, idx) in pieSegmentsDia" :key="idx"
-                      :d="seg.d"
-                      :fill="seg.color"
-                      stroke="#1e293b"
-                      stroke-width="3"
-                      stroke-linejoin="round"
-                      class="pie-segment"
-                      :style="{ '--dx': seg.dx + 'px', '--dy': seg.dy + 'px' }" />
+                <defs>
+                  <filter id="pie-center-shadow-dia" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-opacity="0.15"/>
+                  </filter>
+                </defs>
+                <g v-for="(seg, idx) in pieSegmentsDia" :key="idx" 
+                   class="pie-slice-group"
+                   :style="{ '--dx': seg.dx + 'px', '--dy': seg.dy + 'px' }"
+                   @mouseenter="hoveredSegmentDia = seg"
+                   @mouseleave="hoveredSegmentDia = null">
+                  <path :d="seg.d"
+                        :fill="seg.color"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        stroke-linejoin="round"
+                        class="pie-segment" />
+                  <text v-if="parseFloat(seg.percent) > 4"
+                        :x="seg.tx"
+                        :y="seg.ty"
+                        class="pie-label"
+                        text-anchor="middle">
+                    {{ seg.percent }}%
+                  </text>
+                </g>
+                
+                <!-- Central White Circle (Donut) -->
+                <circle cx="60" cy="60" r="23" fill="#ffffff" filter="url(#pie-center-shadow-dia)" />
+                
+                <!-- Central Text (Hover & Total Info) -->
+                <g v-if="hoveredSegmentDia">
+                  <text x="60" y="49" font-size="7" font-weight="800" fill="#1e1b4b" text-anchor="middle">
+                    {{ hoveredSegmentDia.metodo }}
+                  </text>
+                  <text x="60" y="60" font-size="6.5" font-weight="700" fill="#4f46e5" text-anchor="middle">
+                    S/.{{ hoveredSegmentDia.total.toFixed(0) }}
+                  </text>
+                  <text x="60" y="71" font-size="7" font-weight="800" :fill="hoveredSegmentDia.color" text-anchor="middle">
+                    {{ hoveredSegmentDia.percent }}%
+                  </text>
+                </g>
+                <g v-else>
+                  <text x="60" y="52" font-size="6.5" font-weight="700" fill="#4f46e5" text-anchor="middle" style="letter-spacing: 0.2px;">
+                    PAGOS
+                  </text>
+                  <text x="60" y="63" font-size="7" font-weight="800" fill="#1e1b4b" text-anchor="middle">
+                    S/.{{ totalPagoDia.toFixed(0) }}
+                  </text>
+                  <text x="60" y="72" font-size="5" font-weight="600" fill="#94a3b8" text-anchor="middle">
+                    HOY
+                  </text>
+                </g>
               </svg>
-            </div>
-            <!-- Legend -->
-            <div class="donut-legend">
-              <div v-for="(seg, idx) in pieSegmentsDia" :key="idx" class="legend-item">
-                <span class="legend-dot" :style="{ backgroundColor: seg.color }"></span>
-                <span class="legend-name">{{ seg.metodo }}:</span>
-                <span class="legend-val">S/.{{ seg.total.toFixed(2) }} ({{ seg.percent }}%)</span>
-              </div>
             </div>
           </div>
         </div>
@@ -224,6 +259,13 @@ const stats = ref({
   metodosPagoDia: [],
   productosMasVendidosDia: [],
   fechaDiaActual: ''
+})
+
+const hoveredSegmentDia = ref(null)
+
+const totalPagoDia = computed(() => {
+  if (!stats.value.metodosPagoDia || stats.value.metodosPagoDia.length === 0) return 0
+  return stats.value.metodosPagoDia.reduce((acc, m) => acc + m.total, 0)
 })
 
 // Variables para el sistema de alertas de Recordatorios
@@ -367,7 +409,7 @@ const pieSegmentsDia = computed(() => {
   if (totalAmount === 0) return []
   
   let cumulativePercent = 0
-  const colors = ['#a3c4f3', '#f1c0e8', '#b9fbc0', '#fbf8cc']
+  const colors = ['#6366f1', '#10b981', '#ec4899', '#f59e0b', '#8b5cf6', '#06b6d4']
   
   return stats.value.metodosPagoDia.map((m, index) => {
     const percent = m.total / totalAmount
@@ -395,9 +437,13 @@ const pieSegmentsDia = computed(() => {
       d = `M 60 60 L ${x1} ${y1} A 50 50 0 ${largeArcFlag} 1 ${x2} ${y2} Z`
     }
     
-    const explodeDist = 8
+    const explodeDist = 6
     const dx = Math.cos(midRad) * explodeDist
     const dy = Math.sin(midRad) * explodeDist
+
+    // Coordenadas para el texto del porcentaje (centroide del segmento)
+    const tx = 60 + 35 * Math.cos(midRad)
+    const ty = 60 + 35 * Math.sin(midRad) + 2 // Pequeño ajuste vertical
 
     return {
       metodo: m.metodo,
@@ -406,6 +452,8 @@ const pieSegmentsDia = computed(() => {
       d,
       dx,
       dy,
+      tx,
+      ty,
       color: colors[index % colors.length]
     }
   })
@@ -644,18 +692,17 @@ onMounted(() => {
 /* Pie Chart Styling */
 .donut-chart-layout {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  padding: 10px 0;
 }
 
 .pie-wrapper {
   position: relative;
-  width: 16vh;           /* ~150px en 900px de altura — proporcional */
-  height: 16vh;
-  min-width: 120px;
-  min-height: 120px;
+  width: 25vh;
+  height: 25vh;
+  min-width: 170px;
+  min-height: 170px;
 }
 
 .pie-chart-svg {
@@ -664,45 +711,31 @@ onMounted(() => {
   overflow: visible;
 }
 
-.pie-segment {
+.pie-slice-group {
   transform-origin: 60px 60px;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
 }
 
-.pie-segment:hover {
-  transform: translate(var(--dx), var(--dy));
+.pie-slice-group:hover {
+  transform: translate(var(--dx), var(--dy)) scale(1.05);
 }
 
-.donut-legend {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  text-align: left;
+.pie-segment {
+  transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.9rem;
+.pie-slice-group:hover .pie-segment {
+  filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.2));
+  opacity: 0.95;
 }
 
-.legend-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.legend-name {
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.legend-val {
-  color: var(--text-main);
-  font-weight: 600;
+.pie-label {
+  font-size: 7.5px;
+  font-weight: 800;
+  fill: #ffffff;
+  pointer-events: none;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 /* Modal Styling */

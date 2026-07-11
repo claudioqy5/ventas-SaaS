@@ -134,4 +134,77 @@ public class SalesController : ControllerBase
         await _context.Sales.InsertOneAsync(sale);
         return CreatedAtAction(nameof(GetAll), new { id = sale.Id }, sale);
     }
+
+    // POST api/sales/{id}/revert — revierte una venta, devuelve el stock y guarda el movimiento
+    [HttpPost("{id}/revert")]
+    public async Task<IActionResult> Revert(string id)
+    {
+        // Validar los permisos del usuario actual
+        if (!_userContext.HasPermission("ventas") && !_userContext.HasPermission("historial_ventas"))
+            return Forbid();
+
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        var sale = await _context.Sales.Find(s => s.Id == id && s.EmpresaId == empresaId).FirstOrDefaultAsync();
+        if (sale == null)
+            return NotFound(new { message = "La venta no existe." });
+
+        if (sale.Revertida)
+            return BadRequest(new { message = "Esta venta ya ha sido revertida." });
+
+        // Marcar la venta como revertida
+        sale.Revertida = true;
+        sale.FechaReversion = DateTime.UtcNow;
+        var nameClaim = User.FindFirst("name")?.Value
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value
+            ?? "Empleado";
+        sale.RevertidaPorNombre = nameClaim;
+
+        // Actualizar la venta en la base de datos
+        var saleUpdate = Builders<Sale>.Update
+            .Set(s => s.Revertida, true)
+            .Set(s => s.FechaReversion, sale.FechaReversion)
+            .Set(s => s.RevertidaPorNombre, sale.RevertidaPorNombre);
+        await _context.Sales.UpdateOneAsync(s => s.Id == id && s.EmpresaId == empresaId, saleUpdate);
+
+        // Devolver el stock a cada producto involucrado
+        foreach (var item in sale.Detalles)
+        {
+            var productFilter = Builders<Product>.Filter.And(
+                Builders<Product>.Filter.Eq(p => p.Id, item.ProductoId),
+                Builders<Product>.Filter.Eq(p => p.EmpresaId, empresaId)
+            );
+
+            var product = await _context.Products.Find(productFilter).FirstOrDefaultAsync();
+            if (product != null)
+            {
+                var previousStock = product.Stock;
+                var newStock = previousStock + item.Cantidad;
+
+                // Actualizar stock
+                var stockUpdate = Builders<Product>.Update.Set(p => p.Stock, newStock);
+                await _context.Products.UpdateOneAsync(productFilter, stockUpdate);
+
+                // Registrar movimiento de devolución de stock
+                var movement = new StockMovement
+                {
+                    EmpresaId = empresaId,
+                    ProductoId = product.Id,
+                    NombreProducto = product.Nombre,
+                    Tipo = "Reversión",
+                    Cantidad = item.Cantidad,
+                    StockAnterior = previousStock,
+                    StockNuevo = newStock,
+                    Motivo = $"Venta revertida (ID: {sale.Id})",
+                    CreadoPor = _userContext.UserId ?? string.Empty,
+                    CreadoPorNombre = nameClaim,
+                    FechaCreacion = DateTime.UtcNow
+                };
+                await _context.StockMovements.InsertOneAsync(movement);
+            }
+        }
+
+        return Ok(new { message = "Venta revertida exitosamente y stock restaurado.", sale });
+    }
 }

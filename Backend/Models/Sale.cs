@@ -53,6 +53,10 @@ public class Sale
     public string CreadoPorNombre { get; set; } = string.Empty;
 
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+
+    public bool Revertida { get; set; } = false;
+    public DateTime? FechaReversion { get; set; }
+    public string? RevertidaPorNombre { get; set; }
 }
 
 // Representa cada linea de producto dentro de una venta

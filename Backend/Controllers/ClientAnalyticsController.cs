@@ -50,9 +50,9 @@ public class ClientAnalyticsController : ControllerBase
         if (string.IsNullOrEmpty(empresaId))
             return BadRequest(new { message = "Falta el identificador de la empresa." });
 
-        // Cargar todas las ventas de la empresa que tengan cliente asignado y que no sean fiados pendientes
+        // Cargar todas las ventas de la empresa que tengan cliente asignado, no sean fiados pendientes y no estén revertidas
         var todasLasVentas = await _context.Sales
-            .Find(s => s.EmpresaId == empresaId && s.ClienteId != null && s.EstadoPago != "Fiado")
+            .Find(s => s.EmpresaId == empresaId && s.ClienteId != null && s.EstadoPago != "Fiado" && s.Revertida != true)
             .ToListAsync();
 
         // Cargar la lista de clientes de la empresa para cruzar los datos
@@ -153,7 +153,7 @@ public class ClientAnalyticsController : ControllerBase
             return BadRequest(new { message = "Falta el identificador de la empresa." });
 
         var sales = await _context.Sales
-            .Find(s => s.EmpresaId == empresaId && s.ClienteId == clienteId)
+            .Find(s => s.EmpresaId == empresaId && s.ClienteId == clienteId && s.Revertida != true)
             .SortByDescending(s => s.FechaCreacion)
             .ToListAsync();
 

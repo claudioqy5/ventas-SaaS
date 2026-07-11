@@ -99,9 +99,13 @@
                 </span>
               </td>
               <td>
-                <span class="total-badge">S/. {{ sale.total.toFixed(2) }}</span>
+                <span v-if="sale.revertida" class="total-badge" style="text-decoration: line-through; color: var(--text-muted);">
+                  S/. {{ sale.total.toFixed(2) }}
+                </span>
+                <span v-else class="total-badge">S/. {{ sale.total.toFixed(2) }}</span>
+                <span v-if="sale.revertida" class="reverted-badge" style="margin-left: 8px;">Revertido</span>
               </td>
-              <td style="text-align: center;">
+              <td style="text-align: center; display: flex; gap: 8px; justify-content: center;">
                 <button @click="openDetails(sale)" class="btn btn-primary btn-sm">👁️ Ver Detalles</button>
               </td>
             </tr>
@@ -174,9 +178,9 @@
             </div>
           </div>
 
-          <footer class="modal-actions">
+          <footer class="modal-actions" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
             <a
-              v-if="selectedSale?.clienteTelefono"
+              v-if="selectedSale?.clienteTelefono && !selectedSale?.revertida"
               :href="whatsappSaleUrl"
               target="_blank"
               rel="noopener noreferrer"
@@ -184,6 +188,19 @@
             >
               📱 Enviar Comprobante por WhatsApp
             </a>
+            
+            <button 
+              v-if="!selectedSale?.revertida"
+              @click="confirmRevertSale(selectedSale)" 
+              class="btn btn-danger"
+              style="background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; font-weight: bold; width: 100%; border: none;"
+            >
+              ↩️ Revertir Venta (Devolver Stock)
+            </button>
+            <div v-else style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); text-align: center; color: #b91c1c; font-weight: 600; font-size: 0.9rem;">
+              🚫 Esta venta fue revertida por {{ selectedSale.revertidaPorNombre || 'el sistema' }} el {{ formatDateTime(selectedSale.fechaReversion) }}
+            </div>
+            
             <button @click="selectedSale = null" class="btn btn-secondary w-full">Cerrar</button>
           </footer>
         </div>
@@ -227,6 +244,35 @@ const fetchSales = async () => {
     sales.value = await res.json()
   } catch (err) {
     console.error('Error fetching sales history')
+  } finally {
+    loading.value = false
+  }
+}
+
+const confirmRevertSale = async (sale) => {
+  const confirmMsg = `¿Estás seguro de que deseas revertir esta venta?\n\n- Se devolverá el stock de los productos al inventario.\n- Se restará este ingreso de las estadísticas del negocio.\n\nEsta acción no se puede deshacer.`
+  if (!confirm(confirmMsg)) return
+
+  loading.value = true
+  try {
+    const res = await fetch(`${API_URL}/api/sales/${sale.id}/revert`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authStore.token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      alert(data.message || 'Error al revertir la venta.')
+      return
+    }
+    alert('Venta revertida exitosamente. El stock ha sido restaurado.')
+    selectedSale.value = null
+    await fetchSales()
+  } catch (err) {
+    console.error('Error reverting sale:', err)
+    alert('Ocurrió un error al intentar revertir la venta.')
   } finally {
     loading.value = false
   }
@@ -563,5 +609,16 @@ onMounted(() => {
 .btn-whatsapp:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+}
+
+.reverted-badge {
+  background-color: #fee2e2;
+  color: #991b1b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  border: 1px solid #fca5a5;
 }
 </style>
