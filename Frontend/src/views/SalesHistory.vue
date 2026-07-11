@@ -196,6 +196,14 @@
             >
               📱 Enviar Comprobante por WhatsApp
             </a>
+
+            <button 
+              @click="printSaleTicket(selectedSale)" 
+              class="btn btn-primary"
+              style="background-color: #10b981; border: none; font-size: 0.95rem; font-weight: 700; padding: 12px 20px; border-radius: var(--radius-sm); color: white; display: flex; align-items: center; justify-content: center; gap: 8px;"
+            >
+              🖨️ Descargar Boleta (PDF)
+            </button>
             
             <div v-if="selectedSale?.revertida" style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); text-align: center; color: #b91c1c; font-weight: 600; font-size: 0.9rem;">
               🚫 Esta venta fue revertida por {{ selectedSale.revertidaPorNombre || 'el sistema' }} el {{ formatDateTime(selectedSale.fechaReversion) }}
@@ -276,6 +284,87 @@ const confirmRevertSale = async (sale) => {
   } finally {
     loading.value = false
   }
+}
+
+const printSaleTicket = (sale) => {
+  const printWindow = window.open('', '_blank', 'width=600,height=600')
+  const html = `
+    <html>
+      <head>
+        <title>Boleta_${sale.id}</title>
+        <style>
+          body { font-family: 'Courier New', Courier, monospace; padding: 20px; color: #000; font-size: 14px; }
+          .text-center { text-align: center; }
+          .text-right { text-align: right; }
+          .header { margin-bottom: 20px; }
+          .divider { border-top: 1px dashed #000; margin: 10px 0; }
+          table { width: 100%; border-collapse: collapse; }
+          th, td { padding: 4px 0; }
+          .total-row { font-weight: bold; }
+        </style>
+      </head>
+      <body>
+        <div class="text-center header">
+          <h2>🍦 ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
+          <p>Punto de Venta - Boleta de Compra</p>
+        </div>
+        <div class="divider"></div>
+        <p><strong>ID Venta:</strong> ${sale.id}</p>
+        <p><strong>Fecha:</strong> ${formatDateTime(sale.fechaCreacion)}</p>
+        <p><strong>Cliente:</strong> ${sale.nombreCliente || 'Cliente General'}</p>
+        <p><strong>Vendedor:</strong> ${formatCreatorName(sale.creadoPorNombre)}</p>
+        <p><strong>Método de Pago:</strong> ${sale.metodoPago}</p>
+        <div class="divider"></div>
+        <table>
+          <thead>
+            <tr>
+              <th align="left">Prod</th>
+              <th align="center">Cant</th>
+              <th align="right">P.U</th>
+              <th align="right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sale.detalles.map(item => `
+              <tr>
+                <td>${item.nombreProducto}</td>
+                <td align="center">${item.cantidad}</td>
+                <td align="right">S/. ${item.precioUnitario.toFixed(2)}</td>
+                <td align="right">S/. ${(item.cantidad * item.precioUnitario).toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="divider"></div>
+        <table style="width: 200px; margin-left: auto;">
+          <tr>
+            <td>Subtotal:</td>
+            <td align="right">S/. ${(sale.subtotal || 0).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>IGV (19%):</td>
+            <td align="right">S/. ${(sale.impuesto || 0).toFixed(2)}</td>
+          </tr>
+          <tr class="total-row">
+            <td>TOTAL:</td>
+            <td align="right">S/. ${(sale.total || 0).toFixed(2)}</td>
+          </tr>
+        </table>
+        <div class="divider"></div>
+        <div class="text-center" style="margin-top: 30px;">
+          <p>¡Gracias por su preferencia!</p>
+        </div>
+        <${'script'}>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+          }
+        </${'script'}>
+      </body>
+    </html>
+  `
+  printWindow.document.write(html)
+  printWindow.document.close()
 }
 
 const filteredSales = computed(() => {
