@@ -105,8 +105,16 @@
                 <span v-else class="total-badge">S/. {{ sale.total.toFixed(2) }}</span>
                 <span v-if="sale.revertida" class="reverted-badge" style="margin-left: 8px;">Revertido</span>
               </td>
-              <td style="text-align: center; display: flex; gap: 8px; justify-content: center;">
+              <td style="text-align: center; display: flex; gap: 8px; justify-content: center; align-items: center;">
                 <button @click="openDetails(sale)" class="btn btn-primary btn-sm">👁️ Ver Detalles</button>
+                <button 
+                  v-if="!sale.revertida"
+                  @click="confirmRevertSale(sale)" 
+                  class="btn btn-danger btn-sm"
+                  style="display: flex; align-items: center; gap: 4px; background: linear-gradient(135deg, #ef4444, #b91c1c); border: none;"
+                >
+                  ↩️ Revertir
+                </button>
               </td>
             </tr>
           </tbody>
@@ -189,15 +197,7 @@
               📱 Enviar Comprobante por WhatsApp
             </a>
             
-            <button 
-              v-if="!selectedSale?.revertida"
-              @click="confirmRevertSale(selectedSale)" 
-              class="btn btn-danger"
-              style="background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; font-weight: bold; width: 100%; border: none;"
-            >
-              ↩️ Revertir Venta (Devolver Stock)
-            </button>
-            <div v-else style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); text-align: center; color: #b91c1c; font-weight: 600; font-size: 0.9rem;">
+            <div v-if="selectedSale?.revertida" style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); text-align: center; color: #b91c1c; font-weight: 600; font-size: 0.9rem;">
               🚫 Esta venta fue revertida por {{ selectedSale.revertidaPorNombre || 'el sistema' }} el {{ formatDateTime(selectedSale.fechaReversion) }}
             </div>
             
