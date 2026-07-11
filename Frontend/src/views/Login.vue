@@ -118,7 +118,7 @@ const handleSubmit = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url('../assets/saasfondo.jpg');
+  background-image: url('../assets/saasfondo.png');
   background-size: cover;
   background-repeat: repeat-x;
   animation: scrollBackground 60s linear infinite;
