@@ -322,6 +322,7 @@ const availableYears = computed(() => {
 const stats = ref({
   totalBruto: 0,
   totalNeto: 0,
+  gananciaBruta: 0,
   rangoTexto: '',
   ventasPeriodo: [],
   metodosPago: [],
@@ -384,6 +385,7 @@ const fetchStats = async () => {
     stats.value = {
       totalBruto: data.totalBruto || 0,
       totalNeto: data.totalNeto || 0,
+      gananciaBruta: data.gananciaBruta || 0,
       rangoTexto: data.rangoTexto || '',
       ventasPeriodo: data.ventasPeriodo || [],
       metodosPago: data.metodosPago || [],
