@@ -240,7 +240,7 @@
                     {{ hoveredSegment.metodo }}
                   </text>
                   <text x="60" y="60" font-size="6.5" font-weight="700" fill="#4f46e5" text-anchor="middle">
-                    S/.{{ hoveredSegment.total.toFixed(0) }}
+                    S/.{{ hoveredSegment.total.toFixed(2) }}
                   </text>
                   <text x="60" y="71" font-size="7" font-weight="800" :fill="hoveredSegment.color" text-anchor="middle">
                     {{ hoveredSegment.percent }}%
@@ -251,7 +251,7 @@
                     MÉTODOS
                   </text>
                   <text x="60" y="63" font-size="7" font-weight="800" fill="#1e1b4b" text-anchor="middle">
-                    S/.{{ totalPagoPeriodo.toFixed(0) }}
+                    S/.{{ totalPagoPeriodo.toFixed(2) }}
                   </text>
                   <text x="60" y="72" font-size="5" font-weight="600" fill="#94a3b8" text-anchor="middle">
                     FILTRADO
@@ -698,10 +698,10 @@ onMounted(() => {
 
 .pie-wrapper {
   position: relative;
-  width: 24vh;
-  height: 24vh;
-  min-width: 170px;
-  min-height: 170px;
+  width: 32vh;
+  height: 32vh;
+  min-width: 220px;
+  min-height: 220px;
 }
 
 .pie-chart-svg {

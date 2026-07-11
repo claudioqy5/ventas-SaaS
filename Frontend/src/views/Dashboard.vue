@@ -155,7 +155,7 @@
                     {{ hoveredSegmentDia.metodo }}
                   </text>
                   <text x="60" y="60" font-size="6.5" font-weight="700" fill="#4f46e5" text-anchor="middle">
-                    S/.{{ hoveredSegmentDia.total.toFixed(0) }}
+                    S/.{{ hoveredSegmentDia.total.toFixed(2) }}
                   </text>
                   <text x="60" y="71" font-size="7" font-weight="800" :fill="hoveredSegmentDia.color" text-anchor="middle">
                     {{ hoveredSegmentDia.percent }}%
@@ -166,7 +166,7 @@
                     PAGOS
                   </text>
                   <text x="60" y="63" font-size="7" font-weight="800" fill="#1e1b4b" text-anchor="middle">
-                    S/.{{ totalPagoDia.toFixed(0) }}
+                    S/.{{ totalPagoDia.toFixed(2) }}
                   </text>
                   <text x="60" y="72" font-size="5" font-weight="600" fill="#94a3b8" text-anchor="middle">
                     HOY
@@ -699,10 +699,10 @@ onMounted(() => {
 
 .pie-wrapper {
   position: relative;
-  width: 25vh;
-  height: 25vh;
-  min-width: 170px;
-  min-height: 170px;
+  width: 32vh;
+  height: 32vh;
+  min-width: 220px;
+  min-height: 220px;
 }
 
 .pie-chart-svg {
