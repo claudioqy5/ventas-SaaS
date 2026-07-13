@@ -140,9 +140,12 @@
           <div class="item-details">
             <p class="item-name">{{ item.nombreProducto }}</p>
             <p class="item-sub">
-              S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}
-              <!-- Para Costal Kg suelto: el precio de referencia es editable -->
-              <small v-if="item.tipoProducto === 'Costal' && item.presentacion === 'Kg'" style="display: flex; align-items: center; gap: 3px; font-weight: 600; margin-top: 2px;">
+              <!-- Ocultar subtotal de línea si es producto de tipo Costal (ya que se edita el precio/monto directamente abajo) -->
+              <span v-if="item.tipoProducto !== 'Costal'">
+                S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}
+              </span>
+              <!-- Para productos de tipo Costal (tanto en Kg suelto como Costal completo), el precio es editable inline -->
+              <small v-if="item.tipoProducto === 'Costal'" style="display: flex; align-items: center; gap: 3px; font-weight: 600; margin-top: 2px;">
                 <span style="color: var(--text-muted);">S/.</span>
                 <input
                   type="number"
@@ -152,11 +155,11 @@
                   min="0.01"
                   style="width: 48px; border: none; border-bottom: 1.5px dashed #a3c4f3; background: transparent; font-size: 0.82rem; font-weight: 700; color: var(--text-main); outline: none; padding: 0 2px; text-align: left;"
                 />
-                <span style="color: var(--text-muted); font-size: 0.78rem;">/ Kg ✏️</span>
+                <span style="color: var(--text-muted); font-size: 0.78rem;">/ {{ item.presentacion === 'Costal' ? 'Costal' : 'Kg' }} ✏️</span>
               </small>
-              <!-- Para otros productos: precio de referencia solo lectura -->
+              <!-- Para otros productos (Unidad, Servicio): precio de referencia solo lectura -->
               <small v-else style="color: var(--text-muted); display: block; font-weight: 500;">
-                Pre. Ref: S/. {{ item.precioUnitario.toFixed(2) }} / {{ item.presentacion === 'Costal' ? 'Costal' : item.unidadMedida }}
+                Pre. Ref: S/. {{ item.precioUnitario.toFixed(2) }} / {{ item.unidadMedida }}
               </small>
             </p>
           </div>
@@ -171,21 +174,35 @@
               </button>
             </div>
 
-            <!-- Modo de ingreso: Por Cantidad o Por Monto (solo Kg suelto) -->
-            <div v-if="item.tipoProducto === 'Costal' && item.presentacion === 'Kg'" style="display: flex; align-items: center; gap: 5px; width: 100%; justify-content: flex-end;">
-              <button
-                type="button"
-                @click="toggleModoIngreso(item)"
-                :style="{
-                  fontSize: '0.7rem', fontWeight: '700', padding: '2px 8px',
-                  borderRadius: '5px', border: '1px solid', cursor: 'pointer',
-                  background: item.modoIngreso === 'monto' ? '#fef3c7' : '#f1f5f9',
-                  borderColor: item.modoIngreso === 'monto' ? '#f59e0b' : '#cbd5e1',
-                  color: item.modoIngreso === 'monto' ? '#b45309' : '#475569'
-                }"
-              >
-                {{ item.modoIngreso === 'monto' ? '💰 Por Monto' : '⚖️ Por Kg' }}
-              </button>
+            <!-- Modo de ingreso: Por Cantidad o Por Monto (solo Kg suelto) - Toggle Switch Mini -->
+            <div v-if="item.tipoProducto === 'Costal' && item.presentacion === 'Kg'" style="display: flex; align-items: center; gap: 8px; width: 100%; justify-content: flex-end; margin-top: 2px; margin-bottom: 2px;">
+              <div @click="toggleModoIngreso(item)" style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+                <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">
+                  {{ item.modoIngreso === 'monto' ? '💰 Por Monto' : '⚖️ Por Kg' }}
+                </span>
+                <!-- Switch Track -->
+                <div :style="{
+                  width: '30px',
+                  height: '16px',
+                  backgroundColor: item.modoIngreso === 'monto' ? '#f59e0b' : '#cbd5e1',
+                  borderRadius: '99px',
+                  position: 'relative',
+                  transition: 'background-color 0.2s'
+                }">
+                  <!-- Switch Thumb -->
+                  <div :style="{
+                    width: '12px',
+                    height: '12px',
+                    backgroundColor: '#ffffff',
+                    borderRadius: '50%',
+                    position: 'absolute',
+                    top: '2px',
+                    left: item.modoIngreso === 'monto' ? '16px' : '2px',
+                    transition: 'left 0.2s',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.15)'
+                  }"></div>
+                </div>
+              </div>
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px;">
