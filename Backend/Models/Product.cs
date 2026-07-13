@@ -49,6 +49,11 @@ public class Product
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal PrecioCosto { get; set; }
 
+    // Solo para tipo "Costal": costo de compra del costal cerrado al proveedor
+    // Ej: alimento 20kg → el costal completo de costo es S/.120.00
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal PrecioCostoCostal { get; set; } = 0;
+
     // Solo para tipo "Costal": precio especial cuando se vende el costal completo
     // Ej: alimento 20kg → suelto cuesta S/.5/kg, pero el costal completo cuesta S/.80
     [BsonRepresentation(BsonType.Decimal128)]

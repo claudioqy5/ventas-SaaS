@@ -85,23 +85,40 @@ public class PurchasesController : ControllerBase
 
             // Calculo el nuevo stock sumando la cantidad comprada al stock actual
             var previousStock = product.Stock;
-            var newStock = previousStock + item.Cantidad;
+            
+            decimal cantidadKilos = item.Cantidad;
+            if (product.TipoProducto == "Costal" && product.KilosPorCostal > 0)
+            {
+                cantidadKilos = item.Cantidad * product.KilosPorCostal;
+            }
+
+            var newStock = previousStock + cantidadKilos;
 
             // Actualizo el stock y tambien el precio de costo con el valor de esta compra
-            var stockUpdate = Builders<Product>.Update
-                .Set(p => p.Stock, newStock)
-                .Set(p => p.PrecioCosto, item.PrecioCosto);
+            var updateBuilder = Builders<Product>.Update.Set(p => p.Stock, newStock);
 
-            await _context.Products.UpdateOneAsync(productFilter, stockUpdate);
+            if (product.TipoProducto == "Costal" && product.KilosPorCostal > 0)
+            {
+                var costoUnitarioKg = item.PrecioCosto / product.KilosPorCostal;
+                updateBuilder = updateBuilder
+                    .Set(p => p.PrecioCosto, costoUnitarioKg)
+                    .Set(p => p.PrecioCostoCostal, item.PrecioCosto);
+            }
+            else
+            {
+                updateBuilder = updateBuilder.Set(p => p.PrecioCosto, item.PrecioCosto);
+            }
 
-            // Dejo registrado el movimiento de inventario para que quede en el historial
+            await _context.Products.UpdateOneAsync(productFilter, updateBuilder);
+
+            // Dejo registrado el movimiento de inventario para que quede en el historial (en Kg)
             var movement = new StockMovement
             {
                 EmpresaId = empresaId,
                 ProductoId = product.Id,
                 NombreProducto = product.Nombre,
                 Tipo = "Compra",
-                Cantidad = item.Cantidad,
+                Cantidad = cantidadKilos,
                 StockAnterior = previousStock,
                 StockNuevo = newStock,
                 Motivo = "Abastecimiento por Compra",

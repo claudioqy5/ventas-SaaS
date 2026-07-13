@@ -75,13 +75,15 @@
                 <div class="product-image-container">
                   <img :src="product.imagenUrl || defaultImage" class="product-card-img" alt="product image" />
                   <span :class="['product-card-stock', product.stock <= product.stockMinimo ? 'low' : 'ok']">
-                    Stock: {{ product.stock }}
+                    Stock: {{ product.esServicio ? '∞' : `${Number(product.stock).toFixed(product.tipoProducto === 'Costal' ? 1 : 0)} ${product.unidadMedida}` }}
                   </span>
                 </div>
                 <div class="product-info">
                   <h3 class="product-name">{{ product.nombre }}</h3>
                   <p class="product-barcode">Cod: {{ product.codigoBarras }}</p>
-                  <span class="product-price">S/. {{ product.precio.toFixed(2) }}</span>
+                  <span class="product-price">
+                    S/. {{ product.precio.toFixed(2) }}<span v-if="product.tipoProducto === 'Costal'" style="font-size: 0.75rem; color: var(--text-muted);">/Kg</span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -137,15 +139,39 @@
         <div v-for="item in cart" :key="item.productoId" class="cart-item">
           <div class="item-details">
             <p class="item-name">{{ item.nombreProducto }}</p>
-            <p class="item-sub">S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}</p>
+            <p class="item-sub">
+              S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}
+              <small style="color: var(--text-muted); display: block; font-weight: 500;">
+                Pre. Ref: S/. {{ item.precioUnitario.toFixed(2) }} / {{ item.presentacion === 'Costal' ? 'Costal' : item.unidadMedida }}
+              </small>
+            </p>
           </div>
-          <div class="item-controls-wrapper">
-            <div class="item-controls">
-              <button @click="updateQty(item, -1)" class="btn-qty">-</button>
-              <span class="item-qty">{{ item.cantidad }}</span>
-              <button @click="updateQty(item, 1)" class="btn-qty">+</button>
+          <div class="item-controls-wrapper" style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+            <!-- Selector de presentacion (Solo para tipo Costal) -->
+            <div v-if="item.tipoProducto === 'Costal'" class="pres-selector" style="display: flex; gap: 4px;">
+              <button type="button" @click="changePresentacion(item, 'Kg')" :class="['pres-btn', item.presentacion === 'Kg' ? 'active' : '']">
+                ⚖️ Kilo suelto
+              </button>
+              <button type="button" @click="changePresentacion(item, 'Costal')" :class="['pres-btn', item.presentacion === 'Costal' ? 'active' : '']">
+                🎒 Costal completo
+              </button>
             </div>
-            <button @click="removeFromCart(item.productoId)" class="btn-remove" title="Quitar producto">×</button>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="item-controls">
+                <button @click="updateQty(item, -1)" class="btn-qty">-</button>
+                <input 
+                  type="number" 
+                  v-model.number="item.cantidad" 
+                  @change="validateItemQty(item)"
+                  :step="item.presentacion === 'Kg' && item.tipoProducto === 'Costal' ? '0.05' : '1'"
+                  min="0.01"
+                  style="width: 60px; text-align: center; border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 4px; font-weight: 600;"
+                />
+                <button @click="updateQty(item, 1)" class="btn-qty">+</button>
+              </div>
+              <button @click="removeFromCart(item.productoId)" class="btn-remove" title="Quitar producto">×</button>
+            </div>
           </div>
         </div>
       </div>
@@ -202,7 +228,10 @@
       <div class="success-summary">
         <div v-for="item in lastSaleCart" :key="item.productoId" class="success-item">
           <span>{{ item.nombreProducto }}</span>
-          <span>x{{ item.cantidad }} — S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}</span>
+          <span>
+            x{{ item.presentacion === 'Costal' ? `${item.cantidad} costal(es)` : `${item.cantidad} ${item.unidadMedida}` }} 
+            — S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}
+          </span>
         </div>
         <div class="success-total-row">
           <span>Total Cobrado</span>
@@ -380,15 +409,20 @@ const filteredProducts = computed(() => {
 })
 
 const addToCart = (product) => {
-  if (product.stock <= 0) {
+  if (product.stock <= 0 && !product.esServicio) {
     alert('¡Este producto no tiene stock disponible!')
     return
   }
 
   const existing = cart.value.find(item => item.productoId === product.id)
   if (existing) {
-    if (existing.cantidad >= product.stock) {
-      alert(`No puedes vender más de ${product.stock} unidades de este producto.`)
+    const isCostal = existing.tipoProducto === 'Costal'
+    const neededStock = isCostal && existing.presentacion === 'Costal'
+      ? (existing.cantidad + 1) * existing.kilosPorCostal
+      : (existing.cantidad + 1)
+
+    if (!existing.esServicio && neededStock > existing.maxStock) {
+      alert(`No puedes vender más de ${existing.maxStock} ${existing.unidadMedida} de este producto.`)
       return
     }
     existing.cantidad++
@@ -396,11 +430,32 @@ const addToCart = (product) => {
     cart.value.push({
       productoId: product.id,
       nombreProducto: product.nombre,
+      tipoProducto: product.tipoProducto || 'Unidad',
+      kilosPorCostal: product.kilosPorCostal || 0,
+      precioKg: product.precio,
+      precioCostal: product.precioCostal || 0,
+      esServicio: product.esServicio || false,
+      
+      // Valores activos en el POS
+      presentacion: product.tipoProducto === 'Costal' ? 'Kg' : (product.esServicio ? 'Servicio' : 'Unidad'),
+      unidadMedida: product.unidadMedida || 'Unidad',
+      precioUnitario: product.precio, // por defecto precio suelto/unitario
       cantidad: 1,
-      precioUnitario: product.precio
+      maxStock: product.stock
     })
   }
   computeCrossSell()
+}
+
+// Permite cambiar la presentacion en el carrito y actualizar el precio
+const changePresentacion = (item, newPres) => {
+  item.presentacion = newPres
+  if (newPres === 'Costal') {
+    item.precioUnitario = item.precioCostal
+  } else {
+    item.precioUnitario = item.precioKg
+  }
+  validateItemQty(item)
 }
 
 // ── Cross-Selling: calcula productos frecuentemente comprados juntos ──
@@ -464,15 +519,45 @@ const handleBarcodeKeypress = (e) => {
 }
 
 const updateQty = (item, amount) => {
-  const prod = products.value.find(p => p.id === item.productoId)
-  if (amount > 0 && item.cantidad >= prod.stock) {
-    alert('Stock máximo alcanzado.')
+  let newQty = Number((item.cantidad + amount).toFixed(2))
+  if (newQty <= 0) {
+    cart.value = cart.value.filter(i => i.productoId !== item.productoId)
     return
   }
 
-  item.cantidad += amount
-  if (item.cantidad <= 0) {
-    cart.value = cart.value.filter(i => i.productoId !== item.productoId)
+  item.cantidad = newQty
+  validateItemQty(item)
+}
+
+const validateItemQty = (item) => {
+  if (isNaN(item.cantidad) || item.cantidad <= 0) {
+    item.cantidad = 1
+  }
+
+  if (item.esServicio) return
+
+  // Validacion de stock limite
+  if (item.tipoProducto === 'Costal') {
+    const totalNeededKg = item.presentacion === 'Costal' 
+      ? item.cantidad * item.kilosPorCostal 
+      : item.cantidad
+
+    if (totalNeededKg > item.maxStock) {
+      alert(`Stock insuficiente. Solo quedan ${item.maxStock.toFixed(2)} Kg en inventario.`)
+      
+      // Ajustar al maximo disponible posible
+      if (item.presentacion === 'Costal') {
+        const costalesPosibles = Math.floor(item.maxStock / item.kilosPorCostal)
+        item.cantidad = costalesPosibles > 0 ? costalesPosibles : 1
+      } else {
+        item.cantidad = item.maxStock
+      }
+    }
+  } else {
+    if (item.cantidad > item.maxStock) {
+      alert(`Stock insuficiente. Solo quedan ${item.maxStock} unidades en inventario.`)
+      item.cantidad = item.maxStock
+    }
   }
 }
 
@@ -487,7 +572,10 @@ const cartTotal = computed(() => cart.value.reduce((sum, item) => sum + (item.pr
 const whatsappUrl = computed(() => {
   if (!lastClientPhone.value) return '#'
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
-  const items = lastSaleCart.value.map(i => `  • ${i.nombreProducto} x${i.cantidad} = S/. ${(i.precioUnitario * i.cantidad).toFixed(2)}`).join('%0A')
+  const items = lastSaleCart.value.map(i => {
+    const qtyText = i.presentacion === 'Costal' ? `${i.cantidad} costal(es)` : `${i.cantidad} ${i.unidadMedida}`
+    return `  • ${i.nombreProducto} x${qtyText} = S/. ${(i.precioUnitario * i.cantidad).toFixed(2)}`
+  }).join('%0A')
   const msg = `¡Hola! Gracias por tu compra en *${store}* 🛒%0A%0AComprobante: *${lastSaleCode.value}*%0A%0A${items}%0A%0A*Total: S/. ${lastSaleTotal.value.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
   const phone = lastClientPhone.value.replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${msg}`
@@ -500,6 +588,35 @@ const checkout = async () => {
     const clienteId = client ? client.id : null
     const nombreCliente = client ? client.nombre : 'Cliente General'
 
+    // Adaptamos el mapeo de los productos al formato requerido por el backend
+    const detallesVenta = cart.value.map(item => {
+      const isCostal = item.tipoProducto === 'Costal'
+      const isSack = isCostal && item.presentacion === 'Costal'
+
+      // Cantidad y Precio en unidades base (kilogramos) para el backend
+      const cantidadBase = isSack ? (item.cantidad * item.kilosPorCostal) : item.cantidad
+      const precioUnitarioBase = isSack ? (item.precioUnitario / item.kilosPorCostal) : item.precioUnitario
+
+      // Formatear el nombre en el ticket de forma entendible
+      let nombreLabel = item.nombreProducto
+      if (isCostal) {
+        nombreLabel = isSack 
+          ? `${item.nombreProducto} (Costal ${item.kilosPorCostal}Kg)` 
+          : `${item.nombreProducto} (Kg suelto)`
+      }
+
+      return {
+        productoId: item.productoId,
+        nombreProducto: nombreLabel,
+        cantidad: cantidadBase,
+        precioUnitario: Number(precioUnitarioBase.toFixed(4)),
+        unidadMedida: item.unidadMedida,
+        presentacion: item.presentacion,
+        cantidadPresentacion: item.cantidad,
+        precioPresentacion: item.precioUnitario
+      }
+    })
+
     const res = await fetch(`${API_URL}/api/sales`, {
       method: 'POST',
       headers: {
@@ -507,7 +624,7 @@ const checkout = async () => {
         'Authorization': `Bearer ${authStore.token}`
       },
       body: JSON.stringify({
-        detalles: cart.value,
+        detalles: detallesVenta,
         metodoPago: isFiado.value ? "Fiado" : paymentMethod.value,
         estadoPago: isFiado.value ? "Fiado" : "Pagado",
         clienteId: clienteId,
@@ -813,6 +930,36 @@ onUnmounted(() => {
 .btn-remove:hover {
   color: #b91c1c;
   transform: scale(1.15);
+}
+
+/* ── Botones selectores de presentacion en el POS ── */
+.pres-selector {
+  display: flex;
+  gap: 4px;
+}
+
+.pres-btn {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background-color: #f8fafc;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pres-btn:hover {
+  border-color: var(--primary);
+  background-color: #eff6ff;
+  color: var(--primary);
+}
+
+.pres-btn.active {
+  background-color: #dbeafe;
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 .btn-qty {

@@ -104,6 +104,7 @@ public class ProductsController : ControllerBase
             .Set(p => p.CategoriaId, product.CategoriaId)
             .Set(p => p.Precio, product.Precio)
             .Set(p => p.PrecioCosto, product.PrecioCosto)
+            .Set(p => p.PrecioCostoCostal, product.PrecioCostoCostal)
             .Set(p => p.StockMinimo, product.StockMinimo)
             .Set(p => p.ImagenUrl, product.ImagenUrl)
             .Set(p => p.TipoProducto, product.TipoProducto)

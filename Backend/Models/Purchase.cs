@@ -43,7 +43,8 @@ public class PurchaseItem
     [BsonRepresentation(BsonType.ObjectId)]
     public string ProductoId { get; set; } = string.Empty;
     public string NombreProducto { get; set; } = string.Empty;
-    public int Cantidad { get; set; }
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal Cantidad { get; set; }
 
     // Precio al que se compro este producto en esta orden (puede variar entre compras)
     [BsonRepresentation(BsonType.Decimal128)]

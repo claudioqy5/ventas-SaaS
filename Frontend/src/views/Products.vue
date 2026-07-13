@@ -108,7 +108,7 @@
               <td>
                 <span :class="['stock-badge', prod.stock <= prod.stockMinimo ? 'low' : 'ok']">
                   <template v-if="prod.esServicio">— Servicio —</template>
-                  <template v-else>{{ Number(prod.stock).toFixed(prod.tipoProducto === 'Peso' ? 2 : 0) }} {{ prod.unidadMedida }}</template>
+                  <template v-else>{{ Number(prod.stock).toFixed(prod.tipoProducto === 'Costal' ? 2 : 0) }} {{ prod.unidadMedida }}</template>
                 </span>
               </td>
               <td>
@@ -171,20 +171,56 @@
             </div>
 
             <!-- FILA 3: Precios y stock según tipo -->
-            <div class="grid grid-3" v-if="form.tipoProducto !== 'Servicio'">
+            <div class="grid grid-3" v-if="form.tipoProducto !== 'Servicio' && form.tipoProducto !== 'Costal'">
               <div class="field">
                 <label>Precio Costo (S/.)</label>
                 <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" required />
               </div>
               <div class="field">
-                <label>{{ form.tipoProducto === 'Peso' ? 'Precio por Kg (S/.)' : 'Precio Venta (S/.)' }}</label>
+                <label>Precio Venta (S/.)</label>
                 <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
               </div>
               <div class="field">
                 <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} ({{ form.unidadMedida }})</label>
                 <input v-model.number="form.stock"
                   :type="'number'"
-                  :step="form.tipoProducto === 'Peso' ? '0.01' : '1'"
+                  :step="'1'"
+                  :min="0"
+                  :disabled="isEdit"
+                  required />
+              </div>
+            </div>
+
+            <!-- Para Costales: Doble Precio y Doble Costo -->
+            <div class="grid grid-3" v-if="form.tipoProducto === 'Costal'">
+              <div class="field">
+                <label>💰 Precio Costo del Costal (S/.)</label>
+                <input v-model.number="form.precioCostoCostal" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>🏷️ Precio Venta del Costal (S/.)</label>
+                <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>⚖️ Kilos por Costal (Kg)</label>
+                <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
+              </div>
+            </div>
+
+            <div class="grid grid-3" v-if="form.tipoProducto === 'Costal'">
+              <div class="field">
+                <label>🧠 Costo calculado por Kg (S/.)</label>
+                <input :value="costoKgCalculado" type="text" disabled style="background-color: #f1f5f9;" />
+              </div>
+              <div class="field">
+                <label>🏷️ Precio Venta por Kg suelto (S/.)</label>
+                <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} (Kg)</label>
+                <input v-model.number="form.stock"
+                  type="number"
+                  step="0.01"
                   :min="0"
                   :disabled="isEdit"
                   required />
@@ -203,17 +239,7 @@
               </div>
             </div>
 
-            <!-- Campos extra solo para Costal -->
-            <div class="grid grid-2" v-if="form.tipoProducto === 'Costal'">
-              <div class="field">
-                <label>💰 Precio por Costal Completo (S/.)</label>
-                <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" required />
-              </div>
-              <div class="field">
-                <label>⚖️ Kilos por Costal</label>
-                <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
-              </div>
-            </div>
+<!-- Campos extra de costal removidos de aqui porque los movimos arriba -->
 
             <!-- Stock mínimo: solo para productos físicos -->
             <div class="grid grid-2">
@@ -228,7 +254,7 @@
                 <label>Stock Mínimo Alerta ({{ form.unidadMedida }})</label>
                 <input v-model.number="form.stockMinimo"
                   type="number"
-                  :step="form.tipoProducto === 'Peso' ? '0.01' : '1'"
+                  :step="form.tipoProducto === 'Costal' ? '0.01' : '1'"
                   min="0" required />
               </div>
             </div>
@@ -309,14 +335,22 @@ const form = reactive({
   tipoProducto: 'Unidad',
   unidadMedida: 'Unidad',
   esServicio: false,
+  precioCostoCostal: 0,
   precioCostal: 0,
   kilosPorCostal: 0
+})
+
+// Calcula reactivamente el costo por kilogramo
+const costoKgCalculado = computed(() => {
+  if (form.tipoProducto === 'Costal' && form.kilosPorCostal > 0) {
+    return (form.precioCostoCostal / form.kilosPorCostal).toFixed(2)
+  }
+  return '0.00'
 })
 
 // Definicion de los tipos de producto disponibles
 const tiposProducto = [
   { valor: 'Unidad',   label: 'Unidad',   icono: '📦', descripcion: 'Se vende por unidades (ej: cama, ropa, pollo vivo)' },
-  { valor: 'Peso',     label: 'Por Kg',   icono: '⚖️',  descripcion: 'Se vende por kilos, admite decimales (ej: alimento a granel)' },
   { valor: 'Costal',   label: 'Costal',   icono: '🎒', descripcion: 'Precio por kg suelto Y precio especial por costal completo' },
   { valor: 'Servicio', label: 'Servicio', icono: '🐾', descripcion: 'No descuenta inventario (ej: baño, grooming, consulta)' },
 ]
@@ -327,7 +361,6 @@ const selectTipo = (tipo) => {
   form.esServicio = tipo === 'Servicio'
   const mapaUnidades = {
     'Unidad':   'Unidad',
-    'Peso':     'Kg',
     'Costal':   'Kg',
     'Servicio': 'Servicio'
   }
@@ -418,6 +451,7 @@ const openAddModal = () => {
   form.tipoProducto = 'Unidad'
   form.unidadMedida = 'Unidad'
   form.esServicio = false
+  form.precioCostoCostal = 0
   form.precioCostal = 0
   form.kilosPorCostal = 0
   showModal.value = true
@@ -438,6 +472,7 @@ const openEditModal = (product) => {
   form.tipoProducto = product.tipoProducto || 'Unidad'
   form.unidadMedida = product.unidadMedida || 'Unidad'
   form.esServicio = product.esServicio || false
+  form.precioCostoCostal = product.precioCostoCostal || 0
   form.precioCostal = product.precioCostal || 0
   form.kilosPorCostal = product.kilosPorCostal || 0
   showModal.value = true
@@ -450,6 +485,11 @@ const saveProduct = async () => {
   }
 
   try {
+    // Si es Costal, asignamos el precio de costo unitario por kilo calculado automaticamente
+    if (form.tipoProducto === 'Costal' && form.kilosPorCostal > 0) {
+      form.precioCosto = Number((form.precioCostoCostal / form.kilosPorCostal).toFixed(4))
+    }
+
     const url = isEdit.value
       ? `${API_URL}/api/products/${currentProductId.value}`
       : `${API_URL}/api/products`

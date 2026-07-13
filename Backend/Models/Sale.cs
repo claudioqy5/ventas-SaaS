@@ -66,11 +66,24 @@ public class SaleItem
     [BsonRepresentation(BsonType.ObjectId)]
     public string ProductoId { get; set; } = string.Empty;
     public string NombreProducto { get; set; } = string.Empty;
-    public int Cantidad { get; set; }
 
-    // Precio al que se vendio el producto en este momento (puede diferir del precio actual)
+    // Cantidad en la unidad de medida base (ej: Kilos o Unidades) para descontar stock
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal Cantidad { get; set; }
+
+    // Precio unitario base calculado para el total (ej: total / cantidad)
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal PrecioUnitario { get; set; }
+
+    // Campos informativos para el ticket/comprobante
+    public string UnidadMedida { get; set; } = "Unidad"; // "Kg", "Unidad", "Servicio"
+    public string Presentacion { get; set; } = "Unidad"; // "Kg", "Costal", "Unidad", "Servicio"
+
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal CantidadPresentacion { get; set; } // Ej: 1 costal, o 2.5 kg
+
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal PrecioPresentacion { get; set; } // Ej: S/. 160.00 o S/. 10.00
 
     // Total de esta linea calculado automaticamente: Cantidad x PrecioUnitario
     [BsonRepresentation(BsonType.Decimal128)]
