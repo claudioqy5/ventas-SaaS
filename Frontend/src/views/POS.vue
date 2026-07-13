@@ -146,7 +146,7 @@
               </small>
             </p>
           </div>
-          <div class="item-controls-wrapper" style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+          <div class="item-controls-wrapper" style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
             <!-- Selector de presentacion (Solo para tipo Costal) -->
             <div v-if="item.tipoProducto === 'Costal'" class="pres-selector" style="display: flex; gap: 4px;">
               <button type="button" @click="changePresentacion(item, 'Kg')" :class="['pres-btn', item.presentacion === 'Kg' ? 'active' : '']">
@@ -157,18 +157,66 @@
               </button>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div class="item-controls">
+            <!-- Editor de Precio (solo visible para Kg suelto) -->
+            <div v-if="item.tipoProducto === 'Costal' && item.presentacion === 'Kg'" style="display: flex; align-items: center; gap: 6px; width: 100%; justify-content: flex-end;">
+              <span style="font-size: 0.73rem; font-weight: 700; color: var(--text-muted);">Precio/Kg:</span>
+              <div style="display: flex; align-items: center; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 5px; padding: 1px 5px; gap: 3px;">
+                <span style="font-size: 0.73rem; color: #1e40af; font-weight: 700;">S/.</span>
+                <input
+                  type="number"
+                  v-model.number="item.precioUnitario"
+                  @change="validatePrecio(item)"
+                  step="0.10"
+                  min="0.01"
+                  style="width: 52px; text-align: right; border: none; background: transparent; font-size: 0.82rem; font-weight: 700; color: #1e40af; outline: none; padding: 2px 0;"
+                />
+              </div>
+            </div>
+
+            <!-- Modo de ingreso: Por Cantidad o Por Monto (solo Kg suelto) -->
+            <div v-if="item.tipoProducto === 'Costal' && item.presentacion === 'Kg'" style="display: flex; align-items: center; gap: 5px; width: 100%; justify-content: flex-end;">
+              <button
+                type="button"
+                @click="toggleModoIngreso(item)"
+                :style="{
+                  fontSize: '0.7rem', fontWeight: '700', padding: '2px 8px',
+                  borderRadius: '5px', border: '1px solid', cursor: 'pointer',
+                  background: item.modoIngreso === 'monto' ? '#fef3c7' : '#f1f5f9',
+                  borderColor: item.modoIngreso === 'monto' ? '#f59e0b' : '#cbd5e1',
+                  color: item.modoIngreso === 'monto' ? '#b45309' : '#475569'
+                }"
+              >
+                {{ item.modoIngreso === 'monto' ? '💰 Por Monto' : '⚖️ Por Kg' }}
+              </button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <!-- Modo: Por Cantidad (Kg) -->
+              <div v-if="item.modoIngreso !== 'monto'" class="item-controls">
                 <button @click="updateQty(item, -1)" class="btn-qty">-</button>
-                <input 
-                  type="number" 
-                  v-model.number="item.cantidad" 
+                <input
+                  type="number"
+                  v-model.number="item.cantidad"
                   @change="validateItemQty(item)"
                   :step="item.presentacion === 'Kg' && item.tipoProducto === 'Costal' ? '0.05' : '1'"
                   min="0.01"
-                  style="width: 60px; text-align: center; border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 4px; font-weight: 600;"
+                  style="width: 60px; text-align: center; border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 4px; font-weight: 600; font-size: 0.88rem;"
                 />
                 <button @click="updateQty(item, 1)" class="btn-qty">+</button>
+              </div>
+              <!-- Modo: Por Monto (S/.) —> calcula Kg automaticamente -->
+              <div v-if="item.modoIngreso === 'monto'" style="display: flex; align-items: center; gap: 4px;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: #b45309;">S/.</span>
+                <input
+                  type="number"
+                  v-model.number="item.montoIngresado"
+                  @input="updatePorMonto(item)"
+                  step="0.5"
+                  min="0.01"
+                  placeholder="Monto"
+                  style="width: 65px; text-align: center; border: 1px solid #f59e0b; border-radius: 4px; padding: 2px 4px; font-weight: 700; font-size: 0.88rem; color: #b45309; background: #fffbeb;"
+                />
+                <span style="font-size: 0.73rem; color: var(--text-muted); font-weight: 600;">= {{ item.cantidad.toFixed(2) }} Kg</span>
               </div>
               <button @click="removeFromCart(item.productoId)" class="btn-remove" title="Quitar producto">×</button>
             </div>
@@ -440,8 +488,13 @@ const addToCart = (product) => {
       kilosPorCostal: product.kilosPorCostal || 0,
       precioKg: product.precio,
       precioCostal: product.precioCostal || 0,
+      precioCostoKg: product.precioCosto || 0,  // precio de costo para validacion del piso
       esServicio: product.esServicio || false,
-      
+
+      // Modo de ingreso: 'cantidad' o 'monto'
+      modoIngreso: 'cantidad',
+      montoIngresado: 0,
+
       // Valores activos en el POS
       presentacion: product.tipoProducto === 'Costal' ? 'Kg' : (product.esServicio ? 'Servicio' : 'Unidad'),
       unidadMedida: product.unidadMedida || 'Unidad',
@@ -456,12 +509,55 @@ const addToCart = (product) => {
 // Permite cambiar la presentacion en el carrito y actualizar el precio
 const changePresentacion = (item, newPres) => {
   item.presentacion = newPres
+  item.modoIngreso = 'cantidad'
+  item.montoIngresado = 0
   if (newPres === 'Costal') {
     item.precioUnitario = item.precioCostal
   } else {
     item.precioUnitario = item.precioKg
   }
   validateItemQty(item)
+}
+
+// Valida que el precio de venta no sea menor al precio de costo
+const validatePrecio = (item) => {
+  const minPrice = item.tipoProducto === 'Costal' && item.presentacion === 'Costal'
+    ? (item.precioCostoKg * item.kilosPorCostal)
+    : item.precioCostoKg
+  if (isNaN(item.precioUnitario) || item.precioUnitario <= 0) {
+    item.precioUnitario = minPrice
+    return
+  }
+  if (item.precioUnitario < minPrice) {
+    alert(`El precio de venta no puede ser menor al precio de costo (S/. ${minPrice.toFixed(2)})`)
+    item.precioUnitario = minPrice
+  }
+  // Recalcular cantidad si estamos en modo monto
+  if (item.modoIngreso === 'monto') {
+    updatePorMonto(item)
+  }
+}
+
+// Calcula los Kg a partir del monto ingresado
+const updatePorMonto = (item) => {
+  if (!item.montoIngresado || item.montoIngresado <= 0 || item.precioUnitario <= 0) {
+    item.cantidad = 0.01
+    return
+  }
+  const kgs = Number((item.montoIngresado / item.precioUnitario).toFixed(3))
+  item.cantidad = kgs > 0 ? kgs : 0.01
+  validateItemQty(item)
+}
+
+// Alterna el modo de ingreso entre 'cantidad' y 'monto'
+const toggleModoIngreso = (item) => {
+  if (item.modoIngreso === 'cantidad') {
+    item.modoIngreso = 'monto'
+    item.montoIngresado = Number((item.cantidad * item.precioUnitario).toFixed(2))
+  } else {
+    item.modoIngreso = 'cantidad'
+    item.montoIngresado = 0
+  }
 }
 
 // ── Cross-Selling: calcula productos frecuentemente comprados juntos ──
