@@ -141,7 +141,21 @@
             <p class="item-name">{{ item.nombreProducto }}</p>
             <p class="item-sub">
               S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}
-              <small style="color: var(--text-muted); display: block; font-weight: 500;">
+              <!-- Para Costal Kg suelto: el precio de referencia es editable -->
+              <small v-if="item.tipoProducto === 'Costal' && item.presentacion === 'Kg'" style="display: flex; align-items: center; gap: 3px; font-weight: 600; margin-top: 2px;">
+                <span style="color: var(--text-muted);">S/.</span>
+                <input
+                  type="number"
+                  v-model.number="item.precioUnitario"
+                  @change="validatePrecio(item)"
+                  step="0.10"
+                  min="0.01"
+                  style="width: 48px; border: none; border-bottom: 1.5px dashed #a3c4f3; background: transparent; font-size: 0.82rem; font-weight: 700; color: var(--text-main); outline: none; padding: 0 2px; text-align: left;"
+                />
+                <span style="color: var(--text-muted); font-size: 0.78rem;">/ Kg ✏️</span>
+              </small>
+              <!-- Para otros productos: precio de referencia solo lectura -->
+              <small v-else style="color: var(--text-muted); display: block; font-weight: 500;">
                 Pre. Ref: S/. {{ item.precioUnitario.toFixed(2) }} / {{ item.presentacion === 'Costal' ? 'Costal' : item.unidadMedida }}
               </small>
             </p>
@@ -155,22 +169,6 @@
               <button type="button" @click="changePresentacion(item, 'Costal')" :class="['pres-btn', item.presentacion === 'Costal' ? 'active' : '']">
                 🎒 Costal completo
               </button>
-            </div>
-
-            <!-- Editor de Precio (solo visible para Kg suelto) -->
-            <div v-if="item.tipoProducto === 'Costal' && item.presentacion === 'Kg'" style="display: flex; align-items: center; gap: 6px; width: 100%; justify-content: flex-end;">
-              <span style="font-size: 0.73rem; font-weight: 700; color: var(--text-muted);">Precio/Kg:</span>
-              <div style="display: flex; align-items: center; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 5px; padding: 1px 5px; gap: 3px;">
-                <span style="font-size: 0.73rem; color: #1e40af; font-weight: 700;">S/.</span>
-                <input
-                  type="number"
-                  v-model.number="item.precioUnitario"
-                  @change="validatePrecio(item)"
-                  step="0.10"
-                  min="0.01"
-                  style="width: 52px; text-align: right; border: none; background: transparent; font-size: 0.82rem; font-weight: 700; color: #1e40af; outline: none; padding: 2px 0;"
-                />
-              </div>
             </div>
 
             <!-- Modo de ingreso: Por Cantidad o Por Monto (solo Kg suelto) -->
@@ -204,7 +202,7 @@
                 />
                 <button @click="updateQty(item, 1)" class="btn-qty">+</button>
               </div>
-              <!-- Modo: Por Monto (S/.) —> calcula Kg automaticamente -->
+              <!-- Modo: Por Monto (S/.) — calcula Kg automaticamente -->
               <div v-if="item.modoIngreso === 'monto'" style="display: flex; align-items: center; gap: 4px;">
                 <span style="font-size: 0.78rem; font-weight: 700; color: #b45309;">S/.</span>
                 <input
