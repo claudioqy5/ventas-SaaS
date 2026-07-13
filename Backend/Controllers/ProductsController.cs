@@ -59,7 +59,7 @@ public class ProductsController : ControllerBase
         await _context.Products.InsertOneAsync(product);
 
         // Si el producto ya tiene stock inicial, registro ese ingreso en el historial de movimientos
-        if (product.Stock > 0)
+        if (product.Stock > 0 && !product.EsServicio)
         {
             var movement = new StockMovement
             {
@@ -96,7 +96,7 @@ public class ProductsController : ControllerBase
             Builders<Product>.Filter.Eq(p => p.EmpresaId, empresaId)
         );
 
-        // Actualizo todos los campos del producto incluyendo la imagen y el stock minimo
+        // Actualizo todos los campos del producto incluyendo los nuevos campos de tipo y precio por costal
         var update = Builders<Product>.Update
             .Set(p => p.Nombre, product.Nombre)
             .Set(p => p.Descripcion, product.Descripcion)
@@ -105,7 +105,12 @@ public class ProductsController : ControllerBase
             .Set(p => p.Precio, product.Precio)
             .Set(p => p.PrecioCosto, product.PrecioCosto)
             .Set(p => p.StockMinimo, product.StockMinimo)
-            .Set(p => p.ImagenUrl, product.ImagenUrl);
+            .Set(p => p.ImagenUrl, product.ImagenUrl)
+            .Set(p => p.TipoProducto, product.TipoProducto)
+            .Set(p => p.UnidadMedida, product.UnidadMedida)
+            .Set(p => p.EsServicio, product.EsServicio)
+            .Set(p => p.PrecioCostal, product.PrecioCostal)
+            .Set(p => p.KilosPorCostal, product.KilosPorCostal);
 
         var result = await _context.Products.UpdateOneAsync(filter, update);
         if (result.MatchedCount == 0) return NotFound();

@@ -183,18 +183,19 @@ public class ClientAnalyticsController : ControllerBase
         if (!productos.Any())
             return Ok(new { ValorTotal = 0, CantidadProductos = 0, ProductoMayorValor = (object?)null });
 
-        // Valor total = suma de (precioCosto × stock) para todos los productos
-        var valorTotal = productos.Sum(p => (double)p.PrecioCosto * p.Stock);
+        // Valor total = suma de (precioCosto × stock) para todos los productos (excluye servicios)
+        var valorTotal = productos.Where(p => !p.EsServicio).Sum(p => p.PrecioCosto * p.Stock);
 
         // Producto cuyo valor en inventario es el mayor
         var productoMayorValor = productos
-            .OrderByDescending(p => (double)p.PrecioCosto * p.Stock)
+            .Where(p => !p.EsServicio)
+            .OrderByDescending(p => p.PrecioCosto * p.Stock)
             .Select(p => new
             {
                 Nombre = p.Nombre,
                 Stock = p.Stock,
                 PrecioCosto = (double)p.PrecioCosto,
-                ValorEnInventario = (double)p.PrecioCosto * p.Stock
+                ValorEnInventario = (double)(p.PrecioCosto * p.Stock)
             })
             .FirstOrDefault();
 

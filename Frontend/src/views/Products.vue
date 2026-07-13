@@ -107,7 +107,8 @@
               <td>S/. {{ prod.precio.toFixed(2) }}</td>
               <td>
                 <span :class="['stock-badge', prod.stock <= prod.stockMinimo ? 'low' : 'ok']">
-                  {{ prod.stock }} unidades
+                  <template v-if="prod.esServicio">— Servicio —</template>
+                  <template v-else>{{ Number(prod.stock).toFixed(prod.tipoProducto === 'Peso' ? 2 : 0) }} {{ prod.unidadMedida }}</template>
                 </span>
               </td>
               <td>
@@ -142,10 +143,12 @@
         <div class="modal-card card">
           <h2 class="modal-title">{{ isEdit ? '✏️ Editar Producto' : '📦 Registrar Producto' }}</h2>
           <form @submit.prevent="saveProduct" class="grid">
+
+            <!-- FILA 1: Nombre y Código -->
             <div class="grid grid-2">
               <div class="field">
                 <label>Nombre del Producto</label>
-                <input v-model="form.nombre" type="text" placeholder="Ej. Pastel de Fresas" required />
+                <input v-model="form.nombre" type="text" placeholder="Ej. Alimento Royal Canin" required />
               </div>
               <div class="field">
                 <label>Código de Barra / SKU</label>
@@ -153,21 +156,66 @@
               </div>
             </div>
 
-            <div class="grid grid-3">
-              <div class="field">
-                <label>Precio Costo (S/.)</label>
-                <input v-model.number="form.precioCosto" type="number" step="0.01" required />
-              </div>
-              <div class="field">
-                <label>Precio Venta (S/.)</label>
-                <input v-model.number="form.precio" type="number" step="0.01" required />
-              </div>
-              <div class="field">
-                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }}</label>
-                <input v-model.number="form.stock" type="number" :disabled="isEdit" required />
+            <!-- FILA 2: Tipo de Producto -->
+            <div class="field">
+              <label>Tipo de Producto</label>
+              <div class="tipo-selector">
+                <button type="button"
+                  v-for="tipo in tiposProducto" :key="tipo.valor"
+                  :class="['tipo-btn', form.tipoProducto === tipo.valor ? 'active' : '']"
+                  @click="selectTipo(tipo.valor)">
+                  {{ tipo.icono }} {{ tipo.label }}
+                  <small>{{ tipo.descripcion }}</small>
+                </button>
               </div>
             </div>
 
+            <!-- FILA 3: Precios y stock según tipo -->
+            <div class="grid grid-3" v-if="form.tipoProducto !== 'Servicio'">
+              <div class="field">
+                <label>Precio Costo (S/.)</label>
+                <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>{{ form.tipoProducto === 'Peso' ? 'Precio por Kg (S/.)' : 'Precio Venta (S/.)' }}</label>
+                <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} ({{ form.unidadMedida }})</label>
+                <input v-model.number="form.stock"
+                  :type="'number'"
+                  :step="form.tipoProducto === 'Peso' ? '0.01' : '1'"
+                  :min="0"
+                  :disabled="isEdit"
+                  required />
+              </div>
+            </div>
+
+            <!-- Solo para Servicios: precio único -->
+            <div class="grid grid-2" v-if="form.tipoProducto === 'Servicio'">
+              <div class="field">
+                <label>Precio del Servicio (S/.)</label>
+                <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>Precio Costo / Insumos (S/.)</label>
+                <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" />
+              </div>
+            </div>
+
+            <!-- Campos extra solo para Costal -->
+            <div class="grid grid-2" v-if="form.tipoProducto === 'Costal'">
+              <div class="field">
+                <label>💰 Precio por Costal Completo (S/.)</label>
+                <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>⚖️ Kilos por Costal</label>
+                <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
+              </div>
+            </div>
+
+            <!-- Stock mínimo: solo para productos físicos -->
             <div class="grid grid-2">
               <div class="field">
                 <label>Categoría</label>
@@ -176,15 +224,19 @@
                   <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
                 </select>
               </div>
-              <div class="field">
-                <label>Stock Mínimo Alerta</label>
-                <input v-model.number="form.stockMinimo" type="number" required />
+              <div class="field" v-if="form.tipoProducto !== 'Servicio'">
+                <label>Stock Mínimo Alerta ({{ form.unidadMedida }})</label>
+                <input v-model.number="form.stockMinimo"
+                  type="number"
+                  :step="form.tipoProducto === 'Peso' ? '0.01' : '1'"
+                  min="0" required />
               </div>
             </div>
 
+            <!-- Descripción e imagen -->
             <div class="field">
               <label>Descripción</label>
-              <input v-model="form.descripcion" type="text" placeholder="Ej. Pastel húmedo sabor fresa" />
+              <input v-model="form.descripcion" type="text" placeholder="Ej. Alimento húmedo para cachorros" />
             </div>
 
             <div class="grid grid-2">
@@ -253,8 +305,43 @@ const form = reactive({
   stockMinimo: 5,
   descripcion: '',
   categoriaId: '',
-  imagenUrl: ''
+  imagenUrl: '',
+  tipoProducto: 'Unidad',
+  unidadMedida: 'Unidad',
+  esServicio: false,
+  precioCostal: 0,
+  kilosPorCostal: 0
 })
+
+// Definicion de los tipos de producto disponibles
+const tiposProducto = [
+  { valor: 'Unidad',   label: 'Unidad',   icono: '📦', descripcion: 'Se vende por unidades (ej: cama, ropa, pollo vivo)' },
+  { valor: 'Peso',     label: 'Por Kg',   icono: '⚖️',  descripcion: 'Se vende por kilos, admite decimales (ej: alimento a granel)' },
+  { valor: 'Costal',   label: 'Costal',   icono: '🎒', descripcion: 'Precio por kg suelto Y precio especial por costal completo' },
+  { valor: 'Servicio', label: 'Servicio', icono: '🐾', descripcion: 'No descuenta inventario (ej: baño, grooming, consulta)' },
+]
+
+// Cuando el usuario selecciona un tipo, actualiza automaticamente la unidad de medida
+const selectTipo = (tipo) => {
+  form.tipoProducto = tipo
+  form.esServicio = tipo === 'Servicio'
+  const mapaUnidades = {
+    'Unidad':   'Unidad',
+    'Peso':     'Kg',
+    'Costal':   'Kg',
+    'Servicio': 'Servicio'
+  }
+  form.unidadMedida = mapaUnidades[tipo] || 'Unidad'
+  // Resetear campos especificos de costal al cambiar tipo
+  if (tipo !== 'Costal') {
+    form.precioCostal = 0
+    form.kilosPorCostal = 0
+  }
+  if (tipo === 'Servicio') {
+    form.stock = 0
+    form.stockMinimo = 0
+  }
+}
 
 const fetchProducts = async () => {
   try {
@@ -328,6 +415,11 @@ const openAddModal = () => {
   form.descripcion = ''
   form.categoriaId = ''
   form.imagenUrl = ''
+  form.tipoProducto = 'Unidad'
+  form.unidadMedida = 'Unidad'
+  form.esServicio = false
+  form.precioCostal = 0
+  form.kilosPorCostal = 0
   showModal.value = true
 }
 
@@ -343,6 +435,11 @@ const openEditModal = (product) => {
   form.descripcion = product.descripcion
   form.categoriaId = product.categoriaId
   form.imagenUrl = product.imagenUrl || ''
+  form.tipoProducto = product.tipoProducto || 'Unidad'
+  form.unidadMedida = product.unidadMedida || 'Unidad'
+  form.esServicio = product.esServicio || false
+  form.precioCostal = product.precioCostal || 0
+  form.kilosPorCostal = product.kilosPorCostal || 0
   showModal.value = true
 }
 
@@ -720,5 +817,53 @@ onMounted(() => {
   font-size: 0.78rem;
   color: var(--text-muted);
   font-style: italic;
+}
+
+/* ── Selector de tipo de producto ── */
+.tipo-selector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.tipo-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  transition: all 0.2s;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.tipo-btn small {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.tipo-btn:hover {
+  border-color: var(--primary);
+  background-color: #eff6ff;
+}
+
+.tipo-btn.active {
+  border-color: var(--primary);
+  background-color: #dbeafe;
+  color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.tipo-btn.active small {
+  color: #3b82f6;
 }
 </style>

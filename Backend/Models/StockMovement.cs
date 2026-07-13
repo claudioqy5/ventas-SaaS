@@ -23,11 +23,15 @@ public class StockMovement
     public string NombreProducto { get; set; } = string.Empty;
 
     public string Tipo { get; set; } = "Entrada"; // Tipos de movimiento: Entrada, Salida, Venta, Compra, Ajuste
-    public int Cantidad { get; set; }
+    // Usamos decimal para soportar movimientos de productos por peso (ej: 1.5 kg)
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal Cantidad { get; set; }
     // Stock antes del movimiento (para tener trazabilidad del historial)
-    public int StockAnterior { get; set; }
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal StockAnterior { get; set; }
     // Stock resultante despues del movimiento
-    public int StockNuevo { get; set; }
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal StockNuevo { get; set; }
     public string ReferenciaId { get; set; } = string.Empty; // Vinculacion del movimiento: SaleId, PurchaseId o comentarios de ajuste manual
     public string Motivo { get; set; } = string.Empty;
 
