@@ -141,37 +141,75 @@
       <!-- Modal para el registro/edicion de productos -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Producto' : '📦 Registrar Producto' }}</h2>
-          <form @submit.prevent="saveProduct" class="grid">
+          <h2 class="modal-title" style="margin-bottom: 12px; font-size: 1.3rem;">{{ isEdit ? '✏️ Editar Producto' : '📦 Registrar Producto' }}</h2>
+          <form @submit.prevent="saveProduct" class="compact-form">
 
-            <!-- FILA 1: Nombre y Código -->
-            <div class="grid grid-2">
+            <!-- FILA 1: Nombre (span 2) y Categoría (span 1) -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;">
               <div class="field">
                 <label>Nombre del Producto</label>
                 <input v-model="form.nombre" type="text" placeholder="Ej. Alimento Royal Canin" required />
               </div>
               <div class="field">
+                <label>Categoría</label>
+                <select v-model="form.categoriaId" required>
+                  <option value="" disabled>Seleccione...</option>
+                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- FILA 2: Código/SKU y Tipo de Producto (Horizontal pills) -->
+            <div style="display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px; align-items: end;">
+              <div class="field">
                 <label>Código de Barra / SKU</label>
                 <input v-model="form.codigoBarras" type="text" placeholder="7501234567" required />
               </div>
-            </div>
-
-            <!-- FILA 2: Tipo de Producto -->
-            <div class="field">
-              <label>Tipo de Producto</label>
-              <div class="tipo-selector">
-                <button type="button"
-                  v-for="tipo in tiposProducto" :key="tipo.valor"
-                  :class="['tipo-btn', form.tipoProducto === tipo.valor ? 'active' : '']"
-                  @click="selectTipo(tipo.valor)">
-                  {{ tipo.icono }} {{ tipo.label }}
-                  <small>{{ tipo.descripcion }}</small>
-                </button>
+              <div class="field">
+                <label>Tipo de Producto</label>
+                <div class="tipo-selector-horizontal">
+                  <button type="button"
+                    v-for="tipo in tiposProducto" :key="tipo.valor"
+                    :class="['tipo-btn-pill', form.tipoProducto === tipo.valor ? 'active' : '']"
+                    :title="tipo.descripcion"
+                    @click="selectTipo(tipo.valor)">
+                    <span>{{ tipo.icono }}</span>
+                    <span>{{ tipo.label }}</span>
+                  </button>
+                </div>
               </div>
             </div>
 
-            <!-- FILA 3: Precios y stock según tipo -->
-            <div class="grid grid-3" v-if="form.tipoProducto !== 'Servicio' && form.tipoProducto !== 'Costal'">
+            <!-- FILA 3: Precios y stock (Si es Costal: 6 Columnas alineadas) -->
+            <div class="costal-grid-row" v-if="form.tipoProducto === 'Costal'">
+              <div class="field">
+                <label>Costo Costal</label>
+                <input v-model.number="form.precioCostoCostal" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>Venta Costal</label>
+                <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>Kilos x Costal</label>
+                <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>Costo Kg (calc)</label>
+                <input :value="costoKgCalculado" type="text" disabled style="background-color: #f1f5f9; cursor: not-allowed;" />
+              </div>
+              <div class="field">
+                <label>Venta Kg (suelto)</label>
+                <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+              </div>
+              <div class="field">
+                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} (Kg)</label>
+                <input v-model.number="form.stock" type="number" step="0.01" min="0" :disabled="isEdit" required />
+              </div>
+            </div>
+
+            <!-- FILA 3 (Alternativa): Precios y stock para Unidad (3 Columnas) -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;" v-if="form.tipoProducto === 'Unidad'">
               <div class="field">
                 <label>Precio Costo (S/.)</label>
                 <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" required />
@@ -181,54 +219,13 @@
                 <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
               </div>
               <div class="field">
-                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} ({{ form.unidadMedida }})</label>
-                <input v-model.number="form.stock"
-                  :type="'number'"
-                  :step="'1'"
-                  :min="0"
-                  :disabled="isEdit"
-                  required />
+                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} (Und)</label>
+                <input v-model.number="form.stock" type="number" step="1" min="0" :disabled="isEdit" required />
               </div>
             </div>
 
-            <!-- Para Costales: Doble Precio y Doble Costo -->
-            <div class="grid grid-3" v-if="form.tipoProducto === 'Costal'">
-              <div class="field">
-                <label>💰 Precio Costo del Costal (S/.)</label>
-                <input v-model.number="form.precioCostoCostal" type="number" step="0.01" min="0" required />
-              </div>
-              <div class="field">
-                <label>🏷️ Precio Venta del Costal (S/.)</label>
-                <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" required />
-              </div>
-              <div class="field">
-                <label>⚖️ Kilos por Costal (Kg)</label>
-                <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
-              </div>
-            </div>
-
-            <div class="grid grid-3" v-if="form.tipoProducto === 'Costal'">
-              <div class="field">
-                <label>🧠 Costo calculado por Kg (S/.)</label>
-                <input :value="costoKgCalculado" type="text" disabled style="background-color: #f1f5f9;" />
-              </div>
-              <div class="field">
-                <label>🏷️ Precio Venta por Kg suelto (S/.)</label>
-                <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
-              </div>
-              <div class="field">
-                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} (Kg)</label>
-                <input v-model.number="form.stock"
-                  type="number"
-                  step="0.01"
-                  :min="0"
-                  :disabled="isEdit"
-                  required />
-              </div>
-            </div>
-
-            <!-- Solo para Servicios: precio único -->
-            <div class="grid grid-2" v-if="form.tipoProducto === 'Servicio'">
+            <!-- FILA 3 (Alternativa): Precios para Servicio (2 Columnas) -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;" v-if="form.tipoProducto === 'Servicio'">
               <div class="field">
                 <label>Precio del Servicio (S/.)</label>
                 <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
@@ -239,49 +236,42 @@
               </div>
             </div>
 
-<!-- Campos extra de costal removidos de aqui porque los movimos arriba -->
-
-            <!-- Stock mínimo: solo para productos físicos -->
-            <div class="grid grid-2">
+            <!-- FILA 4: Stock Mínimo y Descripción (Alineados en 1fr y 2.2fr) -->
+            <div style="display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px;">
               <div class="field">
-                <label>Categoría</label>
-                <select v-model="form.categoriaId" required>
-                  <option value="" disabled>Seleccione una categoría...</option>
-                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
-                </select>
-              </div>
-              <div class="field" v-if="form.tipoProducto !== 'Servicio'">
-                <label>Stock Mínimo Alerta ({{ form.unidadMedida }})</label>
+                <label>Stock Mínimo Alerta</label>
                 <input v-model.number="form.stockMinimo"
                   type="number"
                   :step="form.tipoProducto === 'Costal' ? '0.01' : '1'"
+                  :disabled="form.tipoProducto === 'Servicio'"
+                  placeholder="Ej. 5"
                   min="0" required />
               </div>
-            </div>
-
-            <!-- Descripción e imagen -->
-            <div class="field">
-              <label>Descripción</label>
-              <input v-model="form.descripcion" type="text" placeholder="Ej. Alimento húmedo para cachorros" />
-            </div>
-
-            <div class="grid grid-2">
               <div class="field">
-                <label>URL de la Imagen</label>
+                <label>Descripción del Producto</label>
+                <input v-model="form.descripcion" type="text" placeholder="Ej. Alimento premium sabor cordero y arroz" />
+              </div>
+            </div>
+
+            <!-- FILA 5: URL de Imagen y Vista Previa compacta -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: end;">
+              <div class="field" style="margin-bottom: 0;">
+                <label>URL de la Imagen (Opcional)</label>
                 <input v-model="form.imagenUrl" type="url" placeholder="https://ejemplo.com/imagen.jpg" />
               </div>
-              <div class="field">
+              <div class="field" style="margin-bottom: 0;">
                 <label>Vista Previa</label>
-                <div class="image-preview-box">
-                  <img v-if="form.imagenUrl" :src="form.imagenUrl" class="preview-img" alt="Vista previa" />
-                  <span v-else class="preview-placeholder">Sin imagen</span>
+                <div class="image-preview-box-compact">
+                  <img v-if="form.imagenUrl" :src="form.imagenUrl" class="preview-img-compact" alt="Vista previa" />
+                  <span v-else class="preview-placeholder-compact">Sin imagen</span>
                 </div>
               </div>
             </div>
 
-            <div class="modal-actions">
-              <button type="button" @click="showModal = false" class="btn btn-secondary">Cancelar</button>
-              <button type="submit" class="btn btn-primary">{{ isEdit ? 'Guardar Cambios' : 'Guardar Producto' }}</button>
+            <!-- BOTONES DE ACCIÓN -->
+            <div class="modal-actions-compact">
+              <button type="button" @click="showModal = false" class="btn btn-secondary-compact">Cancelar</button>
+              <button type="submit" class="btn btn-primary-compact">{{ isEdit ? 'Guardar Cambios' : 'Guardar Producto' }}</button>
             </div>
           </form>
         </div>
@@ -691,11 +681,10 @@ onMounted(() => {
 
 .modal-card {
   width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 30px;
-  border-radius: var(--radius-lg);
+  max-width: 820px;
+  background-color: var(--bg-card);
+  padding: 20px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   text-align: left;
 }
@@ -794,21 +783,94 @@ onMounted(() => {
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 4px;
+  margin-bottom: 8px;
 }
 
 .field label {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
   color: var(--text-muted);
 }
 
-.modal-actions {
+/* Modificadores especificos de inputs compactos del modal */
+.compact-form input:not([type="checkbox"]):not([type="radio"]), 
+.compact-form select {
+  padding: 8px 12px !important;
+  font-size: 0.88rem !important;
+  height: 38px !important;
+  border-radius: 6px !important;
+}
+
+.compact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Fila especial para los 6 campos de costal */
+.costal-grid-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+/* Vista previa de imagen compacta y horizontal */
+.image-preview-box-compact {
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--bg-app);
+}
+
+.preview-img-compact {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-placeholder-compact {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.modal-actions-compact {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
+  gap: 10px;
+  margin-top: 10px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+}
+
+.btn-secondary-compact {
+  background-color: var(--secondary);
+  color: #5c2053;
+  padding: 8px 16px;
+  font-size: 0.88rem;
+  border-radius: 6px;
+}
+
+.btn-secondary-compact:hover {
+  background-color: var(--secondary-hover);
+}
+
+.btn-primary-compact {
+  background-color: var(--primary);
+  color: #1e3a8a;
+  padding: 8px 18px;
+  font-size: 0.88rem;
+  border-radius: 6px;
+}
+
+.btn-primary-compact:hover {
+  background-color: var(--primary-hover);
 }
 
 /* ── Análisis de stock por IA ── */
@@ -859,51 +921,40 @@ onMounted(() => {
   font-style: italic;
 }
 
-/* ── Selector de tipo de producto ── */
-.tipo-selector {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+/* Selector de tipo horizontal (Compacto tipo pills) */
+.tipo-selector-horizontal {
+  display: flex;
+  gap: 8px;
+  width: 100%;
 }
 
-.tipo-btn {
-  display: flex;
-  flex-direction: column;
+.tipo-btn-pill {
+  flex: 1;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 12px 8px;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
   border: 2px solid var(--border-color);
-  border-radius: var(--radius-md);
+  border-radius: 6px;
   background: #ffffff;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 700;
   color: var(--text-main);
   transition: all 0.2s;
-  text-align: center;
-  line-height: 1.3;
 }
 
-.tipo-btn small {
-  font-size: 0.7rem;
-  font-weight: 400;
-  color: var(--text-muted);
-  line-height: 1.2;
-}
-
-.tipo-btn:hover {
+.tipo-btn-pill:hover {
   border-color: var(--primary);
   background-color: #eff6ff;
+  color: var(--primary);
 }
 
-.tipo-btn.active {
+.tipo-btn-pill.active {
   border-color: var(--primary);
   background-color: #dbeafe;
   color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
-}
-
-.tipo-btn.active small {
-  color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.08);
 }
 </style>
