@@ -178,11 +178,11 @@
             <div class="grid grid-2">
               <div class="field">
                 <label>Nombre Completo</label>
-                <input v-model="form.nombre" type="text" placeholder="Ej. Carlos Mendoza" required />
+                <input v-model="form.nombre" type="text" placeholder="Ej. Carlos Mendoza" required :disabled="isEdit && form.rol === 'EmpresaOwner'" />
               </div>
               <div class="field">
                 <label>Correo Electrónico</label>
-                <input v-model="form.correo" type="email" placeholder="carlos@mitienda.com" required />
+                <input v-model="form.correo" type="email" placeholder="carlos@mitienda.com" required :disabled="isEdit && form.rol === 'EmpresaOwner'" />
               </div>
             </div>
 
@@ -193,7 +193,7 @@
               </div>
               <div class="field">
                 <label>Rol del Usuario</label>
-                <select v-model="form.rol">
+                <select v-model="form.rol" :disabled="!authStore.isSuperadmin || (isEdit && form.rol === 'EmpresaOwner')">
                   <option value="Employee">Empleado (Permisos Restringidos)</option>
                   <option value="EmpresaOwner">Administrador del Negocio</option>
                 </select>
@@ -225,7 +225,7 @@
             <div class="grid grid-2" v-if="isEdit">
               <div class="field checkbox-wrapper">
                 <label class="checkbox-label">
-                  <input type="checkbox" v-model="form.activo" />
+                  <input type="checkbox" v-model="form.activo" :disabled="isEdit && form.rol === 'EmpresaOwner'" />
                   <span>Cuenta Activa / Permitir ingreso</span>
                 </label>
               </div>

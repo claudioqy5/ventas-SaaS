@@ -182,6 +182,16 @@ public class AuthController : ControllerBase
             }
         }
 
+        // SEGURIDAD: cada empresa solo puede tener UN administrador (EmpresaOwner)
+        if (request.Rol == "EmpresaOwner" && !string.IsNullOrEmpty(empresaId))
+        {
+            var ownerExistente = await _context.Users
+                .Find(u => u.EmpresaId == empresaId && u.Rol == "EmpresaOwner")
+                .FirstOrDefaultAsync();
+            if (ownerExistente != null)
+                return BadRequest(new { message = "Esta tienda ya tiene un administrador. Cada negocio solo puede tener un administrador." });
+        }
+
         // CONSULTA: verifico que el correo no este ya en uso por otro usuario
         var existingUser = await _context.Users.Find(u => u.Correo == request.Correo).FirstOrDefaultAsync();
         if (existingUser != null)
@@ -270,7 +280,20 @@ public class AuthController : ControllerBase
         if (role == "EmpresaOwner" && existing.EmpresaId != empresaId)
             return Forbid();
 
-        // ACTUALIZACION: modifico los campos del usuario (nombre, correo, rol, permisos y estado activo)
+        // REGLA: si el usuario a editar es un EmpresaOwner, solo se permite actualizar su contraseña
+        if (existing.Rol == "EmpresaOwner")
+        {
+            if (string.IsNullOrEmpty(request.Clave))
+                return BadRequest(new { message = "Para actualizar un administrador, debes proporcionar la nueva contraseña." });
+
+            // Solo actualizamos la clave, ningún otro campo
+            var passwordUpdate = Builders<User>.Update
+                .Set(u => u.ClaveHash, _passwordHasher.Hash(request.Clave));
+            await _context.Users.UpdateOneAsync(filter, passwordUpdate);
+            return Ok(new { message = "Contraseña del administrador actualizada con éxito." });
+        }
+
+        // ACTUALIZACION normal: modifico los campos del empleado (nombre, correo, rol, permisos y estado activo)
         var update = Builders<User>.Update
             .Set(u => u.Nombre, request.Nombre)
             .Set(u => u.Correo, request.Correo)
@@ -290,7 +313,7 @@ public class AuthController : ControllerBase
             update = update.Set(u => u.ClaveHash, _passwordHasher.Hash(request.Clave));
         }
 
-        // ACTUALIZACION: aplico todos los cambios al documento del usuario en la BD
+        // ACTUALIZACION: aplico todos los cambios al documento del empleado en la BD
         var result = await _context.Users.UpdateOneAsync(filter, update);
         return Ok(new { message = "Usuario actualizado con éxito." });
     }
