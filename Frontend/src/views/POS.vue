@@ -190,25 +190,31 @@
           <span>S/. {{ cartTotal.toFixed(2) }}</span>
         </div>
 
-        <div class="payment-method" style="margin-top: 5px;" v-if="!isFiado">
-          <label>Método de Pago</label>
-          <select v-model="paymentMethod" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff;">
-            <option value="" disabled>Seleccione...</option>
-            <option v-for="pm in activePaymentMethods" :key="pm.id" :value="pm.nombre">💳 {{ pm.nombre }}</option>
-          </select>
-        </div>
+        <!-- Sección de Pago y Cliente en 2 Columnas -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+          <!-- Método de pago -->
+          <div class="payment-method" v-if="!isFiado" style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Método de Pago</label>
+            <select v-model="paymentMethod" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff; height: 38px;">
+              <option value="" disabled>Seleccione...</option>
+              <option v-for="pm in activePaymentMethods" :key="pm.id" :value="pm.nombre">💳 {{ pm.nombre }}</option>
+            </select>
+          </div>
 
-        <div class="fiado-toggle" style="margin-top: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; background: #fff8eb; padding: 10px 14px; border: 1px solid #ffe8cc; border-radius: var(--radius-sm);">
-          <input type="checkbox" v-model="isFiado" id="fiadoCheck" style="width: 16px; height: 16px; cursor: pointer; accent-color: #f59e0b;" />
-          <label for="fiadoCheck" style="font-weight: 700; font-size: 0.85rem; color: #b45309; cursor: pointer; user-select: none;">📒 Vender como Fiado (Crédito)</label>
-        </div>
+          <!-- Cliente (Opcional) -->
+          <div class="client-selection" :style="{ 'grid-column': isFiado ? 'span 2' : 'span 1', 'display': 'flex', 'flex-direction': 'column', 'gap': '4px' }">
+            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Cliente (Opcional)</label>
+            <select v-model="selectedClientId" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff; height: 38px;">
+              <option value="">👤 Cliente General</option>
+              <option v-for="cli in clients" :key="cli.id" :value="cli.id">👤 {{ cli.nombre }}</option>
+            </select>
+          </div>
 
-        <div class="client-selection" style="margin-top: 5px; margin-bottom: 10px;">
-          <label>Cliente (Opcional)</label>
-          <select v-model="selectedClientId" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff;">
-            <option value="">👤 Cliente General</option>
-            <option v-for="cli in clients" :key="cli.id" :value="cli.id">👤 {{ cli.nombre }}</option>
-          </select>
+          <!-- Checkbox de Fiado -->
+          <div class="fiado-toggle" style="grid-column: span 2; display: flex; align-items: center; gap: 8px; background: #fff8eb; padding: 8px 12px; border: 1px solid #ffe8cc; border-radius: var(--radius-sm); height: 38px; margin-top: 2px;">
+            <input type="checkbox" v-model="isFiado" id="fiadoCheck" style="width: 16px; height: 16px; cursor: pointer; accent-color: #f59e0b;" />
+            <label for="fiadoCheck" style="font-weight: 700; font-size: 0.8rem; color: #b45309; cursor: pointer; user-select: none;">📒 Vender como Fiado (Crédito)</label>
+          </div>
         </div>
 
         <button @click="checkout" class="btn btn-success w-full checkout-btn" :disabled="cart.length === 0 || loading" style="padding: 12px; font-weight: 700;">
