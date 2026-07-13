@@ -108,7 +108,10 @@
               <td>
                 <span :class="['stock-badge', prod.stock <= prod.stockMinimo ? 'low' : 'ok']">
                   <template v-if="prod.esServicio">— Servicio —</template>
-                  <template v-else>{{ Number(prod.stock).toFixed(prod.tipoProducto === 'Costal' ? 2 : 0) }} {{ prod.unidadMedida }}</template>
+                  <template v-else-if="prod.tipoProducto === 'Costal'">
+                    {{ (Number(prod.stock) / Number(prod.kilosPorCostal || 1)).toFixed(1) }} Costal(es)
+                  </template>
+                  <template v-else>{{ Number(prod.stock).toFixed(0) }} {{ prod.unidadMedida }}</template>
                 </span>
               </td>
               <td>
@@ -203,8 +206,13 @@
                 <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
               </div>
               <div class="field">
-                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} (Kg)</label>
-                <input v-model.number="form.stock" type="number" step="0.01" min="0" :disabled="isEdit" required />
+                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} (Costales)</label>
+                <input v-model.number="form.stock"
+                  type="number"
+                  step="0.1"
+                  :min="0"
+                  :disabled="isEdit"
+                  required />
               </div>
             </div>
 
@@ -239,12 +247,12 @@
             <!-- FILA 4: Stock Mínimo y Descripción (Alineados en 1fr y 2.2fr) -->
             <div style="display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px;">
               <div class="field">
-                <label>Stock Mínimo Alerta</label>
+                <label>Stock Mínimo ({{ form.tipoProducto === 'Costal' ? 'Costales' : form.unidadMedida }})</label>
                 <input v-model.number="form.stockMinimo"
                   type="number"
-                  :step="form.tipoProducto === 'Costal' ? '0.01' : '1'"
+                  :step="form.tipoProducto === 'Costal' ? '0.1' : '1'"
                   :disabled="form.tipoProducto === 'Servicio'"
-                  placeholder="Ej. 5"
+                  placeholder="Ej. 2"
                   min="0" required />
               </div>
               <div class="field">
@@ -454,8 +462,6 @@ const openEditModal = (product) => {
   form.codigoBarras = product.codigoBarras
   form.precioCosto = product.precioCosto
   form.precio = product.precio
-  form.stock = product.stock
-  form.stockMinimo = product.stockMinimo
   form.descripcion = product.descripcion
   form.categoriaId = product.categoriaId
   form.imagenUrl = product.imagenUrl || ''
@@ -465,6 +471,15 @@ const openEditModal = (product) => {
   form.precioCostoCostal = product.precioCostoCostal || 0
   form.precioCostal = product.precioCostal || 0
   form.kilosPorCostal = product.kilosPorCostal || 0
+
+  if (product.tipoProducto === 'Costal' && product.kilosPorCostal > 0) {
+    form.stock = Number((product.stock / product.kilosPorCostal).toFixed(2))
+    form.stockMinimo = Number((product.stockMinimo / product.kilosPorCostal).toFixed(2))
+  } else {
+    form.stock = product.stock
+    form.stockMinimo = product.stockMinimo
+  }
+
   showModal.value = true
 }
 
@@ -475,9 +490,15 @@ const saveProduct = async () => {
   }
 
   try {
-    // Si es Costal, asignamos el precio de costo unitario por kilo calculado automaticamente
-    if (form.tipoProducto === 'Costal' && form.kilosPorCostal > 0) {
-      form.precioCosto = Number((form.precioCostoCostal / form.kilosPorCostal).toFixed(4))
+    const payload = { ...form }
+
+    // Si es Costal, hacemos las conversiones de costo y stock a Kilogramos para la base de datos
+    if (payload.tipoProducto === 'Costal' && payload.kilosPorCostal > 0) {
+      payload.precioCosto = Number((payload.precioCostoCostal / payload.kilosPorCostal).toFixed(4))
+      payload.stockMinimo = Number((payload.stockMinimo * payload.kilosPorCostal).toFixed(2))
+      if (!isEdit.value) {
+        payload.stock = Number((payload.stock * payload.kilosPorCostal).toFixed(2))
+      }
     }
 
     const url = isEdit.value
