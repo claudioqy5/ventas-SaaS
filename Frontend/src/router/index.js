@@ -52,7 +52,7 @@ const routes = [
     path: '/categories', 
     component: Categories, 
     name: 'Categories',
-    meta: { requiresAuth: true, permission: 'productos' } 
+    meta: { requiresAuth: true, permission: 'categorias' } 
   },
   { 
     path: '/clients', 
@@ -88,19 +88,19 @@ const routes = [
     path: '/reminders',
     component: Reminders,
     name: 'Reminders',
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, permission: 'reminders' }
   },
   {
     path: '/credit-sales',
     component: CreditSales,
     name: 'CreditSales',
-    meta: { requiresAuth: true, permission: 'historial_ventas' }
+    meta: { requiresAuth: true, permission: 'cuentas_cobrar' }
   },
   {
     path: '/payment-methods',
     component: PaymentMethods,
     name: 'PaymentMethods',
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, permission: 'formas_pago' }
   },
   { path: '/:pathMatch(.*)*', redirect: '/login' }
 ]
@@ -126,7 +126,7 @@ router.beforeEach((to, from, next) => {
       authStore.logout()
       next('/login')
     }
-  } else if (to.path === '/users' && !authStore.isEmpresaOwner && !authStore.isSuperadmin) {
+  } else if (to.path === '/users' && !authStore.hasPermission('colaboradores') && !authStore.isSuperadmin) {
     next('/dashboard')
   } else {
     next()

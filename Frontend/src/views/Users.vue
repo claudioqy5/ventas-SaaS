@@ -17,8 +17,8 @@
         <div class="nav-section-title">Ventas</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
-        <router-link v-if="authStore.isEmpresaOwner || authStore.isSuperadmin" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
 
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
@@ -34,8 +34,8 @@
         <!-- SECCIÓN: GESTIÓN -->
         <div class="nav-section-title">Gestión</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">👥 <span class="sidebar-text">Clientes</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
-        <router-link v-if="authStore.isEmpresaOwner || authStore.isSuperadmin" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
       <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
@@ -285,6 +285,18 @@
                   <input type="checkbox" value="movimientos" v-model="form.permisos" />
                   <span>🔄 Movimientos de Inventario</span>
                 </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" value="cuentas_cobrar" v-model="form.permisos" />
+                  <span>📒 Cuentas por Cobrar</span>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" value="formas_pago" v-model="form.permisos" />
+                  <span>💳 Formas de Pago</span>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" value="colaboradores" v-model="form.permisos" />
+                  <span>👥 Colaboradores</span>
+                </label>
               </div>
             </div>
 
@@ -438,7 +450,10 @@ const formatPermissionName = (perm) => {
     'reminders': '📅 Recordatorios',
     'movimientos': '🔄 Movimientos',
     'modificar_productos': '✏️ Editar Prod.',
-    'historial_ventas': '📋 Historial Ventas'
+    'historial_ventas': '📋 Historial Ventas',
+    'cuentas_cobrar': '📒 Cuentas por Cobrar',
+    'formas_pago': '💳 Formas de Pago',
+    'colaboradores': '👥 Colaboradores'
   }
   return mapping[perm] || perm
 }
@@ -457,7 +472,7 @@ const saveUser = async () => {
       correo: form.correo,
       clave: form.clave || null,
       rol: form.rol,
-      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders'] : form.permisos,
+      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders', 'cuentas_cobrar', 'formas_pago', 'colaboradores'] : form.permisos,
       activo: form.activo,
       nombreTienda: form.nombreTienda || null
     }

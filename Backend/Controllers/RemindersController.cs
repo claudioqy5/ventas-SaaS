@@ -27,6 +27,8 @@ public class RemindersController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        if (!_userContext.HasPermission("reminders")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
@@ -70,6 +72,8 @@ public class RemindersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Reminder reminder)
     {
+        if (!_userContext.HasPermission("reminders")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
@@ -87,6 +91,8 @@ public class RemindersController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, [FromBody] Reminder updated)
     {
+        if (!_userContext.HasPermission("reminders")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
@@ -113,6 +119,8 @@ public class RemindersController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
+        if (!_userContext.HasPermission("reminders")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 

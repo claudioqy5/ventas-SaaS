@@ -27,6 +27,8 @@ public class PaymentMethodsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        if (!_userContext.HasPermission("formas_pago")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId))
             return BadRequest(new { message = "Falta el identificador de la empresa." });
@@ -41,6 +43,8 @@ public class PaymentMethodsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] PaymentMethod method)
     {
+        if (!_userContext.HasPermission("formas_pago")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId))
             return BadRequest(new { message = "Falta el identificador de la empresa." });
@@ -61,6 +65,8 @@ public class PaymentMethodsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, [FromBody] PaymentMethod updatedMethod)
     {
+        if (!_userContext.HasPermission("formas_pago")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId))
             return BadRequest(new { message = "Falta el identificador de la empresa." });
@@ -86,6 +92,8 @@ public class PaymentMethodsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
+        if (!_userContext.HasPermission("formas_pago")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId))
             return BadRequest(new { message = "Falta el identificador de la empresa." });

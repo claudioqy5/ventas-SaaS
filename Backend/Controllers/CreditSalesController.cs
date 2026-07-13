@@ -27,6 +27,8 @@ public class CreditSalesController : ControllerBase
     [HttpGet("pending")]
     public async Task<IActionResult> GetPending()
     {
+        if (!_userContext.HasPermission("cuentas_cobrar")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest();
 
@@ -41,6 +43,8 @@ public class CreditSalesController : ControllerBase
     [HttpGet("history")]
     public async Task<IActionResult> GetHistory()
     {
+        if (!_userContext.HasPermission("cuentas_cobrar")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest();
 
@@ -55,6 +59,8 @@ public class CreditSalesController : ControllerBase
     [HttpGet("metrics")]
     public async Task<IActionResult> GetMetrics()
     {
+        if (!_userContext.HasPermission("cuentas_cobrar")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest();
 
@@ -84,6 +90,8 @@ public class CreditSalesController : ControllerBase
     [HttpPost("{id}/pay")]
     public async Task<IActionResult> MarkAsPaid(string id, [FromBody] PayRequest request)
     {
+        if (!_userContext.HasPermission("cuentas_cobrar")) return Forbid();
+
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest();
 

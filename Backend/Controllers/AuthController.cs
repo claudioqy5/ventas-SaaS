@@ -99,7 +99,7 @@ public class AuthController : ControllerBase
             Correo = request.CorreoPropietario,
             ClaveHash = _passwordHasher.Hash(request.ClavePropietario),
             Rol = "EmpresaOwner",
-            Permisos = new List<string> { "dashboard", "historial_negocio", "ventas", "productos", "categorias", "modificar_productos", "clientes", "proveedores", "compras", "movimientos", "config" }
+            Permisos = new List<string> { "dashboard", "historial_negocio", "ventas", "productos", "categorias", "modificar_productos", "clientes", "proveedores", "compras", "movimientos", "config", "reminders", "cuentas_cobrar", "formas_pago", "colaboradores" }
         };
         await _context.Users.InsertOneAsync(owner);
 
@@ -151,7 +151,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> CreateSubUser([FromBody] CreateUserRequest request)
     {
         var role = _userContext.Role;
-        if (role != "Superadmin" && role != "EmpresaOwner")
+        if (role != "Superadmin" && role != "EmpresaOwner" && !_userContext.HasPermission("colaboradores"))
             return Forbid();
 
         var empresaId = _userContext.EmpresaId;
@@ -218,7 +218,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> GetUsers()
     {
         var role = _userContext.Role;
-        if (role == "Employee")
+        if (role == "Employee" && !_userContext.HasPermission("colaboradores"))
             return Forbid();
 
         if (role == "Superadmin")
@@ -256,7 +256,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserRequest request)
     {
         var role = _userContext.Role;
-        if (role != "Superadmin" && role != "EmpresaOwner")
+        if (role != "Superadmin" && role != "EmpresaOwner" && !_userContext.HasPermission("colaboradores"))
             return Forbid();
 
         var empresaId = _userContext.EmpresaId;
@@ -301,7 +301,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> DeleteUser(string id)
     {
         var role = _userContext.Role;
-        if (role != "Superadmin" && role != "EmpresaOwner")
+        if (role != "Superadmin" && role != "EmpresaOwner" && !_userContext.HasPermission("colaboradores"))
             return Forbid();
 
         // Seguridad: el sistema no permite que un usuario se elimine a si mismo
