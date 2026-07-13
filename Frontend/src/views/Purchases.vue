@@ -205,6 +205,13 @@ const getTodayDateString = () => {
 const startDate = ref(getTodayDateString())
 const endDate = ref(getTodayDateString())
 
+// Parsear fecha en hora local para evitar problemas de zona horaria (UTC shifts)
+const parseLocalDate = (dateStr) => {
+  if (!dateStr) return null
+  const [year, month, day] = dateStr.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}
+
 const filteredPurchases = computed(() => {
   const q = searchQuery.value.toLowerCase()
   return purchases.value.filter(p => {
@@ -216,14 +223,18 @@ const filteredPurchases = computed(() => {
       pDate.setHours(0, 0, 0, 0)
       
       if (startDate.value) {
-        const start = new Date(startDate.value)
-        start.setHours(0, 0, 0, 0)
-        if (pDate < start) matchesDate = false
+        const start = parseLocalDate(startDate.value)
+        if (start) {
+          start.setHours(0, 0, 0, 0)
+          if (pDate < start) matchesDate = false
+        }
       }
       if (endDate.value) {
-        const end = new Date(endDate.value)
-        end.setHours(0, 0, 0, 0)
-        if (pDate > end) matchesDate = false
+        const end = parseLocalDate(endDate.value)
+        if (end) {
+          end.setHours(0, 0, 0, 0)
+          if (pDate > end) matchesDate = false
+        }
       }
     }
     return matchesSearch && matchesDate
