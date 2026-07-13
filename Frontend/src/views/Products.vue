@@ -89,7 +89,6 @@
               <th>Precio Venta</th>
               <th>Stock</th>
               <th>Estado</th>
-              <th>Análisis 🧠</th>
               <th v-if="authStore.hasPermission('modificar_productos')">Acciones</th>
             </tr>
           </thead>
@@ -117,18 +116,6 @@
               <td>
                 <span v-if="prod.stock <= prod.stockMinimo" class="status-indicator low">⚠️ Reabastecer</span>
                 <span v-else class="status-indicator ok">✅ Activo</span>
-              </td>
-              <td>
-                <div v-if="productAnalysis[prod.id]" class="analysis-cell">
-                  <span class="analysis-rate">⚡ {{ productAnalysis[prod.id].promedioDiario.toFixed(1) }}/día</span>
-                  <span :class="['analysis-days', productAnalysis[prod.id].diasRestantes <= 7 ? 'danger' : productAnalysis[prod.id].diasRestantes <= 20 ? 'warning' : 'ok']">
-                    {{ productAnalysis[prod.id].diasRestantes === Infinity ? '✅ Sin riesgo' : `🕒 ~${Math.ceil(productAnalysis[prod.id].diasRestantes)}d` }}
-                  </span>
-                  <span v-if="productAnalysis[prod.id].sugerido > 0" class="analysis-suggest">
-                    🛒 Pedir +{{ productAnalysis[prod.id].sugerido }}u
-                  </span>
-                </div>
-                <span v-else class="analysis-no-data">Sin ventas</span>
               </td>
               <td v-if="authStore.hasPermission('modificar_productos')">
                 <div class="actions-cell">
@@ -183,8 +170,21 @@
               </div>
             </div>
 
-            <!-- FILA 3: Precios y stock (Si es Costal: 3 Bloques visuales compactos) -->
+            <!-- FILA 3: Precios y stock (Si es Costal: 3 Bloques visuales compactos ordenados: Inventario -> Compra -> Venta) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Costal'">
+              <!-- BLOQUE INVENTARIO -->
+              <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 800; color: #92400e; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">📦 Inventario</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Kg x Costal</label>
+                  <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
+                </div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>{{ isEdit ? 'Stock' : 'Inicial (Costales)' }}</label>
+                  <input v-model.number="form.stock" type="number" step="0.1" min="0" :disabled="isEdit" required />
+                </div>
+              </div>
+
               <!-- BLOQUE COMPRA -->
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 800; color: #475569; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Compra (Costos)</div>
@@ -210,23 +210,17 @@
                   <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
                 </div>
               </div>
-
-              <!-- BLOQUE INVENTARIO -->
-              <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 800; color: #92400e; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">📦 Inventario</div>
-                <div class="field" style="margin-bottom: 0 !important;">
-                  <label>Kg x Costal</label>
-                  <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
-                </div>
-                <div class="field" style="margin-bottom: 0 !important;">
-                  <label>{{ isEdit ? 'Stock' : 'Inicial (Costales)' }}</label>
-                  <input v-model.number="form.stock" type="number" step="0.1" min="0" :disabled="isEdit" required />
-                </div>
-              </div>
             </div>
 
-            <!-- FILA 3 (Alternativa): Precios y stock para Unidad (3 Bloques visuales) -->
+            <!-- FILA 3 (Alternativa): Precios y stock para Unidad (3 Bloques ordenados: Inventario -> Compra -> Venta) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Unidad'">
+              <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px;">
+                <div style="font-size: 0.75rem; font-weight: 800; color: #92400e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📦 Inventario</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>{{ isEdit ? 'Stock' : 'Inicial (Und)' }}</label>
+                  <input v-model.number="form.stock" type="number" step="1" min="0" :disabled="isEdit" required />
+                </div>
+              </div>
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
                 <div style="font-size: 0.75rem; font-weight: 800; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Compra</div>
                 <div class="field" style="margin-bottom: 0 !important;">
@@ -239,13 +233,6 @@
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Precio Venta (S/.)</label>
                   <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
-                </div>
-              </div>
-              <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 800; color: #92400e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📦 Inventario</div>
-                <div class="field" style="margin-bottom: 0 !important;">
-                  <label>{{ isEdit ? 'Stock' : 'Inicial (Und)' }}</label>
-                  <input v-model.number="form.stock" type="number" step="1" min="0" :disabled="isEdit" required />
                 </div>
               </div>
             </div>
@@ -536,7 +523,7 @@ const saveProduct = async () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authStore.token}`
       },
-      body: JSON.stringify(form)
+      body: JSON.stringify(payload)
     })
     if (!res.ok) throw new Error('Error al guardar el producto.')
     
