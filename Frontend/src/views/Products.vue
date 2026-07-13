@@ -183,64 +183,88 @@
               </div>
             </div>
 
-            <!-- FILA 3: Precios y stock (Si es Costal: 6 Columnas alineadas) -->
-            <div class="costal-grid-row" v-if="form.tipoProducto === 'Costal'">
-              <div class="field">
-                <label>Costo Costal</label>
-                <input v-model.number="form.precioCostoCostal" type="number" step="0.01" min="0" required />
+            <!-- FILA 3: Precios y stock (Si es Costal: 3 Bloques visuales compactos) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Costal'">
+              <!-- BLOQUE COMPRA -->
+              <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 800; color: #475569; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Compra (Costos)</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Costo Costal</label>
+                  <input v-model.number="form.precioCostoCostal" type="number" step="0.01" min="0" required />
+                </div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Costo Kg (calc)</label>
+                  <input :value="costoKgCalculado" type="text" disabled style="background-color: #e2e8f0; cursor: not-allowed;" />
+                </div>
               </div>
-              <div class="field">
-                <label>Venta Costal</label>
-                <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" required />
+
+              <!-- BLOQUE VENTA -->
+              <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 800; color: #166534; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">🏷️ Venta (Precios)</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Venta Costal</label>
+                  <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" required />
+                </div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Venta Kg (suelto)</label>
+                  <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                </div>
               </div>
-              <div class="field">
-                <label>Kilos x Costal</label>
-                <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
-              </div>
-              <div class="field">
-                <label>Costo Kg (calc)</label>
-                <input :value="costoKgCalculado" type="text" disabled style="background-color: #f1f5f9; cursor: not-allowed;" />
-              </div>
-              <div class="field">
-                <label>Venta Kg (suelto)</label>
-                <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
-              </div>
-              <div class="field">
-                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} (Costales)</label>
-                <input v-model.number="form.stock"
-                  type="number"
-                  step="0.1"
-                  :min="0"
-                  :disabled="isEdit"
-                  required />
+
+              <!-- BLOQUE INVENTARIO -->
+              <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 800; color: #92400e; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">📦 Inventario</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Kg x Costal</label>
+                  <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
+                </div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>{{ isEdit ? 'Stock' : 'Inicial (Costales)' }}</label>
+                  <input v-model.number="form.stock" type="number" step="0.1" min="0" :disabled="isEdit" required />
+                </div>
               </div>
             </div>
 
-            <!-- FILA 3 (Alternativa): Precios y stock para Unidad (3 Columnas) -->
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;" v-if="form.tipoProducto === 'Unidad'">
-              <div class="field">
-                <label>Precio Costo (S/.)</label>
-                <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" required />
+            <!-- FILA 3 (Alternativa): Precios y stock para Unidad (3 Bloques visuales) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Unidad'">
+              <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
+                <div style="font-size: 0.75rem; font-weight: 800; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Compra</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Precio Costo (S/.)</label>
+                  <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" required />
+                </div>
               </div>
-              <div class="field">
-                <label>Precio Venta (S/.)</label>
-                <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+              <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
+                <div style="font-size: 0.75rem; font-weight: 800; color: #166534; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🏷️ Venta</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Precio Venta (S/.)</label>
+                  <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                </div>
               </div>
-              <div class="field">
-                <label>{{ isEdit ? 'Stock Actual' : 'Stock Inicial' }} (Und)</label>
-                <input v-model.number="form.stock" type="number" step="1" min="0" :disabled="isEdit" required />
+              <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px;">
+                <div style="font-size: 0.75rem; font-weight: 800; color: #92400e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📦 Inventario</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>{{ isEdit ? 'Stock' : 'Inicial (Und)' }}</label>
+                  <input v-model.number="form.stock" type="number" step="1" min="0" :disabled="isEdit" required />
+                </div>
               </div>
             </div>
 
-            <!-- FILA 3 (Alternativa): Precios para Servicio (2 Columnas) -->
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;" v-if="form.tipoProducto === 'Servicio'">
-              <div class="field">
-                <label>Precio del Servicio (S/.)</label>
-                <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+            <!-- FILA 3 (Alternativa): Precios para Servicio (2 Bloques visuales) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Servicio'">
+              <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
+                <div style="font-size: 0.75rem; font-weight: 800; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Costo</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Costo Insumos (S/.)</label>
+                  <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" />
+                </div>
               </div>
-              <div class="field">
-                <label>Precio Costo / Insumos (S/.)</label>
-                <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" />
+              <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
+                <div style="font-size: 0.75rem; font-weight: 800; color: #166534; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🏷️ Venta</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Precio Servicio (S/.)</label>
+                  <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                </div>
               </div>
             </div>
 
