@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* PALETA EXACTA DEL CLIENTE */
+  --c-deep-purple: #363237;   /* Deep Purple elegante */
+  --c-indigo: #2D4262;        /* Indigo sofisticado */
+  --c-indigo-hover: #1f2f47;
+  --c-taupe: #73605B;         /* Taupe cálido */
+  --c-blush: #D09683;         /* Blush terracota/oro rosa */
+  --c-blush-light: #faece7;
+  --c-blush-glow: rgba(208, 150, 131, 0.35);
+
+  /* BLANCOS Y FONDOS LUMINOSOS */
+  --bg-main: #fbfaf8;         /* Fondo perla claro, cálido y elegante */
+  --bg-surface: #ffffff;      /* Blanco puro */
+  --bg-card: #ffffff;
+  --bg-card-alt: #f6f3ee;
+  --bg-glass-light: rgba(255, 255, 255, 0.88);
+  --bg-glass-card: rgba(255, 255, 255, 0.95);
+  
+  /* BORDES Y SOMBRAS */
+  --border-light: rgba(115, 96, 91, 0.14);
+  --border-indigo: rgba(45, 66, 98, 0.22);
+  --border-blush: rgba(208, 150, 131, 0.45);
+  --shadow-subtle: 0 4px 20px rgba(45, 66, 98, 0.05);
+  --shadow-card: 0 10px 30px -5px rgba(54, 50, 55, 0.08);
+  --shadow-hover: 0 20px 45px -10px rgba(45, 66, 98, 0.16), 0 0 20px -5px rgba(208, 150, 131, 0.3);
+
+  /* TEXTO */
+  --text-primary: #363237;    /* Deep purple oscuro para máxima legibilidad */
+  --text-secondary: #73605B;  /* Taupe para subtítulos y notas */
+  --text-muted: #8e7c77;      /* Taupe suave */
+  --text-light: #ffffff;
+
+  /* TIPOGRAFÍAS */
+  --font-serif: 'Cinzel', serif;
+  --font-classic: 'Cormorant Garamond', serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 9999px;
+  
+  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  background-image: 
+    radial-gradient(circle at 15% 10%, rgba(208, 150, 131, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 85% 25%, rgba(45, 66, 98, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 50% 75%, rgba(115, 96, 91, 0.06) 0%, transparent 50%);
+}
+
+/* Scrollbar estilizado en la paleta del cliente */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1eeea;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--c-blush);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-indigo);
+}
+
+/* Tipografía */
+.font-serif {
+  font-family: var(--font-serif);
+  letter-spacing: 0.04em;
+}
+
+.font-classic {
+  font-family: var(--font-classic);
+}
+
+/* Gradientes con la paleta: Deep Purple -> Indigo -> Blush */
+.palette-gradient-text {
+  background: linear-gradient(135deg, var(--c-deep-purple) 0%, var(--c-indigo) 60%, var(--c-blush) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.blush-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.blush-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.4) 45%,
+    rgba(208, 150, 131, 0.3) 50%,
+    transparent 60%
+  );
+  transform: rotate(30deg);
+  animation: shimmerFlow 6s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes shimmerFlow {
+  0% { transform: translateX(-100%) rotate(30deg); }
+  100% { transform: translateX(100%) rotate(30deg); }
+}
+
+@keyframes floatElement {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+/* Botón Primario: Indigo con realce Blush */
+.btn-indigo {
+  background: var(--c-indigo);
+  color: #ffffff;
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--c-indigo);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: var(--transition-smooth);
+  box-shadow: 0 6px 20px rgba(45, 66, 98, 0.25);
+}
+.btn-indigo:hover {
+  background: var(--c-indigo-hover);
+  border-color: var(--c-indigo-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(45, 66, 98, 0.35);
+}
+
+/* Botón Secundario: Blanco con borde Taupe y hover Blush */
+.btn-outline-luxury {
+  background: #ffffff;
+  color: var(--c-deep-purple);
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 13px 26px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-subtle);
+}
+.btn-outline-luxury:hover {
+  border-color: var(--c-blush);
+  color: var(--c-indigo);
+  background: var(--c-blush-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--c-blush-glow);
+}
+
+/* Botón Blush cálido */
+.btn-blush {
+  background: var(--c-blush);
+  color: #ffffff;
+  font-family: var(--font-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+  box-shadow: 0 6px 20px rgba(208, 150, 131, 0.35);
+}
+.btn-blush:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(208, 150, 131, 0.5);
+}

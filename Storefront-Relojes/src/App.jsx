@@ -1,0 +1,435 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import ProductCard from './components/ProductCard';
+import ProductModal from './components/ProductModal';
+import CartDrawer from './components/CartDrawer';
+import TenantSettingsModal from './components/TenantSettingsModal';
+import Heritage from './components/Heritage';
+import Footer from './components/Footer';
+import { fetchStoreProducts } from './services/api';
+import WatchLoader from './components/WatchLoader';
+import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
+
+const STORAGE_KEY_CART = 'aurelia_vip_cart_v1';
+const STORAGE_KEY_EMPRESA = 'aurelia_saas_empresa_id';
+const STORAGE_KEY_API_URL = 'aurelia_saas_api_url';
+const WHATSAPP_CONCIERGE = '51999999999';
+
+export default function App() {
+  const [empresaId, setEmpresaId] = useState(() => localStorage.getItem(STORAGE_KEY_EMPRESA) || '');
+  const [apiUrl, setApiUrl] = useState(() => localStorage.getItem(STORAGE_KEY_API_URL) || 'http://localhost:5000/api/public/store');
+
+  const [products, setProducts] = useState([]);
+  const [storeName, setStoreName] = useState('Aurelia Haute Horlogerie');
+  const [isConnected, setIsConnected] = useState(false);
+  const [isFallback, setIsFallback] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [isLoaderActive, setIsLoaderActive] = useState(true);
+
+  // Ocultar pantalla de carga tras calibración inicial
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaderActive(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleTriggerLoader = () => {
+    setIsLoaderActive(true);
+    setTimeout(() => {
+      setIsLoaderActive(false);
+    }, 2500);
+  };
+
+  // Filtros y búsqueda
+  const [selectedCategory, setSelectedCategory] = useState('Todos');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('featured');
+
+  // Modales
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // Carrito persistido
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_CART);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_CART, JSON.stringify(cart));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [cart]);
+
+  // Cargar productos del Backend SaaS o catálogo exclusivo
+  const loadCatalog = async () => {
+    setLoading(true);
+    const data = await fetchStoreProducts(empresaId, apiUrl);
+    setProducts(data.products || []);
+    setIsConnected(data.connected);
+    setIsFallback(data.isFallback);
+    if (data.storeName) setStoreName(data.storeName);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadCatalog();
+  }, [empresaId, apiUrl]);
+
+  const handleSaveEmpresaId = (id) => {
+    setEmpresaId(id);
+    localStorage.setItem(STORAGE_KEY_EMPRESA, id);
+  };
+
+  const handleSaveApiUrl = (url) => {
+    setApiUrl(url);
+    localStorage.setItem(STORAGE_KEY_API_URL, url);
+  };
+
+  // Categorías
+  const categories = useMemo(() => {
+    const list = new Set(['Todos']);
+    products.forEach((p) => {
+      if (p.categoria) list.add(p.categoria);
+    });
+    return Array.from(list);
+  }, [products]);
+
+  // Filtrado y ordenación
+  const filteredProducts = useMemo(() => {
+    return products
+      .filter((p) => {
+        const matchesCategory = selectedCategory === 'Todos' || p.categoria === selectedCategory;
+        const query = searchQuery.toLowerCase();
+        const matchesSearch = !query ||
+          p.nombre.toLowerCase().includes(query) ||
+          (p.descripcion && p.descripcion.toLowerCase().includes(query)) ||
+          (p.categoria && p.categoria.toLowerCase().includes(query));
+        return matchesCategory && matchesSearch;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'price-desc') return b.precio - a.precio;
+        if (sortBy === 'price-asc') return a.precio - b.precio;
+        if (sortBy === 'name') return a.nombre.localeCompare(b.nombre);
+        return 0;
+      });
+  }, [products, selectedCategory, searchQuery, sortBy]);
+
+  // Carrito
+  const handleAddToCart = (product, qty = 1) => {
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + qty } : item
+        );
+      }
+      return [
+        ...prev,
+        {
+          id: product.id,
+          nombre: product.nombre,
+          precio: product.precio,
+          imagenUrl: product.imagenUrl,
+          unidadMedida: product.unidadMedida,
+          quantity: qty
+        }
+      ];
+    });
+  };
+
+  const handleUpdateQuantity = (productId, qty) => {
+    if (qty <= 0) {
+      handleRemoveItem(productId);
+      return;
+    }
+    setCart((prev) =>
+      prev.map((item) => (item.id === productId ? { ...item, quantity: qty } : item))
+    );
+  };
+
+  const handleRemoveItem = (productId) => {
+    setCart((prev) => prev.filter((item) => item.id !== productId));
+  };
+
+  const handleClearCart = () => {
+    setCart([]);
+  };
+
+  const totalCartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  const handleWhatsAppInquiry = (product) => {
+    const text = encodeURIComponent(
+      `👋 *CONSULTA DE DISPONIBILIDAD - AURELIA*\n\n` +
+      `Hola, me interesa conocer más detalles y coordinar la adquisición del guardatiempo:\n` +
+      `⚜️ *${product.nombre}*\n` +
+      `💰 Precio: S/ ${Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}\n` +
+      `¿Podría un asesor de la boutique brindarme información de disponibilidad y entrega?`
+    );
+    window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_CONCIERGE}&text=${text}`, '_blank');
+  };
+
+  const handleOpenWhatsAppConcierge = () => {
+    const text = encodeURIComponent(
+      `👋 *ATENCIÓN VIP - CONCIERGE AURELIA*\n\n` +
+      `Hola, deseo comunicarme con un asesor de la boutique para recibir asesoramiento sobre su colección de alta relojería.`
+    );
+    window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_CONCIERGE}&text=${text}`, '_blank');
+  };
+
+  const scrollToCatalog = () => {
+    const el = document.getElementById('catalogo');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-main)' }}>
+      {/* Pantalla de Carga de Alta Precisión: Cronógrafo Analógico */}
+      <WatchLoader isLoading={isLoaderActive} minDuration={1800} />
+
+      {/* Barra de Navegación Luminosa */}
+      <Navbar
+        cartCount={totalCartCount}
+        onOpenCart={() => setIsCartOpen(true)}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        isConnected={isConnected}
+        isFallback={isFallback}
+        storeName={storeName}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onTriggerLoader={handleTriggerLoader}
+      />
+
+      {/* Hero Section */}
+      <Hero
+        onExplore={scrollToCatalog}
+        onOpenWhatsAppConcierge={handleOpenWhatsAppConcierge}
+      />
+
+      {/* Sección Principal de Catálogo de Relojes */}
+      <main id="catalogo" style={{
+        maxWidth: '1360px',
+        margin: '0 auto',
+        padding: '50px 24px 90px',
+        width: '100%',
+        flex: 1
+      }}>
+        {/* Encabezado del Catálogo */}
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          marginBottom: '32px',
+          gap: '20px'
+        }}>
+          <div>
+            <span style={{
+              fontSize: '0.74rem',
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: 'var(--c-blush)',
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 700
+            }}>
+              ✦ CATÁLOGO PRIVADO
+            </span>
+            <h2 className="font-serif" style={{
+              fontSize: 'clamp(1.8rem, 3vw, 2.6rem)',
+              color: 'var(--c-deep-purple)',
+              letterSpacing: '0.02em',
+              marginTop: '6px',
+              fontWeight: 800
+            }}>
+              Guardatiempos Exclusivos
+            </h2>
+          </div>
+
+          {/* Selector de ordenamiento */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <SlidersHorizontal size={16} color="var(--c-indigo)" />
+            <span style={{ fontSize: '0.78rem', color: 'var(--c-taupe)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>
+              Ordenar por:
+            </span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              style={{
+                backgroundColor: '#ffffff',
+                border: '1px solid rgba(115, 96, 91, 0.25)',
+                borderRadius: '8px',
+                padding: '8px 14px',
+                color: 'var(--c-deep-purple)',
+                fontSize: '0.84rem',
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600,
+                outline: 'none',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(45, 66, 98, 0.05)'
+              }}
+            >
+              <option value="featured">Colección Destacada</option>
+              <option value="price-desc">Mayor Valor</option>
+              <option value="price-asc">Menor Valor</option>
+              <option value="name">Nombre Alfabético</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Pestañas de Categoría */}
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '10px',
+          marginBottom: '36px',
+          paddingBottom: '16px',
+          borderBottom: '1px solid rgba(115, 96, 91, 0.12)'
+        }}>
+          {categories.map((cat) => {
+            const isSelected = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                style={{
+                  background: isSelected
+                    ? 'var(--c-indigo)'
+                    : '#ffffff',
+                  border: isSelected
+                    ? '1px solid var(--c-indigo)'
+                    : '1px solid rgba(115, 96, 91, 0.18)',
+                  color: isSelected ? '#ffffff' : 'var(--c-deep-purple)',
+                  fontFamily: 'var(--font-serif)',
+                  fontSize: '0.78rem',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  fontWeight: isSelected ? 800 : 600,
+                  padding: '9px 20px',
+                  borderRadius: '9999px',
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease',
+                  boxShadow: isSelected
+                    ? '0 6px 18px rgba(45, 66, 98, 0.25)'
+                    : '0 2px 8px rgba(45, 66, 98, 0.04)'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.borderColor = 'var(--c-blush)';
+                    e.currentTarget.style.color = 'var(--c-indigo)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.borderColor = 'rgba(115, 96, 91, 0.18)';
+                    e.currentTarget.style.color = 'var(--c-deep-purple)';
+                  }
+                }}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Estado de carga */}
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '90px 20px' }}>
+            <RefreshCw size={36} color="var(--c-indigo)" style={{ animation: 'spin 1.5s linear infinite', margin: '0 auto 16px' }} />
+            <p className="font-serif" style={{ color: 'var(--c-deep-purple)', fontSize: '1.1rem', letterSpacing: '0.04em', fontWeight: 700 }}>
+              Sincronizando Manufactura con el Catálogo...
+            </p>
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          /* Sin resultados */
+          <div style={{
+            textAlign: 'center',
+            padding: '70px 20px',
+            backgroundColor: '#ffffff',
+            borderRadius: '20px',
+            border: '1px solid rgba(115, 96, 91, 0.15)',
+            boxShadow: '0 4px 20px rgba(45, 66, 98, 0.05)'
+          }}>
+            <AlertCircle size={42} color="var(--c-blush)" style={{ margin: '0 auto 16px' }} />
+            <h3 className="font-serif" style={{ fontSize: '1.2rem', color: 'var(--c-deep-purple)', marginBottom: '8px', fontWeight: 800 }}>
+              No se encontraron piezas con ese criterio
+            </h3>
+            <p style={{ color: 'var(--c-taupe)', fontSize: '0.88rem', marginBottom: '20px' }}>
+              Intenta restablecer los filtros de búsqueda o seleccionar otra categoría.
+            </p>
+            <button
+              onClick={() => { setSelectedCategory('Todos'); setSearchQuery(''); }}
+              className="btn-outline-luxury"
+            >
+              Restablecer Búsqueda
+            </button>
+          </div>
+        ) : (
+          /* Grid de Productos en tarjetas blancas luminosas */
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
+            gap: '30px'
+          }}>
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onQuickView={setSelectedProduct}
+                onAddToCart={handleAddToCart}
+                onWhatsAppInquiry={handleWhatsAppInquiry}
+              />
+            ))}
+          </div>
+        )}
+      </main>
+
+      {/* Sección de Arte y Manufactura */}
+      <Heritage />
+
+      {/* Footer de Alta Relojería */}
+      <Footer
+        onOpenWhatsAppConcierge={handleOpenWhatsAppConcierge}
+        storeName={storeName}
+      />
+
+      {/* Modal de Vista Rápida del Reloj */}
+      <ProductModal
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onAddToCart={handleAddToCart}
+        onWhatsAppInquiry={handleWhatsAppInquiry}
+      />
+
+      {/* Bolsa de Compras VIP / Drawer */}
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        items={cart}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveItem}
+        onClearCart={handleClearCart}
+        whatsappNumber={WHATSAPP_CONCIERGE}
+      />
+
+      {/* Modal de Vinculación SaaS Multi-Tenant */}
+      <TenantSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        empresaId={empresaId}
+        onSaveEmpresaId={handleSaveEmpresaId}
+        apiUrl={apiUrl}
+        onSaveApiUrl={handleSaveApiUrl}
+        onReload={loadCatalog}
+      />
+    </div>
+  );
+}
