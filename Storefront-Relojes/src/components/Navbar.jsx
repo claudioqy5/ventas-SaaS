@@ -141,24 +141,23 @@ export default function Navbar({
             <Clock size={22} color="#ffffff" strokeWidth={2.4} />
           </div>
           <div>
-            <div className="font-serif" style={{
-              fontSize: '1.45rem',
-              fontWeight: 800,
-              letterSpacing: '0.18em',
+            <div className="brand-geomanist" style={{
+              fontSize: '1.75rem',
               color: 'var(--c-deep-purple)',
-              lineHeight: 1.1
+              lineHeight: 1
             }}>
-              A U R E L I A
+              <span className="brand-bold">TEMPO</span>
+              <span className="brand-light">preciso</span>
             </div>
             <div style={{
-              fontSize: '0.64rem',
+              fontSize: '0.62rem',
               letterSpacing: '0.24em',
               color: 'var(--c-blush)',
               textTransform: 'uppercase',
               fontWeight: 700,
-              marginTop: '3px'
+              marginTop: '4px'
             }}>
-              {storeName || 'Haute Horlogerie • Suiza'}
+              {storeName && storeName !== 'Aurelia Haute Horlogerie' ? storeName : 'Alta Relojería • Chronométrie'}
             </div>
           </div>
         </a>

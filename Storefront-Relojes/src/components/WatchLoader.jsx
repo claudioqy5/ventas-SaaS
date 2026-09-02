@@ -5,7 +5,7 @@ import React, { useEffect, useState, useMemo } from 'react';
  * Basada en el dial de un cronógrafo analógico con manecillas en rojo vibrante (#ff3b30),
  * marcas numéricas cada 5 unidades (05..60) y contrapeso circular sobre fondo oscuro/azulado glassmorphic.
  */
-export default function WatchLoader({ isLoading = true, onFinish, minDuration = 2000 }) {
+export default function WatchLoader({ isLoading = true, onFinish, minDuration = 2200 }) {
   const [visible, setVisible] = useState(true);
   const [fading, setFading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -49,8 +49,8 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
       const angleDeg = i * 6 - 90;
       const angleRad = (angleDeg * Math.PI) / 180;
       const isMajor = i % 5 === 0;
-      const rOuter = 135;
-      const rInner = isMajor ? 120 : 127;
+      const rOuter = 136;
+      const rInner = isMajor ? 120 : 128;
 
       const x1 = cx + rOuter * Math.cos(angleRad);
       const y1 = cy + rOuter * Math.sin(angleRad);
@@ -64,8 +64,8 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
         x2,
         y2,
         isMajor,
-        strokeWidth: isMajor ? 2.4 : 1,
-        strokeColor: isMajor ? '#ffffff' : 'rgba(255, 255, 255, 0.38)'
+        strokeWidth: isMajor ? 2.6 : 1,
+        strokeColor: isMajor ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'
       });
     }
 
@@ -107,7 +107,7 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
         backdropFilter: 'blur(30px)',
         WebkitBackdropFilter: 'blur(30px)',
         opacity: fading ? 0 : 1,
-        transform: fading ? 'scale(1.05)' : 'scale(1)',
+        transform: fading ? 'scale(1.04)' : 'scale(1)',
         transition: 'opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
         pointerEvents: fading ? 'none' : 'auto',
         userSelect: 'none'
@@ -126,7 +126,7 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
         }}
       />
 
-      {/* Dial Vectorial SVG del Cronógrafo (Tamaño optimizado a 340px) */}
+      {/* Dial Vectorial SVG del Cronógrafo */}
       <div style={{ position: 'relative', width: '340px', height: '340px' }}>
         <svg
           viewBox="0 0 300 300"
@@ -134,25 +134,19 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
             width: '100%',
             height: '100%',
             overflow: 'visible',
-            filter: 'drop-shadow(0 20px 50px rgba(0, 0, 0, 0.8))'
+            filter: 'drop-shadow(0 20px 50px rgba(0, 0, 0, 0.85))'
           }}
         >
           <defs>
-            {/* Bisel del dial */}
             <linearGradient id="chronoBezel" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="rgba(255, 255, 255, 0.35)" />
               <stop offset="50%" stopColor="rgba(45, 66, 98, 0.6)" />
               <stop offset="100%" stopColor="rgba(208, 150, 131, 0.35)" />
             </linearGradient>
-
-            {/* Resplandor neón rojo para las manecillas */}
-            <filter id="handGlow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="0" stdDeviation="2.5" floodColor="#ff3b30" floodOpacity="0.85" />
-            </filter>
           </defs>
 
           {/* Cuerpo principal del dial */}
-          <circle cx="150" cy="150" r="144" fill="rgba(9, 15, 26, 0.94)" stroke="url(#chronoBezel)" strokeWidth="2" />
+          <circle cx="150" cy="150" r="144" fill="rgba(9, 15, 26, 0.96)" stroke="url(#chronoBezel)" strokeWidth="2.5" />
           <circle cx="150" cy="150" r="136" fill="none" stroke="rgba(255, 255, 255, 0.12)" strokeWidth="1" />
           <circle cx="150" cy="150" r="88" fill="none" stroke="rgba(255, 255, 255, 0.08)" strokeWidth="1" strokeDasharray="3 3" />
 
@@ -178,8 +172,8 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
               y={n.y}
               textAnchor="middle"
               dominantBaseline="central"
-              fill="rgba(255, 255, 255, 0.92)"
-              fontSize="11"
+              fill="rgba(255, 255, 255, 0.95)"
+              fontSize="11.5"
               fontFamily="'JetBrains Mono', 'Courier New', monospace"
               fontWeight="700"
               letterSpacing="0.04em"
@@ -188,30 +182,30 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
             </text>
           ))}
 
-          {/* Firmas de Manufactura */}
+          {/* Firmas de Manufactura en estilo Geomanist (NineStyles: bold + light) */}
           <text
             x="150"
             y="74"
             textAnchor="middle"
             fill="#ffffff"
-            fontFamily="'Cinzel', serif"
-            fontSize="10"
-            fontWeight="900"
-            letterSpacing="0.22em"
+            fontFamily="'Outfit', sans-serif"
+            fontSize="12.5"
+            letterSpacing="-0.02em"
           >
-            A U R E L I A
+            <tspan fontWeight="900">tempo</tspan>
+            <tspan fontWeight="200" dx="2">preciso</tspan>
           </text>
           <text
             x="150"
             y="85"
             textAnchor="middle"
             fill="#D09683"
-            fontFamily="'Plus Jakarta Sans', sans-serif"
+            fontFamily="'Outfit', sans-serif"
             fontSize="6.5"
-            fontWeight="800"
-            letterSpacing="0.24em"
+            fontWeight="700"
+            letterSpacing="0.22em"
           >
-            CHRONOMETRE SUIZO
+            CHRONOMÈTRE SUIZO
           </text>
 
           {/* Sub-esfera decorativa de 60s a las 6 en punto */}
@@ -233,82 +227,63 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
           </text>
 
           {/* ========================================================= */}
-          {/* MANECILLAS ROJAS (#ff3b30) ANCLADAS EXACTAMENTE AL CENTRO */}
+          {/* MANECILLAS ROJAS VIBRANTES (#ff3b30) — 100% VISIBLES      */}
+          {/* Geometría con polígonos sólidos (sin errores de filtro 0) */}
+          {/* Rotación nativa y CSS centrada exactamente en (150, 150)  */}
           {/* ========================================================= */}
 
-          {/* Contenedor centrado en (150, 150) */}
-          <g transform="translate(150, 150)">
-            {/* 1. Manecilla Horaria Secundaria (Más corta) */}
-            <g className="hour-hand-rotator">
-              {/* Brazo horario desde (0,0) hacia las 12 (0, -70) */}
-              <line
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="-70"
-                stroke="#ff3b30"
-                strokeWidth="4.6"
-                strokeLinecap="round"
-                filter="url(#handGlow)"
-              />
-              {/* Flecha horaria */}
-              <polygon points="-5,-68 5,-68 0,-82" fill="#ff3b30" filter="url(#handGlow)" />
-            </g>
-
-            {/* 2. Manecilla Principal Larga (Minutero / Segundero Chrono a alta velocidad) */}
-            <g className="chrono-sweep-rotator">
-              {/* Varilla principal larga que apunta a las 12 (0, -120) */}
-              <line
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="-120"
-                stroke="#ff3b30"
-                strokeWidth="2.8"
-                strokeLinecap="round"
-                filter="url(#handGlow)"
-              />
-              {/* Punta afilada del segundero */}
-              <line
-                x1="0"
-                y1="-118"
-                x2="0"
-                y2="-133"
-                stroke="#ff3b30"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                filter="url(#handGlow)"
-              />
-
-              {/* Extensión del contrapeso hacia las 6 (0, 36) */}
-              <line
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="36"
-                stroke="#ff3b30"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                filter="url(#handGlow)"
-              />
-
-              {/* Pequeño contrapeso circular / aro emblemático de cronógrafo */}
-              <circle
-                cx="0"
-                cy="25"
-                r="7.5"
-                fill="#070c17"
-                stroke="#ff3b30"
-                strokeWidth="2.6"
-                filter="url(#handGlow)"
-              />
-            </g>
-
-            {/* 3. Punto Central / Pivote bien definido */}
-            <circle cx="0" cy="0" r="9" fill="#1b283d" stroke="rgba(255, 255, 255, 0.7)" strokeWidth="1.2" />
-            <circle cx="0" cy="0" r="6" fill="#ff3b30" />
-            <circle cx="0" cy="0" r="2.4" fill="#ffffff" />
+          {/* 1. Manecilla Horaria Secundaria (Más corta, gira a ritmo horario) */}
+          <g className="chrono-hour-hand">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from="0 150 150"
+              to="360 150 150"
+              dur="4.8s"
+              repeatCount="indefinite"
+            />
+            {/* Cuerpo de la aguja horaria con punta de flecha */}
+            <polygon
+              points="147.6,150 147.6,82 145,80 150,65 155,80 152.4,82 152.4,150"
+              fill="#ff3b30"
+            />
           </g>
+
+          {/* 2. Manecilla Principal Larga (Minutero / Segundero Chrono a alta velocidad) */}
+          <g className="chrono-fast-hand">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from="0 150 150"
+              to="360 150 150"
+              dur="1.2s"
+              repeatCount="indefinite"
+            />
+            {/* Varilla larga principal que apunta a las 12 (hasta y = 18) */}
+            <polygon
+              points="148.4,150 148.8,35 150,18 151.2,35 151.6,150"
+              fill="#ff3b30"
+            />
+            {/* Extensión del contrapeso hacia el lado opuesto (las 6, hasta y = 188) */}
+            <polygon
+              points="148.5,150 148.5,188 151.5,188 151.5,150"
+              fill="#ff3b30"
+            />
+            {/* Pequeño contrapeso circular / aro emblemático de cronógrafo */}
+            <circle
+              cx="150"
+              cy="174"
+              r="8"
+              fill="#070c17"
+              stroke="#ff3b30"
+              strokeWidth="2.8"
+            />
+          </g>
+
+          {/* 3. Punto Central / Pivote bien definido */}
+          <circle cx="150" cy="150" r="9" fill="#182844" stroke="rgba(255, 255, 255, 0.7)" strokeWidth="1.5" />
+          <circle cx="150" cy="150" r="6" fill="#ff3b30" />
+          <circle cx="150" cy="150" r="2.2" fill="#ffffff" />
         </svg>
       </div>
 
@@ -324,15 +299,17 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
       >
         <div
           style={{
-            fontFamily: "'Cinzel', serif",
-            fontSize: '0.86rem',
-            letterSpacing: '0.24em',
+            fontFamily: "'Outfit', sans-serif",
+            fontSize: '0.96rem',
             color: '#ffffff',
-            fontWeight: 800,
-            textTransform: 'uppercase'
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '2px'
           }}
         >
-          Sincronizando Manufactura
+          <span style={{ fontWeight: 900, letterSpacing: '-0.03em' }}>tempo</span>
+          <span style={{ fontWeight: 200, letterSpacing: '-0.01em', marginLeft: '1px' }}>preciso</span>
+          <span style={{ fontSize: '0.74rem', color: '#D09683', letterSpacing: '0.18em', marginLeft: '8px', textTransform: 'uppercase', fontWeight: 700 }}>• CALIBRANDO</span>
         </div>
 
         <div
@@ -374,21 +351,21 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
         </div>
       </div>
 
-      {/* Reglas de Animación CSS sincronizadas por GPU */}
+      {/* Reglas de Animación CSS sincronizadas */}
       <style>{`
-        .chrono-sweep-rotator {
-          transform-origin: 0 0;
-          animation: chronoRotateFast 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-          will-change: transform;
+        .chrono-fast-hand {
+          transform-box: view-box;
+          transform-origin: 150px 150px;
+          animation: rotateChronoFast 1.2s linear infinite;
         }
 
-        .hour-hand-rotator {
-          transform-origin: 0 0;
-          animation: chronoRotateSlow 4.8s linear infinite;
-          will-change: transform;
+        .chrono-hour-hand {
+          transform-box: view-box;
+          transform-origin: 150px 150px;
+          animation: rotateChronoHour 4.8s linear infinite;
         }
 
-        @keyframes chronoRotateFast {
+        @keyframes rotateChronoFast {
           0% {
             transform: rotate(0deg);
           }
@@ -397,7 +374,7 @@ export default function WatchLoader({ isLoading = true, onFinish, minDuration = 
           }
         }
 
-        @keyframes chronoRotateSlow {
+        @keyframes rotateChronoHour {
           0% {
             transform: rotate(0deg);
           }

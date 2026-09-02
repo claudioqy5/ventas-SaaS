@@ -84,7 +84,7 @@ export default function Hero({ onExplore, onOpenWhatsAppConcierge }) {
             marginBottom: '26px'
           }}>
             <Sparkles size={14} color="var(--c-blush)" />
-            Alta Relojería • Colección Privada 2026
+            tempo preciso • Colección Suiza 2026
           </div>
 
           {/* Título Principal */}

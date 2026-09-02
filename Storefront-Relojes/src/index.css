@@ -91,6 +91,26 @@ body {
   font-family: var(--font-classic);
 }
 
+/* Tipografía Geomanist / Outfit: Una parte Bold y otra Thin (estilo NineStyles) */
+.brand-geomanist {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.03em;
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1;
+}
+
+.brand-bold {
+  font-weight: 900;
+  letter-spacing: -0.035em;
+}
+
+.brand-light {
+  font-weight: 200;
+  letter-spacing: -0.015em;
+  margin-left: 2px;
+}
+
 /* Gradientes con la paleta: Deep Purple -> Indigo -> Blush */
 .palette-gradient-text {
   background: linear-gradient(135deg, var(--c-deep-purple) 0%, var(--c-indigo) 60%, var(--c-blush) 100%);

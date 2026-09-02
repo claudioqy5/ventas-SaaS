@@ -35,12 +35,13 @@ export default function Footer({ onOpenWhatsAppConcierge, storeName }) {
               }}>
                 <Clock size={19} color="#ffffff" />
               </div>
-              <span className="font-serif" style={{ fontSize: '1.25rem', color: '#ffffff', letterSpacing: '0.14em', fontWeight: 800 }}>
-                A U R E L I A
-              </span>
+              <div className="brand-geomanist" style={{ fontSize: '1.6rem', color: '#ffffff' }}>
+                <span className="brand-bold" style={{ color: '#ffffff' }}>tempo</span>
+                <span className="brand-light" style={{ color: 'rgba(255, 255, 255, 0.75)' }}>preciso</span>
+              </div>
             </div>
             <p style={{ fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '20px', color: '#e5e1dd' }}>
-              {storeName || 'Haute Horlogerie'}. Exclusividad, artesanía centenaria y calibres mecánicos certificados para los coleccionistas más exigentes.
+              tempo preciso. Exclusividad, artesanía centenaria y calibres mecánicos certificados para los coleccionistas más exigentes.
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--c-blush)', fontSize: '0.8rem', fontWeight: 600 }}>
               <ShieldCheck size={16} />
