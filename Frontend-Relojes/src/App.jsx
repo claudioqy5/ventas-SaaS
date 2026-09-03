@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ProductCard from './components/ProductCard';
-import ProductModal from './components/ProductModal';
-import CartDrawer from './components/CartDrawer';
-import TenantSettingsModal from './components/TenantSettingsModal';
-import Heritage from './components/Heritage';
-import Footer from './components/Footer';
+import BarraNavegacion from './components/BarraNavegacion';
+import Inicio from './components/Inicio';
+import TarjetaProducto from './components/TarjetaProducto';
+import ModalProducto from './components/ModalProducto';
+import CajonCarrito from './components/CajonCarrito';
+import ModalAjustesInquilino from './components/ModalAjustesInquilino';
+import Herencia from './components/Herencia';
+import PieDePagina from './components/PieDePagina';
 import { fetchStoreProducts } from './services/api';
-import WatchLoader from './components/WatchLoader';
+import CargadorReloj from './components/CargadorReloj';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 
 const STORAGE_KEY_CART = 'aurelia_vip_cart_v1';
@@ -194,10 +194,10 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-main)' }}>
       {/* Pantalla de Carga de Alta Precisión: Cronógrafo Analógico */}
-      <WatchLoader isLoading={isLoaderActive} minDuration={1800} />
+      <CargadorReloj isLoading={isLoaderActive} minDuration={1800} />
 
       {/* Barra de Navegación Luminosa */}
-      <Navbar
+      <BarraNavegacion
         cartCount={totalCartCount}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
@@ -210,7 +210,7 @@ export default function App() {
       />
 
       {/* Hero Section */}
-      <Hero
+      <Inicio
         onExplore={scrollToCatalog}
         onOpenWhatsAppConcierge={handleOpenWhatsAppConcierge}
       />
@@ -380,7 +380,7 @@ export default function App() {
             gap: '30px'
           }}>
             {filteredProducts.map((product) => (
-              <ProductCard
+              <TarjetaProducto
                 key={product.id}
                 product={product}
                 onQuickView={setSelectedProduct}
@@ -393,16 +393,16 @@ export default function App() {
       </main>
 
       {/* Sección de Arte y Manufactura */}
-      <Heritage />
+      <Herencia />
 
       {/* Footer de Alta Relojería */}
-      <Footer
+      <PieDePagina
         onOpenWhatsAppConcierge={handleOpenWhatsAppConcierge}
         storeName={storeName}
       />
 
       {/* Modal de Vista Rápida del Reloj */}
-      <ProductModal
+      <ModalProducto
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
         onAddToCart={handleAddToCart}
@@ -410,7 +410,7 @@ export default function App() {
       />
 
       {/* Bolsa de Compras VIP / Drawer */}
-      <CartDrawer
+      <CajonCarrito
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         items={cart}
@@ -421,7 +421,7 @@ export default function App() {
       />
 
       {/* Modal de Vinculación SaaS Multi-Tenant */}
-      <TenantSettingsModal
+      <ModalAjustesInquilino
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         empresaId={empresaId}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Trash2, ShoppingBag, Send } from 'lucide-react';
 
-export default function CartDrawer({
+export default function CajonCarrito({
   isOpen,
   onClose,
   items,

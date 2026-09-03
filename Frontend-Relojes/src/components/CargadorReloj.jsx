@@ -5,7 +5,7 @@ import React, { useEffect, useState, useMemo } from 'react';
  * Basada en el dial de un cronógrafo analógico con manecillas en rojo vibrante (#ff3b30),
  * marcas numéricas cada 5 unidades (05..60) y contrapeso circular sobre fondo oscuro/azulado glassmorphic.
  */
-export default function WatchLoader({ isLoading = true, onFinish, minDuration = 2200 }) {
+export default function CargadorReloj({ isLoading = true, onFinish, minDuration = 2200 }) {
   const [visible, setVisible] = useState(true);
   const [fading, setFading] = useState(false);
   const [progress, setProgress] = useState(0);

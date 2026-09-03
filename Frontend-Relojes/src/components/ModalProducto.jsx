@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, ShoppingBag, MessageCircle, ShieldCheck, Check, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export default function ProductModal({
+export default function ModalProducto({
   product,
   onClose,
   onAddToCart,

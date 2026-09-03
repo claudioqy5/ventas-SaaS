@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Server, CheckCircle2, AlertCircle, RefreshCw, Key } from 'lucide-react';
 
-export default function TenantSettingsModal({
+export default function ModalAjustesInquilino({
   isOpen,
   onClose,
   empresaId,

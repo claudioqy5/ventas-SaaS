@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Eye, ShoppingBag, MessageCircle, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export default function ProductCard({
+export default function TarjetaProducto({
   product,
   onQuickView,
   onAddToCart,

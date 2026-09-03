@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Search, Settings, ShieldCheck, Clock, Sparkles } from 'lucide-react';
+import { ShoppingBag, Search, Settings, ShieldCheck, Clock, Sparkles, Watch } from 'lucide-react';
 
-export default function Navbar({
+export default function BarraNavegacion({
   cartCount,
   onOpenCart,
   onOpenSettings,
@@ -38,23 +38,10 @@ export default function Navbar({
         letterSpacing: '0.08em',
         color: 'var(--c-taupe)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--c-indigo)', fontWeight: 600 }}>
-            <span style={{
-              width: '7px',
-              height: '7px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--c-blush)',
-              boxShadow: '0 0 8px var(--c-blush)',
-              display: 'inline-block'
-            }}></span>
-            Boutique & Concierge Privado
-          </span>
-          <span style={{ opacity: 0.4 }}>|</span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-            <ShieldCheck size={14} color="var(--c-blush)" />
-            Certificado Oficial de Autenticidad
-          </span>
+        <div className="marquee-container">
+          <div className="marquee-text">
+            ENVIOS A TODO EL PERÚ &nbsp;&nbsp;•&nbsp;&nbsp; ENTREGA EN TU DOMICILIO &nbsp;&nbsp;•&nbsp;&nbsp; 3 AÑOS DE GARANTIA &nbsp;&nbsp;•&nbsp;&nbsp; ESCRIBE A NUESTRA LINEA DE VENTAS POR WHATSAPP +51 998788599
+          </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -126,39 +113,23 @@ export default function Navbar({
         gap: '24px'
       }}>
         {/* Brand Logo */}
-        <a href="#" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{
-            width: '44px',
-            height: '44px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, var(--c-indigo) 0%, var(--c-deep-purple) 60%, var(--c-blush) 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 4px 15px rgba(45, 66, 98, 0.25)',
-            border: '2px solid #ffffff'
-          }}>
-            <Clock size={22} color="#ffffff" strokeWidth={2.4} />
+        <a href="#" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <Watch size={28} color="#5e1743" strokeWidth={1.5} />
+            <div style={{ width: '1.5px', height: '36px', backgroundColor: '#000' }}></div>
+            <div style={{ fontSize: '2.2rem', fontFamily: '"Cinzel", serif', color: '#5e1743', lineHeight: 1, letterSpacing: '0.05em' }}>
+              TP
+            </div>
           </div>
-          <div>
-            <div className="brand-geomanist" style={{
-              fontSize: '1.75rem',
-              color: 'var(--c-deep-purple)',
-              lineHeight: 1
-            }}>
-              <span className="brand-bold">TEMPO</span>
-              <span className="brand-light">preciso</span>
-            </div>
-            <div style={{
-              fontSize: '0.62rem',
-              letterSpacing: '0.24em',
-              color: 'var(--c-blush)',
-              textTransform: 'uppercase',
-              fontWeight: 700,
-              marginTop: '4px'
-            }}>
-              {storeName && storeName !== 'Aurelia Haute Horlogerie' ? storeName : 'Alta Relojería • Chronométrie'}
-            </div>
+          <div style={{
+            fontSize: '0.65rem',
+            letterSpacing: '0.45em',
+            fontFamily: '"Cinzel", serif',
+            color: '#000',
+            textTransform: 'uppercase',
+            marginLeft: '0.45em'
+          }}>
+            TEMPO PRECISO
           </div>
         </a>
 

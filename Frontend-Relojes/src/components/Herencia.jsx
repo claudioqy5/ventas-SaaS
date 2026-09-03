@@ -1,7 +1,7 @@
 import React from 'react';
 import { Award, Compass, Gem, Sparkles } from 'lucide-react';
 
-export default function Heritage() {
+export default function Herencia() {
   return (
     <section id="artesania" style={{
       padding: '90px 24px',

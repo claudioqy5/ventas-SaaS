@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, ShieldCheck, MapPin, MessageCircle } from 'lucide-react';
 
-export default function Footer({ onOpenWhatsAppConcierge, storeName }) {
+export default function PieDePagina({ onOpenWhatsAppConcierge, storeName }) {
   return (
     <footer id="garantia" style={{
       backgroundColor: 'var(--c-deep-purple)',
