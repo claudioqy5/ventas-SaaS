@@ -48,7 +48,7 @@ export default function TarjetaProducto({
   };
 
   return (
-    <div
+    <article
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -140,7 +140,7 @@ export default function TarjetaProducto({
         }}>
           <img
             src={product.imagenUrl}
-            alt={product.nombre}
+            alt={`Reloj de Lujo ${product.nombre} - ${product.categoria || 'Colección Exclusiva'}`}
             style={{
               width: '100%',
               height: '100%',
@@ -333,6 +333,6 @@ export default function TarjetaProducto({
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

@@ -16,8 +16,8 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
       position: 'relative',
       minHeight: 'calc(100vh - 85px)',
       display: 'flex',
-      alignItems: 'center',
-      overflow: 'hidden'
+      alignItems: 'center'
+      /* overflow: hidden quitado para permitir que la tarjeta sobresalga hacia abajo */
     }}>
       {/* Columna Derecha: Galería de Relojes (Crossfade) Full Bleed */}
       <div style={{
@@ -84,7 +84,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         zIndex: 2
       }}>
         {/* Columna Izquierda: Mensaje en fondo luminoso */}
-        <div style={{ width: '45%', paddingRight: '4%' }}>
+        <div style={{ width: '45%', paddingRight: '4%', position: 'relative' }}>
           {/* Badge de Alta Horlogerie */}
           <div style={{
             display: 'inline-flex',
@@ -99,11 +99,16 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             marginBottom: '16px'
           }}>
             <span style={{ width: '24px', height: '1px', background: 'var(--c-blush)', opacity: 0.6 }}></span>
-            BOUTIQUE DE ALTA RELOJERÍA EN PERÚ
+            ALTA RELOJERÍA
           </div>
 
-          {/* Título Principal de Alto Status */}
-          <h1 style={{
+          {/* Titular SEO Oculto pero indexable */}
+          <h1 style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', borderWidth: 0 }}>
+            Tempo Preciso: Boutique de Alta Relojería y Relojes de Lujo en Perú
+          </h1>
+
+          {/* Título Poético Visual (Ahora es H2 para mantener la jerarquía) */}
+          <h2 style={{
             fontFamily: '"Cormorant Garamond", "Cinzel", serif',
             fontSize: 'clamp(2.8rem, 4.8vw, 4.4rem)',
             lineHeight: 1.05,
@@ -133,7 +138,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             >
               SEGUNDO
             </span>
-          </h1>
+          </h2>
 
           {/* Subtítulo en Taupe cálido */}
           <p style={{
@@ -169,10 +174,11 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
           {/* Sellos de Excelencia */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: 'repeat(2, 1fr)',
             gap: '20px',
             borderTop: '1px solid rgba(115, 96, 91, 0.15)',
-            paddingTop: '26px'
+            paddingTop: '26px',
+            maxWidth: '380px' // Limitar el ancho para dar espacio a la tarjeta
           }}>
             <div>
               <div className="font-serif" style={{ color: 'var(--c-indigo)', fontSize: '1.35rem', fontWeight: 600 }}>
@@ -190,15 +196,41 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
                 Garantía Internacional
               </div>
             </div>
-            <div>
-              <div className="font-serif" style={{ color: 'var(--c-deep-purple)', fontSize: '1.35rem', fontWeight: 600 }}>
-                PERÚ
-              </div>
-              <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 400 }}>
-                Envíos Asegurados a Todo el País
-              </div>
-            </div>
           </div>
+        </div>
+      </div>
+
+      {/* Tarjeta Flotante Promocional para incentivar Scroll (Pegada al fondo de la sección) */}
+      <div 
+        onClick={onExplore}
+        style={{
+          position: 'absolute',
+          left: 'max(25%, calc(50vw - 650px))', /* Alinear con el contenido izquierdo */
+          bottom: '-120px', /* Cuelga por debajo del Hero, mitad adentro mitad afuera */
+          background: 'linear-gradient(135deg, var(--c-deep-purple) 0%, var(--c-indigo) 100%)',
+          color: '#fff',
+          padding: '45px 50px',
+          borderRadius: '24px',
+          width: 'min(90%, 550px)',
+          boxShadow: '0 30px 60px rgba(45, 66, 98, 0.4)',
+          zIndex: 30,
+          cursor: 'pointer',
+          transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-15px)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+      >
+        <div style={{ fontSize: '0.9rem', letterSpacing: '0.2em', textTransform: 'uppercase', opacity: 0.8, marginBottom: '14px', fontWeight: 600 }}>
+          Beneficio Exclusivo
+        </div>
+        <div className="font-serif" style={{ fontSize: '3.6rem', lineHeight: 1.1, marginBottom: '10px', color: 'var(--c-blush)' }}>
+          30% <span style={{ fontSize: '1.6rem', fontWeight: 400, fontStyle: 'italic', fontFamily: 'var(--font-sans)' }}>OFF</span>
+        </div>
+        <div style={{ fontSize: '1.1rem', opacity: 0.9, marginBottom: '35px', lineHeight: 1.5, maxWidth: '400px' }}>
+          En tu primer pedido de Alta Relojería. Aplica para colecciones seleccionadas.
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+          Descubrir Ahora <ArrowRight size={20} />
         </div>
       </div>
     </section>

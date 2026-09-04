@@ -8,7 +8,7 @@ export default function CajonCarrito({
   onUpdateQuantity,
   onRemoveItem,
   onClearCart,
-  whatsappNumber = '51999999999'
+  whatsappNumber = '51962956919'
 }) {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');

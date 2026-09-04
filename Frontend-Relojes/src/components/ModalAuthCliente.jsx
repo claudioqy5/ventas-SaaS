@@ -20,7 +20,32 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
+    
+    // Auto-login con credenciales demo si está vacío (facilidad de prueba sin banner)
+    if (!email && !password) {
+      handleFillDemoCredentials();
+      const demoData = {
+        nombre: 'Aurelio de la Torre',
+        email: 'cliente@tempopreciso.pe',
+        nivel: 'Cliente VIP Concierge',
+        ciudad: 'San Isidro, Lima - Perú',
+        pedidos: [
+          { codigo: 'TP-2026-8891', producto: 'Vetruvius Chronograph Tourbillon', fecha: '02 Sep 2026', estado: 'En Tránsito a San Isidro', monto: 'S/ 14,850.00' }
+        ],
+        garantias: [
+          { serie: 'VT-9080-PERU-004', modelo: 'Vetruvius Tourbillon', validoHasta: 'Sep 2031' }
+        ]
+      };
+      onLogin(demoData);
+      setShowSuccessToast(true);
+      setTimeout(() => {
+        setShowSuccessToast(false);
+        onClose();
+      }, 1200);
+      return;
+    }
+
     if (!email || !password) {
       setError('Por favor complete todos los campos');
       return;
@@ -86,245 +111,191 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
         overflow: 'hidden',
         position: 'relative'
       }}>
-        {/* Encabezado del Modal */}
-        <div style={{
-          backgroundColor: '#363237',
-          padding: '28px 32px 24px',
-          color: '#ffffff',
-          position: 'relative',
-          borderBottom: '2px solid var(--c-blush)'
-        }}>
-          <button
-            onClick={onClose}
-            style={{
-              position: 'absolute',
-              top: '20px',
-              right: '24px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              border: 'none',
-              color: '#ffffff',
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            ✕
-          </button>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-            <Sparkles size={20} color="var(--c-blush)" />
-            <span style={{
-              fontSize: '0.72rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: 'var(--c-blush)',
-              fontFamily: '"Cinzel", serif',
-              fontWeight: 700
-            }}>
-              TEMPO PRECISO • PERÚ
-            </span>
-          </div>
-
-          <h2 className="font-serif" style={{ fontSize: '1.5rem', color: '#ffffff', fontWeight: 600 }}>
-            {user ? 'Panel de Cliente VIP' : (isRegister ? 'Registro de Cliente VIP' : 'Iniciar Sesión')}
-          </h2>
-          <p style={{ fontSize: '0.84rem', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px', fontWeight: 400 }}>
-            {user ? 'Bienvenido a su espacio privado de alta relojería.' : 'Acceda a su historial de compras, certificados de garantía y lista de deseos.'}
-          </p>
-        </div>
+        {/* Botón de cerrar global */}
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            right: '24px',
+            background: 'none',
+            border: 'none',
+            color: 'var(--c-taupe)',
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            cursor: 'pointer',
+            fontSize: '1.2rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10
+          }}
+        >
+          ✕
+        </button>
 
         {/* Notificación de Éxito */}
         {showSuccessToast && (
           <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
             backgroundColor: 'var(--c-indigo)',
             color: '#ffffff',
             padding: '12px 24px',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: '10px',
             fontSize: '0.88rem',
-            fontWeight: 500
+            fontWeight: 500,
+            zIndex: 20
           }}>
             <CheckCircle2 size={18} color="var(--c-blush)" />
-            Sesión iniciada correctamente. ¡Bienvenido a TEMPO PRECISO!
+            Sesión iniciada correctamente. ¡Bienvenido!
           </div>
         )}
 
         {/* Contenido si el Usuario YA está autenticado */}
         {user ? (
-          <div style={{ padding: '32px' }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '18px',
-              padding: '20px',
-              borderRadius: '16px',
-              backgroundColor: '#fbf9f6',
-              border: '1px solid rgba(115, 96, 91, 0.15)',
-              marginBottom: '24px'
-            }}>
+          <div>
+            <div style={{ padding: '32px 32px 10px' }}>
+              <h2 className="font-serif" style={{ fontSize: '1.5rem', color: 'var(--c-deep-purple)', fontWeight: 600 }}>
+                Panel de Cliente VIP
+              </h2>
+            </div>
+            <div style={{ padding: '0 32px 32px' }}>
               <div style={{
-                width: '56px',
-                height: '56px',
-                borderRadius: '50%',
-                backgroundColor: 'var(--c-deep-purple)',
-                color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: '"Cinzel", serif',
-                fontSize: '1.4rem',
-                fontWeight: 600,
-                boxShadow: '0 4px 14px rgba(45, 66, 98, 0.2)'
+                gap: '18px',
+                padding: '20px',
+                borderRadius: '16px',
+                backgroundColor: '#fbf9f6',
+                border: '1px solid rgba(115, 96, 91, 0.15)',
+                marginBottom: '24px'
               }}>
-                {user.nombre.charAt(0)}
-              </div>
-              <div>
-                <h3 className="font-serif" style={{ fontSize: '1.18rem', color: 'var(--c-deep-purple)', fontWeight: 600 }}>
-                  {user.nombre}
-                </h3>
-                <p style={{ fontSize: '0.82rem', color: 'var(--c-indigo)', fontWeight: 500 }}>
-                  ✦ {user.nivel || 'Cliente VIP Concierge'}
-                </p>
-                <p style={{ fontSize: '0.78rem', color: 'var(--c-taupe)', marginTop: '2px', fontWeight: 400 }}>
-                  {user.email} • {user.ciudad}
-                </p>
-              </div>
-            </div>
-
-            {/* Pedidos Recientes */}
-            <div style={{ marginBottom: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <span style={{ fontSize: '0.78rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--c-taupe)', fontWeight: 500 }}>
-                  Última Adquisición
-                </span>
-                <span style={{ fontSize: '0.74rem', color: 'var(--c-indigo)', fontWeight: 500 }}>1 Pedido Activo</span>
-              </div>
-
-              {user.pedidos && user.pedidos.map((ped, idx) => (
-                <div key={idx} style={{
-                  padding: '14px 18px',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(45, 66, 98, 0.15)',
-                  backgroundColor: '#ffffff',
+                <div style={{
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--c-deep-purple)',
+                  color: '#ffffff',
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: '"Cinzel", serif',
+                  fontSize: '1.4rem',
+                  fontWeight: 600,
+                  boxShadow: '0 4px 14px rgba(45, 66, 98, 0.2)'
                 }}>
-                  <div>
-                    <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
-                      {ped.producto}
-                    </div>
-                    <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)' }}>
-                      {ped.codigo} • {ped.fecha}
-                    </div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.72rem', backgroundColor: 'rgba(208, 150, 131, 0.15)', color: 'var(--c-deep-purple)', padding: '3px 8px', borderRadius: '6px', fontWeight: 500 }}>
-                      {ped.estado}
-                    </div>
-                    <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--c-indigo)', marginTop: '4px' }}>
-                      {ped.monto}
-                    </div>
-                  </div>
+                  {user.nombre.charAt(0)}
                 </div>
-              ))}
-            </div>
-
-            {/* Garantía */}
-            <div style={{
-              padding: '14px 18px',
-              borderRadius: '12px',
-              backgroundColor: 'rgba(45, 66, 98, 0.05)',
-              border: '1px solid rgba(45, 66, 98, 0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              marginBottom: '28px'
-            }}>
-              <Award size={22} color="var(--c-indigo)" />
-              <div>
-                <div style={{ fontSize: '0.84rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
-                  Garantía Internacional 5 Años Activa en Perú
-                </div>
-                <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)' }}>
-                  Serie: VT-9080-PERU-004 (Cobertura total en showrooms San Isidro y Surco)
+                <div>
+                  <h3 className="font-serif" style={{ fontSize: '1.18rem', color: 'var(--c-deep-purple)', fontWeight: 600 }}>
+                    {user.nombre}
+                  </h3>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--c-indigo)', fontWeight: 500 }}>
+                    ✦ {user.nivel || 'Cliente VIP Concierge'}
+                  </p>
+                  <p style={{ fontSize: '0.78rem', color: 'var(--c-taupe)', marginTop: '2px', fontWeight: 400 }}>
+                    {user.email} • {user.ciudad}
+                  </p>
                 </div>
               </div>
-            </div>
 
-            <button
-              onClick={onLogout}
-              style={{
-                width: '100%',
-                padding: '12px',
+              {/* Pedidos Recientes */}
+              <div style={{ marginBottom: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '0.78rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--c-taupe)', fontWeight: 500 }}>
+                    Última Adquisición
+                  </span>
+                  <span style={{ fontSize: '0.74rem', color: 'var(--c-indigo)', fontWeight: 500 }}>1 Pedido Activo</span>
+                </div>
+
+                {user.pedidos && user.pedidos.map((ped, idx) => (
+                  <div key={idx} style={{
+                    padding: '14px 18px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(45, 66, 98, 0.15)',
+                    backgroundColor: '#ffffff',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
+                        {ped.producto}
+                      </div>
+                      <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)' }}>
+                        {ped.codigo} • {ped.fecha}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '0.72rem', backgroundColor: 'rgba(208, 150, 131, 0.15)', color: 'var(--c-deep-purple)', padding: '3px 8px', borderRadius: '6px', fontWeight: 500 }}>
+                        {ped.estado}
+                      </div>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--c-indigo)', marginTop: '4px' }}>
+                        {ped.monto}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Garantía */}
+              <div style={{
+                padding: '14px 18px',
                 borderRadius: '12px',
-                border: '1px solid rgba(115, 96, 91, 0.25)',
-                backgroundColor: '#ffffff',
-                color: 'var(--c-deep-purple)',
-                fontWeight: 500,
-                fontSize: '0.88rem',
-                cursor: 'pointer',
+                backgroundColor: 'rgba(45, 66, 98, 0.05)',
+                border: '1px solid rgba(45, 66, 98, 0.15)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fdf2f2'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
-            >
-              <LogOut size={16} color="#ff3b30" />
-              Cerrar Sesión VIP
-            </button>
-          </div>
-        ) : (
-          /* Formulario de Login / Registro */
-          <form onSubmit={handleSubmit} style={{ padding: '32px' }}>
-            {/* Banner de Credenciales por Defecto */}
-            <div style={{
-              backgroundColor: 'rgba(208, 150, 131, 0.12)',
-              border: '1px dashed var(--c-blush)',
-              borderRadius: '14px',
-              padding: '14px 18px',
-              marginBottom: '24px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <div>
-                <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
-                  👤 Credenciales por Defecto (Modo Demo)
-                </div>
-                <div style={{ fontSize: '0.74rem', color: 'var(--c-taupe)', marginTop: '2px' }}>
-                  Usuario: <b>cliente@tempopreciso.pe</b> | Clave: <b>123456</b>
+                gap: '12px',
+                marginBottom: '28px'
+              }}>
+                <Award size={22} color="var(--c-indigo)" />
+                <div>
+                  <div style={{ fontSize: '0.84rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
+                    Garantía Internacional 5 Años Activa en Perú
+                  </div>
+                  <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)' }}>
+                    Serie: VT-9080-PERU-004 (Cobertura total en showrooms San Isidro y Surco)
+                  </div>
                 </div>
               </div>
+
               <button
-                type="button"
-                onClick={handleFillDemoCredentials}
+                onClick={onLogout}
                 style={{
-                  backgroundColor: 'var(--c-indigo)',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  padding: '6px 12px',
-                  fontSize: '0.74rem',
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(115, 96, 91, 0.25)',
+                  backgroundColor: '#ffffff',
+                  color: 'var(--c-deep-purple)',
                   fontWeight: 500,
+                  fontSize: '0.88rem',
                   cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  boxShadow: '0 2px 8px rgba(45, 66, 98, 0.15)'
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fdf2f2'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
               >
-                ⚡ Cargar Demo
+                <LogOut size={16} color="#ff3b30" />
+                Cerrar Sesión VIP
               </button>
             </div>
-
+          </div>
+        ) : (
+          /* Formulario de Login / Registro Minimalista (Estilo Screenshot) */
+          <form onSubmit={handleSubmit} style={{ padding: '48px 40px 40px' }}>
             {error && (
               <div style={{
                 backgroundColor: 'rgba(255, 59, 48, 0.1)',
@@ -340,121 +311,188 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
             )}
 
             {isRegister && (
-              <div style={{ marginBottom: '18px' }}>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 500, color: 'var(--c-deep-purple)', marginBottom: '6px' }}>
-                  Nombre Completo
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
+                  Name
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <User size={18} color="var(--c-taupe)" style={{ position: 'absolute', left: '14px', top: '12px' }} />
+                  <User size={16} color="var(--c-taupe)" style={{ position: 'absolute', left: '16px', top: '14px' }} />
                   <input
                     type="text"
-                    placeholder="Ej. Carlos Mendoza"
+                    placeholder="Enter your Name"
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     style={{
                       width: '100%',
-                      padding: '11px 14px 11px 42px',
-                      borderRadius: '10px',
-                      border: '1px solid rgba(115, 96, 91, 0.25)',
-                      fontSize: '0.88rem',
+                      padding: '12px 14px 12px 42px',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(115, 96, 91, 0.2)',
+                      fontSize: '0.9rem',
                       outline: 'none',
-                      color: 'var(--c-deep-purple)'
+                      color: 'var(--c-deep-purple)',
+                      transition: 'border-color 0.2s ease'
                     }}
+                    onFocus={(e) => e.target.style.borderColor = 'var(--c-indigo)'}
+                    onBlur={(e) => e.target.style.borderColor = 'rgba(115, 96, 91, 0.2)'}
                   />
                 </div>
               </div>
             )}
 
-            <div style={{ marginBottom: '18px' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 500, color: 'var(--c-deep-purple)', marginBottom: '6px' }}>
-                Correo Electrónico
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
+                Email
               </label>
               <div style={{ position: 'relative' }}>
-                <Mail size={18} color="var(--c-taupe)" style={{ position: 'absolute', left: '14px', top: '12px' }} />
+                <span style={{ position: 'absolute', left: '16px', top: '10px', color: 'var(--c-taupe)', fontFamily: 'sans-serif', fontSize: '1.2rem', fontWeight: 500 }}>@</span>
                 <input
                   type="email"
-                  placeholder="cliente@tempopreciso.pe"
+                  placeholder="Enter your Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   style={{
                     width: '100%',
-                    padding: '11px 14px 11px 42px',
-                    borderRadius: '10px',
-                    border: '1px solid rgba(115, 96, 91, 0.25)',
-                    fontSize: '0.88rem',
+                    padding: '12px 14px 12px 42px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(115, 96, 91, 0.2)',
+                    fontSize: '0.9rem',
                     outline: 'none',
-                    color: 'var(--c-deep-purple)'
+                    color: 'var(--c-deep-purple)',
+                    transition: 'border-color 0.2s ease'
                   }}
+                  onFocus={(e) => e.target.style.borderColor = 'var(--c-indigo)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(115, 96, 91, 0.2)'}
                 />
               </div>
             </div>
 
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 500, color: 'var(--c-deep-purple)', marginBottom: '6px' }}>
-                Contraseña
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
+                Password
               </label>
               <div style={{ position: 'relative' }}>
-                <Lock size={18} color="var(--c-taupe)" style={{ position: 'absolute', left: '14px', top: '12px' }} />
+                <Lock size={16} color="var(--c-taupe)" style={{ position: 'absolute', left: '16px', top: '14px' }} />
                 <input
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="Enter your Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   style={{
                     width: '100%',
-                    padding: '11px 14px 11px 42px',
-                    borderRadius: '10px',
-                    border: '1px solid rgba(115, 96, 91, 0.25)',
-                    fontSize: '0.88rem',
+                    padding: '12px 14px 12px 42px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(115, 96, 91, 0.2)',
+                    fontSize: '0.9rem',
                     outline: 'none',
-                    color: 'var(--c-deep-purple)'
+                    color: 'var(--c-deep-purple)',
+                    transition: 'border-color 0.2s ease'
                   }}
+                  onFocus={(e) => e.target.style.borderColor = 'var(--c-indigo)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(115, 96, 91, 0.2)'}
                 />
               </div>
             </div>
+
+            {!isRegister && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--c-deep-purple)', cursor: 'pointer' }}>
+                  <input type="checkbox" style={{ accentColor: 'var(--c-indigo)', width: '14px', height: '14px', cursor: 'pointer' }} />
+                  Remember me
+                </label>
+                <a href="#" onClick={(e) => e.preventDefault()} style={{ fontSize: '0.85rem', color: 'var(--c-indigo)', textDecoration: 'none', fontWeight: 500 }}>
+                  Forgot password?
+                </a>
+              </div>
+            )}
 
             <button
               type="submit"
               style={{
                 width: '100%',
                 padding: '14px',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 border: 'none',
-                backgroundColor: 'var(--c-indigo)',
+                backgroundColor: 'var(--c-deep-purple)',
                 color: '#ffffff',
-                fontFamily: 'var(--font-serif)',
-                fontSize: '0.9rem',
-                fontWeight: 500,
-                letterSpacing: '0.06em',
+                fontSize: '1rem',
+                fontWeight: 600,
                 cursor: 'pointer',
-                boxShadow: '0 6px 20px rgba(45, 66, 98, 0.25)',
                 transition: 'all 0.25s ease',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
+                marginBottom: '24px',
+                boxShadow: '0 4px 12px rgba(45, 66, 98, 0.2)'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--c-indigo-hover)'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--c-indigo)'}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--c-deep-purple)'}
             >
-              {isRegister ? 'Crear Cuenta VIP Concierge' : 'Ingresar a Mi Cuenta VIP'}
-              <ChevronRight size={18} />
+              {isRegister ? 'Sign Up' : 'Sign In'}
             </button>
 
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <div style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--c-deep-purple)', marginBottom: '24px' }}>
+              {isRegister ? 'Already have an account? ' : "Don't have an account? "}
+              <span 
+                onClick={() => { setIsRegister(!isRegister); setError(''); }} 
+                style={{ color: 'var(--c-indigo)', cursor: 'pointer', fontWeight: 500 }}
+              >
+                {isRegister ? 'Sign In' : 'Sign Up'}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(115, 96, 91, 0.15)' }}></div>
+              <span style={{ fontSize: '0.85rem', color: 'var(--c-taupe)' }}>Or With</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(115, 96, 91, 0.15)' }}></div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '16px' }}>
               <button
                 type="button"
-                onClick={() => { setIsRegister(!isRegister); setError(''); }}
+                onClick={handleSubmit} // Permite login demo
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--c-taupe)',
-                  fontSize: '0.82rem',
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(115, 96, 91, 0.2)',
+                  backgroundColor: '#ffffff',
+                  color: 'var(--c-deep-purple)',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
                   cursor: 'pointer',
-                  textDecoration: 'underline'
+                  transition: 'all 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9f9f9'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
               >
-                {isRegister ? '¿Ya tiene cuenta? Inicie sesión aquí' : '¿No tiene cuenta? Regístrese como Cliente VIP'}
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Google
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmit} // Permite login demo
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(115, 96, 91, 0.2)',
+                  backgroundColor: '#ffffff',
+                  color: 'var(--c-deep-purple)',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9f9f9'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 14.381c-.024-3.045 2.482-4.512 2.597-4.582-1.411-2.065-3.6-2.355-4.385-2.399-1.874-.188-3.657 1.103-4.614 1.103-.956 0-2.428-1.077-3.966-1.047-2.02.03-3.876 1.173-4.908 2.973-2.083 3.612-.533 8.971 1.498 11.902.996 1.442 2.183 3.053 3.754 2.997 1.512-.06 2.087-.978 3.906-.978 1.819 0 2.333.978 3.935.948 1.631-.03 2.65-1.464 3.633-2.909 1.144-1.674 1.614-3.298 1.64-3.385-.035-.015-3.14-1.205-3.17-4.811zM11.996 6.075c.828-1.002 1.385-2.395 1.233-3.785-1.198.048-2.646.797-3.498 1.794-.766.892-1.428 2.316-1.25 3.678 1.341.104 2.687-.683 3.515-1.687z"/></svg>
+                Apple
               </button>
             </div>
           </form>

@@ -36,15 +36,24 @@ export default function Herencia() {
           }}>
             Manufactura de Alta Relojería
           </h2>
-          <p className="font-classic" style={{
-            fontSize: '1.3rem',
+          <div className="font-classic" style={{
+            fontSize: '1.1rem',
             color: 'var(--c-taupe)',
-            maxWidth: '680px',
+            maxWidth: '820px',
             margin: '0 auto',
-            lineHeight: 1.6
+            lineHeight: 1.75,
+            textAlign: 'justify'
           }}>
-            Cada guardatiempo de nuestra selección multimarca representa la cúspide de la ingeniería de precisión, inspeccionado y certificado para nuestros clientes en Perú.
-          </p>
+            <p style={{ marginBottom: '16px' }}>
+              Bienvenidos a <strong>Tempo Preciso</strong>, la boutique líder en <strong>relojes de lujo en Perú</strong>. Nuestra pasión por la <strong>alta relojería</strong> nos ha llevado a crear un catálogo privado con la más exclusiva curaduría de marcas internacionales. Si buscas adquirir relojes originales, automáticos y de inversión, te encuentras en el lugar indicado.
+            </p>
+            <p style={{ marginBottom: '16px' }}>
+              Cada guardatiempo de nuestra selección multimarca representa la cúspide de la ingeniería de precisión suiza. Entendemos que adquirir piezas de casas históricas (como <strong>Rolex, Omega, Cartier o Patek Philippe</strong>) es una inversión para toda la vida. Por ello, todos nuestros modelos son inspeccionados meticulosamente, entregados en su estuche original y cuentan con garantía internacional certificada.
+            </p>
+            <p>
+              Explora nuestra exclusiva colección de <strong>relojes suizos para hombre y mujer</strong>, que abarca desde clásicos de vestir hasta robustos relojes de buceo y cronógrafos deportivos. Realizamos envíos totalmente asegurados a Lima y todo el territorio nacional, garantizando que tu próxima obra maestra llegue a tus manos con la máxima seguridad y elegancia.
+            </p>
+          </div>
         </div>
 
         {/* 3 Pilares en tarjetas blancas elegantes */}

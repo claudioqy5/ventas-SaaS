@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShoppingBag, Search, Settings, ShieldCheck, Clock, Sparkles, Watch, User } from 'lucide-react';
+import Link from 'next/link';
 
 export default function BarraNavegacion({
   cartCount,
@@ -34,73 +35,16 @@ export default function BarraNavegacion({
         borderBottom: '1px solid rgba(115, 96, 91, 0.12)',
         padding: '7px 24px',
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
         fontSize: '0.74rem',
         letterSpacing: '0.08em',
         color: 'var(--c-taupe)'
       }}>
-        <div className="marquee-container">
+        <div className="marquee-container" style={{ width: '100%' }}>
           <div className="marquee-text">
-            ENVIOS A TODO EL PERÚ &nbsp;&nbsp;•&nbsp;&nbsp; ENTREGA EN TU DOMICILIO &nbsp;&nbsp;•&nbsp;&nbsp; 3 AÑOS DE GARANTIA &nbsp;&nbsp;•&nbsp;&nbsp; ESCRIBE A NUESTRA LINEA DE VENTAS POR WHATSAPP +51 998788599
+            ENVIOS A TODO EL PERÚ &nbsp;&nbsp;•&nbsp;&nbsp; ENTREGA EN TU DOMICILIO &nbsp;&nbsp;•&nbsp;&nbsp; 3 AÑOS DE GARANTIA &nbsp;&nbsp;•&nbsp;&nbsp; ESCRIBE A NUESTRA LINEA DE VENTAS POR WHATSAPP +51 962956919
           </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {/* Botón para probar la pantalla de carga */}
-          {onTriggerLoader && (
-            <button
-              onClick={onTriggerLoader}
-              title="Ver animación del dial de cronógrafo analógico"
-              style={{
-                background: 'rgba(255, 59, 48, 0.08)',
-                border: '1px solid rgba(255, 59, 48, 0.35)',
-                color: '#ff3b30',
-                padding: '4px 12px',
-                borderRadius: '9999px',
-                cursor: 'pointer',
-                fontSize: '0.72rem',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#ff3b30';
-                e.currentTarget.style.color = '#ffffff';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 59, 48, 0.08)';
-                e.currentTarget.style.color = '#ff3b30';
-              }}
-            >
-              ⏱️ Probar Loader
-            </button>
-          )}
-
-          {/* Indicador de conexión SaaS */}
-          <button
-            onClick={onOpenSettings}
-            title="Configurar conexión con tu SaaS"
-            style={{
-              background: isConnected ? 'rgba(45, 66, 98, 0.08)' : 'rgba(208, 150, 131, 0.15)',
-              border: `1px solid ${isConnected ? 'var(--c-indigo)' : 'var(--c-blush)'}`,
-              color: isConnected ? 'var(--c-indigo)' : 'var(--c-deep-purple)',
-              padding: '4px 12px',
-              borderRadius: '9999px',
-              cursor: 'pointer',
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            <Settings size={12} color="var(--c-indigo)" />
-            {isConnected ? 'SaaS Conectado' : 'Conectar con SaaS / Demostración'}
-          </button>
         </div>
       </div>
 
@@ -115,7 +59,7 @@ export default function BarraNavegacion({
         gap: '24px'
       }}>
         {/* Brand Logo */}
-        <a href="#" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <Watch size={28} color="#5e1743" strokeWidth={1.5} />
             <div style={{ width: '1.5px', height: '36px', backgroundColor: '#000' }}></div>
@@ -133,19 +77,19 @@ export default function BarraNavegacion({
           }}>
             TEMPO PRECISO
           </div>
-        </a>
+        </Link>
 
         {/* Enlaces de Navegación de Alta Categoría */}
         <nav style={{ display: 'flex', alignItems: 'center', gap: '22px', flexWrap: 'wrap' }}>
           {[
-            { label: 'Hombre', href: '#catalogo', tag: 'Hombre' },
-            { label: 'Mujer', href: '#catalogo', tag: 'Mujer' },
-            { label: 'Marcas', href: '#catalogo', isHighlight: true },
-            { label: 'Novedades', href: '#catalogo', badge: 'Nuevo' },
-            { label: 'Ofertas', href: '#catalogo', badge: 'VIP' },
-            { label: 'Accesorios', href: '#catalogo' }
+            { label: 'Hombre', href: '/categoria/hombre', tag: 'Hombre' },
+            { label: 'Mujer', href: '/categoria/mujer', tag: 'Mujer' },
+            { label: 'Marcas', href: '/categoria/marcas', isHighlight: true },
+            { label: 'Novedades', href: '/categoria/novedades', badge: 'Nuevo' },
+            { label: 'Ofertas', href: '/categoria/ofertas', badge: 'VIP' },
+            { label: 'Accesorios', href: '/categoria/accesorios' }
           ].map((item, idx) => (
-            <a
+            <Link
               key={idx}
               href={item.href}
               style={{
@@ -185,7 +129,7 @@ export default function BarraNavegacion({
                   {item.badge}
                 </span>
               )}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -304,56 +248,51 @@ export default function BarraNavegacion({
             </button>
           )}
 
-          {/* Bolsa VIP */}
+          {/* Bolsa VIP Minimalista */}
           <button
             onClick={onOpenCart}
+            title="Ver Bolsa"
             style={{
               position: 'relative',
-              background: 'var(--c-indigo)',
-              border: 'none',
-              borderRadius: '9999px',
-              padding: '10px 20px',
-              cursor: 'pointer',
+              width: '42px',
+              height: '42px',
+              borderRadius: '50%',
+              background: '#ffffff',
+              border: '1px solid var(--border-light)',
+              color: 'var(--c-deep-purple)',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              color: '#ffffff',
-              boxShadow: '0 4px 18px rgba(45, 66, 98, 0.25)',
-              transition: 'all 0.3s ease'
+              justifyContent: 'center',
+              cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(45, 66, 98, 0.06)',
+              transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 6px 22px rgba(45, 66, 98, 0.35)';
-              e.currentTarget.style.background = 'var(--c-indigo-hover)';
+              e.currentTarget.style.borderColor = 'var(--c-blush)';
+              e.currentTarget.style.color = 'var(--c-indigo)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 18px rgba(45, 66, 98, 0.25)';
-              e.currentTarget.style.background = 'var(--c-indigo)';
+              e.currentTarget.style.borderColor = 'var(--border-light)';
+              e.currentTarget.style.color = 'var(--c-deep-purple)';
             }}
           >
-            <ShoppingBag size={17} color="#ffffff" />
-            <span style={{
-              fontSize: '0.82rem',
-              fontFamily: 'var(--font-serif)',
-              letterSpacing: '0.08em',
-              fontWeight: 700
-            }}>
-              Bolsa VIP
-            </span>
+            <ShoppingBag size={18} />
             {cartCount > 0 && (
               <span style={{
+                position: 'absolute',
+                top: '-4px',
+                right: '-4px',
                 backgroundColor: 'var(--c-blush)',
                 color: '#ffffff',
-                fontSize: '0.72rem',
+                fontSize: '0.65rem',
                 fontWeight: 800,
-                width: '20px',
-                height: '20px',
+                width: '18px',
+                height: '18px',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 0 8px var(--c-blush)'
+                boxShadow: '0 0 6px rgba(208, 150, 131, 0.6)'
               }}>
                 {cartCount}
               </span>

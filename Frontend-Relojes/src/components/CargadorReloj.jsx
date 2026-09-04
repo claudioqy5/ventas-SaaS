@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { Watch } from 'lucide-react';
 
 /**
  * WatchLoader — Pantalla de carga minimalista de alta precisión
@@ -52,10 +53,10 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
       const rOuter = 136;
       const rInner = isMajor ? 120 : 128;
 
-      const x1 = cx + rOuter * Math.cos(angleRad);
-      const y1 = cy + rOuter * Math.sin(angleRad);
-      const x2 = cx + rInner * Math.cos(angleRad);
-      const y2 = cy + rInner * Math.sin(angleRad);
+      const x1 = (cx + rOuter * Math.cos(angleRad)).toFixed(3);
+      const y1 = (cy + rOuter * Math.sin(angleRad)).toFixed(3);
+      const x2 = (cx + rInner * Math.cos(angleRad)).toFixed(3);
+      const y2 = (cy + rInner * Math.sin(angleRad)).toFixed(3);
 
       tickList.push({
         id: `t-${i}`,
@@ -76,8 +77,8 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
       const numAngleRad = (numAngleDeg * Math.PI) / 180;
       const rNum = 104;
 
-      const x = cx + rNum * Math.cos(numAngleRad);
-      const y = cy + rNum * Math.sin(numAngleRad);
+      const x = (cx + rNum * Math.cos(numAngleRad)).toFixed(3);
+      const y = (cy + rNum * Math.sin(numAngleRad)).toFixed(3);
 
       numList.push({
         id: `num-${k}`,
@@ -251,14 +252,6 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
 
           {/* 2. Manecilla Principal Larga (Minutero / Segundero Chrono a alta velocidad) */}
           <g className="chrono-fast-hand">
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="0 150 150"
-              to="360 150 150"
-              dur="1.2s"
-              repeatCount="indefinite"
-            />
             {/* Varilla larga principal que apunta a las 12 (hasta y = 18) */}
             <polygon
               points="148.4,150 148.8,35 150,18 151.2,35 151.6,150"
@@ -287,67 +280,33 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
         </svg>
       </div>
 
-      {/* Barra de estado y progreso de calibración */}
+      {/* Brand Logo igual al Header */}
       <div
         style={{
-          marginTop: '32px',
+          marginTop: '40px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '8px'
+          gap: '10px',
+          opacity: 0.95
         }}
       >
-        <div
-          style={{
-            fontFamily: "'Cinzel', serif",
-            fontSize: '0.96rem',
-            color: '#ffffff',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            letterSpacing: '0.3em'
-          }}
-        >
-          <span style={{ fontWeight: 700 }}>TEMPO PRECISO</span>
-          <span style={{ fontSize: '0.74rem', color: '#D09683', letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 700 }}>• CALIBRANDO</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <Watch size={28} color="#D09683" strokeWidth={1.5} />
+          <div style={{ width: '1.5px', height: '36px', backgroundColor: 'rgba(255, 255, 255, 0.4)' }}></div>
+          <div style={{ fontSize: '2.4rem', fontFamily: '"Cinzel", serif', color: '#D09683', lineHeight: 1, letterSpacing: '0.05em' }}>
+            TP
+          </div>
         </div>
-
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            fontFamily: "'Cinzel', serif",
-            fontSize: '0.78rem',
-            color: '#D09683',
-            letterSpacing: '0.12em'
-          }}
-        >
-          <span>ALTA RELOJERÍA EN PERÚ</span>
-          <span>•</span>
-          <span style={{ fontWeight: 800, minWidth: '40px', color: '#ffffff', fontFamily: "'JetBrains Mono', monospace" }}>{progress}%</span>
-        </div>
-
-        {/* Barra de progreso fluida con resplandor rojo */}
-        <div
-          style={{
-            width: '200px',
-            height: '3px',
-            backgroundColor: 'rgba(255, 255, 255, 0.12)',
-            borderRadius: '9999px',
-            overflow: 'hidden',
-            marginTop: '8px'
-          }}
-        >
-          <div
-            style={{
-              width: `${progress}%`,
-              height: '100%',
-              backgroundColor: '#ff3b30',
-              boxShadow: '0 0 12px #ff3b30',
-              transition: 'width 0.12s ease-out'
-            }}
-          />
+        <div style={{
+          fontSize: '0.65rem',
+          letterSpacing: '0.45em',
+          fontFamily: '"Cinzel", serif',
+          color: 'rgba(255, 255, 255, 0.8)',
+          textTransform: 'uppercase',
+          marginLeft: '0.45em'
+        }}>
+          TEMPO PRECISO
         </div>
       </div>
 
@@ -356,7 +315,7 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
         .chrono-fast-hand {
           transform-box: view-box;
           transform-origin: 150px 150px;
-          animation: rotateChronoFast 1.2s linear infinite;
+          animation: sweepTo60 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
         .chrono-hour-hand {
@@ -365,7 +324,7 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
           animation: rotateChronoHour 4.8s linear infinite;
         }
 
-        @keyframes rotateChronoFast {
+        @keyframes sweepTo60 {
           0% {
             transform: rotate(0deg);
           }
