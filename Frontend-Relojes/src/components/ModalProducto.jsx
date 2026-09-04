@@ -31,7 +31,7 @@ export default function ModalProducto({
   };
 
   const specs = product.specs || {
-    calibre: 'Calibre Suizo de Precisión Automática',
+    calibre: 'Calibre de Alta Precisión Automática Certificada',
     rubies: '32 Joyas de Rubí Sintético',
     reservaMarcha: '68 Horas Continuas',
     diametro: '42 mm',

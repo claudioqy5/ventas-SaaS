@@ -40,9 +40,11 @@
   --text-light: #ffffff;
 
   /* TIPOGRAFÍAS */
-  --font-serif: 'Cinzel', serif;
-  --font-classic: 'Cinzel', serif;
-  --font-sans: 'Cinzel', serif;
+  --font-main: 'Montserrat', sans-serif;
+  --font-serif: 'Montserrat', sans-serif;
+  --font-classic: 'Montserrat', sans-serif;
+  --font-sans: 'Montserrat', sans-serif;
+  --font-logo: 'Cinzel', serif;
   
   --radius-sm: 8px;
   --radius-md: 14px;
@@ -63,7 +65,7 @@
 body {
   background-color: var(--bg-main);
   color: var(--text-primary);
-  font-family: var(--font-sans);
+  font-family: 'Montserrat', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
@@ -88,34 +90,42 @@ body {
   background: var(--c-indigo);
 }
 
-/* Tipografía */
+/* Tipografía Global: Montserrat (Pesos suaves y finos para máxima elegancia) */
 .font-serif {
-  font-family: var(--font-serif);
-  letter-spacing: 0.04em;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.02em;
+  font-weight: 400;
 }
 
 .font-classic {
-  font-family: var(--font-classic);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
 }
 
-/* Tipografía Geomanist / Outfit: Una parte Bold y otra Thin (estilo NineStyles) */
+/* Clase preservada exclusivamente para el Logo TEMPO PRECISO */
+.brand-logo-font {
+  font-family: 'Cinzel', serif !important;
+}
+
+/* Tipografía Geomanist / Outfit */
 .brand-geomanist {
-  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-  letter-spacing: -0.03em;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: -0.02em;
   display: inline-flex;
   align-items: baseline;
   line-height: 1;
+  font-weight: 400;
 }
 
 .brand-bold {
   font-family: 'LeBistrotDesAmoureux', cursive;
   font-weight: normal;
   letter-spacing: 0.02em;
-  font-size: 1.45em; /* Script fonts usually need to be larger to match sans-serif x-heights */
+  font-size: 1.45em;
 }
 
 .brand-light {
-  font-weight: 200;
+  font-weight: 300;
   letter-spacing: -0.015em;
   margin-left: 2px;
 }
@@ -125,6 +135,90 @@ body {
   background: linear-gradient(135deg, var(--c-deep-purple) 0%, var(--c-indigo) 60%, var(--c-blush) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Tipografías de Alto Status y Lujo */
+.font-cormorant {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+}
+
+.font-bodoni {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+}
+
+/* Kicker de lujo con líneas sutiles en oro rosa/blush */
+.hero-luxury-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-blush);
+  margin-bottom: 18px;
+}
+.hero-luxury-kicker::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--c-blush));
+}
+.hero-luxury-kicker::after {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(to left, transparent, var(--c-blush));
+}
+
+/* Título de Status Principal */
+.hero-luxury-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(3.2rem, 5.8vw, 5.2rem);
+  line-height: 1.06;
+  color: var(--c-deep-purple);
+  margin-bottom: 24px;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+}
+
+/* Variante 1: Montserrat con Itálica Dorada */
+.hero-luxury-title-v1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(3.2rem, 5.8vw, 5.2rem);
+  line-height: 1.06;
+  color: var(--c-deep-purple);
+  margin-bottom: 24px;
+}
+.hero-luxury-title-v1 .line-1 {
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #2c272e;
+  display: block;
+}
+.hero-luxury-title-v1 .line-2 {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: linear-gradient(135deg, var(--c-indigo) 0%, #1b2838 40%, #b8860b 80%, var(--c-blush) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Accent Shimmer Metálico para texto de lujo */
+.luxury-title-accent {
+  background: linear-gradient(135deg, var(--c-indigo) 0%, #1b263b 35%, #b8860b 70%, var(--c-blush) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
   display: inline-block;
 }
 
@@ -167,8 +261,8 @@ body {
   color: #ffffff;
   font-family: var(--font-serif);
   font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 14px 28px;
   border-radius: var(--radius-sm);
@@ -179,13 +273,13 @@ body {
   justify-content: center;
   gap: 10px;
   transition: var(--transition-smooth);
-  box-shadow: 0 6px 20px rgba(45, 66, 98, 0.25);
+  box-shadow: 0 6px 20px rgba(45, 66, 98, 0.2);
 }
 .btn-indigo:hover {
   background: var(--c-indigo-hover);
   border-color: var(--c-indigo-hover);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(45, 66, 98, 0.35);
+  box-shadow: 0 10px 25px rgba(45, 66, 98, 0.3);
 }
 
 /* Botón Secundario: Blanco con borde Taupe y hover Blush */
@@ -194,8 +288,8 @@ body {
   color: var(--c-deep-purple);
   font-family: var(--font-serif);
   font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 13px 26px;
   border-radius: var(--radius-sm);
@@ -222,7 +316,7 @@ body {
   color: #ffffff;
   font-family: var(--font-serif);
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 12px 20px;

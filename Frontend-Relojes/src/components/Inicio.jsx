@@ -85,18 +85,54 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
       }}>
         {/* Columna Izquierda: Mensaje en fondo luminoso */}
         <div style={{ width: '45%', paddingRight: '4%' }}>
-          {/* Título Principal */}
+          {/* Badge de Alta Horlogerie */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '12px',
+            fontFamily: '"Cinzel", serif',
+            fontSize: '0.72rem',
+            fontWeight: 600,
+            letterSpacing: '0.28em',
+            textTransform: 'uppercase',
+            color: 'var(--c-blush)',
+            marginBottom: '16px'
+          }}>
+            <span style={{ width: '24px', height: '1px', background: 'var(--c-blush)', opacity: 0.6 }}></span>
+            BOUTIQUE DE ALTA RELOJERÍA EN PERÚ
+          </div>
+
+          {/* Título Principal de Alto Status */}
           <h1 style={{
-            fontFamily: '"Outfit", sans-serif',
-            fontSize: 'clamp(3.5rem, 6.5vw, 5.5rem)', // Más grande para mayor impacto
-            fontWeight: 200, // Minimalista y muy limpio
+            fontFamily: '"Cormorant Garamond", "Cinzel", serif',
+            fontSize: 'clamp(2.8rem, 4.8vw, 4.4rem)',
             lineHeight: 1.05,
             color: 'var(--c-deep-purple)',
-            letterSpacing: '-0.03em', // Tracking ajustado típico de diseño moderno
-            marginBottom: '24px'
+            marginBottom: '24px',
+            letterSpacing: '0.03em',
           }}>
-            VALOR EN CADA <br />
-            <span style={{ fontWeight: 500, color: 'var(--c-indigo)' }}>SEGUNDO</span>
+            <span style={{
+              display: 'block',
+              fontWeight: 300,
+              letterSpacing: '0.09em',
+              textTransform: 'uppercase',
+              color: '#2b272c',
+              whiteSpace: 'nowrap'
+            }}>
+              VALOR EN CADA
+            </span>
+            <span 
+              className="luxury-title-accent"
+              style={{
+                fontWeight: 600,                
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                marginTop: '4px',
+                fontSize: '1.05em'
+              }}
+            >
+              SEGUNDO
+            </span>
           </h1>
 
           {/* Subtítulo en Taupe cálido */}
@@ -110,7 +146,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             fontWeight: 300,
             letterSpacing: '0.01em'
           }}>
-            Obras maestras de precisión. Ingeniería suiza y lujo en cada detalle.
+            Obras maestras de precisión. Curaduría exclusiva de las mejores marcas internacionales de lujo en Perú.
           </p>
 
           {/* Botones de Acción */}
@@ -139,27 +175,27 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             paddingTop: '26px'
           }}>
             <div>
-              <div className="font-serif" style={{ color: 'var(--c-indigo)', fontSize: '1.35rem', fontWeight: 800 }}>
+              <div className="font-serif" style={{ color: 'var(--c-indigo)', fontSize: '1.35rem', fontWeight: 600 }}>
                 100%
               </div>
-              <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 500 }}>
-                Manufactura Suiza
+              <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 400 }}>
+                Originales Multimarca
               </div>
             </div>
             <div>
-              <div className="font-serif" style={{ color: 'var(--c-blush)', fontSize: '1.35rem', fontWeight: 800 }}>
+              <div className="font-serif" style={{ color: 'var(--c-blush)', fontSize: '1.35rem', fontWeight: 600 }}>
                 5 AÑOS
               </div>
-              <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 500 }}>
+              <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 400 }}>
                 Garantía Internacional
               </div>
             </div>
             <div>
-              <div className="font-serif" style={{ color: 'var(--c-deep-purple)', fontSize: '1.35rem', fontWeight: 800 }}>
-                COSC
+              <div className="font-serif" style={{ color: 'var(--c-deep-purple)', fontSize: '1.35rem', fontWeight: 600 }}>
+                PERÚ
               </div>
-              <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 500 }}>
-                Cronómetro Certificado
+              <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 400 }}>
+                Envíos Asegurados a Todo el País
               </div>
             </div>
           </div>

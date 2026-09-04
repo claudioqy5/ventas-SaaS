@@ -98,7 +98,7 @@ export default function TarjetaProducto({
             letterSpacing: '0.14em',
             textTransform: 'uppercase',
             fontFamily: 'var(--font-serif)',
-            fontWeight: 700,
+            fontWeight: 500,
             color: 'var(--c-deep-purple)',
             background: 'rgba(208, 150, 131, 0.18)',
             border: '1px solid rgba(208, 150, 131, 0.45)',
@@ -196,19 +196,19 @@ export default function TarjetaProducto({
           <div style={{
             fontSize: '0.72rem',
             color: 'var(--c-blush)',
-            letterSpacing: '0.16em',
+            letterSpacing: '0.14em',
             textTransform: 'uppercase',
-            fontWeight: 700,
+            fontWeight: 500,
             marginBottom: '6px'
           }}>
             {product.categoria || 'Reloj de Lujo'}
           </div>
 
           <h3 className="font-serif" style={{
-            fontSize: '1.2rem',
-            fontWeight: 800,
+            fontSize: '1.18rem',
+            fontWeight: 600,
             color: 'var(--c-deep-purple)',
-            letterSpacing: '0.02em',
+            letterSpacing: '0.01em',
             marginBottom: '8px',
             lineHeight: 1.3
           }}>
@@ -242,12 +242,12 @@ export default function TarjetaProducto({
           alignItems: 'baseline',
           marginBottom: '14px'
         }}>
-          <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500 }}>
             Valor de Catálogo
           </span>
           <div className="font-serif" style={{
-            fontSize: '1.38rem',
-            fontWeight: 800,
+            fontSize: '1.35rem',
+            fontWeight: 600,
             color: 'var(--c-indigo)'
           }}>
             S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
@@ -270,7 +270,7 @@ export default function TarjetaProducto({
               fontSize: '0.78rem',
               fontFamily: 'var(--font-serif)',
               letterSpacing: '0.08em',
-              fontWeight: 700,
+              fontWeight: 500,
               textTransform: 'uppercase',
               cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
               opacity: product.stock <= 0 ? 0.5 : 1,

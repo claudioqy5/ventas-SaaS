@@ -9,7 +9,7 @@ export const LUXURY_SAMPLE_WATCHES = [
   {
     id: 'sample-1',
     nombre: 'Vetruvius Chronograph Tourbillon',
-    descripcion: 'Caja en oro rosa de 18k con esfera verde esmeralda cepillada con efecto rayos de sol. Escape de tourbillon volante a las 6 en punto y calibre automático suizo de manufactura propia.',
+    descripcion: 'Caja en oro rosa de 18k con esfera verde esmeralda cepillada con efecto rayos de sol. Escape de tourbillon volante a las 6 en punto y calibre automático de alta precisión.',
     precio: 14850.00,
     categoria: 'Tourbillon',
     tipoProducto: 'Unidad',
@@ -80,7 +80,7 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     return {
       connected: false,
       isFallback: true,
-      storeName: 'Aurelia Haute Horlogerie',
+      storeName: 'TEMPO PRECISO',
       products: LUXURY_SAMPLE_WATCHES
     };
   }
@@ -91,7 +91,7 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     const data = await res.json();
     
     // Traer información de la tienda
-    let storeInfo = { nombre: 'Tienda de Relojes' };
+    let storeInfo = { nombre: 'TEMPO PRECISO' };
     try {
       const storeRes = await fetch(`${apiUrl}/${empresaId}`);
       if (storeRes.ok) {
@@ -124,7 +124,7 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     return {
       connected: true,
       isFallback: false,
-      storeName: storeInfo.nombre || 'Boutique Autorizada',
+      storeName: storeInfo.nombre || 'TEMPO PRECISO • Boutique Perú',
       products: mapped.length > 0 ? mapped : LUXURY_SAMPLE_WATCHES
     };
   } catch (err) {
@@ -132,7 +132,7 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     return {
       connected: false,
       isFallback: true,
-      storeName: 'Aurelia Haute Horlogerie (Modo Muestra)',
+      storeName: 'TEMPO PRECISO • Boutique Perú',
       products: LUXURY_SAMPLE_WATCHES,
       error: err.message
     };

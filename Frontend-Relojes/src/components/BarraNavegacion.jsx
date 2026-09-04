@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Search, Settings, ShieldCheck, Clock, Sparkles, Watch } from 'lucide-react';
+import { ShoppingBag, Search, Settings, ShieldCheck, Clock, Sparkles, Watch, User } from 'lucide-react';
 
 export default function BarraNavegacion({
   cartCount,
@@ -10,7 +10,9 @@ export default function BarraNavegacion({
   storeName,
   searchQuery,
   setSearchQuery,
-  onTriggerLoader
+  onTriggerLoader,
+  user,
+  onOpenAuth
 }) {
   const [showSearch, setShowSearch] = useState(false);
 
@@ -133,56 +135,102 @@ export default function BarraNavegacion({
           </div>
         </a>
 
-        {/* Enlaces de Navegación */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '34px' }}>
-          <a href="#catalogo" style={{
-            color: 'var(--c-deep-purple)',
-            textDecoration: 'none',
-            fontSize: '0.86rem',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            fontFamily: 'var(--font-serif)',
-            fontWeight: 700,
-            transition: 'color 0.2s',
-            borderBottom: '2px solid var(--c-blush)',
-            paddingBottom: '4px'
-          }}>
-            Colección
-          </a>
-          <a href="#artesania" style={{
-            color: 'var(--c-taupe)',
-            textDecoration: 'none',
-            fontSize: '0.86rem',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            fontFamily: 'var(--font-serif)',
-            fontWeight: 600,
-            transition: 'color 0.2s'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--c-indigo)'}
-          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--c-taupe)'}
-          >
-            Manufactura
-          </a>
-          <a href="#garantia" style={{
-            color: 'var(--c-taupe)',
-            textDecoration: 'none',
-            fontSize: '0.86rem',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            fontFamily: 'var(--font-serif)',
-            fontWeight: 600,
-            transition: 'color 0.2s'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--c-indigo)'}
-          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--c-taupe)'}
-          >
-            Garantía
-          </a>
+        {/* Enlaces de Navegación de Alta Categoría */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '22px', flexWrap: 'wrap' }}>
+          {[
+            { label: 'Hombre', href: '#catalogo', tag: 'Hombre' },
+            { label: 'Mujer', href: '#catalogo', tag: 'Mujer' },
+            { label: 'Marcas', href: '#catalogo', isHighlight: true },
+            { label: 'Novedades', href: '#catalogo', badge: 'Nuevo' },
+            { label: 'Ofertas', href: '#catalogo', badge: 'VIP' },
+            { label: 'Accesorios', href: '#catalogo' }
+          ].map((item, idx) => (
+            <a
+              key={idx}
+              href={item.href}
+              style={{
+                color: item.isHighlight ? 'var(--c-indigo)' : 'var(--c-deep-purple)',
+                textDecoration: 'none',
+                fontSize: '0.8rem',
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 500,
+                transition: 'all 0.2s ease',
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '4px 0'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--c-blush)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = item.isHighlight ? 'var(--c-indigo)' : 'var(--c-deep-purple)';
+              }}
+            >
+              {item.label}
+              {item.badge && (
+                <span style={{
+                  fontSize: '0.58rem',
+                  backgroundColor: item.badge === 'VIP' ? 'var(--c-blush)' : 'var(--c-indigo)',
+                  color: '#ffffff',
+                  padding: '2px 5px',
+                  borderRadius: '4px',
+                  lineHeight: 1,
+                  fontWeight: 800,
+                  letterSpacing: '0.05em'
+                }}>
+                  {item.badge}
+                </span>
+              )}
+            </a>
+          ))}
         </nav>
 
         {/* Acciones */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* Botón de Mi Cuenta VIP (Login) */}
+          <button
+            onClick={onOpenAuth}
+            title={user ? `Cuenta VIP: ${user.nombre}` : "Mi Cuenta VIP / Iniciar Sesión"}
+            style={{
+              height: '42px',
+              padding: user ? '0 16px' : '0',
+              width: user ? 'auto' : '42px',
+              borderRadius: user ? '9999px' : '50%',
+              background: user ? 'var(--c-deep-purple)' : '#ffffff',
+              border: user ? '1px solid var(--c-blush)' : '1px solid var(--border-light)',
+              color: user ? '#ffffff' : 'var(--c-deep-purple)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(45, 66, 98, 0.08)',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--c-blush)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = user ? 'var(--c-blush)' : 'var(--border-light)';
+            }}
+          >
+            <User size={18} color={user ? 'var(--c-blush)' : 'var(--c-deep-purple)'} />
+            {user && (
+              <span style={{
+                fontSize: '0.8rem',
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 700,
+                letterSpacing: '0.04em'
+              }}>
+                {user.nombre.split(' ')[0]} (VIP)
+              </span>
+            )}
+          </button>
+
           {/* Buscador */}
           {showSearch ? (
             <div style={{

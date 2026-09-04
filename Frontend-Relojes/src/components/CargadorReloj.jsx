@@ -182,30 +182,30 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
             </text>
           ))}
 
-          {/* Firmas de Manufactura en estilo Geomanist (NineStyles: bold + light) */}
+          {/* Firmas de Manufactura en estilo Cinzel idéntico al Header */}
           <text
             x="150"
             y="74"
             textAnchor="middle"
             fill="#ffffff"
-            fontFamily="'Outfit', sans-serif"
-            fontSize="12.5"
-            letterSpacing="-0.02em"
+            fontFamily="'Cinzel', serif"
+            fontSize="10"
+            fontWeight="700"
+            letterSpacing="0.35em"
           >
-            <tspan fontWeight="900">tempo</tspan>
-            <tspan fontWeight="200" dx="2">preciso</tspan>
+            TEMPO PRECISO
           </text>
           <text
             x="150"
             y="85"
             textAnchor="middle"
             fill="#D09683"
-            fontFamily="'Outfit', sans-serif"
-            fontSize="6.5"
+            fontFamily="'Cinzel', serif"
+            fontSize="6"
             fontWeight="700"
-            letterSpacing="0.22em"
+            letterSpacing="0.2em"
           >
-            CHRONOMÈTRE SUIZO
+            BOUTIQUE DE ALTA RELOJERÍA • PERÚ
           </text>
 
           {/* Sub-esfera decorativa de 60s a las 6 en punto */}
@@ -299,17 +299,17 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
       >
         <div
           style={{
-            fontFamily: "'Outfit', sans-serif",
+            fontFamily: "'Cinzel', serif",
             fontSize: '0.96rem',
             color: '#ffffff',
             display: 'flex',
-            alignItems: 'baseline',
-            gap: '2px'
+            alignItems: 'center',
+            gap: '8px',
+            letterSpacing: '0.3em'
           }}
         >
-          <span style={{ fontWeight: 900, letterSpacing: '-0.03em' }}>tempo</span>
-          <span style={{ fontWeight: 200, letterSpacing: '-0.01em', marginLeft: '1px' }}>preciso</span>
-          <span style={{ fontSize: '0.74rem', color: '#D09683', letterSpacing: '0.18em', marginLeft: '8px', textTransform: 'uppercase', fontWeight: 700 }}>• CALIBRANDO</span>
+          <span style={{ fontWeight: 700 }}>TEMPO PRECISO</span>
+          <span style={{ fontSize: '0.74rem', color: '#D09683', letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 700 }}>• CALIBRANDO</span>
         </div>
 
         <div
@@ -317,15 +317,15 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '0.8rem',
+            fontFamily: "'Cinzel', serif",
+            fontSize: '0.78rem',
             color: '#D09683',
-            letterSpacing: '0.08em'
+            letterSpacing: '0.12em'
           }}
         >
-          <span>CALIBRACIÓN SUIZA COSC</span>
+          <span>ALTA RELOJERÍA EN PERÚ</span>
           <span>•</span>
-          <span style={{ fontWeight: 800, minWidth: '40px', color: '#ffffff' }}>{progress}%</span>
+          <span style={{ fontWeight: 800, minWidth: '40px', color: '#ffffff', fontFamily: "'JetBrains Mono', monospace" }}>{progress}%</span>
         </div>
 
         {/* Barra de progreso fluida con resplandor rojo */}

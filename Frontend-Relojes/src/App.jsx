@@ -5,6 +5,7 @@ import TarjetaProducto from './components/TarjetaProducto';
 import ModalProducto from './components/ModalProducto';
 import CajonCarrito from './components/CajonCarrito';
 import ModalAjustesInquilino from './components/ModalAjustesInquilino';
+import ModalAuthCliente from './components/ModalAuthCliente';
 import Herencia from './components/Herencia';
 import PieDePagina from './components/PieDePagina';
 import { fetchStoreProducts } from './services/api';
@@ -51,6 +52,8 @@ export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   // Carrito persistido
   const [cart, setCart] = useState(() => {
@@ -207,6 +210,8 @@ export default function App() {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onTriggerLoader={handleTriggerLoader}
+        user={currentUser}
+        onOpenAuth={() => setIsAuthOpen(true)}
       />
 
       {/* Hero Section */}
@@ -235,20 +240,20 @@ export default function App() {
           <div>
             <span style={{
               fontSize: '0.74rem',
-              letterSpacing: '0.22em',
+              letterSpacing: '0.2em',
               textTransform: 'uppercase',
               color: 'var(--c-blush)',
               fontFamily: 'var(--font-serif)',
-              fontWeight: 700
+              fontWeight: 500
             }}>
               ✦ CATÁLOGO PRIVADO
             </span>
             <h2 className="font-serif" style={{
-              fontSize: 'clamp(1.8rem, 3vw, 2.6rem)',
+              fontSize: 'clamp(1.8rem, 3vw, 2.4rem)',
               color: 'var(--c-deep-purple)',
               letterSpacing: '0.02em',
               marginTop: '6px',
-              fontWeight: 800
+              fontWeight: 600
             }}>
               Guardatiempos Exclusivos
             </h2>
@@ -310,9 +315,9 @@ export default function App() {
                   color: isSelected ? '#ffffff' : 'var(--c-deep-purple)',
                   fontFamily: 'var(--font-serif)',
                   fontSize: '0.78rem',
-                  letterSpacing: '0.1em',
+                  letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  fontWeight: isSelected ? 800 : 600,
+                  fontWeight: isSelected ? 600 : 400,
                   padding: '9px 20px',
                   borderRadius: '9999px',
                   cursor: 'pointer',
@@ -429,6 +434,15 @@ export default function App() {
         apiUrl={apiUrl}
         onSaveApiUrl={handleSaveApiUrl}
         onReload={loadCatalog}
+      />
+
+      {/* Modal de Iniciar Sesión / Registro / Perfil VIP del Cliente */}
+      <ModalAuthCliente
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        user={currentUser}
+        onLogin={(userData) => setCurrentUser(userData)}
+        onLogout={() => setCurrentUser(null)}
       />
     </div>
   );

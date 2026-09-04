@@ -43,7 +43,7 @@ export default function Herencia() {
             margin: '0 auto',
             lineHeight: 1.6
           }}>
-            Cada guardatiempo requiere más de 450 horas de ensamblaje artesanal, pulido a mano y calibración milimétrica en nuestros talleres de Ginebra.
+            Cada guardatiempo de nuestra selección multimarca representa la cúspide de la ingeniería de precisión, inspeccionado y certificado para nuestros clientes en Perú.
           </p>
         </div>
 
@@ -77,10 +77,10 @@ export default function Herencia() {
               <Compass size={24} color="var(--c-indigo)" />
             </div>
             <h3 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--c-deep-purple)', marginBottom: '12px', fontWeight: 800 }}>
-              Calibres Propios de Manufactura
+              Selección de Marcas Internacionales
             </h3>
             <p style={{ fontSize: '0.88rem', color: 'var(--c-taupe)', lineHeight: 1.6 }}>
-              Engranajes tallados con tolerancias de micras. Escapes de tourbillon que neutralizan la gravedad terrestre para garantizar una precisión absoluta de segundos al año.
+              Curaduría rigurosa de cronógrafos automáticos, complicados y piezas de coleccionista importadas directamente de las casas relojeras más prestigiosas.
             </p>
           </div>
 
@@ -107,10 +107,10 @@ export default function Herencia() {
               <Gem size={24} color="var(--c-blush)" />
             </div>
             <h3 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--c-deep-purple)', marginBottom: '12px', fontWeight: 800 }}>
-              Materiales Nobles & Zafiro
+              Garantía y Autenticidad 100%
             </h3>
             <p style={{ fontSize: '0.88rem', color: 'var(--c-taupe)', lineHeight: 1.6 }}>
-              Fundición propia de oro rosa y amarillo de 18k, titanio de grado aeroespacial y cristales de zafiro sintético con dureza 9 en la escala de Mohs.
+              Todos los modelos cuentan con estuche original, documentos oficiales de serie y respaldo de garantía internacional de 5 años en Perú.
             </p>
           </div>
 
@@ -137,10 +137,10 @@ export default function Herencia() {
               <Award size={24} color="var(--c-deep-purple)" />
             </div>
             <h3 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--c-deep-purple)', marginBottom: '12px', fontWeight: 800 }}>
-              Control Cronométrico Estricto
+              Entrega VIP Segura en Perú
             </h3>
             <p style={{ fontSize: '0.88rem', color: 'var(--c-taupe)', lineHeight: 1.6 }}>
-              Cada ejemplar pasa por 15 días consecutivos de pruebas en 5 posiciones diferentes y 3 variaciones de temperatura antes de recibir su certificado de cronometría.
+              Despachos asegurados a Lima y provincias, con atención preferencial de nuestro equipo de concierge en cada paso de su adquisición.
             </p>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function Herencia() {
             fontStyle: 'normal',
             fontWeight: 700
           }}>
-            — Aurelia Haute Horlogerie Atelier, Ginebra
+            — TEMPO PRECISO • Boutique de Alta Relojería en Perú
           </cite>
         </div>
       </div>
