@@ -7,7 +7,7 @@ import ModalProducto from './components/ModalProducto';
 import CajonCarrito from './components/CajonCarrito';
 import ModalAjustesInquilino from './components/ModalAjustesInquilino';
 import ModalAuthCliente from './components/ModalAuthCliente';
-import Herencia from './components/Herencia';
+import Testimonios from './components/Testimonios';
 import PieDePagina from './components/PieDePagina';
 import { fetchStoreProducts } from './services/api';
 import CargadorReloj from './components/CargadorReloj';
@@ -16,6 +16,7 @@ import PanelFiltros from './components/PanelFiltros';
 import MarcasDestacadas from './components/MarcasDestacadas';
 import ToastNotificacion from './components/ToastNotificacion';
 import WebThreads from './components/WebThreads';
+import Beneficios from './components/Beneficios';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 
 const STORAGE_KEY_CART = 'aurelia_vip_cart_v1';
@@ -506,49 +507,34 @@ export default function App({ initialCategory }) {
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
-          backgroundColor: '#1C2B42',
+          backgroundColor: '#fbfaf8', // Fondo exacto de la página principal
           overflow: 'hidden'
         }}>
-          {/* Degradados superior e inferior para fundirse invisiblemente con la web */}
-          <div style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0, height: '160px',
-            background: 'linear-gradient(to bottom, var(--bg-main, #f8f6f2) 0%, transparent 100%)',
-            pointerEvents: 'none',
-            zIndex: 5
-          }} />
-          <div style={{
-            position: 'absolute',
-            bottom: 0, left: 0, right: 0, height: '160px',
-            background: 'linear-gradient(to top, #f7f4ef 0%, transparent 100%)', // Color del fondo de Herencia
-            pointerEvents: 'none',
-            zIndex: 5
-          }} />
-
           {/* Fondo animado WebGL */}
           <WebThreads
-            color1="#D09683" // Blush
-            color2="#2D4262" // Indigo
-            color3="#FFFFFF" // White
-            speed={0.2}
-            threadCount={8}
-            frequency={4}
-            spread={0.2}
-            taper={1}
-            position={0.5}
+            color1="#FFB6A0" // Blush brillante
+            color2="#5271FF" // Indigo brillante
+            color3="#FFFFFF" // Núcleo blanco
+            speed={0.35}
+            threadCount={3}
+            frequency={9.5}
+            spread={0.18}
+            taper={1.6}
+            position={0.49}
             fanMode="center"
-            glow={0.04}
+            glow={0.02}
             falloff={0.6}
-            thickness={1.5}
-            brightness={0.8}
-            opacity={0.85}
+            thickness={0.9}
+            brightness={0.55}
+            opacity={1}
             mirror={true}
-            shimmer={true}
+            shimmer={false}
             grain={true}
-            grainIntensity={0.04}
+            grainIntensity={0}
             mouseInteraction={true}
-            mouseStrength={0.5}
-            lightMode={false}
+            mouseStrength={0.25}
+            lightMode={true}
+            backgroundColor="#fbfaf8" // Para que coincida con el fondo de la sección
           />
           
           {/* Texto superpuesto */}
@@ -556,7 +542,7 @@ export default function App({ initialCategory }) {
             position: 'relative',
             zIndex: 10,
             textAlign: 'center',
-            color: '#ffffff',
+            color: '#2D4262', // Color oscuro para contrastar con el fondo claro
             pointerEvents: 'none'
           }}>
             <span style={{
@@ -567,17 +553,16 @@ export default function App({ initialCategory }) {
               color: 'var(--c-blush)',
               fontFamily: 'var(--font-serif)',
               fontWeight: 600,
-              marginBottom: '16px',
-              textShadow: '0 2px 10px rgba(0,0,0,0.5)'
+              marginBottom: '16px'
             }}>
               La Precisión del Movimiento
             </span>
-            <h2 className="font-serif" style={{
+            <h2 style={{
+              fontFamily: '"Cinzel", serif', // Fuente del logo Tempo Preciso
               fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-              fontWeight: 700,
+              fontWeight: 400, // Más delgado, como solicitó el usuario
               letterSpacing: '0.04em',
-              margin: 0,
-              textShadow: '0 4px 25px rgba(0,0,0,0.6)'
+              margin: 0
             }}>
               Eternidad en cada Segundo
             </h2>
@@ -585,8 +570,59 @@ export default function App({ initialCategory }) {
         </section>
       )}
 
-      {/* Sección de Arte y Manufactura */}
-      <Herencia />
+      {/* Sección "Nuevos Ingresos" */}
+      {!initialCategory && filteredProducts.length > 4 && (
+        <section style={{
+          padding: '80px 24px',
+          backgroundColor: 'var(--bg-main)', // Fondo igual al de la página principal
+          position: 'relative'
+        }}>
+          <div style={{ maxWidth: '1360px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '55px' }}>
+              <span style={{
+                fontSize: '0.74rem',
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                color: 'var(--c-blush)',
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600
+              }}>
+                Descubre lo Último
+              </span>
+              <h2 className="font-serif" style={{
+                fontSize: 'clamp(2rem, 3.5vw, 2.8rem)',
+                color: 'var(--c-deep-purple)',
+                letterSpacing: '0.02em',
+                marginTop: '6px',
+                fontWeight: 600
+              }}>
+                Nuevos Ingresos
+              </h2>
+            </div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
+              gap: '30px'
+            }}>
+              {filteredProducts.slice(4, 8).map((product) => (
+                <TarjetaProducto
+                  key={product.id}
+                  product={product}
+                  onQuickView={setSelectedProduct}
+                  onAddToCart={handleAddToCart}
+                  onWhatsAppInquiry={handleWhatsAppInquiry}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Sección de Beneficios */}
+      {!initialCategory && <Beneficios />}
+
+      {/* Sección de Opiniones */}
+      {!initialCategory && <Testimonios />}
 
       {/* Footer de Alta Relojería */}
       <PieDePagina

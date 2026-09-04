@@ -1,114 +1,296 @@
 import React from 'react';
-import { Watch, ShieldCheck, MapPin, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Watch, ShieldCheck } from 'lucide-react';
+
+const TikTokIcon = ({ size = 20, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5v3a3 3 0 0 1-3-3" />
+  </svg>
+);
+
+const FacebookIcon = ({ size = 20, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
+const InstagramIcon = ({ size = 20, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
+
+const CardBadge = ({ children, bg, color }) => (
+  <div style={{
+    backgroundColor: bg || '#ffffff',
+    color: color || '#1434CB',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    fontSize: '0.65rem',
+    fontWeight: 800,
+    letterSpacing: '0.05em',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: '42px',
+    height: '26px',
+    border: bg ? 'none' : '1px solid rgba(255, 255, 255, 0.2)'
+  }}>
+    {children}
+  </div>
+);
+
+const FooterLink = ({ href = "#", children }) => (
+  <li>
+    <a href={href} style={{
+      color: 'rgba(255, 255, 255, 0.75)',
+      textDecoration: 'none',
+      transition: 'color 0.2s',
+      fontSize: '0.85rem'
+    }}
+    onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
+    onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)'}
+    >
+      {children}
+    </a>
+  </li>
+);
 
 export default function PieDePagina({ onOpenWhatsAppConcierge, storeName }) {
+  const marcas = [
+    "Rolex", "Cartier", "Patek Philippe", "Audemars Piguet",
+    "Omega", "Tag Heuer", "Breitling", "Hublot",
+    "IWC", "Jaeger-LeCoultre", "Tudor", "Panerai"
+  ];
+
   return (
     <footer id="garantia" style={{
       backgroundColor: 'var(--c-deep-purple)',
       borderTop: '2px solid var(--c-blush)',
-      padding: '80px 24px 40px',
+      padding: '80px 24px 30px',
       color: 'rgba(255, 255, 255, 0.75)'
     }}>
-      <div style={{
-        maxWidth: '1360px',
-        margin: '0 auto'
-      }}>
+      <div style={{ maxWidth: '1360px', margin: '0 auto' }}>
+        
+        {/* TOP GRID: 4 COLUMNS */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '40px',
-          paddingBottom: '50px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '50px',
+          paddingBottom: '60px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
         }}>
-          {/* Col 1: Marca con Logo Idéntico al Header */}
+          
+          {/* COL 1: CANALES DE ATENCIÓN */}
           <div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '6px', marginBottom: '18px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <Watch size={26} color="var(--c-blush)" strokeWidth={1.5} />
-                <div style={{ width: '1.5px', height: '32px', backgroundColor: 'rgba(255, 255, 255, 0.3)' }}></div>
-                <div style={{ fontSize: '2.1rem', fontFamily: '"Cinzel", serif', color: '#ffffff', lineHeight: 1, letterSpacing: '0.05em' }}>
-                  TP
+            <h4 style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.95rem',
+              fontWeight: 800,
+              color: '#ffffff',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              marginBottom: '10px'
+            }}>
+              Canales de Atención
+            </h4>
+            <div style={{ width: '100%', height: '1px', backgroundColor: '#ffffff', marginBottom: '24px' }}></div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <Mail size={22} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div style={{ fontSize: '0.85rem' }}>
+                  <p style={{ margin: '0 0 4px 0', color: '#ffffff', fontWeight: 600 }}>Comercial:</p>
+                  <a href="mailto:concierge@tempopreciso.pe" style={{ color: 'rgba(255, 255, 255, 0.75)', textDecoration: 'none' }}>concierge@tempopreciso.pe</a>
                 </div>
               </div>
-              <div style={{
-                fontSize: '0.64rem',
-                letterSpacing: '0.45em',
-                fontFamily: '"Cinzel", serif',
-                color: 'rgba(255, 255, 255, 0.9)',
-                textTransform: 'uppercase',
-                marginTop: '4px'
-              }}>
-                TEMPO PRECISO
+
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <Phone size={22} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div style={{ fontSize: '0.85rem' }}>
+                  <p style={{ margin: '0 0 4px 0', color: '#ffffff', fontWeight: 600 }}>Atención 24/7 (WhatsApp):</p>
+                  <button 
+                    onClick={onOpenWhatsAppConcierge}
+                    style={{ background: 'none', border: 'none', padding: 0, color: 'rgba(255, 255, 255, 0.75)', cursor: 'pointer', textAlign: 'left' }}
+                  >
+                    +51 962 956 919
+                  </button>
+                </div>
               </div>
-            </div>
-            <p style={{ fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '20px', color: '#e5e1dd' }}>
-              TEMPO PRECISO. Boutique de alta relojería fina en Perú. Curaduría exclusiva de las mejores marcas internacionales de lujo para coleccionistas.
-            </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--c-blush)', fontSize: '0.8rem', fontWeight: 600 }}>
-              <ShieldCheck size={16} />
-              <span>Garantía de 5 Años y Envío Asegurado a Todo el Perú</span>
+              
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <MapPin size={22} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div style={{ fontSize: '0.85rem' }}>
+                  <p style={{ margin: '0 0 4px 0', color: '#ffffff', fontWeight: 600 }}>Boutique Principal:</p>
+                  <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.75)' }}>Av. Camino Real 1225,<br/>San Isidro, Lima - Perú</p>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Col 2: Salones de Venta en Perú */}
+          {/* COL 2: TEMPO PRECISO */}
           <div>
-            <h4 className="font-serif" style={{ fontSize: '0.92rem', color: '#ffffff', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '18px', fontWeight: 800 }}>
-              Boutique & Showrooms Perú
+            <h4 style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.95rem',
+              fontWeight: 800,
+              color: '#ffffff',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              marginBottom: '10px'
+            }}>
+              Tempo Preciso
             </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem' }}>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                <MapPin size={16} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span>Av. Camino Real 1225, San Isidro, Lima - Perú</span>
-              </li>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                <MapPin size={16} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span>Av. Primavera 1050, Santiago de Surco, Lima</span>
-              </li>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                <MapPin size={16} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span>Despachos Directos a Todo el Perú (Arequipa, Trujillo, Cusco)</span>
+            <div style={{ width: '100%', height: '1px', backgroundColor: '#ffffff', marginBottom: '24px' }}></div>
+            
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <FooterLink>Relojes para Hombre</FooterLink>
+              <FooterLink>Relojes para Mujer</FooterLink>
+              <FooterLink>Nuevos Ingresos</FooterLink>
+              <FooterLink>Alta Relojería</FooterLink>
+              <FooterLink>Accesorios y Cajas</FooterLink>
+              <FooterLink>Nuestra Herencia</FooterLink>
+              <FooterLink>Boutiques</FooterLink>
+              <FooterLink>Contáctanos</FooterLink>
+            </ul>
+          </div>
+
+          {/* COL 3: MARCAS */}
+          <div>
+            <h4 style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.95rem',
+              fontWeight: 800,
+              color: '#ffffff',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              marginBottom: '10px'
+            }}>
+              Marcas
+            </h4>
+            <div style={{ width: '100%', height: '1px', backgroundColor: '#ffffff', marginBottom: '24px' }}></div>
+            
+            <ul style={{ 
+              listStyle: 'none', 
+              padding: 0, 
+              margin: 0, 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr', 
+              columnGap: '10px',
+              rowGap: '14px' 
+            }}>
+              {marcas.map(marca => (
+                <FooterLink key={marca}>{marca}</FooterLink>
+              ))}
+            </ul>
+          </div>
+
+          {/* COL 4: OTROS ENLACES */}
+          <div>
+            <h4 style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.95rem',
+              fontWeight: 800,
+              color: '#ffffff',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              marginBottom: '10px'
+            }}>
+              Otros Enlaces
+            </h4>
+            <div style={{ width: '100%', height: '1px', backgroundColor: '#ffffff', marginBottom: '24px' }}></div>
+            
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <FooterLink>Preguntas Frecuentes</FooterLink>
+              <FooterLink>Términos y Condiciones</FooterLink>
+              <FooterLink>Políticas de Privacidad</FooterLink>
+              <FooterLink>Cambios y Devoluciones</FooterLink>
+              <FooterLink>Servicio Técnico Autorizado</FooterLink>
+              
+              {/* Libro de reclamaciones con icono representativo */}
+              <li style={{ marginTop: '10px' }}>
+                <a href="#" style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  padding: '8px 12px',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(255,255,255,0.2)'
+                }}>
+                  📖 Libro de Reclamaciones
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Asistencia y Concierge */}
-          <div>
-            <h4 className="font-serif" style={{ fontSize: '0.92rem', color: '#ffffff', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '18px', fontWeight: 800 }}>
-              Atención Personalizada
-            </h4>
-            <p style={{ fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '18px', color: '#e5e1dd' }}>
-              Nuestros asesores expertos en alta relojería están a su disposición para coordinar citas privadas en showroom y entregas personalizadas.
-            </p>
-            <button
-              onClick={onOpenWhatsAppConcierge}
-              className="btn-blush"
-              style={{ width: '100%', fontSize: '0.78rem', padding: '12px 18px' }}
-            >
-              <MessageCircle size={16} />
-              Iniciar Chat con Concierge VIP Perú
-            </button>
-          </div>
         </div>
 
-        {/* Copyright */}
-        <div style={{
-          paddingTop: '30px',
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          fontSize: '0.78rem',
-          color: 'rgba(255, 255, 255, 0.5)'
-        }}>
-          <div>
-            © {new Date().getFullYear()} TEMPO PRECISO • Boutique de Alta Relojería en Perú. Todos los derechos reservados.
+        {/* BOTTOM SECTION: SOCIAL & PAYMENTS & COPYRIGHT */}
+        <div style={{ paddingTop: '30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '20px' }}>
+            {/* Redes Sociales */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff', textTransform: 'uppercase' }}>Síguenos:</span>
+              <div style={{ display: 'flex', gap: '14px' }}>
+                <a href="#" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
+                  <FacebookIcon size={20} />
+                </a>
+                <a href="#" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
+                  <InstagramIcon size={20} />
+                </a>
+                <a href="#" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
+                  <TikTokIcon size={20} />
+                </a>
+              </div>
+            </div>
+
+            {/* Métodos de Pago */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff', textTransform: 'uppercase' }}>Pago Seguro:</span>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <CardBadge bg="#009EE3" color="#ffffff">
+                  <span style={{ fontSize: '0.55rem', marginRight: '2px', color: '#000' }}>mercado</span>
+                  <span style={{ fontSize: '0.55rem' }}>pago</span>
+                </CardBadge>
+                <CardBadge bg="#1434CB" color="#ffffff">VISA</CardBadge>
+                <CardBadge bg="#222222" color="#ffffff">
+                  <div style={{ position: 'relative', width: '16px', height: '10px' }}>
+                    <div style={{ position: 'absolute', left: 0, width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#EB001B', opacity: 0.9 }}></div>
+                    <div style={{ position: 'absolute', right: 0, width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#F79E1B', opacity: 0.9 }}></div>
+                  </div>
+                </CardBadge>
+                <CardBadge bg="#002663" color="#ffffff">AMEX</CardBadge>
+              </div>
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
-            <span>Relojes 100% Auténticos Multimarca</span>
-            <span>Garantía en Perú</span>
-            <span>Plataforma SaaS</span>
+
+          <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}></div>
+
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            fontSize: '0.78rem',
+            color: 'rgba(255, 255, 255, 0.4)'
+          }}>
+            <div>
+              © {new Date().getFullYear()} TEMPO PRECISO. Boutique de Alta Relojería en Perú. Todos los derechos reservados.
+            </div>
+            <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
+              <span>Relojes 100% Auténticos</span>
+              <span>Garantía Internacional</span>
+            </div>
           </div>
         </div>
+        
       </div>
     </footer>
   );

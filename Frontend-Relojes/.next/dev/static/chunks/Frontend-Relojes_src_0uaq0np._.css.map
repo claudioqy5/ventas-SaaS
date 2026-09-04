@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/FAMURP/Desktop/CFQY/ventas-SaaS/Frontend-Relojes/src/components/WebThreads.css"],"sourcesContent":[".web-threads-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  pointer-events: none;\n}\n"],"names":[],"mappings":"AAAA"}},
-    {"offset": {"line": 11, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/FAMURP/Desktop/CFQY/ventas-SaaS/Frontend-Relojes/src/App.css"],"sourcesContent":["/* Estilos complementarios para la aplicación */\r\n"],"names":[],"mappings":""}}]
-}
