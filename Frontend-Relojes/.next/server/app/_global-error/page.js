@@ -1,9 +1,9 @@
 var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_global-error/page.js")
-R.c("server/chunks/ssr/node_modules_0ts4ag-._.js")
-R.c("server/chunks/ssr/[root-of-the-server]__0z5ob0b._.js")
-R.c("server/chunks/ssr/[root-of-the-server]__0bf0c1b._.js")
-R.c("server/chunks/ssr/[root-of-the-server]__07-cb6x._.js")
-R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_0q-w892.js")
-R.c("server/chunks/ssr/_next-internal_server_app__global-error_page_actions_0zi5s8-.js")
-R.m(42378)
-module.exports=R.m(42378).exports
+R.c("server/chunks/ssr/21a0_0af32k8._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0nl6umb._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0xxdxdd._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__01j0f16._.js")
+R.c("server/chunks/ssr/21a0_next_dist_client_components_builtin_global-error_1elayzz.js")
+R.c("server/chunks/ssr/Frontend-Relojes__next-internal_server_app__global-error_page_actions_0j3f06t.js")
+R.m(14431)
+module.exports=R.m(14431).exports

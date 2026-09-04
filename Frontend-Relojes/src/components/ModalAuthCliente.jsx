@@ -294,7 +294,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
             </div>
           </div>
         ) : (
-          /* Formulario de Login / Registro Minimalista (Estilo Screenshot) */
+          /* Formulario de Login / Registro Minimalista en Español */
           <form onSubmit={handleSubmit} style={{ padding: '48px 40px 40px' }}>
             {error && (
               <div style={{
@@ -310,16 +310,27 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
               </div>
             )}
 
+            <div style={{ marginBottom: '28px', textAlign: 'center' }}>
+              <h2 className="font-serif" style={{ fontSize: '1.6rem', color: 'var(--c-deep-purple)', fontWeight: 600, marginBottom: '6px' }}>
+                {isRegister ? 'Crear Cuenta VIP' : 'Acceso Clientes VIP'}
+              </h2>
+              <p style={{ fontSize: '0.86rem', color: 'var(--c-taupe)' }}>
+                {isRegister 
+                  ? 'Completa tus datos para disfrutar de piezas y beneficios exclusivos' 
+                  : 'Ingresa a tu cuenta para gestionar tus pedidos y garantías'}
+              </p>
+            </div>
+
             {isRegister && (
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
-                  Name
+                  Nombre
                 </label>
                 <div style={{ position: 'relative' }}>
                   <User size={16} color="var(--c-taupe)" style={{ position: 'absolute', left: '16px', top: '14px' }} />
                   <input
                     type="text"
-                    placeholder="Enter your Name"
+                    placeholder="Ingresa tu nombre completo"
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     style={{
@@ -341,13 +352,13 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
 
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
-                Email
+                Correo Electrónico
               </label>
               <div style={{ position: 'relative' }}>
                 <span style={{ position: 'absolute', left: '16px', top: '10px', color: 'var(--c-taupe)', fontFamily: 'sans-serif', fontSize: '1.2rem', fontWeight: 500 }}>@</span>
                 <input
                   type="email"
-                  placeholder="Enter your Email"
+                  placeholder="Ingresa tu correo electrónico"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   style={{
@@ -368,13 +379,13 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
 
             <div style={{ marginBottom: '16px' }}>
               <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
-                Password
+                Contraseña
               </label>
               <div style={{ position: 'relative' }}>
                 <Lock size={16} color="var(--c-taupe)" style={{ position: 'absolute', left: '16px', top: '14px' }} />
                 <input
                   type="password"
-                  placeholder="Enter your Password"
+                  placeholder="Ingresa tu contraseña"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   style={{
@@ -397,10 +408,10 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--c-deep-purple)', cursor: 'pointer' }}>
                   <input type="checkbox" style={{ accentColor: 'var(--c-indigo)', width: '14px', height: '14px', cursor: 'pointer' }} />
-                  Remember me
+                  Recordarme
                 </label>
                 <a href="#" onClick={(e) => e.preventDefault()} style={{ fontSize: '0.85rem', color: 'var(--c-indigo)', textDecoration: 'none', fontWeight: 500 }}>
-                  Forgot password?
+                  ¿Olvidaste tu contraseña?
                 </a>
               </div>
             )}
@@ -424,22 +435,22 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--c-deep-purple)'}
             >
-              {isRegister ? 'Sign Up' : 'Sign In'}
+              {isRegister ? 'Registrarse' : 'Iniciar Sesión'}
             </button>
 
             <div style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--c-deep-purple)', marginBottom: '24px' }}>
-              {isRegister ? 'Already have an account? ' : "Don't have an account? "}
+              {isRegister ? '¿Ya tienes una cuenta? ' : '¿No tienes una cuenta? '}
               <span 
                 onClick={() => { setIsRegister(!isRegister); setError(''); }} 
                 style={{ color: 'var(--c-indigo)', cursor: 'pointer', fontWeight: 500 }}
               >
-                {isRegister ? 'Sign In' : 'Sign Up'}
+                {isRegister ? 'Inicia Sesión' : 'Regístrate'}
               </span>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
               <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(115, 96, 91, 0.15)' }}></div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--c-taupe)' }}>Or With</span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--c-taupe)' }}>O continuar con</span>
               <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(115, 96, 91, 0.15)' }}></div>
             </div>
 

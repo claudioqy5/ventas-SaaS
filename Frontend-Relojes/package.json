@@ -10,9 +10,11 @@
     "lint": "oxlint"
   },
   "dependencies": {
+    "@next/swc-win32-x64-msvc": "^16.3.4",
     "canvas-confetti": "^1.9.4",
     "lucide-react": "^1.39.0",
     "next": "^16.3.4",
+    "ogl": "^1.0.11",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Trash2, ShoppingBag, Send } from 'lucide-react';
 
 export default function CajonCarrito({
@@ -15,14 +15,57 @@ export default function CajonCarrito({
   const [customerAddress, setCustomerAddress] = useState('');
   const [notes, setNotes] = useState('');
 
-  if (!isOpen) return null;
+  // Control de animación suave de entrada y salida
+  const [render, setRender] = useState(isOpen);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setRender(true);
+      document.body.style.overflow = 'hidden';
+      const frame1 = requestAnimationFrame(() => {
+        const frame2 = requestAnimationFrame(() => {
+          setVisible(true);
+        });
+        return () => cancelAnimationFrame(frame2);
+      });
+      return () => cancelAnimationFrame(frame1);
+    } else {
+      setVisible(false);
+      document.body.style.overflow = '';
+      const timer = setTimeout(() => {
+        setRender(false);
+      }, 380);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  // Cerrar al pulsar Escape
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  // Limpieza de bloqueo de scroll
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+  if (!render) return null;
 
   const total = items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
 
   const handleCheckoutWhatsApp = () => {
     if (items.length === 0) return;
 
-    let message = `🎩 *SOLICITUD DE ADQUISICIÓN VIP - AURELIA HAUTE HORLOGERIE*\n`;
+    let message = `🛍️ *PEDIDO DE COMPRA - TEMPO PRECISO*\n`;
     message += `═══════════════════════════\n`;
     if (customerName) message += `👤 *Cliente:* ${customerName}\n`;
     if (customerPhone) message += `📞 *Teléfono:* ${customerPhone}\n`;
@@ -49,19 +92,22 @@ export default function CajonCarrito({
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(45, 66, 98, 0.4)',
-      backdropFilter: 'blur(12px)',
-      WebkitBackdropFilter: 'blur(12px)',
-      zIndex: 100,
-      display: 'flex',
-      justifyContent: 'flex-end'
-    }} onClick={onClose}>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(24, 18, 25, 0.55)',
+        backdropFilter: visible ? 'blur(10px)' : 'blur(0px)',
+        WebkitBackdropFilter: visible ? 'blur(10px)' : 'blur(0px)',
+        zIndex: 100,
+        display: 'flex',
+        justifyContent: 'flex-end',
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.35s ease',
+        pointerEvents: visible ? 'auto' : 'none'
+      }}
+      onClick={onClose}
+    >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
@@ -70,12 +116,14 @@ export default function CajonCarrito({
           height: '100%',
           backgroundColor: '#ffffff',
           borderLeft: '1px solid rgba(115, 96, 91, 0.2)',
-          boxShadow: '-20px 0 60px rgba(45, 66, 98, 0.2)',
+          boxShadow: visible ? '-20px 0 60px rgba(45, 66, 98, 0.25)' : 'none',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '28px',
-          overflowY: 'auto'
+          overflowY: 'auto',
+          transform: visible ? 'translateX(0)' : 'translateX(100%)',
+          transition: 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s ease'
         }}
       >
         {/* Header de la Bolsa */}
@@ -96,7 +144,7 @@ export default function CajonCarrito({
                 letterSpacing: '0.04em',
                 fontWeight: 800
               }}>
-                Bolsa de Adquisición VIP
+                Bolsa de Compras
               </h3>
             </div>
             <button
@@ -127,10 +175,10 @@ export default function CajonCarrito({
             }}>
               <ShoppingBag size={48} color="var(--c-blush)" style={{ margin: '0 auto 16px' }} />
               <p className="font-serif" style={{ fontSize: '1.05rem', color: 'var(--c-deep-purple)', marginBottom: '8px', fontWeight: 700 }}>
-                Tu bolsa está vacía
+                Tu bolsa de compras está vacía
               </p>
               <p style={{ fontSize: '0.86rem', color: 'var(--c-taupe)' }}>
-                Explora el catálogo y añade los guardatiempos que deseas adquirir.
+                Explora el catálogo y añade los relojes que deseas ordenar.
               </p>
             </div>
           ) : (
@@ -371,7 +419,7 @@ export default function CajonCarrito({
               }}
             >
               <Send size={16} />
-              Finalizar Pedido con Concierge VIP
+              Finalizar Pedido vía WhatsApp
             </button>
           </div>
         )}

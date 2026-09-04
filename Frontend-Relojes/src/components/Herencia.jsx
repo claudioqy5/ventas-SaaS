@@ -6,7 +6,6 @@ export default function Herencia() {
     <section id="artesania" style={{
       padding: '90px 24px',
       backgroundColor: '#f7f4ef',
-      borderTop: '1px solid rgba(115, 96, 91, 0.15)',
       borderBottom: '1px solid rgba(115, 96, 91, 0.15)',
       position: 'relative'
     }}>

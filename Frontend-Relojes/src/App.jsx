@@ -14,6 +14,8 @@ import CargadorReloj from './components/CargadorReloj';
 import BotonWhatsApp from './components/BotonWhatsApp';
 import PanelFiltros from './components/PanelFiltros';
 import MarcasDestacadas from './components/MarcasDestacadas';
+import ToastNotificacion from './components/ToastNotificacion';
+import WebThreads from './components/WebThreads';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 
 const STORAGE_KEY_CART = 'aurelia_vip_cart_v1';
@@ -69,12 +71,13 @@ export default function App({ initialCategory }) {
     materials: []
   });
 
-  // Modales
+  // Modales y Notificaciones
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [addedProduct, setAddedProduct] = useState(null);
 
   const [cart, setCart] = useState(() => {
     if (typeof window === 'undefined') return [];
@@ -182,6 +185,7 @@ export default function App({ initialCategory }) {
         }
       ];
     });
+    setAddedProduct(product);
   };
 
   const handleUpdateQuantity = (productId, qty) => {
@@ -295,7 +299,7 @@ export default function App({ initialCategory }) {
               marginTop: '6px',
               fontWeight: 600
             }}>
-              {showFullCatalog ? 'Guardatiempos Exclusivos' : 'Nuestros Modelos Más Vendidos'}
+              {showFullCatalog ? 'Guardatiempos Exclusivos' : 'Los más Vendidos'}
             </h2>
           </div>
 
@@ -493,6 +497,94 @@ export default function App({ initialCategory }) {
         </div>
       </main>
 
+      {/* Sección Transicional con Animación WebThreads */}
+      {!initialCategory && (
+        <section style={{ 
+          position: 'relative', 
+          width: '100%', 
+          height: '460px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          backgroundColor: '#1C2B42',
+          overflow: 'hidden'
+        }}>
+          {/* Degradados superior e inferior para fundirse invisiblemente con la web */}
+          <div style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0, height: '160px',
+            background: 'linear-gradient(to bottom, var(--bg-main, #f8f6f2) 0%, transparent 100%)',
+            pointerEvents: 'none',
+            zIndex: 5
+          }} />
+          <div style={{
+            position: 'absolute',
+            bottom: 0, left: 0, right: 0, height: '160px',
+            background: 'linear-gradient(to top, #f7f4ef 0%, transparent 100%)', // Color del fondo de Herencia
+            pointerEvents: 'none',
+            zIndex: 5
+          }} />
+
+          {/* Fondo animado WebGL */}
+          <WebThreads
+            color1="#D09683" // Blush
+            color2="#2D4262" // Indigo
+            color3="#FFFFFF" // White
+            speed={0.2}
+            threadCount={8}
+            frequency={4}
+            spread={0.2}
+            taper={1}
+            position={0.5}
+            fanMode="center"
+            glow={0.04}
+            falloff={0.6}
+            thickness={1.5}
+            brightness={0.8}
+            opacity={0.85}
+            mirror={true}
+            shimmer={true}
+            grain={true}
+            grainIntensity={0.04}
+            mouseInteraction={true}
+            mouseStrength={0.5}
+            lightMode={false}
+          />
+          
+          {/* Texto superpuesto */}
+          <div style={{
+            position: 'relative',
+            zIndex: 10,
+            textAlign: 'center',
+            color: '#ffffff',
+            pointerEvents: 'none'
+          }}>
+            <span style={{
+              display: 'block',
+              fontSize: '0.8rem',
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: 'var(--c-blush)',
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 600,
+              marginBottom: '16px',
+              textShadow: '0 2px 10px rgba(0,0,0,0.5)'
+            }}>
+              La Precisión del Movimiento
+            </span>
+            <h2 className="font-serif" style={{
+              fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+              fontWeight: 700,
+              letterSpacing: '0.04em',
+              margin: 0,
+              textShadow: '0 4px 25px rgba(0,0,0,0.6)'
+            }}>
+              Eternidad en cada Segundo
+            </h2>
+          </div>
+        </section>
+      )}
+
       {/* Sección de Arte y Manufactura */}
       <Herencia />
 
@@ -543,6 +635,13 @@ export default function App({ initialCategory }) {
 
       {/* Botón flotante de WhatsApp global */}
       <BotonWhatsApp phoneNumber={WHATSAPP_CONCIERGE} />
+
+      {/* Notificación Toast al agregar al carrito */}
+      <ToastNotificacion
+        product={addedProduct}
+        onClose={() => setAddedProduct(null)}
+        onOpenCart={() => setIsCartOpen(true)}
+      />
     </div>
   );
 }

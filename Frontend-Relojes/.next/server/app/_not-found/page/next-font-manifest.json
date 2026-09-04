@@ -1,7 +1,7 @@
 {
   "pages": {},
   "app": {
-    "[project]/src/app/_not-found/page": []
+    "[project]/Frontend-Relojes/src/app/_not-found/page": []
   },
   "appUsingSizeAdjust": false,
   "pagesUsingSizeAdjust": false

@@ -308,7 +308,7 @@ export default function ModalProducto({
                 ) : (
                   <>
                     <ShoppingBag size={18} />
-                    Agregar a la Bolsa VIP
+                    Agregar a la Bolsa
                   </>
                 )}
               </button>

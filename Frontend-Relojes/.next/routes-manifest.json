@@ -21,7 +21,16 @@
     "afterFiles": [],
     "fallback": []
   },
-  "dynamicRoutes": [],
+  "dynamicRoutes": [
+    {
+      "page": "/categoria/[slug]",
+      "regex": "^/categoria/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/categoria/(?<nxtPslug>[^/]+?)(?:/)?$"
+    }
+  ],
   "staticRoutes": [
     {
       "page": "/",

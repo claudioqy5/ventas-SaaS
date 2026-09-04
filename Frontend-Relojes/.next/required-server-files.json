@@ -105,7 +105,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "C:\\Users\\PC-37\\Desktop\\PROYECTOS CFQY\\VENTASSAAS\\ventas-SaaS\\Frontend-Relojes",
+    "outputFileTracingRoot": "C:\\Users\\FAMURP\\Desktop\\CFQY\\ventas-SaaS",
     "enablePrerenderSourceMaps": true,
     "cacheComponents": false,
     "cacheLife": {
@@ -320,14 +320,14 @@
     "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight",
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.mjs",
-    "repoRoot": "C:\\Users\\PC-37\\Desktop\\PROYECTOS CFQY\\VENTASSAAS\\ventas-SaaS\\Frontend-Relojes",
+    "repoRoot": "C:\\Users\\FAMURP\\Desktop\\CFQY\\ventas-SaaS",
     "turbopack": {
-      "root": "C:\\Users\\PC-37\\Desktop\\PROYECTOS CFQY\\VENTASSAAS\\ventas-SaaS\\Frontend-Relojes"
+      "root": "C:\\Users\\FAMURP\\Desktop\\CFQY\\ventas-SaaS"
     },
     "distDirRoot": ".next"
   },
-  "appDir": "C:\\Users\\PC-37\\Desktop\\PROYECTOS CFQY\\VENTASSAAS\\ventas-SaaS\\Frontend-Relojes",
-  "relativeAppDir": "",
+  "appDir": "C:\\Users\\FAMURP\\Desktop\\CFQY\\ventas-SaaS\\Frontend-Relojes",
+  "relativeAppDir": "Frontend-Relojes",
   "files": [
     ".next\\package.json",
     ".next\\routes-manifest.json",
