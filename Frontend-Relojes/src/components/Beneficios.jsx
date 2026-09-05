@@ -16,7 +16,7 @@ export default function Beneficios() {
     {
       icon: <Headset size={40} strokeWidth={1.5} color="var(--c-indigo)" />,
       title: 'ATENCIÓN 24 HORAS',
-      description: 'Escríbenos al 973012634 por whatsapp',
+      description: 'Escríbenos al 962956919 por whatsapp',
     },
     {
       icon: <ShieldCheck size={40} strokeWidth={1.5} color="var(--c-indigo)" />,
