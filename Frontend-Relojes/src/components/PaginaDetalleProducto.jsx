@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ArrowLeft, ShoppingBag, MessageCircle, ShieldCheck, Check, CreditCard, Sparkles, Truck, Lock, ChevronRight, ChevronLeft, Share2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import TarjetaProducto from './TarjetaProducto';
@@ -308,38 +308,27 @@ export default function PaginaDetalleProducto({
 
             {/* Sección de Precios */}
             <div style={{ marginBottom: '22px' }}>
-              <div style={{
-                fontSize: '1.05rem',
-                textDecoration: 'line-through',
-                color: 'var(--c-taupe)',
-                opacity: 0.6,
-                marginBottom: '2px',
-                fontFamily: 'var(--font-serif)'
-              }}>
-                S/ {Number(product.precio * 1.25).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <span className="font-serif" style={{
-                  fontSize: '2.3rem',
-                  fontWeight: 600,
-                  color: 'var(--c-indigo)'
-                }}>
-                  S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
-                </span>
-                <span style={{
-                  backgroundColor: 'var(--c-blush)',
-                  color: '#ffffff',
-                  fontSize: '0.76rem',
-                  fontWeight: 600,
-                  fontFamily: 'var(--font-serif)',
-                  letterSpacing: '0.06em',
-                  padding: '4px 10px',
-                  borderRadius: '6px',
-                  boxShadow: '0 2px 8px var(--c-blush-glow)'
-                }}>
-                  OFERTA VIP -20%
-                </span>
-              </div>
+              {product.precioOferta > 0 ? (
+                <>
+                  <div style={{ fontSize: '1.05rem', textDecoration: 'line-through', color: 'var(--c-taupe)', opacity: 0.6, marginBottom: '2px', fontFamily: 'var(--font-serif)' }}>
+                    S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <span className="font-serif" style={{ fontSize: '2.3rem', fontWeight: 600, color: 'var(--c-indigo)' }}>
+                      S/ {Number(product.precioOferta).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                    </span>
+                    <span style={{ backgroundColor: 'var(--c-blush)', color: '#ffffff', fontSize: '0.76rem', fontWeight: 600, fontFamily: 'var(--font-serif)', letterSpacing: '0.06em', padding: '4px 10px', borderRadius: '6px', boxShadow: '0 2px 8px var(--c-blush-glow)' }}>
+                      OFERTA VIP -{Math.round((1 - product.precioOferta / product.precio) * 100)}%
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <span className="font-serif" style={{ fontSize: '2.3rem', fontWeight: 600, color: 'var(--c-indigo)' }}>
+                    S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Cuadro Promocional de Cuotas en Paleta del Sistema */}

@@ -80,10 +80,12 @@ public class PublicStoreController : ControllerBase
             p.UnidadMedida,
             p.EsServicio,
             p.Precio,
+            p.PrecioOferta,
             p.PrecioCostal,
             p.KilosPorCostal,
             p.Stock,
-            p.ImagenUrl
+            p.ImagenUrl,
+            p.Imagenes
         });
 
         return Ok(publicProducts);

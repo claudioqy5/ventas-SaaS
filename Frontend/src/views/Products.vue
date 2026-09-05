@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -272,19 +272,49 @@
               </div>
             </div>
 
-            <!-- FILA 5: URL de Imagen y Vista Previa compacta -->
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: end;">
-              <div class="field" style="margin-bottom: 0;">
-                <label>URL de la Imagen (Opcional)</label>
-                <input v-model="form.imagenUrl" type="url" placeholder="https://ejemplo.com/imagen.jpg" />
-              </div>
-              <div class="field" style="margin-bottom: 0;">
-                <label>Vista Previa</label>
-                <div class="image-preview-box-compact">
-                  <img v-if="form.imagenUrl" :src="form.imagenUrl" class="preview-img-compact" alt="Vista previa" />
-                  <span v-else class="preview-placeholder-compact">Sin imagen</span>
+            <!-- FILA 5: Precio de Oferta -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;">
+              <div style="background-color: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; padding: 10px;">
+                <div style="font-size: 0.75rem; font-weight: 500; color: #9f1239; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🏷️ Precio de Oferta</div>
+                <div class="field" style="margin-bottom: 0 !important;">
+                  <label>Precio Oferta (S/.) — 0 = Sin oferta</label>
+                  <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" />
                 </div>
               </div>
+              <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center;">
+                <div style="text-align: center;">
+                  <div style="font-size: 0.8rem; color: #166534; margin-bottom: 4px;">Descuento calculado</div>
+                  <div style="font-size: 1.6rem; font-weight: 700; color: #15803d;">{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}%</div>
+                  <div style="font-size: 0.75rem; color: #166534;">OFF sobre precio base</div>
+                </div>
+              </div>
+              <div v-else style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">Ingresa un precio de oferta mayor a 0 para activar el descuento</span>
+              </div>
+            </div>
+
+            <!-- FILA 6: Subida de imágenes múltiples -->
+            <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; margin-top: 4px;">
+              <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">📷 Imágenes del Producto (máx. 5 imágenes, 5MB c/u)</div>
+              
+              <!-- Botón de subida -->
+              <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
+                <label class="btn btn-secondary-compact" style="cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 6px;">
+                  <input type="file" accept=".jpg,.jpeg,.png,.webp" multiple @change="handleImageUpload" style="display: none;" :disabled="uploadingImage || form.imagenes.length >= 5" />
+                  {{ uploadingImage ? '⏳ Subiendo...' : '📁 Seleccionar imágenes' }}
+                </label>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">{{ form.imagenes.length }}/5 imágenes</span>
+              </div>
+
+              <!-- Vista previa de imágenes subidas -->
+              <div v-if="form.imagenes.length > 0" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <div v-for="(img, idx) in form.imagenes" :key="idx" style="position: relative; width: 80px; height: 80px;">
+                  <img :src="img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);" alt="Imagen producto" />
+                  <button type="button" @click="removeImage(idx)" style="position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1;">✕</button>
+                  <div v-if="idx === 0" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.55); color: white; font-size: 0.6rem; text-align: center; border-radius: 0 0 6px 6px; padding: 2px;">Principal</div>
+                </div>
+              </div>
+              <div v-else style="font-size: 0.8rem; color: var(--text-muted);">Sin imágenes cargadas aún.</div>
             </div>
 
             <!-- BOTONES DE ACCIÓN -->
@@ -331,16 +361,20 @@ const filteredProducts = computed(() => {
   })
 })
 
+const uploadingImage = ref(false)
+
 const form = reactive({
   nombre: '',
   codigoBarras: '',
   precioCosto: 0,
   precio: 0,
+  precioOferta: 0,
   stock: 0,
   stockMinimo: 5,
   descripcion: '',
   categoriaId: '',
   imagenUrl: '',
+  imagenes: [],
   tipoProducto: 'Unidad',
   unidadMedida: 'Unidad',
   esServicio: false,
@@ -457,6 +491,8 @@ const openAddModal = () => {
   form.descripcion = ''
   form.categoriaId = ''
   form.imagenUrl = ''
+  form.imagenes = []
+  form.precioOferta = 0
   form.tipoProducto = 'Unidad'
   form.unidadMedida = 'Unidad'
   form.esServicio = false
@@ -476,6 +512,8 @@ const openEditModal = (product) => {
   form.descripcion = product.descripcion
   form.categoriaId = product.categoriaId
   form.imagenUrl = product.imagenUrl || ''
+  form.imagenes = product.imagenes || []
+  form.precioOferta = product.precioOferta || 0
   form.tipoProducto = product.tipoProducto || 'Unidad'
   form.unidadMedida = product.unidadMedida || 'Unidad'
   form.esServicio = product.esServicio || false
@@ -564,6 +602,40 @@ const fetchInventoryStats = async () => {
   } catch (err) {
     console.error('Error fetching inventory stats', err)
   }
+}
+
+const handleImageUpload = async (event) => {
+  const files = Array.from(event.target.files)
+  if (!files.length) return
+
+  const remaining = 5 - form.imagenes.length
+  const toUpload = files.slice(0, remaining)
+
+  uploadingImage.value = true
+  try {
+    for (const file of toUpload) {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch(API_URL + '/api/uploads/image', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${authStore.token}` },
+        body: formData
+      })
+      if (!res.ok) { alert('Error al subir imagen: ' + file.name); continue }
+      const data = await res.json()
+      form.imagenes.push(data.url)
+      // La primera imagen también queda como imagenUrl principal (compatibilidad)\r
+      if (form.imagenes.length === 1) form.imagenUrl = data.url
+    }
+  } finally {
+    uploadingImage.value = false
+    event.target.value = '' // reset input for re-upload\r
+  }
+}
+
+const removeImage = (index) => {
+  form.imagenes.splice(index, 1)
+  form.imagenUrl = form.imagenes.length > 0 ? form.imagenes[0] : ''
 }
 
 const handleLogout = () => {

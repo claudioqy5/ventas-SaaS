@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Eye, ShoppingBag, MessageCircle, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -236,22 +236,30 @@ export default function TarjetaProducto({
         paddingTop: '14px',
         marginTop: '10px'
       }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'baseline',
-          marginBottom: '14px'
-        }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '6px' }}>
           <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500 }}>
-            Valor de Catálogo
+            Valor de Cat\u00e1logo
           </span>
-          <div className="font-serif" style={{
-            fontSize: '1.35rem',
-            fontWeight: 600,
-            color: 'var(--c-indigo)',
-            whiteSpace: 'nowrap'
-          }}>
-            S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
+            {product.precioOferta > 0 ? (
+              <>
+                <span style={{ fontSize: '0.85rem', textDecoration: 'line-through', color: 'var(--c-taupe)', opacity: 0.6, fontFamily: 'var(--font-serif)', whiteSpace: 'nowrap' }}>
+                  S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className="font-serif" style={{ fontSize: '1.35rem', fontWeight: 600, color: 'var(--c-indigo)', whiteSpace: 'nowrap' }}>
+                    S/ {Number(product.precioOferta).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                  </span>
+                  <span style={{ backgroundColor: '#ef4444', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '2px 7px', borderRadius: '6px', whiteSpace: 'nowrap' }}>
+                    -{Math.round((1 - product.precioOferta / product.precio) * 100)}%
+                  </span>
+                </div>
+              </>
+            ) : (
+              <div className="font-serif" style={{ fontSize: '1.35rem', fontWeight: 600, color: 'var(--c-indigo)', whiteSpace: 'nowrap' }}>
+                S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+              </div>
+            )}
           </div>
         </div>
 

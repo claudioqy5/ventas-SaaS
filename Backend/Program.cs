@@ -9,6 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Registrar servicios en el contenedor de dependencias
 builder.Services.AddControllers();
 
+// Permitir subida de archivos de hasta 5 MB en multipart/form-data
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 5 * 1024 * 1024;
+});
+
 // Configurar politicas de acceso CORS
 builder.Services.AddCors(options =>
 {
@@ -65,6 +71,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAll");
+
+// Servir los archivos de imágenes subidos como contenido estático accesible vía URL
+var uploadsPath = Path.Combine(app.Environment.ContentRootPath, "uploads");
+Directory.CreateDirectory(uploadsPath);
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(uploadsPath),
+    RequestPath = "/uploads"
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

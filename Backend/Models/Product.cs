@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -75,7 +76,15 @@ public class Product
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal StockMinimo { get; set; }
 
-    // URL de la imagen del producto (puede ser un enlace externo o una imagen subida)
+    // URL de la imagen principal del producto (compatibilidad hacia atrás)
     public string ImagenUrl { get; set; } = string.Empty;
+
+    // Lista de URLs para galería de múltiples imágenes (el primer elemento equivale a ImagenUrl)
+    public List<string> Imagenes { get; set; } = new List<string>();
+
+    // Precio de oferta/descuento para la tienda virtual. 0 = sin oferta activa.
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal PrecioOferta { get; set; } = 0;
+
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 }

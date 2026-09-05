@@ -25,6 +25,8 @@ services:
       - MongoDB__ConnectionString=mongodb://mongodb:27017
       - MongoDB__DatabaseName=VentasSaaS
       - JwtSettings__Secret=SuperSecretSaaSKeyOfLengthGreaterThan32Characters!12345
+    volumes:
+      - uploads_data:/app/uploads
     depends_on:
       - mongodb
     networks:
@@ -47,6 +49,7 @@ services:
 
 volumes:
   mongo_data:
+  uploads_data:
 
 networks:
   saas_network:
