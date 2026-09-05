@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, X, SlidersHorizontal } from 'lucide-react';
 
-export default function PanelFiltros({ filters, setFilters }) {
+export default function PanelFiltros({ filters, setFilters, isMobileOpen, onCloseMobile }) {
   const [openSections, setOpenSections] = useState({
     precio: true,
     disponibilidad: true,
@@ -19,6 +19,10 @@ export default function PanelFiltros({ filters, setFilters }) {
       priceRange: { ...prev.priceRange, [type]: val },
     }));
   };
+
+  const activeCount = (filters.priceRange.min !== '' || filters.priceRange.max !== '' ? 1 : 0) +
+                      (filters.inStockOnly ? 1 : 0) +
+                      filters.materials.length;
 
   const SectionHeader = ({ title, section }) => (
     <div
@@ -40,19 +44,33 @@ export default function PanelFiltros({ filters, setFilters }) {
     </div>
   );
 
-  return (
-    <aside style={{
-      width: '260px',
-      flexShrink: 0,
-      backgroundColor: '#ffffff',
-      padding: '24px',
-      borderRadius: '12px',
-      border: '1px solid rgba(115, 96, 91, 0.15)',
-      alignSelf: 'flex-start',
-      position: 'sticky',
-      top: '100px'
-    }}>
-      <h3 style={{ fontSize: '0.9rem', color: 'var(--c-taupe)', marginBottom: '20px', letterSpacing: '0.05em' }}>FILTRAR POR:</h3>
+  const filterBody = (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <SlidersHorizontal size={18} color="var(--c-indigo)" />
+          <h3 style={{ fontSize: '0.9rem', color: 'var(--c-deep-purple)', letterSpacing: '0.05em', margin: 0, fontWeight: 700, textTransform: 'uppercase' }}>
+            FILTRAR POR {activeCount > 0 && <span style={{ color: 'var(--c-indigo)', fontWeight: 800 }}>({activeCount})</span>}
+          </h3>
+        </div>
+        {onCloseMobile && (
+          <button
+            onClick={onCloseMobile}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--c-deep-purple)',
+              padding: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <X size={22} />
+          </button>
+        )}
+      </div>
 
       {/* Rango de Precios */}
       <SectionHeader title="Precio" section="precio" />
@@ -151,6 +169,48 @@ export default function PanelFiltros({ filters, setFilters }) {
         Limpiar Filtros
       </button>
 
-    </aside>
+      {/* Botón de Ver Resultados en Móvil */}
+      {onCloseMobile && (
+        <button
+          onClick={onCloseMobile}
+          style={{
+            width: '100%',
+            marginTop: '16px',
+            padding: '12px',
+            backgroundColor: 'var(--c-indigo)',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '0.85rem',
+            fontWeight: 700,
+            cursor: 'pointer',
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            boxShadow: '0 4px 14px rgba(45, 66, 98, 0.25)'
+          }}
+        >
+          Ver Resultados
+        </button>
+      )}
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar (visible on desktop) */}
+      <aside className="panel-filtros-desktop">
+        {filterBody}
+      </aside>
+
+      {/* Mobile Drawer (visible when isMobileOpen is true) */}
+      {isMobileOpen && (
+        <div className="panel-filtros-mobile-overlay" onClick={onCloseMobile}>
+          <div className="panel-filtros-mobile-drawer" onClick={(e) => e.stopPropagation()}>
+            {filterBody}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
+

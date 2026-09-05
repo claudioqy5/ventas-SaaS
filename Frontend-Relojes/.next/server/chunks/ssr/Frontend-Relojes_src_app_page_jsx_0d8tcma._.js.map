@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../../Frontend-Relojes/src/app/page.jsx"],"sourcesContent":["\"use client\";\r\nimport App from '../App';\r\nimport '../App.css';\r\n\r\nexport default function Page() {\r\n  return <App />;\r\n}\r\n"],"names":["Page"],"mappings":"wDACA,EAAA,EAAA,CAAA,CAAA,wBAGe,SAASA,EACtB,MAAO,CAAA,EAAA,EAAA,GAAA,EAAC,EAAA,OAAG,CAAA,CAAA,EACb"}

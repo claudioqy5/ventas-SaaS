@@ -12,7 +12,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
   }, []);
 
   return (
-    <section style={{
+    <section className="hero-section" style={{
       position: 'relative',
       minHeight: 'calc(100vh - 85px)',
       display: 'flex',
@@ -20,7 +20,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
       /* overflow: hidden quitado para permitir que la tarjeta sobresalga hacia abajo */
     }}>
       {/* Columna Derecha: Galería de Relojes (Crossfade) Full Bleed */}
-      <div style={{
+      <div className="hero-images" style={{
         position: 'absolute',
         top: 0,
         right: 0,
@@ -75,7 +75,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         zIndex: 0
       }} />
 
-      <div style={{
+      <div className="hero-content-wrapper" style={{
         width: '100%',
         padding: '50px 5%', /* Padding fluido para que se apegue más a la izquierda en pantallas anchas */
         display: 'flex',
@@ -84,7 +84,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         zIndex: 2
       }}>
         {/* Columna Izquierda: Mensaje en fondo luminoso */}
-        <div style={{ width: '45%', paddingRight: '4%', position: 'relative' }}>
+        <div className="hero-content" style={{ width: '45%', paddingRight: '4%', position: 'relative' }}>
           {/* Badge de Alta Horlogerie */}
           <div style={{
             display: 'inline-flex',
@@ -121,8 +121,8 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
               fontWeight: 300,
               letterSpacing: '0.09em',
               textTransform: 'uppercase',
-              color: '#2b272c',
-              whiteSpace: 'nowrap'
+              color: '#2b272c'
+
             }}>
               VALOR EN CADA
             </span>
@@ -155,7 +155,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
           </p>
 
           {/* Botones de Acción */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginBottom: '50px' }}>
+          <div className="hero-buttons" style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginBottom: '50px' }}>
             <button
               onClick={onExplore}
               className="btn-indigo blush-shimmer"
@@ -202,6 +202,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
 
       {/* Tarjeta Flotante Promocional para incentivar Scroll (Pegada al fondo de la sección) */}
       <div 
+        className="hero-promo-card"
         onClick={onExplore}
         style={{
           position: 'absolute',

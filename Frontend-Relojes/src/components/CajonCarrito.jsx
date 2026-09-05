@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Trash2, ShoppingBag, Send } from 'lucide-react';
+import { X, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 
 export default function CajonCarrito({
   isOpen,
@@ -10,11 +10,6 @@ export default function CajonCarrito({
   onClearCart,
   whatsappNumber = '51962956919'
 }) {
-  const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
-  const [customerAddress, setCustomerAddress] = useState('');
-  const [notes, setNotes] = useState('');
-
   // Control de animación suave de entrada y salida
   const [render, setRender] = useState(isOpen);
   const [visible, setVisible] = useState(false);
@@ -62,33 +57,11 @@ export default function CajonCarrito({
 
   const total = items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
 
-  const handleCheckoutWhatsApp = () => {
-    if (items.length === 0) return;
-
-    let message = `🛍️ *PEDIDO DE COMPRA - TEMPO PRECISO*\n`;
-    message += `═══════════════════════════\n`;
-    if (customerName) message += `👤 *Cliente:* ${customerName}\n`;
-    if (customerPhone) message += `📞 *Teléfono:* ${customerPhone}\n`;
-    if (customerAddress) message += `📍 *Dirección de Entrega:* ${customerAddress}\n`;
-    if (notes) message += `📝 *Observaciones:* ${notes}\n`;
-    message += `═══════════════════════════\n`;
-    message += `*GUARDATIEMPOS SELECCIONADOS:*\n`;
-
-    items.forEach((item, index) => {
-      message += `\n${index + 1}. *${item.nombre}*\n`;
-      message += `   • Cantidad: ${item.quantity} ${item.unidadMedida || 'pza'}\n`;
-      message += `   • Precio unitario: S/ ${Number(item.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}\n`;
-      message += `   • Subtotal: S/ ${Number(item.precio * item.quantity).toLocaleString('es-PE', { minimumFractionDigits: 2 })}\n`;
-    });
-
-    message += `\n═══════════════════════════\n`;
-    message += `💰 *TOTAL GENERAL:* S/ ${Number(total).toLocaleString('es-PE', { minimumFractionDigits: 2 })}\n`;
-    message += `═══════════════════════════\n`;
-    message += `🛡️ *Incluye:* Garantía Internacional 5 años, estuche de nogal y entrega asegurada.\n\n`;
-    message += `Deseo coordinar la reserva y el método de pago con el Concierge.`;
-
-    const encoded = encodeURIComponent(message);
-    window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encoded}`, '_blank');
+  const handleGoToCheckout = () => {
+    onClose();
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
   };
 
   return (
@@ -112,7 +85,7 @@ export default function CajonCarrito({
         onClick={(e) => e.stopPropagation()}
         style={{
           width: '100%',
-          maxWidth: '480px',
+          maxWidth: '440px',
           height: '100%',
           backgroundColor: '#ffffff',
           borderLeft: '1px solid rgba(115, 96, 91, 0.2)',
@@ -123,7 +96,8 @@ export default function CajonCarrito({
           padding: '28px',
           overflowY: 'auto',
           transform: visible ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s ease'
+          transition: 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s ease',
+          boxSizing: 'border-box'
         }}
       >
         {/* Header de la Bolsa */}
@@ -137,12 +111,12 @@ export default function CajonCarrito({
             marginBottom: '20px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <ShoppingBag size={20} color="var(--c-indigo)" />
+              <ShoppingBag size={18} color="var(--c-indigo)" />
               <h3 className="font-serif" style={{
-                fontSize: '1.25rem',
+                fontSize: '1.15rem',
                 color: 'var(--c-deep-purple)',
-                letterSpacing: '0.04em',
-                fontWeight: 800
+                letterSpacing: '0.02em',
+                fontWeight: 600
               }}>
                 Bolsa de Compras
               </h3>
@@ -173,16 +147,16 @@ export default function CajonCarrito({
               padding: '60px 20px',
               color: 'var(--c-taupe)'
             }}>
-              <ShoppingBag size={48} color="var(--c-blush)" style={{ margin: '0 auto 16px' }} />
-              <p className="font-serif" style={{ fontSize: '1.05rem', color: 'var(--c-deep-purple)', marginBottom: '8px', fontWeight: 700 }}>
+              <ShoppingBag size={44} color="var(--c-blush)" style={{ margin: '0 auto 16px' }} />
+              <p className="font-serif" style={{ fontSize: '1rem', color: 'var(--c-deep-purple)', marginBottom: '8px', fontWeight: 600 }}>
                 Tu bolsa de compras está vacía
               </p>
-              <p style={{ fontSize: '0.86rem', color: 'var(--c-taupe)' }}>
+              <p style={{ fontSize: '0.84rem', color: 'var(--c-taupe)', fontFamily: 'var(--font-serif)' }}>
                 Explora el catálogo y añade los relojes que deseas ordenar.
               </p>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxHeight: '35vh', overflowY: 'auto', paddingRight: '4px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxHeight: '58vh', overflowY: 'auto', paddingRight: '4px' }}>
               {items.map((item) => (
                 <div
                   key={item.id}
@@ -200,8 +174,8 @@ export default function CajonCarrito({
                     src={item.imagenUrl}
                     alt={item.nombre}
                     style={{
-                      width: '60px',
-                      height: '60px',
+                      width: '56px',
+                      height: '56px',
                       borderRadius: '8px',
                       objectFit: 'cover',
                       border: '1px solid rgba(115, 96, 91, 0.15)'
@@ -210,18 +184,18 @@ export default function CajonCarrito({
 
                   <div style={{ flex: 1 }}>
                     <h4 className="font-serif" style={{
-                      fontSize: '0.88rem',
+                      fontSize: '0.86rem',
                       color: 'var(--c-deep-purple)',
                       marginBottom: '4px',
-                      lineHeight: 1.2,
-                      fontWeight: 800
+                      lineHeight: 1.25,
+                      fontWeight: 600
                     }}>
                       {item.nombre}
                     </h4>
-                    <div style={{
+                    <div className="font-serif" style={{
                       fontSize: '0.86rem',
                       color: 'var(--c-indigo)',
-                      fontWeight: 800
+                      fontWeight: 600
                     }}>
                       S/ {Number(item.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                     </div>
@@ -237,12 +211,13 @@ export default function CajonCarrito({
                           height: '24px',
                           borderRadius: '4px',
                           cursor: 'pointer',
-                          fontWeight: 700
+                          fontWeight: 500,
+                          fontSize: '0.9rem'
                         }}
                       >
                         -
                       </button>
-                      <span style={{ fontSize: '0.82rem', color: 'var(--c-deep-purple)', fontWeight: 700 }}>
+                      <span className="font-serif" style={{ fontSize: '0.82rem', color: 'var(--c-deep-purple)', fontWeight: 600 }}>
                         {item.quantity}
                       </span>
                       <button
@@ -255,7 +230,8 @@ export default function CajonCarrito({
                           height: '24px',
                           borderRadius: '4px',
                           cursor: 'pointer',
-                          fontWeight: 700
+                          fontWeight: 500,
+                          fontSize: '0.9rem'
                         }}
                       >
                         +
@@ -280,78 +256,9 @@ export default function CajonCarrito({
               ))}
             </div>
           )}
-
-          {/* Formulario Concierge de Entrega */}
-          {items.length > 0 && (
-            <div style={{
-              marginTop: '20px',
-              paddingTop: '16px',
-              borderTop: '1px solid rgba(115, 96, 91, 0.15)'
-            }}>
-              <div style={{
-                fontSize: '0.74rem',
-                fontFamily: 'var(--font-serif)',
-                color: 'var(--c-indigo)',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                fontWeight: 800,
-                marginBottom: '10px'
-              }}>
-                ✦ Datos del Titular para la Entrega
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <input
-                  type="text"
-                  placeholder="Nombre y Apellidos"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  style={{
-                    backgroundColor: '#ffffff',
-                    border: '1px solid rgba(115, 96, 91, 0.2)',
-                    borderRadius: '8px',
-                    padding: '9px 12px',
-                    color: 'var(--c-deep-purple)',
-                    fontSize: '0.84rem',
-                    outline: 'none'
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="Teléfono / WhatsApp de contacto"
-                  value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  style={{
-                    backgroundColor: '#ffffff',
-                    border: '1px solid rgba(115, 96, 91, 0.2)',
-                    borderRadius: '8px',
-                    padding: '9px 12px',
-                    color: 'var(--c-deep-purple)',
-                    fontSize: '0.84rem',
-                    outline: 'none'
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="Dirección o Ciudad de Entrega"
-                  value={customerAddress}
-                  onChange={(e) => setCustomerAddress(e.target.value)}
-                  style={{
-                    backgroundColor: '#ffffff',
-                    border: '1px solid rgba(115, 96, 91, 0.2)',
-                    borderRadius: '8px',
-                    padding: '9px 12px',
-                    color: 'var(--c-deep-purple)',
-                    fontSize: '0.84rem',
-                    outline: 'none'
-                  }}
-                />
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Footer y Checkout de WhatsApp */}
+        {/* Footer y Botón Ir a Comprar */}
         {items.length > 0 && (
           <div style={{
             borderTop: '1px solid rgba(115, 96, 91, 0.15)',
@@ -361,12 +268,13 @@ export default function CajonCarrito({
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
-              marginBottom: '6px',
-              fontSize: '0.82rem',
+              marginBottom: '8px',
+              fontSize: '0.8rem',
+              fontFamily: 'var(--font-serif)',
               color: 'var(--c-taupe)'
             }}>
               <span>Custodia y Transporte Asegurado</span>
-              <span style={{ color: 'var(--c-indigo)', fontWeight: 700 }}>Cortesía VIP (S/ 0.00)</span>
+              <span style={{ color: 'var(--c-indigo)', fontWeight: 600 }}>Cortesía VIP (S/ 0.00)</span>
             </div>
 
             <div style={{
@@ -375,12 +283,12 @@ export default function CajonCarrito({
               alignItems: 'baseline',
               marginBottom: '18px'
             }}>
-              <span className="font-serif" style={{ fontSize: '1rem', color: 'var(--c-deep-purple)', letterSpacing: '0.04em', fontWeight: 800 }}>
+              <span className="font-serif" style={{ fontSize: '0.95rem', color: 'var(--c-deep-purple)', letterSpacing: '0.02em', fontWeight: 500 }}>
                 Total a Liquidar:
               </span>
               <span className="font-serif" style={{
-                fontSize: '1.6rem',
-                fontWeight: 800,
+                fontSize: '1.45rem',
+                fontWeight: 600,
                 color: 'var(--c-indigo)'
               }}>
                 S/ {Number(total).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
@@ -388,38 +296,26 @@ export default function CajonCarrito({
             </div>
 
             <button
-              onClick={handleCheckoutWhatsApp}
+              onClick={handleGoToCheckout}
+              className="btn-indigo blush-shimmer"
               style={{
                 width: '100%',
-                background: '#25d366',
-                color: '#ffffff',
+                padding: '14px 20px',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.84rem',
                 fontFamily: 'var(--font-serif)',
-                fontSize: '0.86rem',
-                letterSpacing: '0.1em',
-                fontWeight: 800,
+                fontWeight: 500,
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
-                padding: '14px',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '10px',
-                boxShadow: '0 4px 18px rgba(37, 211, 102, 0.35)',
-                transition: 'all 0.25s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.filter = 'brightness(1.08)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.filter = 'brightness(1)';
-                e.currentTarget.style.transform = 'translateY(0)';
+                gap: '8px'
               }}
             >
-              <Send size={16} />
-              Finalizar Pedido vía WhatsApp
+              <ShoppingBag size={17} />
+              IR A COMPRAR
+              <ArrowRight size={15} />
             </button>
           </div>
         )}

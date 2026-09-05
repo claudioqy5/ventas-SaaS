@@ -1,0 +1,13 @@
+var R=require("../../../chunks/ssr/[turbopack]_runtime.js")("server/app/producto/[id]/page.js")
+R.c("server/chunks/ssr/Frontend-Relojes_1bv_vv3._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0nl6umb._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__1bu680h._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__01j0f16._.js")
+R.c("server/chunks/ssr/Frontend-Relojes_src_app_layout_jsx_0ey3rqx._.js")
+R.c("server/chunks/ssr/21a0_next_dist_client_components_0fxgb7a._.js")
+R.c("server/chunks/ssr/21a0_next_dist_client_components_builtin_forbidden_1z9avhd.js")
+R.c("server/chunks/ssr/21a0_next_dist_client_components_builtin_unauthorized_1e629ts.js")
+R.c("server/chunks/ssr/21a0_next_dist_client_components_builtin_global-error_1elayzz.js")
+R.c("server/chunks/ssr/Frontend-Relojes__next-internal_server_app_producto_[id]_page_actions_0np4rd-.js")
+R.m(86213)
+module.exports=R.m(86213).exports

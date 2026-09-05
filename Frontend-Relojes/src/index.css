@@ -12,13 +12,13 @@
   --c-deep-purple: #363237;   /* Deep Purple elegante */
   --c-indigo: #2D4262;        /* Indigo sofisticado */
   --c-indigo-hover: #1f2f47;
-  --c-taupe: #73605B;         /* Taupe cálido */
+  --c-taupe: #73605B;         /* Taupe cÃ¡lido */
   --c-blush: #D09683;         /* Blush terracota/oro rosa */
   --c-blush-light: #faece7;
   --c-blush-glow: rgba(208, 150, 131, 0.35);
 
   /* BLANCOS Y FONDOS LUMINOSOS */
-  --bg-main: #fbfaf8;         /* Fondo perla claro, cálido y elegante */
+  --bg-main: #fbfaf8;         /* Fondo perla claro, cÃ¡lido y elegante */
   --bg-surface: #ffffff;      /* Blanco puro */
   --bg-card: #ffffff;
   --bg-card-alt: #f6f3ee;
@@ -34,12 +34,12 @@
   --shadow-hover: 0 20px 45px -10px rgba(45, 66, 98, 0.16), 0 0 20px -5px rgba(208, 150, 131, 0.3);
 
   /* TEXTO */
-  --text-primary: #363237;    /* Deep purple oscuro para máxima legibilidad */
-  --text-secondary: #73605B;  /* Taupe para subtítulos y notas */
+  --text-primary: #363237;    /* Deep purple oscuro para mÃ¡xima legibilidad */
+  --text-secondary: #73605B;  /* Taupe para subtÃ­tulos y notas */
   --text-muted: #8e7c77;      /* Taupe suave */
   --text-light: #ffffff;
 
-  /* TIPOGRAFÍAS */
+  /* TIPOGRAFÃAS */
   --font-main: 'Montserrat', sans-serif;
   --font-serif: 'Montserrat', sans-serif;
   --font-classic: 'Montserrat', sans-serif;
@@ -54,9 +54,16 @@
   --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-* {
+html, body {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+}
+
+* {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -67,13 +74,13 @@ body {
   color: var(--text-primary);
   font-family: 'Montserrat', sans-serif;
   min-height: 100vh;
-  overflow-x: hidden;
   position: relative;
   background-image: 
     radial-gradient(circle at 15% 10%, rgba(208, 150, 131, 0.12) 0%, transparent 45%),
     radial-gradient(circle at 85% 25%, rgba(45, 66, 98, 0.08) 0%, transparent 40%),
     radial-gradient(circle at 50% 75%, rgba(115, 96, 91, 0.06) 0%, transparent 50%);
 }
+
 
 /* Scrollbar estilizado en la paleta del cliente */
 ::-webkit-scrollbar {
@@ -90,7 +97,7 @@ body {
   background: var(--c-indigo);
 }
 
-/* Tipografía Global: Montserrat (Pesos suaves y finos para máxima elegancia) */
+/* TipografÃ­a Global: Montserrat (Pesos suaves y finos para mÃ¡xima elegancia) */
 .font-serif {
   font-family: 'Montserrat', sans-serif;
   letter-spacing: 0.02em;
@@ -107,7 +114,7 @@ body {
   font-family: 'Cinzel', serif !important;
 }
 
-/* Tipografía Geomanist / Outfit */
+/* TipografÃ­a Geomanist / Outfit */
 .brand-geomanist {
   font-family: 'Montserrat', sans-serif;
   letter-spacing: -0.02em;
@@ -138,7 +145,7 @@ body {
   display: inline-block;
 }
 
-/* Tipografías de Alto Status y Lujo */
+/* TipografÃ­as de Alto Status y Lujo */
 .font-cormorant {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
@@ -149,7 +156,7 @@ body {
   font-weight: 400;
 }
 
-/* Kicker de lujo con líneas sutiles en oro rosa/blush */
+/* Kicker de lujo con lÃ­neas sutiles en oro rosa/blush */
 .hero-luxury-kicker {
   display: inline-flex;
   align-items: center;
@@ -177,7 +184,7 @@ body {
   background: linear-gradient(to left, transparent, var(--c-blush));
 }
 
-/* Título de Status Principal */
+/* TÃ­tulo de Status Principal */
 .hero-luxury-title {
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(3.2rem, 5.8vw, 5.2rem);
@@ -188,7 +195,7 @@ body {
   font-weight: 500;
 }
 
-/* Variante 1: Montserrat con Itálica Dorada */
+/* Variante 1: Montserrat con ItÃ¡lica Dorada */
 .hero-luxury-title-v1 {
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(3.2rem, 5.8vw, 5.2rem);
@@ -212,7 +219,7 @@ body {
   display: inline-block;
 }
 
-/* Accent Shimmer Metálico para texto de lujo */
+/* Accent Shimmer MetÃ¡lico para texto de lujo */
 .luxury-title-accent {
   background: linear-gradient(135deg, var(--c-indigo) 0%, #1b263b 35%, #b8860b 70%, var(--c-blush) 100%);
   -webkit-background-clip: text;
@@ -255,7 +262,7 @@ body {
   50% { transform: translateY(-7px); }
 }
 
-/* Botón Primario: Indigo con realce Blush */
+/* BotÃ³n Primario: Indigo con realce Blush */
 .btn-indigo {
   background: var(--c-indigo);
   color: #ffffff;
@@ -282,7 +289,7 @@ body {
   box-shadow: 0 10px 25px rgba(45, 66, 98, 0.3);
 }
 
-/* Botón Secundario: Blanco con borde Taupe y hover Blush */
+/* BotÃ³n Secundario: Blanco con borde Taupe y hover Blush */
 .btn-outline-luxury {
   background: #ffffff;
   color: var(--c-deep-purple);
@@ -310,7 +317,7 @@ body {
   box-shadow: 0 6px 20px var(--c-blush-glow);
 }
 
-/* Botón Blush cálido */
+/* BotÃ³n Blush cÃ¡lido */
 .btn-blush {
   background: var(--c-blush);
   color: #ffffff;
@@ -336,7 +343,7 @@ body {
   box-shadow: 0 10px 25px rgba(208, 150, 131, 0.5);
 }
 
-/* Animación Marquee para Top Bar */
+/* AnimaciÃ³n Marquee para Top Bar */
 @keyframes marquee-scroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
@@ -359,4 +366,400 @@ body {
   color: var(--c-indigo);
   letter-spacing: 0.12em;
 }
+
+
+/* =========================================================
+   Surgical Mobile Overrides (Max-width: 768px)
+   ========================================================= */
+@media (max-width: 768px) {
+  /* Navbar */
+  .navbar-main {
+    padding: 12px 15px !important;
+    gap: 12px !important;
+    position: relative !important;
+  }
+  .mobile-menu-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  .navbar-links {
+    display: none !important; /* Hidden by default */
+  }
+  .navbar-links.mobile-open {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    width: 100% !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    padding: 20px 24px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+    z-index: 100 !important;
+    border-top: 1px solid rgba(115, 96, 91, 0.1) !important;
+    gap: 20px !important;
+  }
+  .navbar-links.mobile-open > a {
+    width: 100% !important;
+    padding: 10px 0 !important;
+    border-bottom: 1px solid rgba(115, 96, 91, 0.05) !important;
+  }
+  .navbar-links::-webkit-scrollbar {
+    display: none;
+  }
+  .navbar-search {
+    /* Prevent search bar from taking too much width on mobile */
+    max-width: 180px !important;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    min-height: auto !important;
+    padding-top: 40px !important;
+    padding-bottom: 30px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .hero-images {
+    width: 100% !important;
+    opacity: 0.15 !important; /* Make it a subtle background */
+    box-shadow: none !important;
+  }
+  .hero-content-wrapper {
+    padding: 20px 16px !important;
+    width: 100% !important;
+  }
+  .hero-content {
+    width: 100% !important;
+    padding-right: 0 !important;
+    text-align: center !important;
+  }
+  .hero-content h2 {
+    font-size: clamp(2.1rem, 7.5vw, 2.9rem) !important;
+  }
+  .hero-content h2, .hero-content p {
+    text-align: center !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-content > div:first-child {
+    /* The Alta Relojeria badge */
+    justify-content: center !important;
+  }
+  .hero-buttons {
+    justify-content: center !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+  .hero-buttons > button {
+    width: 100% !important;
+    max-width: 320px !important;
+  }
+  .hero-content > div:last-child {
+    /* The 100% and 5 AÑOS seals */
+    margin: 0 auto !important;
+    max-width: 100% !important;
+  }
+  
+  /* Promo Card: Posición relativa fluida en móvil para no tapar texto ni sellos en ninguna resolución */
+  .hero-promo-card {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: calc(100% - 32px) !important;
+    max-width: 520px !important;
+    margin: 32px auto 0 !important;
+    padding: 30px 24px !important;
+    box-shadow: 0 15px 35px rgba(45, 66, 98, 0.22) !important;
+  }
+  .hero-promo-card:hover {
+    transform: translateY(-4px) !important;
+  }
+  .hero-promo-card .font-serif {
+    font-size: clamp(2.4rem, 8.5vw, 3.4rem) !important;
+  }
+
+  /* Catalog Main */
+  .catalog-main {
+    padding: 45px 16px 50px !important;
+  }
+  .catalog-layout {
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+  .catalog-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .catalog-controls-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+  .catalog-controls-bar select {
+    padding: 6px 10px !important;
+    font-size: 0.78rem !important;
+  }
+
+  /* Horizontal Scrollable Category Ribbon (Cinta Deslizable de Categorías) */
+  .category-chips-container {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 24px !important;
+    gap: 8px !important;
+    width: 100% !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  .category-chips-container::-webkit-scrollbar {
+    display: none !important;
+  }
+  .category-chips-container > button {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 7px 16px !important;
+    font-size: 0.74rem !important;
+  }
+
+  
+  /* Mobile Filter Trigger Button */
+  .mobile-filter-trigger-btn {
+    display: inline-flex !important;
+  }
+
+  /* Hide Desktop Sidebar on Mobile */
+  .panel-filtros-desktop {
+    display: none !important;
+  }
+
+  /* Mobile Slide-Over Drawer Modal (Igual al Carrito de Compras) */
+  .panel-filtros-mobile-overlay {
+    display: flex !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background-color: rgba(24, 18, 25, 0.6) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    z-index: 100 !important;
+    justify-content: flex-start !important;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .panel-filtros-mobile-drawer {
+    width: 85% !important;
+    max-width: 360px !important;
+    height: 100% !important;
+    background-color: #ffffff !important;
+    padding: 24px !important;
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.25) !important;
+    overflow-y: auto !important;
+    animation: slideInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  /* Product Grid adjustments - Adaptable a pantallas desde 320px */
+  .catalog-layout > div:last-child > div[style*="grid-template-columns"] {
+    width: 100% !important;
+  }
+}
+
+/* Grid de 4 productos exactos sin huecos laterales en escritorio */
+.grid-4-products {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 30px !important;
+  width: 100% !important;
+}
+
+@media (max-width: 1280px) {
+  .grid-4-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 20px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-4-products {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+  }
+}
+
+/* Base Desktop Sidebar Rules */
+.panel-filtros-desktop {
+  width: 260px;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(115, 96, 91, 0.15);
+  align-self: flex-start;
+  position: sticky;
+  top: 100px;
+}
+
+.panel-filtros-mobile-overlay {
+  display: none;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+
+/* =========================================================
+   Marcas Section (Desktop: Left-to-Right | Mobile: Right-to-Left)
+   ========================================================= */
+.marcas-section {
+  width: 100%;
+  background-color: #fdfdfd;
+  border-top: 1px solid rgba(115, 96, 91, 0.1);
+  border-bottom: 1px solid rgba(115, 96, 91, 0.1);
+  padding: 130px 0 50px;
+  overflow: hidden;
+}
+
+.marcas-wrapper {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+.marcas-title {
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  color: var(--c-taupe);
+  text-transform: uppercase;
+  margin-bottom: 35px;
+  font-weight: 600;
+}
+
+.marcas-marquee-container {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.marcas-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 75px;
+  width: max-content;
+  /* ESCRITORIO (WEB): Movimiento perpetuo de IZQUIERDA a DERECHA */
+  animation: marcas-marquee-left-to-right 32s linear infinite;
+  will-change: transform;
+}
+
+.marcas-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.marca-item {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: grayscale(100%) opacity(0.65);
+  flex-shrink: 0;
+}
+
+.marca-item:hover {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.1);
+}
+
+/* Animación Desktop (Web): Izquierda a Derecha */
+@keyframes marcas-marquee-left-to-right {
+  0% {
+    transform: translateX(-33.333%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Animación Mobile: Derecha a Izquierda */
+@keyframes marcas-marquee-right-to-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+@media (max-width: 768px) {
+  .marcas-section {
+    padding: 90px 0 35px !important;
+  }
+  .marcas-marquee-track {
+    gap: 40px !important;
+    /* MÓVIL: Movimiento perpetuo de Derecha a Izquierda */
+    animation: marcas-marquee-right-to-left 22s linear infinite !important;
+  }
+}
+
+/* =========================================================
+   Product Detail Page Mobile Responsive Rules
+   ========================================================= */
+@media (max-width: 900px) {
+  .product-detail-layout {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .product-detail-gallery {
+    flex-direction: column-reverse !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+
+  .product-detail-thumbs {
+    flex-direction: row !important;
+    width: 100% !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+
+  .product-detail-thumbs > button {
+    width: 70px !important;
+    height: 70px !important;
+  }
+
+  .product-detail-main-img {
+    height: 360px !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-detail-main-img {
+    height: 300px !important;
+  }
+}
+
 

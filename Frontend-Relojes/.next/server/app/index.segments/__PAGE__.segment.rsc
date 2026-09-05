@@ -1,0 +1,19 @@
+1:"$Sreact.fragment"
+2:I[66407,["/_next/static/chunks/0x6j_bhkc0-g4.js"],"ClientPageRoot"]
+3:I[56994,["/_next/static/chunks/0x6j_bhkc0-g4.js","/_next/static/chunks/0d2xul7k78b7u.js","/_next/static/chunks/0tmbd7ne76iox.js"],"default"]
+6:I[96332,["/_next/static/chunks/0x6j_bhkc0-g4.js"],"OutletBoundary"]
+7:"$Sreact.suspense"
+b:I[96332,["/_next/static/chunks/0x6j_bhkc0-g4.js"],"ViewportBoundary"]
+c:I[96332,["/_next/static/chunks/0x6j_bhkc0-g4.js"],"MetadataBoundary"]
+:HL["/_next/static/chunks/43trfpu44tw-e.css","style"]
+a:X
+0:{"buildId":"Y1NkRjma32uLQgq8kMKtb","data":[{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/43trfpu44tw-e.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/0d2xul7k78b7u.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/0tmbd7ne76iox.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":"$@9","staleTime":"$a","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$Lb",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#09090b"}]]}],["$","div",null,{"hidden":true,"children":["$","$Lc",null,{"children":["$","$7",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Tempo Preciso | Boutique de Alta Relojería en Perú"}],["$","meta","1",{"name":"description","content":"Descubre el catálogo privado de Tempo Preciso. Curaduría exclusiva de relojes de lujo, marcas suizas automáticas y obras maestras de precisión en Perú. 100% Originales y con garantía internacional."}],["$","meta","2",{"name":"keywords","content":"relojes de lujo en perú, alta relojería, relojes suizos, comprar relojes originales, boutique de relojes, relojes automáticos, relojes de inversión, rolex, omega, tempo preciso perú"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","meta","4",{"property":"og:title","content":"Tempo Preciso | Alta Relojería en Perú"}],["$","meta","5",{"property":"og:description","content":"Boutique exclusiva de relojes de lujo y colecciones privadas en Perú."}],["$","meta","6",{"property":"og:url","content":"https://tempopreciso.pe"}],["$","meta","7",{"property":"og:site_name","content":"Tempo Preciso"}],["$","meta","8",{"property":"og:locale","content":"es_PE"}],["$","meta","9",{"property":"og:type","content":"website"}],["$","meta","10",{"name":"twitter:card","content":"summary"}],["$","meta","11",{"name":"twitter:title","content":"Tempo Preciso | Alta Relojería en Perú"}],["$","meta","12",{"name":"twitter:description","content":"Boutique exclusiva de relojes de lujo y colecciones privadas en Perú."}]]}]}]}],null]}],"isPartial":"$@d","staleTime":"$a","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@e","rootVaryParams":null,"needsRuntimeRequest":"$@f"}
+4:{}
+5:"$0:data:0:rsc:props:children:0:props:serverProvidedParams:params"
+8:null
+f:true
+a:300
+a:C
+e:0
+d:"$undefined"
+9:"$undefined"

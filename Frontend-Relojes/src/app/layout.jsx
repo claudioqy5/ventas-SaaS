@@ -51,6 +51,62 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
+        {/* Loader + script como HTML crudo para evitar errores de hidratación */}
+        <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: `
+          <div id="tp-initial-loader" style="position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 45%,#182844 0%,#0d1627 50%,#070c17 100%);transition:opacity 0.65s cubic-bezier(0.16,1,0.3,1),transform 0.65s cubic-bezier(0.16,1,0.3,1)">
+            <div style="position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(45,66,98,0.45) 0%,rgba(208,150,131,0.1) 45%,transparent 70%);filter:blur(60px);pointer-events:none"></div>
+            <div style="position:relative;width:340px;height:340px">
+              <svg viewBox="0 0 300 300" style="width:100%;height:100%;overflow:visible;filter:drop-shadow(0 20px 50px rgba(0,0,0,0.85))">
+                <defs>
+                  <linearGradient id="il-bezel" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+                    <stop offset="50%" stop-color="rgba(45,66,98,0.6)"/>
+                    <stop offset="100%" stop-color="rgba(208,150,131,0.35)"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="150" cy="150" r="144" fill="rgba(9,15,26,0.96)" stroke="url(#il-bezel)" stroke-width="2.5"/>
+                <circle cx="150" cy="150" r="136" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+                <line x1="150" y1="14" x2="150" y2="30" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="218" y1="42.72" x2="210" y2="53.86" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="257.28" y1="82" x2="246.14" y2="90" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="286" y1="150" x2="270" y2="150" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="257.28" y1="218" x2="246.14" y2="210" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="218" y1="257.28" x2="210" y2="246.14" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="150" y1="286" x2="150" y2="270" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="82" y1="257.28" x2="90" y2="246.14" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="42.72" y1="218" x2="53.86" y2="210" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="14" y1="150" x2="30" y2="150" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="42.72" y1="82" x2="53.86" y2="90" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="82" y1="42.72" x2="90" y2="53.86" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+                <text x="150" y="74" text-anchor="middle" fill="#ffffff" font-family="'Cinzel',serif" font-size="10" font-weight="700" letter-spacing="0.35em">TEMPO PRECISO</text>
+                <text x="150" y="85" text-anchor="middle" fill="#D09683" font-family="'Cinzel',serif" font-size="6" font-weight="700" letter-spacing="0.2em">BOUTIQUE DE ALTA RELOJERÍA · PERÚ</text>
+                <g class="tp-hand">
+                  <polygon points="148.4,150 148.8,35 150,18 151.2,35 151.6,150" fill="#ff3b30"/>
+                  <polygon points="148.5,150 148.5,188 151.5,188 151.5,150" fill="#ff3b30"/>
+                  <circle cx="150" cy="174" r="8" fill="#070c17" stroke="#ff3b30" stroke-width="2.8"/>
+                </g>
+                <circle cx="150" cy="150" r="9" fill="#182844" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+                <circle cx="150" cy="150" r="6" fill="#ff3b30"/>
+                <circle cx="150" cy="150" r="2.2" fill="#ffffff"/>
+              </svg>
+            </div>
+            <div style="margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0.95">
+              <div style="font-size:2.4rem;font-family:'Cinzel',serif;color:#D09683;line-height:1;letter-spacing:0.05em">TP</div>
+              <div style="font-size:0.65rem;letter-spacing:0.45em;font-family:'Cinzel',serif;color:rgba(255,255,255,0.8);text-transform:uppercase;margin-left:0.45em">TEMPO PRECISO</div>
+            </div>
+          </div>
+          <style>
+            @keyframes il-sweep{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+            .tp-hand{transform-origin:150px 150px;animation:il-sweep 2s linear infinite}
+            #tp-initial-loader.tp-fade-out{opacity:0!important;transform:scale(1.04)!important;pointer-events:none!important}
+          </style>
+          <script>
+            if(sessionStorage.getItem('tp_loaded')){
+              var el=document.getElementById('tp-initial-loader');
+              if(el)el.style.display='none';
+            }
+          </script>
+        `}} />
         {children}
       </body>
     </html>

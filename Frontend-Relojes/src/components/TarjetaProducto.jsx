@@ -248,7 +248,8 @@ export default function TarjetaProducto({
           <div className="font-serif" style={{
             fontSize: '1.35rem',
             fontWeight: 600,
-            color: 'var(--c-indigo)'
+            color: 'var(--c-indigo)',
+            whiteSpace: 'nowrap'
           }}>
             S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
           </div>

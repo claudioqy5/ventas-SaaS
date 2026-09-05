@@ -65,7 +65,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName }) {
   ];
 
   return (
-    <footer id="garantia" style={{
+    <footer id="garantia" className="footer-main" style={{
       backgroundColor: 'var(--c-deep-purple)',
       borderTop: '2px solid var(--c-blush)',
       padding: '80px 24px 30px',

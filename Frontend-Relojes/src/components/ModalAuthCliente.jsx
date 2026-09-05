@@ -105,11 +105,13 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
         backgroundColor: '#ffffff',
         width: '100%',
         maxWidth: '520px',
+        maxHeight: '90vh',
+        overflowY: 'auto',
         borderRadius: '24px',
         border: '1px solid rgba(208, 150, 131, 0.4)',
         boxShadow: '0 25px 50px -12px rgba(45, 66, 98, 0.35)',
-        overflow: 'hidden',
         position: 'relative'
+
       }}>
         {/* Botón de cerrar global */}
         <button
