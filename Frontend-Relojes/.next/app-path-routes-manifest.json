@@ -1,6 +1,6 @@
 {
-  "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
+  "/_global-error/page": "/_global-error",
   "/categoria/[slug]/page": "/categoria/[slug]",
   "/page": "/",
   "/producto/[id]/page": "/producto/[id]"

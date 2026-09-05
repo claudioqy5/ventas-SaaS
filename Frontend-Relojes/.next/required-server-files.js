@@ -324,7 +324,8 @@ self.__SERVER_FILES_MANIFEST={
     "turbopack": {
       "root": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS"
     },
-    "distDirRoot": ".next"
+    "distDirRoot": ".next",
+    "supportsImmutableAssets": false
   },
   "appDir": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS\\Frontend-Relojes",
   "relativeAppDir": "Frontend-Relojes",
@@ -337,6 +338,8 @@ self.__SERVER_FILES_MANIFEST={
     ".next\\server\\functions-config-manifest.json",
     ".next\\server\\middleware-manifest.json",
     ".next\\server\\middleware-build-manifest.js",
+    ".next\\server\\middleware-react-loadable-manifest.js",
+    ".next\\react-loadable-manifest.json",
     ".next\\server\\app-paths-manifest.json",
     ".next\\app-path-routes-manifest.json",
     ".next\\server\\server-reference-manifest.js",
