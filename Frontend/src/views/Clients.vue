@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
-      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>◈</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -10,34 +10,34 @@
             <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">📊 <span class="sidebar-text">Dashboard</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">◫ <span class="sidebar-text">Dashboard</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">▸ <span class="sidebar-text">Historial de Negocio</span></router-link>
 
         <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">❖ <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">≡ <span class="sidebar-text">Historial Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">▫ <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">▪ <span class="sidebar-text">Formas de Pago</span></router-link>
 
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">📦 <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">🏷️ <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">🔄 <span class="sidebar-text">Movimientos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">🏢 <span class="sidebar-text">Proveedores</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">⌂ <span class="sidebar-text">Proveedores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">✧ <span class="sidebar-text">Compras</span></router-link>
 
         <!-- SECCIÓN: GESTIÓN -->
         <div class="nav-section-title">Gestión</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">👥 <span class="sidebar-text">Clientes</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Clientes</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">◦ <span class="sidebar-text">Recordatorios</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">↪ <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Area de contenido principal -->
@@ -45,7 +45,7 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">👥 Gestión de Clientes</h1>
+            <h1 class="text-title">⚇ Gestión de Clientes</h1>
             <p class="text-subtitle">Registra, edita y analiza el comportamiento de tus clientes</p>
           </div>
           <button v-if="activeTab === 'directorio'" @click="openCreateModal" class="btn btn-primary">➕ Agregar Cliente</button>
@@ -129,7 +129,7 @@
         <!-- Estado cargando o sin datos -->
         <div v-if="loadingTop" class="empty-state card">Calculando estadísticas…</div>
         <div v-else-if="topClientes.length === 0" class="empty-state card">
-          📊 Aún no hay suficientes datos de compras vinculadas a clientes. Selecciona un cliente en el POS al registrar ventas.
+          ◫ Aún no hay suficientes datos de compras vinculadas a clientes. Selecciona un cliente en el POS al registrar ventas.
         </div>
 
         <!-- Buscador de Top Clientes -->
@@ -156,7 +156,7 @@
             <tbody>
               <tr v-for="cli in filteredTopClientes" :key="cli.clienteId" class="clickable-row" @click="openDetailModal(cli)" style="cursor: pointer;">
                 <td>
-                  <span :class="['rank-badge', 'rank-' + cli.originalRank]" style="font-weight: bold; font-size: 0.9rem;">
+                  <span :class="['rank-badge', 'rank-' + cli.originalRank]" style="font-weight: 500; font-size: 0.9rem;">
                     {{ cli.originalRank === 1 ? '🥇 1' : cli.originalRank === 2 ? '🥈 2' : cli.originalRank === 3 ? '🥉 3' : '#' + cli.originalRank }}
                   </span>
                 </td>
@@ -169,7 +169,7 @@
                     </div>
                   </div>
                 </td>
-                <td style="font-weight: 800; color: var(--text-main);">S/. {{ cli.totalGastado?.toFixed(2) }}</td>
+                <td style="font-weight: 500; color: var(--text-main);">S/. {{ cli.totalGastado?.toFixed(2) }}</td>
                 <td><strong>{{ cli.numCompras }}</strong> compras</td>
                 <td>
                   <span :class="['status-badge', cli.inactivo ? 'disabled' : 'ok']">
@@ -191,18 +191,18 @@
         <div v-if="showDetailModal && selectedClient" class="modal-overlay">
           <div class="modal-card card detail-modal-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
-              <h2 class="modal-title" style="margin-bottom: 0;">📊 Análisis de Cliente</h2>
-              <button @click="showDetailModal = false" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); font-weight: bold;">&times;</button>
+              <h2 class="modal-title" style="margin-bottom: 0;">◫ Análisis de Cliente</h2>
+              <button @click="showDetailModal = false" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); font-weight: 500;">&times;</button>
             </div>
             
             <div class="top-card-header" style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
               <div class="top-avatar">{{ selectedClient.nombre?.charAt(0).toUpperCase() }}</div>
               <div class="top-info" style="flex-grow: 1;">
-                <h3 class="top-name" style="font-size: 1.2rem; font-weight: 700; color: var(--text-main);">{{ selectedClient.nombre }}</h3>
+                <h3 class="top-name" style="font-size: 1.2rem; font-weight: 500; color: var(--text-main);">{{ selectedClient.nombre }}</h3>
                 <span class="top-doc" style="font-size: 0.85rem; color: var(--text-muted);">{{ selectedClient.numeroDocumento || selectedClient.correo || 'Sin documento' }}</span>
               </div>
               <div style="display: flex; gap: 8px; align-items: center;">
-                <button @click="printCompleteClientReport" class="btn btn-primary" style="background-color: #6366f1; border: none; font-size: 0.78rem; font-weight: 700; padding: 6px 12px; border-radius: 99px;">📥 Exportar Reporte</button>
+                <button @click="printCompleteClientReport" class="btn btn-primary" style="background-color: #6366f1; border: none; font-size: 0.78rem; font-weight: 500; padding: 6px 12px; border-radius: 99px;">📥 Exportar Reporte</button>
                 <a v-if="selectedClient.telefono" :href="buildWhatsappPromo(selectedClient)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm" style="margin-top: 0;">📱 Enviar Oferta</a>
               </div>
             </div>
@@ -210,16 +210,16 @@
             <!-- Métricas clave -->
             <div class="top-metrics" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; text-align: center; background: var(--bg-app); padding: 16px; border-radius: var(--radius-md);">
               <div class="metric" style="display: flex; flex-direction: column; gap: 4px;">
-                <span class="metric-val" style="font-size: 1.2rem; font-weight: 800; color: var(--text-main);">S/. {{ selectedClient.totalGastado?.toFixed(2) }}</span>
-                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Total Gastado</span>
+                <span class="metric-val" style="font-size: 1.2rem; font-weight: 500; color: var(--text-main);">S/. {{ selectedClient.totalGastado?.toFixed(2) }}</span>
+                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase;">Total Gastado</span>
               </div>
               <div class="metric" style="display: flex; flex-direction: column; gap: 4px; border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color);">
-                <span class="metric-val" style="font-size: 1.2rem; font-weight: 800; color: var(--text-main);">{{ selectedClient.numCompras }}</span>
-                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Compras</span>
+                <span class="metric-val" style="font-size: 1.2rem; font-weight: 500; color: var(--text-main);">{{ selectedClient.numCompras }}</span>
+                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase;">Compras</span>
               </div>
               <div class="metric" style="display: flex; flex-direction: column; gap: 4px;">
-                <span class="metric-val" :class="selectedClient.inactivo ? 'val-danger' : 'val-ok'" style="font-size: 1.2rem; font-weight: 800;">Hace {{ selectedClient.diasDesdeUltimaCompra }}d</span>
-                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Última compra</span>
+                <span class="metric-val" :class="selectedClient.inactivo ? 'val-danger' : 'val-ok'" style="font-size: 1.2rem; font-weight: 500;">Hace {{ selectedClient.diasDesdeUltimaCompra }}d</span>
+                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase;">Última compra</span>
               </div>
             </div>
 
@@ -227,7 +227,7 @@
             <div class="analysis-columns-grid" style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; margin-bottom: 24px; align-items: start;">
               <!-- Columna Izquierda: Tendencia de Compras -->
               <div class="sparkline-wrapper" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md);">
-                <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">📈 Tendencia de Compras (Últimos 6 meses)</span>
+                <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); margin-bottom: 12px;">▸ Tendencia de Compras (Últimos 6 meses)</span>
                 <svg class="line-chart-svg" viewBox="0 0 500 150" style="width: 100%; height: 230px; background: transparent; overflow: visible;">
                   <defs>
                     <linearGradient :id="'sparkGrad-' + selectedClient.clienteId" x1="0" y1="0" x2="0" y2="1">
@@ -241,9 +241,9 @@
                   <line x1="60" y1="120" x2="480" y2="120" stroke="#e2e8f0" stroke-width="1.5" />
 
                   <!-- Y Axis Labels -->
-                  <text x="50" y="24" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.{{ clientMaxVal(selectedClient.tendenciaMensual).toFixed(0) }}</text>
-                  <text x="50" y="74" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.{{ (clientMaxVal(selectedClient.tendenciaMensual) / 2).toFixed(0) }}</text>
-                  <text x="50" y="124" text-anchor="end" style="font-size: 0.65rem; font-weight: 700; fill: var(--text-muted);">S/.0</text>
+                  <text x="50" y="24" text-anchor="end" style="font-size: 0.65rem; font-weight: 500; fill: var(--text-muted);">S/.{{ clientMaxVal(selectedClient.tendenciaMensual).toFixed(0) }}</text>
+                  <text x="50" y="74" text-anchor="end" style="font-size: 0.65rem; font-weight: 500; fill: var(--text-muted);">S/.{{ (clientMaxVal(selectedClient.tendenciaMensual) / 2).toFixed(0) }}</text>
+                  <text x="50" y="124" text-anchor="end" style="font-size: 0.65rem; font-weight: 500; fill: var(--text-muted);">S/.0</text>
 
                   <!-- Gradient Area Fill -->
                   <path
@@ -299,8 +299,8 @@
               <div style="display: flex; flex-direction: column; gap: 16px;">
                 <!-- Listado de compras del mes seleccionado -->
                 <div class="selected-month-sales" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); background: #fafafa; margin-bottom: 0;">
-                  <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-top: 0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                    <span>🛒 Compras de: <strong style="color: #4f46e5;">{{ selectedMonth?.mes }} {{ selectedMonth?.anio }}</strong></span>
+                  <h4 style="font-size: 0.9rem; font-weight: 500; color: var(--text-main); margin-top: 0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>❖ Compras de: <strong style="color: #4f46e5;">{{ selectedMonth?.mes }} {{ selectedMonth?.anio }}</strong></span>
                     <span class="badge badge-info" style="font-size: 0.72rem; background-color: #e0f2fe; color: #0369a1;">S/. {{ selectedMonth?.total.toFixed(2) }}</span>
                   </h4>
 
@@ -319,7 +319,7 @@
                       <tbody>
                         <tr v-for="sale in filteredSalesByMonth" :key="sale.id" style="border-bottom: 1px solid var(--border-color);">
                           <td style="padding: 8px; text-align: left; font-size: 0.75rem;">{{ formatDate(sale.fechaCreacion) }}</td>
-                          <td style="padding: 8px; text-align: right; font-weight: 700; color: var(--text-main);">S/. {{ sale.total.toFixed(2) }}</td>
+                          <td style="padding: 8px; text-align: right; font-weight: 500; color: var(--text-main);">S/. {{ sale.total.toFixed(2) }}</td>
                           <td style="padding: 8px; text-align: center;">
                             <button @click="openSaleDetail(sale)" class="btn btn-primary btn-sm" style="padding: 2px 6px; font-size: 0.7rem;">📄 Boleta</button>
                           </td>
@@ -331,9 +331,9 @@
 
                 <!-- Top productos de este cliente -->
                 <div v-if="selectedClient.topProductos?.length > 0" class="top-products" style="margin-bottom: 0; padding-top: 12px; border-top: 1px dashed var(--border-color);">
-                  <p class="top-products-title" style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 10px;">🛒 Productos más comprados históricamente:</p>
+                  <p class="top-products-title" style="font-size: 0.82rem; font-weight: 500; color: var(--text-muted); margin-bottom: 10px;">❖ Productos más comprados históricamente:</p>
                   <div class="top-products-list" style="display: flex; flex-wrap: wrap; gap: 6px;">
-                    <span v-for="(p, pi) in selectedClient.topProductos" :key="pi" class="product-chip" style="background: #e2e8f0; color: #1e293b; padding: 4px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;">
+                    <span v-for="(p, pi) in selectedClient.topProductos" :key="pi" class="product-chip" style="background: #e2e8f0; color: #1e293b; padding: 4px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 500;">
                       {{ p.producto }} <strong style="color: #6366f1;">x{{ p.cantidad }}</strong>
                     </span>
                   </div>
@@ -351,8 +351,8 @@
         <div v-if="showSaleDetailModal && selectedSale" class="modal-overlay" style="z-index: 1100; background-color: rgba(0, 0, 0, 0.45);">
           <div class="modal-card card" style="max-width: 500px; border-top: 4px solid var(--primary); text-align: left; padding: 24px; color: var(--text-main);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
-              <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0; color: var(--text-main);">📄 Detalles de Compra</h3>
-              <button @click="showSaleDetailModal = false" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-muted); font-weight: bold;">&times;</button>
+              <h3 style="font-size: 1.15rem; font-weight: 500; margin: 0; color: var(--text-main);">📄 Detalles de Compra</h3>
+              <button @click="showSaleDetailModal = false" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-muted); font-weight: 500;">&times;</button>
             </div>
 
             <div style="font-size: 0.85rem; line-height: 1.6; color: var(--text-main); margin-bottom: 20px;">
@@ -368,10 +368,10 @@
               <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
                 <thead style="background: var(--bg-app); border-bottom: 1px solid var(--border-color);">
                   <tr>
-                    <th style="padding: 8px; text-align: left; font-weight: 600; color: var(--text-muted);">Producto</th>
-                    <th style="padding: 8px; text-align: center; width: 60px; font-weight: 600; color: var(--text-muted);">Cant.</th>
-                    <th style="padding: 8px; text-align: right; width: 80px; font-weight: 600; color: var(--text-muted);">P. Unit.</th>
-                    <th style="padding: 8px; text-align: right; width: 80px; font-weight: 600; color: var(--text-muted);">Total</th>
+                    <th style="padding: 8px; text-align: left; font-weight: 500; color: var(--text-muted);">Producto</th>
+                    <th style="padding: 8px; text-align: center; width: 60px; font-weight: 500; color: var(--text-muted);">Cant.</th>
+                    <th style="padding: 8px; text-align: right; width: 80px; font-weight: 500; color: var(--text-muted);">P. Unit.</th>
+                    <th style="padding: 8px; text-align: right; width: 80px; font-weight: 500; color: var(--text-muted);">Total</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -379,7 +379,7 @@
                     <td style="padding: 8px; color: var(--text-main);">{{ item.nombreProducto }}</td>
                     <td style="padding: 8px; text-align: center; color: var(--text-main);">{{ item.cantidad }}</td>
                     <td style="padding: 8px; text-align: right; color: var(--text-main);">S/. {{ item.precioUnitario.toFixed(2) }}</td>
-                    <td style="padding: 8px; text-align: right; font-weight: 700; color: var(--text-main);">S/. {{ (item.cantidad * item.precioUnitario).toFixed(2) }}</td>
+                    <td style="padding: 8px; text-align: right; font-weight: 500; color: var(--text-main);">S/. {{ (item.cantidad * item.precioUnitario).toFixed(2) }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -395,14 +395,14 @@
                 <span style="color: var(--text-muted);">IGV (19%):</span>
                 <span style="color: var(--text-main);">S/. {{ selectedSale.impuesto?.toFixed(2) || '0.00' }}</span>
               </div>
-              <div style="display: flex; justify-content: space-between; width: 200px; font-weight: bold; font-size: 1.05rem; color: var(--text-main);">
+              <div style="display: flex; justify-content: space-between; width: 200px; font-weight: 500; font-size: 1.05rem; color: var(--text-main);">
                 <span>Total Compra:</span>
                 <span>S/. {{ selectedSale.total?.toFixed(2) || '0.00' }}</span>
               </div>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
-              <button @click="printSaleTicket(selectedSale)" class="btn btn-primary" style="background-color: #10b981; border: none; font-size: 0.8rem; font-weight: 700; padding: 8px 16px;">🖨️ Imprimir Ticket</button>
+              <button @click="printSaleTicket(selectedSale)" class="btn btn-primary" style="background-color: #10b981; border: none; font-size: 0.8rem; font-weight: 500; padding: 8px 16px;">🖨️ Imprimir Ticket</button>
               <button @click="showSaleDetailModal = false" class="btn btn-secondary">Cerrar</button>
             </div>
           </div>
@@ -412,7 +412,7 @@
       <!-- Formulario modal de creacion/edicion -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Cliente' : '👥 Registrar Cliente' }}</h2>
+          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Cliente' : '⚇ Registrar Cliente' }}</h2>
           <form @submit.prevent="saveClient" class="grid">
             <div class="grid grid-2">
               <div class="field">
@@ -606,12 +606,12 @@ const printSaleTicket = (sale) => {
           .divider { border-top: 1px dashed #000; margin: 10px 0; }
           table { width: 100%; border-collapse: collapse; }
           th, td { padding: 4px 0; }
-          .total-row { font-weight: bold; }
+          .total-row { font-weight: 500; }
         </style>
       </head>
       <body>
         <div class="text-center header">
-          <h2>🍦 ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
+          <h2>◈ ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
           <p>Punto de Venta - Boleta de Compra</p>
         </div>
         <div class="divider"></div>
@@ -685,24 +685,24 @@ const printCompleteClientReport = () => {
         <style>
           body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 30px; color: #333; }
           .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #6366f1; padding-bottom: 15px; margin-bottom: 30px; }
-          .brand { font-size: 24px; font-weight: bold; color: #4f46e5; }
-          .title { font-size: 20px; font-weight: bold; color: #1f2937; }
+          .brand { font-size: 24px; font-weight: 500; color: #4f46e5; }
+          .title { font-size: 20px; font-weight: 500; color: #1f2937; }
           .subtitle { font-size: 14px; color: #6b7280; }
           .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
           .card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 8px; text-align: center; background: #f9fafb; }
-          .card-val { font-size: 20px; font-weight: bold; color: #111827; margin-bottom: 5px; }
-          .card-lbl { font-size: 12px; color: #6b7280; font-weight: 600; text-transform: uppercase; }
+          .card-val { font-size: 20px; font-weight: 500; color: #111827; margin-bottom: 5px; }
+          .card-lbl { font-size: 12px; color: #6b7280; font-weight: 500; text-transform: uppercase; }
           h3 { color: #111827; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-top: 30px; }
           table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-          th { background: #f3f4f6; color: #374151; font-weight: 600; text-align: left; padding: 10px; font-size: 14px; border-bottom: 2px solid #e5e7eb; }
+          th { background: #f3f4f6; color: #374151; font-weight: 500; text-align: left; padding: 10px; font-size: 14px; border-bottom: 2px solid #e5e7eb; }
           td { padding: 10px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
-          .product-chip { display: inline-block; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 3px 10px; border-radius: 99px; font-size: 12px; margin: 4px; font-weight: 600; }
+          .product-chip { display: inline-block; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 3px 10px; border-radius: 99px; font-size: 12px; margin: 4px; font-weight: 500; }
         </style>
       </head>
       <body>
         <div class="header">
           <div>
-            <div class="brand">🍦 ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</div>
+            <div class="brand">◈ ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</div>
             <div class="subtitle">Reporte Consolidado de Cliente</div>
           </div>
           <div style="text-align: right;">
@@ -726,14 +726,14 @@ const printCompleteClientReport = () => {
           </div>
         </div>
 
-        <h3>📦 Productos Más Comprados</h3>
+        <h3>⬦ Productos Más Comprados</h3>
         <div style="margin-top: 10px;">
           ${(client.topProductos || []).map(p => `
             <span class="product-chip">${p.producto} (x${p.cantidad})</span>
           `).join('') || '<p>No hay productos registrados.</p>'}
         </div>
 
-        <h3>📈 Historial Mensual (Últimos 6 Meses)</h3>
+        <h3>▸ Historial Mensual (Últimos 6 Meses)</h3>
         <table>
           <thead>
             <tr>
@@ -751,7 +751,7 @@ const printCompleteClientReport = () => {
           </tbody>
         </table>
 
-        <h3>📋 Detalle Completo de Transacciones</h3>
+        <h3>≡ Detalle Completo de Transacciones</h3>
         <table>
           <thead>
             <tr>
@@ -926,7 +926,7 @@ const buildClientChartPath = (tendencia) => {
 const buildWhatsappReactivacion = (cli) => {
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
   const productos = (cli.topProductos || []).slice(0, 2).map(p => p.producto).join(' y ')
-  const msg = `¡Hola ${cli.nombre}! 👋 Somos *${store}* y te echamos de menos. Tus productos favoritos (${productos || 'nuestros mejores productos'}) te esperan ✨ ¡Ven a visitarnos! 🛒`
+  const msg = `¡Hola ${cli.nombre}! 👋 Somos *${store}* y te echamos de menos. Tus productos favoritos (${productos || 'nuestros mejores productos'}) te esperan ✨ ¡Ven a visitarnos! ❖`
   const phone = (cli.telefono || '').replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`
 }
@@ -935,7 +935,7 @@ const buildWhatsappReactivacion = (cli) => {
 const buildWhatsappPromo = (cli) => {
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
   const productos = (cli.topProductos || []).slice(0, 2).map(p => p.producto).join(', ')
-  const msg = `¡Hola ${cli.nombre}! 🔶 Tenemos novedades y ofertas especiales en *${store}*. ${productos ? `Recordamos que acostumbras llevar: ${productos}.` : ''} ¡Te esperamos! 🛒`
+  const msg = `¡Hola ${cli.nombre}! 🔶 Tenemos novedades y ofertas especiales en *${store}*. ${productos ? `Recordamos que acostumbras llevar: ${productos}.` : ''} ¡Te esperamos! ❖`
   const phone = (cli.telefono || '').replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`
 }
@@ -976,7 +976,7 @@ onMounted(() => {
 }
 
 .data-table th {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
@@ -1024,7 +1024,7 @@ onMounted(() => {
 
 .modal-title {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 20px;
 }
 
@@ -1037,7 +1037,7 @@ onMounted(() => {
 
 .field label {
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
@@ -1093,7 +1093,7 @@ onMounted(() => {
   border-bottom: 3px solid transparent;
   margin-bottom: -2px;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
   cursor: pointer;
   transition: var(--transition);
@@ -1131,7 +1131,7 @@ onMounted(() => {
 
 .inactivos-title {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #c2410c;
   margin: 0 0 4px 0;
 }
@@ -1165,7 +1165,7 @@ onMounted(() => {
   border-radius: 50%;
   background: linear-gradient(135deg, #f97316, #ea580c);
   color: #fff;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1180,14 +1180,14 @@ onMounted(() => {
 
 .inactivo-name {
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-main);
 }
 
 .inactivo-days {
   font-size: 0.78rem;
   color: #c2410c;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* ── Grid de top clientes ── */
@@ -1227,7 +1227,7 @@ onMounted(() => {
   border-radius: 50%;
   background: linear-gradient(135deg, #6366f1, #818cf8);
   color: #fff;
-  font-weight: 800;
+  font-weight: 500;
   font-size: 1.2rem;
   display: flex;
   align-items: center;
@@ -1242,7 +1242,7 @@ onMounted(() => {
 
 .top-name {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -1279,14 +1279,14 @@ onMounted(() => {
 
 .metric-val {
   font-size: 1.05rem;
-  font-weight: 800;
+  font-weight: 500;
   color: var(--text-main);
 }
 
 .metric-lbl {
   font-size: 0.7rem;
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .val-ok { color: #16a34a; }
@@ -1301,7 +1301,7 @@ onMounted(() => {
 
 .sparkline-label {
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
@@ -1315,7 +1315,7 @@ onMounted(() => {
   justify-content: space-between;
   font-size: 0.65rem;
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 500;
   padding: 0 2px;
 }
 
@@ -1327,7 +1327,7 @@ onMounted(() => {
 
 .top-products-title {
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-muted);
   margin: 0 0 8px 0;
 }
@@ -1355,7 +1355,7 @@ onMounted(() => {
   padding: 6px 12px;
   background: linear-gradient(135deg, #25d366, #128c7e);
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 0.78rem;
   border-radius: 99px;
   text-decoration: none;
@@ -1380,7 +1380,7 @@ onMounted(() => {
   border-radius: 50%;
   background: linear-gradient(135deg, #a3c4f3, #90b3e2);
   color: #1e3a8a;
-  font-weight: 800;
+  font-weight: 500;
   font-size: 0.95rem;
   display: flex;
   align-items: center;
@@ -1392,7 +1392,7 @@ onMounted(() => {
   padding: 4px 10px;
   border-radius: 99px;
   font-size: 0.8rem;
-  font-weight: bold;
+  font-weight: 500;
   display: inline-block;
 }
 

@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
-      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>◈</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -10,41 +10,41 @@
             <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">📊 <span class="sidebar-text">Dashboard</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">◫ <span class="sidebar-text">Dashboard</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">▸ <span class="sidebar-text">Historial de Negocio</span></router-link>
 
         <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">❖ <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">≡ <span class="sidebar-text">Historial Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">▫ <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">▪ <span class="sidebar-text">Formas de Pago</span></router-link>
 
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">📦 <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">🏷️ <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">🔄 <span class="sidebar-text">Movimientos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">🏢 <span class="sidebar-text">Proveedores</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">⌂ <span class="sidebar-text">Proveedores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">✧ <span class="sidebar-text">Compras</span></router-link>
 
         <!-- SECCIÓN: GESTIÓN -->
         <div class="nav-section-title">Gestión</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">👥 <span class="sidebar-text">Clientes</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Clientes</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">◦ <span class="sidebar-text">Recordatorios</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">↪ <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Area de contenido principal -->
     <main class="main-content">
       <header class="content-header">
         <div>
-          <h1 class="text-title">📋 Historial de Ventas</h1>
+          <h1 class="text-title">≡ Historial de Ventas</h1>
           <p class="text-subtitle">Consulta todas las ventas registradas en el sistema, con sus respectivos cajeros, clientes y detalles.</p>
         </div>
       </header>
@@ -55,9 +55,9 @@
           <input v-model="searchQuery" type="text" placeholder="🔍 Buscar por cliente o cajero..." class="filter-input" />
           <input v-model="filterDate" type="date" class="filter-select" title="Filtrar por fecha" />
           <select v-model="filterPayment" class="filter-select">
-            <option value="">💵 Todos los Métodos</option>
-            <option value="Efectivo">💵 Efectivo</option>
-            <option value="Tarjeta">💳 Tarjeta</option>
+            <option value="">✧ Todos los Métodos</option>
+            <option value="Efectivo">✧ Efectivo</option>
+            <option value="Tarjeta">▪ Tarjeta</option>
             <option value="Transferencia">🏦 Transferencia</option>
           </select>
         </div>
@@ -125,7 +125,7 @@
       <div v-if="selectedSale" class="modal-overlay" @click.self="selectedSale = null">
         <div class="modal-content card max-width-600">
           <header class="modal-header">
-            <h3>📋 Detalles de la Venta</h3>
+            <h3>≡ Detalles de la Venta</h3>
             <button @click="selectedSale = null" class="close-btn">×</button>
           </header>
 
@@ -200,12 +200,12 @@
             <button 
               @click="printSaleTicket(selectedSale)" 
               class="btn btn-primary"
-              style="background-color: #10b981; border: none; font-size: 0.95rem; font-weight: 700; padding: 12px 20px; border-radius: var(--radius-sm); color: white; display: flex; align-items: center; justify-content: center; gap: 8px;"
+              style="background-color: #10b981; border: none; font-size: 0.95rem; font-weight: 500; padding: 12px 20px; border-radius: var(--radius-sm); color: white; display: flex; align-items: center; justify-content: center; gap: 8px;"
             >
               🖨️ Descargar Boleta (PDF)
             </button>
             
-            <div v-if="selectedSale?.revertida" style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); text-align: center; color: #b91c1c; font-weight: 600; font-size: 0.9rem;">
+            <div v-if="selectedSale?.revertida" style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); text-align: center; color: #b91c1c; font-weight: 500; font-size: 0.9rem;">
               🚫 Esta venta fue revertida por {{ selectedSale.revertidaPorNombre || 'el sistema' }} el {{ formatDateTime(selectedSale.fechaReversion) }}
             </div>
             
@@ -300,12 +300,12 @@ const printSaleTicket = (sale) => {
           .divider { border-top: 1px dashed #000; margin: 10px 0; }
           table { width: 100%; border-collapse: collapse; }
           th, td { padding: 4px 0; }
-          .total-row { font-weight: bold; }
+          .total-row { font-weight: 500; }
         </style>
       </head>
       <body>
         <div class="text-center header">
-          <h2>🍦 ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
+          <h2>◈ ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
           <p>Punto de Venta - Boleta de Compra</p>
         </div>
         <div class="divider"></div>
@@ -429,7 +429,7 @@ const whatsappSaleUrl = computed(() => {
   const sale = selectedSale.value
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
   const items = (sale.detalles || []).map(i => `  • ${i.nombreProducto} x${i.cantidad} = S/. ${(i.cantidad * i.precioUnitario).toFixed(2)}`).join('%0A')
-  const msg = `¡Hola! Gracias por tu compra en *${store}* 🛒%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE', { timeZone: 'America/Lima' })}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
+  const msg = `¡Hola! Gracias por tu compra en *${store}* ❖%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE', { timeZone: 'America/Lima' })}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
   const phone = sale.clienteTelefono.replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${msg}`
 })
@@ -479,7 +479,7 @@ onMounted(() => {
   padding: 4px 8px;
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   display: inline-block;
 }
 
@@ -499,7 +499,7 @@ onMounted(() => {
 }
 
 .total-badge {
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-main);
 }
 
@@ -529,12 +529,12 @@ onMounted(() => {
 .meta-label {
   font-size: 0.8rem;
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .meta-val {
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-main);
 }
 
@@ -560,7 +560,7 @@ onMounted(() => {
 
 .modal-details-table th {
   background-color: var(--bg-app);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.85rem;
   color: var(--text-muted);
 }
@@ -584,7 +584,7 @@ onMounted(() => {
 
 .summary-row.total-row {
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-main);
   border-top: 1px solid var(--border-color);
   padding-top: 8px;
@@ -603,7 +603,7 @@ onMounted(() => {
 }
 
 .data-table th {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
@@ -643,7 +643,7 @@ onMounted(() => {
 
 .modal-header h3 {
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 500;
   margin: 0;
 }
 
@@ -685,7 +685,7 @@ onMounted(() => {
   padding: 12px 20px;
   background: linear-gradient(135deg, #25d366, #128c7e);
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 0.95rem;
   border-radius: var(--radius-sm);
   text-decoration: none;
@@ -704,7 +704,7 @@ onMounted(() => {
   background-color: #fee2e2;
   color: #991b1b;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   padding: 3px 8px;
   border-radius: var(--radius-sm);
   display: inline-block;

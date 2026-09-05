@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
-      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>◈</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -10,41 +10,41 @@
             <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">📊 <span class="sidebar-text">Dashboard</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">◫ <span class="sidebar-text">Dashboard</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">▸ <span class="sidebar-text">Historial de Negocio</span></router-link>
 
         <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">❖ <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">≡ <span class="sidebar-text">Historial Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">▫ <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">▪ <span class="sidebar-text">Formas de Pago</span></router-link>
 
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">📦 <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">🏷️ <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">🔄 <span class="sidebar-text">Movimientos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">🏢 <span class="sidebar-text">Proveedores</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">⌂ <span class="sidebar-text">Proveedores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">✧ <span class="sidebar-text">Compras</span></router-link>
 
         <!-- SECCIÓN: GESTIÓN -->
         <div class="nav-section-title">Gestión</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">👥 <span class="sidebar-text">Clientes</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Clientes</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">◦ <span class="sidebar-text">Recordatorios</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">↪ <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Area de contenido principal -->
     <main class="main-content">
       <header class="content-header">
         <div>
-          <h1 class="text-title">🔄 Auditoría de Movimientos</h1>
+          <h1 class="text-title">⟳ Auditoría de Movimientos</h1>
           <p class="text-subtitle">Monitorea las entradas, salidas y ajustes del stock de tu inventario en tiempo real.</p>
         </div>
       </header>
@@ -92,7 +92,7 @@
                     {{ formatType(mov.tipo) }}
                   </span>
                 </td>
-                <td style="text-align: right; font-weight: 800;" :style="{ color: getQuantityColor(mov.tipo) }">
+                <td style="text-align: right; font-weight: 500;" :style="{ color: getQuantityColor(mov.tipo) }">
                   {{ getQuantityPrefix(mov.tipo) }}{{ mov.cantidad }}
                 </td>
                 <td style="text-align: center; color: var(--text-muted);">
@@ -192,9 +192,9 @@ const getTypeClass = (type) => {
 const formatType = (type) => {
   const mapping = {
     'entrada': '📥 Entrada',
-    'compra': '💵 Compra',
+    'compra': '✧ Compra',
     'salida': '📤 Salida',
-    'venta': '🛒 Venta',
+    'venta': '❖ Venta',
     'ajuste': '🔧 Ajuste'
   }
   return mapping[type.toLowerCase()] || type
@@ -247,7 +247,7 @@ onMounted(() => {
 }
 
 .data-table th {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
@@ -287,7 +287,7 @@ onMounted(() => {
   gap: 8px;
   color: var(--text-muted);
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .filter-date {
@@ -303,7 +303,7 @@ onMounted(() => {
   padding: 4px 10px;
   border-radius: var(--radius-sm);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 500;
   display: inline-block;
 }
 

@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
-      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>◈</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -10,45 +10,45 @@
             <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">📊 <span class="sidebar-text">Dashboard</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">◫ <span class="sidebar-text">Dashboard</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">▸ <span class="sidebar-text">Historial de Negocio</span></router-link>
 
         <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">❖ <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">≡ <span class="sidebar-text">Historial Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">▫ <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">▪ <span class="sidebar-text">Formas de Pago</span></router-link>
 
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">📦 <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">🏷️ <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">🔄 <span class="sidebar-text">Movimientos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">🏢 <span class="sidebar-text">Proveedores</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">⌂ <span class="sidebar-text">Proveedores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">✧ <span class="sidebar-text">Compras</span></router-link>
 
         <!-- SECCIÓN: GESTIÓN -->
         <div class="nav-section-title">Gestión</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">👥 <span class="sidebar-text">Clientes</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Clientes</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">◦ <span class="sidebar-text">Recordatorios</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">↪ <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
       <header class="content-header" style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <h1 class="text-title">📊 Resumen del Negocio</h1>
+          <h1 class="text-title">◫ Resumen del Negocio</h1>
           <p class="text-subtitle">Monitorea tus ventas, inventario y alertas</p>
         </div>
         <div class="date-filter-container">
-          <label for="dashboard-date" class="text-subtitle" style="margin-right: 10px; font-weight: 600;">Filtrar por Fecha:</label>
+          <label for="dashboard-date" class="text-subtitle" style="margin-right: 10px; font-weight: 500;">Filtrar por Fecha:</label>
           <input type="date" id="dashboard-date" v-model="selectedDate" @change="fetchStats" class="form-input" style="padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);" />
         </div>
       </header>
@@ -56,23 +56,23 @@
       <!-- Metric Grid -->
       <div class="grid grid-4 metrics-container">
         <div class="kpi-total-card bruto" style="background: #eef2ff; border: 1px solid #c7d2fe; padding: 20px 24px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center; cursor: pointer;">
-          <div style="font-size: 0.75rem; font-weight: 700; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px;">Venta Total (Con IGV)</div>
-          <div style="font-size: 1.8rem; font-weight: 800; color: #1e1b4b; margin-top: 4px;">S/. {{ (stats.totalIngresos || 0).toFixed(2) }}</div>
+          <div style="font-size: 0.75rem; font-weight: 500; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px;">Venta Total (Con IGV)</div>
+          <div style="font-size: 1.8rem; font-weight: 500; color: #1e1b4b; margin-top: 4px;">S/. {{ (stats.totalIngresos || 0).toFixed(2) }}</div>
         </div>
 
         <div class="kpi-total-card neto" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px 24px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center; cursor: pointer;">
-          <div style="font-size: 0.75rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Ganancia Bruta (Pre-Impuesto)</div>
-          <div style="font-size: 1.8rem; font-weight: 800; color: #14532d; margin-top: 4px;">S/. {{ (stats.gananciaBruta || 0).toFixed(2) }}</div>
+          <div style="font-size: 0.75rem; font-weight: 500; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Ganancia Bruta (Pre-Impuesto)</div>
+          <div style="font-size: 1.8rem; font-weight: 500; color: #14532d; margin-top: 4px;">S/. {{ (stats.gananciaBruta || 0).toFixed(2) }}</div>
         </div>
 
         <div class="kpi-total-card realizadas" style="background: #fff0f6; border: 1px solid #ffd8e8; padding: 20px 24px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center; cursor: pointer;">
-          <div style="font-size: 0.75rem; font-weight: 700; color: #d01c68; text-transform: uppercase; letter-spacing: 0.5px;">Ventas Realizadas</div>
-          <div style="font-size: 1.8rem; font-weight: 800; color: #500e2e; margin-top: 4px;">{{ stats.totalVentas || 0 }}</div>
+          <div style="font-size: 0.75rem; font-weight: 500; color: #d01c68; text-transform: uppercase; letter-spacing: 0.5px;">Ventas Realizadas</div>
+          <div style="font-size: 1.8rem; font-weight: 500; color: #500e2e; margin-top: 4px;">{{ stats.totalVentas || 0 }}</div>
         </div>
 
         <div class="kpi-total-card activas" style="background: #fffbeb; border: 1px solid #fef3c7; padding: 20px 24px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center; cursor: pointer;">
-          <div style="font-size: 0.75rem; font-weight: 700; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px;">Productos Activos</div>
-          <div style="font-size: 1.8rem; font-weight: 800; color: #451a03; margin-top: 4px;">{{ stats.totalProductos || 0 }}</div>
+          <div style="font-size: 0.75rem; font-weight: 500; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px;">Productos Activos</div>
+          <div style="font-size: 1.8rem; font-weight: 500; color: #451a03; margin-top: 4px;">{{ stats.totalProductos || 0 }}</div>
         </div>
       </div>
 
@@ -114,7 +114,7 @@
 
         <!-- Payment Methods Donut Chart -->
         <div class="card chart-card">
-          <h2 class="section-title">💳 Formas de Pago del Día</h2>
+          <h2 class="section-title">▪ Formas de Pago del Día</h2>
           <div v-if="!stats.metodosPagoDia || stats.metodosPagoDia.length === 0" class="empty-state">
             Sin ventas aún...
           </div>
@@ -200,7 +200,7 @@
     <div v-if="showReminderAlert" class="modal-overlay">
       <div class="modal-content card" style="max-width: 550px; border-left: 5px solid var(--warning);">
         <div class="modal-header">
-          <h2 style="display: flex; align-items: center; gap: 10px;">📅 Alertas de Cuentas por Pagar</h2>
+          <h2 style="display: flex; align-items: center; gap: 10px;">◦ Alertas de Cuentas por Pagar</h2>
           <button @click="showReminderAlert = false" class="close-btn">&times;</button>
         </div>
         
@@ -214,12 +214,12 @@
                  style="background: var(--bg-app); border: 1px solid var(--border-color); padding: 14px; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 6px;">
               <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
                 <strong style="font-size: 1rem; color: var(--text-main);">{{ rem.titulo }}</strong>
-                <span :class="['date-badge', getDaysRemainingClass(rem)]" style="font-size: 0.75rem; padding: 3px 8px; border-radius: 99px; font-weight: 700;">
+                <span :class="['date-badge', getDaysRemainingClass(rem)]" style="font-size: 0.75rem; padding: 3px 8px; border-radius: 99px; font-weight: 500;">
                   {{ getDaysRemainingText(rem) }}
                 </span>
               </div>
               <p v-if="rem.descripcion" style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">{{ rem.descripcion }}</p>
-              <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-top: 4px;">
+              <div style="font-size: 0.9rem; font-weight: 500; color: var(--text-main); margin-top: 4px;">
                 Monto: <span style="color: var(--danger-hover);">S/. {{ rem.monto ? rem.monto.toFixed(2) : '0.00' }}</span>
               </div>
             </div>
@@ -509,7 +509,7 @@ onMounted(() => {
 
 .metric-value {
   font-size: 2.1rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-main);
   line-height: 1.2;
 }
@@ -533,7 +533,7 @@ onMounted(() => {
 
 .section-title {
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 20px;
   text-align: left;
   color: var(--text-main);
@@ -577,13 +577,13 @@ onMounted(() => {
 
 .alert-name {
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-main);
 }
 
 .alert-badge {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #c53030;
 }
 
@@ -613,7 +613,7 @@ onMounted(() => {
 
 .movement-badge {
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 500;
   padding: 2px 8px;
   border-radius: 99px;
   text-transform: uppercase;
@@ -672,7 +672,7 @@ onMounted(() => {
 .chart-tooltip-text {
   font-size: 10px;
   fill: var(--text-main);
-  font-weight: 700;
+  font-weight: 500;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -734,7 +734,7 @@ onMounted(() => {
 
 .pie-label {
   font-size: 7.5px;
-  font-weight: 800;
+  font-weight: 500;
   fill: #ffffff;
   pointer-events: none;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
@@ -785,7 +785,7 @@ onMounted(() => {
   padding: 4px 8px;
   border-radius: var(--radius-sm);
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 500;
   display: inline-block;
 }
 

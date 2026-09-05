@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
-      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>◈</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -10,34 +10,34 @@
             <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">📊 <span class="sidebar-text">Dashboard</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">◫ <span class="sidebar-text">Dashboard</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">▸ <span class="sidebar-text">Historial de Negocio</span></router-link>
 
         <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">❖ <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">≡ <span class="sidebar-text">Historial Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">▫ <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">▪ <span class="sidebar-text">Formas de Pago</span></router-link>
 
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">📦 <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">🏷️ <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">🔄 <span class="sidebar-text">Movimientos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">🏢 <span class="sidebar-text">Proveedores</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">⌂ <span class="sidebar-text">Proveedores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">✧ <span class="sidebar-text">Compras</span></router-link>
 
         <!-- SECCIÓN: GESTIÓN -->
         <div class="nav-section-title">Gestión</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">👥 <span class="sidebar-text">Clientes</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Clientes</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">◦ <span class="sidebar-text">Recordatorios</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">↪ <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Area de contenido principal -->
@@ -45,7 +45,7 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">👥 Colaboradores y Permisos</h1>
+            <h1 class="text-title">⚇ Colaboradores y Permisos</h1>
             <p class="text-subtitle">Gestiona las cuentas de tus trabajadores y restringe el acceso a datos sensibles</p>
           </div>
           <button @click="openCreateModal" class="btn btn-primary">➕ Agregar Trabajador</button>
@@ -54,8 +54,8 @@
 
       <!-- Sistema de Tabs (Solo visible para Superadmin) -->
       <div v-if="authStore.isSuperadmin" class="tabs-nav" style="display: flex; gap: 6px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color);">
-        <button :class="['tab-btn', activeTab === 'colaboradores' ? 'active' : '']" @click="activeTab = 'colaboradores'" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: var(--transition);">👥 Cuentas y Colaboradores</button>
-        <button :class="['tab-btn', activeTab === 'solicitudes' ? 'active' : '']" @click="switchToSolicitudes" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: var(--transition);">📋 Solicitudes de Registro</button>
+        <button :class="['tab-btn', activeTab === 'colaboradores' ? 'active' : '']" @click="activeTab = 'colaboradores'" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: var(--transition);">⚇ Cuentas y Colaboradores</button>
+        <button :class="['tab-btn', activeTab === 'solicitudes' ? 'active' : '']" @click="switchToSolicitudes" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: var(--transition);">≡ Solicitudes de Registro</button>
       </div>
 
       <!-- TAB 1: Colaboradores -->
@@ -160,8 +160,8 @@
                 <td>
                   <div class="actions-cell" style="gap: 6px;">
                     <button v-if="req.estado === 'Pendiente'" @click="updateRequestStatus(req.id, 'Contactado')" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 4px 8px;">📞 Contactar</button>
-                    <button v-if="req.estado !== 'Aprobado'" @click="approveAndPreFill(req)" class="btn btn-success btn-sm" style="font-size: 0.75rem; padding: 4px 8px; background-color: #10b981; color: white;">✅ Aprobar</button>
-                    <button v-if="req.estado !== 'Rechazado' && req.estado !== 'Aprobado'" @click="updateRequestStatus(req.id, 'Rechazado')" class="btn btn-danger btn-sm" style="font-size: 0.75rem; padding: 4px 8px; background-color: #ef4444; color: white;">❌ Rechazar</button>
+                    <button v-if="req.estado !== 'Aprobado'" @click="approveAndPreFill(req)" class="btn btn-success btn-sm" style="font-size: 0.75rem; padding: 4px 8px; background-color: #10b981; color: white;">✓ Aprobar</button>
+                    <button v-if="req.estado !== 'Rechazado' && req.estado !== 'Aprobado'" @click="updateRequestStatus(req.id, 'Rechazado')" class="btn btn-danger btn-sm" style="font-size: 0.75rem; padding: 4px 8px; background-color: #ef4444; color: white;">✕ Rechazar</button>
                   </div>
                 </td>
               </tr>
@@ -173,7 +173,7 @@
       <!-- Modal para agregar/editar colaboradores -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Colaborador' : '👥 Registrar Colaborador' }}</h2>
+          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Colaborador' : '⚇ Registrar Colaborador' }}</h2>
           <form @submit.prevent="saveUser" class="grid">
             <div class="grid grid-2">
               <div class="field">
@@ -239,19 +239,19 @@
               <div class="checkbox-grid">
                 <label class="checkbox-card">
                   <input type="checkbox" value="ventas" v-model="form.permisos" />
-                  <span>🛒 Ventas (POS)</span>
+                  <span>❖ Ventas (POS)</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="productos" v-model="form.permisos" />
-                  <span>📦 Productos e Inventario</span>
+                  <span>⬦ Productos e Inventario</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="dashboard" v-model="form.permisos" />
-                  <span>📊 Dashboard Estadísticas</span>
+                  <span>◫ Dashboard Estadísticas</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="historial_negocio" v-model="form.permisos" />
-                  <span>📈 Historial de Negocio</span>
+                  <span>▸ Historial de Negocio</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="clientes" v-model="form.permisos" />
@@ -259,15 +259,15 @@
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="proveedores" v-model="form.permisos" />
-                  <span>🏢 Proveedores</span>
+                  <span>⌂ Proveedores</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="compras" v-model="form.permisos" />
-                  <span>💵 Compras (Sensible)</span>
+                  <span>✧ Compras (Sensible)</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="categorias" v-model="form.permisos" />
-                  <span>🏷️ Categorías</span>
+                  <span>✦ Categorías</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="modificar_productos" v-model="form.permisos" />
@@ -275,27 +275,27 @@
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="historial_ventas" v-model="form.permisos" />
-                  <span>📋 Historial de Ventas</span>
+                  <span>≡ Historial de Ventas</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="reminders" v-model="form.permisos" />
-                  <span>📅 Recordatorios</span>
+                  <span>◦ Recordatorios</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="movimientos" v-model="form.permisos" />
-                  <span>🔄 Movimientos de Inventario</span>
+                  <span>⟳ Movimientos de Inventario</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="cuentas_cobrar" v-model="form.permisos" />
-                  <span>📒 Cuentas por Cobrar</span>
+                  <span>▫ Cuentas por Cobrar</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="formas_pago" v-model="form.permisos" />
-                  <span>💳 Formas de Pago</span>
+                  <span>▪ Formas de Pago</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="colaboradores" v-model="form.permisos" />
-                  <span>👥 Colaboradores</span>
+                  <span>⚇ Colaboradores</span>
                 </label>
               </div>
             </div>
@@ -439,21 +439,21 @@ const openEditModal = (user) => {
 
 const formatPermissionName = (perm) => {
   const mapping = {
-    'dashboard': '📊 Dashboard',
-    'historial_negocio': '📈 Historial Negocio',
-    'ventas': '🛒 POS Ventas',
-    'productos': '📦 Productos',
-    'categorias': '🏷️ Categorías',
-    'clientes': '👥 Clientes',
-    'proveedores': '🏢 Proveedores',
-    'compras': '💵 Compras',
-    'reminders': '📅 Recordatorios',
-    'movimientos': '🔄 Movimientos',
+    'dashboard': '◫ Dashboard',
+    'historial_negocio': '▸ Historial Negocio',
+    'ventas': '❖ POS Ventas',
+    'productos': '⬦ Productos',
+    'categorias': '✦ Categorías',
+    'clientes': '⚇ Clientes',
+    'proveedores': '⌂ Proveedores',
+    'compras': '✧ Compras',
+    'reminders': '◦ Recordatorios',
+    'movimientos': '⟳ Movimientos',
     'modificar_productos': '✏️ Editar Prod.',
-    'historial_ventas': '📋 Historial Ventas',
-    'cuentas_cobrar': '📒 Cuentas por Cobrar',
-    'formas_pago': '💳 Formas de Pago',
-    'colaboradores': '👥 Colaboradores'
+    'historial_ventas': '≡ Historial Ventas',
+    'cuentas_cobrar': '▫ Cuentas por Cobrar',
+    'formas_pago': '▪ Formas de Pago',
+    'colaboradores': '⚇ Colaboradores'
   }
   return mapping[perm] || perm
 }
@@ -560,7 +560,7 @@ onMounted(() => {
 
 .store-badge {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 500;
   padding: 4px 10px;
   border-radius: 6px;
   background-color: var(--secondary);
@@ -597,13 +597,13 @@ onMounted(() => {
 }
 
 .data-table th {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
 .role-badge {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 500;
   padding: 4px 12px;
   border-radius: 99px;
 }
@@ -620,7 +620,7 @@ onMounted(() => {
 
 .perm-badge {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   background-color: var(--border-color);
   color: var(--text-main);
   padding: 2px 8px;
@@ -634,7 +634,7 @@ onMounted(() => {
 
 .status-dot {
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -686,7 +686,7 @@ onMounted(() => {
 
 .permissions-selector h3 {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 4px;
 }
 
@@ -733,7 +733,7 @@ onMounted(() => {
 }
 
 .checkbox-card span {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
   color: var(--text-main);
 }
@@ -771,7 +771,7 @@ onMounted(() => {
 
 .modal-title {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 20px;
 }
 
@@ -783,7 +783,7 @@ onMounted(() => {
 
 .field label {
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
 }
 

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
 
 :root {
   /* Pastel Modern Color Palette */
@@ -25,7 +25,7 @@
   --radius-md: 16px;
   --radius-lg: 24px;
   
-  --font-family: 'Outfit', sans-serif;
+  --font-family: 'Montserrat', sans-serif;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -54,7 +54,7 @@ body {
 button, .btn {
   font-family: var(--font-family);
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500;
   padding: 10px 20px;
   border-radius: var(--radius-sm);
   border: none;
@@ -172,7 +172,7 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
 
 /* Typography helper classes */
 .text-title {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1.8rem;
   color: var(--text-main);
 }
@@ -215,7 +215,7 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
 
 .sidebar-brand {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-main);
   white-space: nowrap;
   display: flex;
@@ -232,7 +232,7 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
 /* Nombre de la tienda — siempre visible, pero pequeño y recortado cuando colapsado */
 .sidebar-brand-name {
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-muted);
   opacity: 0.7;
   white-space: nowrap;
@@ -275,14 +275,14 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
 }
 
 .user-name {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.95rem;
   white-space: nowrap;
 }
 
 .user-badge {
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: none;       /* sin mayusculas forzadas para que el rol en español se lea bien */
   color: #1e3a8a;
   background: var(--primary);
@@ -314,7 +314,7 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
 .nav-section-title {
   display: none;
   font-size: 0.68rem;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
   color: var(--text-muted);
   letter-spacing: 1.2px;
@@ -355,7 +355,7 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
   border-radius: var(--radius-sm);
   color: var(--text-muted);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
   transition: var(--transition);
   gap: 16px;
   white-space: nowrap;
@@ -382,7 +382,7 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
   border-radius: var(--radius-sm);
   background-color: var(--danger);
   color: #7f1d1d;
-  font-weight: 700;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   transition: var(--transition);
@@ -430,7 +430,7 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
   min-height: 220px;
   background: transparent;
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
   letter-spacing: 0.5px;
   user-select: none;

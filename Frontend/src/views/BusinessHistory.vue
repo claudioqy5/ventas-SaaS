@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
-      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>◈</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -10,34 +10,34 @@
             <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">📊 <span class="sidebar-text">Dashboard</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">◫ <span class="sidebar-text">Dashboard</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">▸ <span class="sidebar-text">Historial de Negocio</span></router-link>
 
         <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">❖ <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">≡ <span class="sidebar-text">Historial Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">▫ <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">▪ <span class="sidebar-text">Formas de Pago</span></router-link>
 
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">📦 <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">🏷️ <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">🔄 <span class="sidebar-text">Movimientos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">🏢 <span class="sidebar-text">Proveedores</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">⌂ <span class="sidebar-text">Proveedores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">✧ <span class="sidebar-text">Compras</span></router-link>
 
         <!-- SECCIÓN: GESTIÓN -->
         <div class="nav-section-title">Gestión</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">👥 <span class="sidebar-text">Clientes</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Clientes</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">◦ <span class="sidebar-text">Recordatorios</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">↪ <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Main Content -->
@@ -46,19 +46,19 @@
         <!-- Left Side: Title and KPI Cards side by side -->
         <div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap;">
           <div>
-            <h1 class="text-title">📈 Historial del Negocio</h1>
+            <h1 class="text-title">▸ Historial del Negocio</h1>
             <p class="text-subtitle">Resumen y análisis de ventas por periodo</p>
           </div>
           
           <!-- KPI Totals Row -->
           <div class="kpi-totals-row" style="display: flex; gap: 12px; flex-wrap: wrap;">
             <div class="kpi-total-card bruto" style="background: #eef2ff; border: 1px solid #c7d2fe; padding: 10px 18px; border-radius: var(--radius-md); text-align: left; min-width: 150px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center;">
-              <div style="font-size: 0.75rem; font-weight: 700; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px;">Venta Total (Con IGV)</div>
-              <div style="font-size: 1.35rem; font-weight: 800; color: #1e1b4b; margin-top: 2px;">S/. {{ (stats.totalBruto || 0).toFixed(2) }}</div>
+              <div style="font-size: 0.75rem; font-weight: 500; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px;">Venta Total (Con IGV)</div>
+              <div style="font-size: 1.35rem; font-weight: 500; color: #1e1b4b; margin-top: 2px;">S/. {{ (stats.totalBruto || 0).toFixed(2) }}</div>
             </div>
             <div class="kpi-total-card neto" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px 18px; border-radius: var(--radius-md); text-align: left; min-width: 150px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center;">
-              <div style="font-size: 0.75rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Ganancia Bruta (Pre-Impuesto)</div>
-              <div style="font-size: 1.35rem; font-weight: 800; color: #14532d; margin-top: 2px;">S/. {{ (stats.gananciaBruta || 0).toFixed(2) }}</div>
+              <div style="font-size: 0.75rem; font-weight: 500; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Ganancia Bruta (Pre-Impuesto)</div>
+              <div style="font-size: 1.35rem; font-weight: 500; color: #14532d; margin-top: 2px;">S/. {{ (stats.gananciaBruta || 0).toFixed(2) }}</div>
             </div>
           </div>
         </div>
@@ -66,7 +66,7 @@
         <!-- Filters & Period Tabs -->
         <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
           <div v-if="selectedPeriod === 'semanal'" class="date-picker-wrapper" style="display: flex; align-items: center; gap: 8px;">
-            <label for="history-date" style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">Filtrar por Semana:</label>
+            <label for="history-date" style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">Filtrar por Semana:</label>
             <input 
               type="date" 
               id="history-date" 
@@ -77,7 +77,7 @@
             />
           </div>
           <div v-if="selectedPeriod === 'mensual'" class="date-picker-wrapper" style="display: flex; align-items: center; gap: 8px;">
-            <label for="history-month" style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">Filtrar por Mes:</label>
+            <label for="history-month" style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">Filtrar por Mes:</label>
             <input 
               type="month" 
               id="history-month" 
@@ -88,7 +88,7 @@
             />
           </div>
           <div v-if="selectedPeriod === 'anual'" class="date-picker-wrapper" style="display: flex; align-items: center; gap: 8px;">
-            <label for="history-year" style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">Filtrar por Año:</label>
+            <label for="history-year" style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">Filtrar por Año:</label>
             <select 
               id="history-year" 
               v-model="selectedYear" 
@@ -105,19 +105,19 @@
               :class="['tab-btn', { active: selectedPeriod === 'semanal' }]" 
               @click="setPeriod('semanal')"
             >
-              📅 Semanal
+              ◦ Semanal
             </button>
             <button 
               :class="['tab-btn', { active: selectedPeriod === 'mensual' }]" 
               @click="setPeriod('mensual')"
             >
-              📊 Mensual
+              ◫ Mensual
             </button>
             <button 
               :class="['tab-btn', { active: selectedPeriod === 'anual' }]" 
               @click="setPeriod('anual')"
             >
-              📈 Anual
+              ▸ Anual
             </button>
           </div>
         </div>
@@ -132,7 +132,7 @@
           <!-- Periodic Sales Trend (Bar Chart - Enlarged) -->
           <div class="card chart-card">
             <h2 class="section-title">
-              📊 Tendencia de Ventas ({{ selectedPeriodText }})
+              ◫ Tendencia de Ventas ({{ selectedPeriodText }})
             </h2>
             <div v-if="!stats.ventasPeriodo || stats.ventasPeriodo.length === 0" class="empty-state">
               No hay datos de ventas registrados para este periodo.
@@ -199,7 +199,7 @@
 
         <!-- Payment Methods Pie Chart -->
         <div class="card chart-card">
-          <h2 class="section-title">💳 Métodos de Pago (Filtrado)</h2>
+          <h2 class="section-title">▪ Métodos de Pago (Filtrado)</h2>
           <div v-if="!stats.metodosPago || stats.metodosPago.length === 0" class="empty-state">
             Sin ventas en este periodo.
           </div>
@@ -645,7 +645,7 @@ onMounted(() => {
 
 .section-title {
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 20px;
   text-align: left;
   color: var(--text-main);
@@ -676,7 +676,7 @@ onMounted(() => {
 .chart-tooltip-text {
   font-size: 9px;
   fill: var(--text-main);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .chart-bar {
@@ -733,7 +733,7 @@ onMounted(() => {
 
 .pie-label {
   font-size: 7.5px;
-  font-weight: 800;
+  font-weight: 500;
   fill: #ffffff;
   pointer-events: none;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
@@ -769,7 +769,7 @@ onMounted(() => {
   background: var(--bg-app);
   color: var(--text-muted);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 500;
   padding: 2px 8px;
   border-radius: var(--radius-sm);
 }
@@ -818,7 +818,7 @@ onMounted(() => {
   border: none;
   padding: 8px 16px;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
   cursor: pointer;
   border-radius: var(--radius-sm);

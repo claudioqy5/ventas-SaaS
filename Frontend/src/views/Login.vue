@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-card card">
       <div class="header">
-        <h1 class="brand-title">🍦 VentasSaaS</h1>
+        <h1 class="brand-title">◈ VentasSaaS</h1>
         <p class="text-subtitle">{{ isRegister ? 'Solicita tu cuenta de negocio' : 'Inicia sesión en tu punto de venta' }}</p>
       </div>
 
@@ -152,7 +152,7 @@ const handleSubmit = async () => {
 
 .brand-title {
   font-size: 2.2rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-main);
   margin-bottom: 5px;
 }
@@ -166,7 +166,7 @@ const handleSubmit = async () => {
 
 label {
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
 }
 

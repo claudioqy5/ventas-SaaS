@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar" @mouseenter="isSidebarHovered = true" @mouseleave="isSidebarHovered = false">
-      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>◈</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -10,40 +10,40 @@
             <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">📊 <span class="sidebar-text">Dashboard</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">◫ <span class="sidebar-text">Dashboard</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">▸ <span class="sidebar-text">Historial de Negocio</span></router-link>
 
         <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">❖ <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">≡ <span class="sidebar-text">Historial Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">▫ <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">▪ <span class="sidebar-text">Formas de Pago</span></router-link>
 
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">📦 <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">🏷️ <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">🔄 <span class="sidebar-text">Movimientos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">🏢 <span class="sidebar-text">Proveedores</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">⌂ <span class="sidebar-text">Proveedores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">✧ <span class="sidebar-text">Compras</span></router-link>
 
         <!-- SECCIÓN: GESTIÓN -->
         <div class="nav-section-title">Gestión</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">👥 <span class="sidebar-text">Clientes</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Clientes</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">◦ <span class="sidebar-text">Recordatorios</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">↪ <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Main Content Area with Header (matching other views) -->
     <main class="main-content" style="height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 20px; padding-right: 0;">
       <header class="content-header" style="margin-bottom: 15px; flex-shrink: 0;">
-        <h1 class="text-title">🛒 Punto de Venta (POS)</h1>
+        <h1 class="text-title">❖ Punto de Venta (POS)</h1>
         <p class="text-subtitle">Registra nuevas ventas de forma rápida y sencilla</p>
       </header>
 
@@ -55,7 +55,7 @@
             <div class="search-filters">
               <input v-model="searchQuery" type="text" placeholder="🔍 Buscar por nombre o código de barra..." class="search-input" />
               <select v-model="selectedCategory" class="category-select">
-                <option value="">🏷️ Todas las Categorías</option>
+                <option value="">✦ Todas las Categorías</option>
                 <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
               </select>
             </div>
@@ -93,7 +93,7 @@
               <button @click="currentPage--" :disabled="currentPage === 1" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">
                 ⬅️ Anterior
               </button>
-              <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-main);">
+              <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-main);">
                 Página {{ currentPage }} de {{ totalPages }}
               </span>
               <button @click="currentPage++" :disabled="currentPage >= totalPages" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">
@@ -126,7 +126,7 @@
     <!-- Panel del Carrito de Compra — columna fija a la derecha, altura completa desde arriba -->
     <aside class="cart-panel">
       <div class="cart-header">
-        <h2 class="cart-title">🛒 Carrito de Compra</h2>
+        <h2 class="cart-title">❖ Carrito de Compra</h2>
         <span class="sale-code-badge">{{ codigoVenta }}</span>
       </div>
 
@@ -145,7 +145,7 @@
                 S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}
               </span>
               <!-- Para productos de tipo Costal (tanto en Kg suelto como Costal completo), el precio es editable inline -->
-              <small v-if="item.tipoProducto === 'Costal'" style="display: flex; align-items: center; gap: 3px; font-weight: 600; margin-top: 2px;">
+              <small v-if="item.tipoProducto === 'Costal'" style="display: flex; align-items: center; gap: 3px; font-weight: 500; margin-top: 2px;">
                 <span style="color: var(--text-muted);">S/.</span>
                 <input
                   type="number"
@@ -153,7 +153,7 @@
                   @change="validatePrecio(item)"
                   step="0.10"
                   min="0.01"
-                  style="width: 48px; border: none; border-bottom: 1.5px dashed #a3c4f3; background: transparent; font-size: 0.82rem; font-weight: 700; color: var(--text-main); outline: none; padding: 0 2px; text-align: left;"
+                  style="width: 48px; border: none; border-bottom: 1.5px dashed #a3c4f3; background: transparent; font-size: 0.82rem; font-weight: 500; color: var(--text-main); outline: none; padding: 0 2px; text-align: left;"
                 />
                 <span style="color: var(--text-muted); font-size: 0.78rem;">/ {{ item.presentacion === 'Costal' ? 'Costal' : 'Kg' }} ✏️</span>
               </small>
@@ -177,7 +177,7 @@
             <!-- Modo de ingreso: Por Cantidad o Por Monto (solo Kg suelto) - Toggle Switch Mini -->
             <div v-if="item.tipoProducto === 'Costal' && item.presentacion === 'Kg'" style="display: flex; align-items: center; gap: 8px; width: 100%; justify-content: flex-end; margin-top: 2px; margin-bottom: 2px;">
               <div @click="toggleModoIngreso(item)" style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
-                <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">
+                <span style="font-size: 0.72rem; font-weight: 500; color: var(--text-muted);">
                   {{ item.modoIngreso === 'monto' ? '💰 Por Monto' : '⚖️ Por Kg' }}
                 </span>
                 <!-- Switch Track -->
@@ -215,13 +215,13 @@
                   @change="validateItemQty(item)"
                   :step="item.presentacion === 'Kg' && item.tipoProducto === 'Costal' ? '0.05' : '1'"
                   min="0.01"
-                  style="width: 60px; text-align: center; border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 4px; font-weight: 600; font-size: 0.88rem;"
+                  style="width: 60px; text-align: center; border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 4px; font-weight: 500; font-size: 0.88rem;"
                 />
                 <button @click="updateQty(item, 1)" class="btn-qty">+</button>
               </div>
               <!-- Modo: Por Monto (S/.) — calcula Kg automaticamente -->
               <div v-if="item.modoIngreso === 'monto'" style="display: flex; align-items: center; gap: 4px;">
-                <span style="font-size: 0.78rem; font-weight: 700; color: #b45309;">S/.</span>
+                <span style="font-size: 0.78rem; font-weight: 500; color: #b45309;">S/.</span>
                 <input
                   type="number"
                   v-model.number="item.montoIngresado"
@@ -229,9 +229,9 @@
                   step="0.5"
                   min="0.01"
                   placeholder="Monto"
-                  style="width: 65px; text-align: center; border: 1px solid #f59e0b; border-radius: 4px; padding: 2px 4px; font-weight: 700; font-size: 0.88rem; color: #b45309; background: #fffbeb;"
+                  style="width: 65px; text-align: center; border: 1px solid #f59e0b; border-radius: 4px; padding: 2px 4px; font-weight: 500; font-size: 0.88rem; color: #b45309; background: #fffbeb;"
                 />
-                <span style="font-size: 0.73rem; color: var(--text-muted); font-weight: 600;">= {{ item.cantidad.toFixed(2) }} Kg</span>
+                <span style="font-size: 0.73rem; color: var(--text-muted); font-weight: 500;">= {{ item.cantidad.toFixed(2) }} Kg</span>
               </div>
               <button @click="removeFromCart(item.productoId)" class="btn-remove" title="Quitar producto">×</button>
             </div>
@@ -257,16 +257,16 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
           <!-- Método de pago -->
           <div class="payment-method" v-if="!isFiado" style="display: flex; flex-direction: column; gap: 4px;">
-            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Método de Pago</label>
+            <label style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted);">Método de Pago</label>
             <select v-model="paymentMethod" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff; height: 38px;">
               <option value="" disabled>Seleccione...</option>
-              <option v-for="pm in activePaymentMethods" :key="pm.id" :value="pm.nombre">💳 {{ pm.nombre }}</option>
+              <option v-for="pm in activePaymentMethods" :key="pm.id" :value="pm.nombre">▪ {{ pm.nombre }}</option>
             </select>
           </div>
 
           <!-- Cliente (Opcional) -->
           <div class="client-selection" :style="{ 'grid-column': isFiado ? 'span 2' : 'span 1', 'display': 'flex', 'flex-direction': 'column', 'gap': '4px' }">
-            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Cliente (Opcional)</label>
+            <label style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted);">Cliente (Opcional)</label>
             <select v-model="selectedClientId" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff; height: 38px;">
               <option value="">👤 Cliente General</option>
               <option v-for="cli in clients" :key="cli.id" :value="cli.id">👤 {{ cli.nombre }}</option>
@@ -276,12 +276,12 @@
           <!-- Checkbox de Fiado -->
           <div class="fiado-toggle" style="grid-column: span 2; display: flex; align-items: center; gap: 8px; background: #fff8eb; padding: 8px 12px; border: 1px solid #ffe8cc; border-radius: var(--radius-sm); height: 38px; margin-top: 2px;">
             <input type="checkbox" v-model="isFiado" id="fiadoCheck" style="width: 16px; height: 16px; cursor: pointer; accent-color: #f59e0b;" />
-            <label for="fiadoCheck" style="font-weight: 700; font-size: 0.8rem; color: #b45309; cursor: pointer; user-select: none;">📒 Vender como Fiado (Crédito)</label>
+            <label for="fiadoCheck" style="font-weight: 500; font-size: 0.8rem; color: #b45309; cursor: pointer; user-select: none;">▫ Vender como Fiado (Crédito)</label>
           </div>
         </div>
 
-        <button @click="checkout" class="btn btn-success w-full checkout-btn" :disabled="cart.length === 0 || loading" style="padding: 12px; font-weight: 700;">
-          {{ loading ? 'Procesando Venta...' : '💵 Confirmar Venta' }}
+        <button @click="checkout" class="btn btn-success w-full checkout-btn" :disabled="cart.length === 0 || loading" style="padding: 12px; font-weight: 500;">
+          {{ loading ? 'Procesando Venta...' : '✧ Confirmar Venta' }}
         </button>
       </div>
     </aside>
@@ -693,7 +693,7 @@ const whatsappUrl = computed(() => {
     const qtyText = i.presentacion === 'Costal' ? `${i.cantidad} costal(es)` : `${i.cantidad} ${i.unidadMedida}`
     return `  • ${i.nombreProducto} x${qtyText} = S/. ${(i.precioUnitario * i.cantidad).toFixed(2)}`
   }).join('%0A')
-  const msg = `¡Hola! Gracias por tu compra en *${store}* 🛒%0A%0AComprobante: *${lastSaleCode.value}*%0A%0A${items}%0A%0A*Total: S/. ${lastSaleTotal.value.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
+  const msg = `¡Hola! Gracias por tu compra en *${store}* ❖%0A%0AComprobante: *${lastSaleCode.value}*%0A%0A${items}%0A%0A*Total: S/. ${lastSaleTotal.value.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
   const phone = lastClientPhone.value.replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${msg}`
 })
@@ -892,7 +892,7 @@ onUnmounted(() => {
   top: 8px;
   right: 8px;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   padding: 4px 8px;
   border-radius: var(--radius-sm);
   color: #ffffff;
@@ -910,7 +910,7 @@ onUnmounted(() => {
 
 .product-name {
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-main);
   margin-bottom: 2px;
   min-height: 38px;
@@ -927,7 +927,7 @@ onUnmounted(() => {
 }
 
 .product-price {
-  font-weight: 700;
+  font-weight: 500;
   color: var(--primary);
   font-size: 1rem;
   margin-top: auto;
@@ -977,7 +977,7 @@ onUnmounted(() => {
 
 .cart-title {
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 500;
   margin: 0;
 }
 
@@ -986,7 +986,7 @@ onUnmounted(() => {
   color: #1e40af;
   padding: 4px 10px;
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 500;
   border-radius: var(--radius-sm);
   border: 1px solid #bfdbfe;
 }
@@ -1011,7 +1011,7 @@ onUnmounted(() => {
 }
 
 .item-name {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
 }
 
@@ -1037,7 +1037,7 @@ onUnmounted(() => {
   border: none;
   color: #ef4444;
   font-size: 1.3rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   padding: 0 4px;
   line-height: 1;
@@ -1058,7 +1058,7 @@ onUnmounted(() => {
 .pres-btn {
   padding: 4px 10px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: 4px;
   border: 1px solid var(--border-color);
   background-color: #f8fafc;
@@ -1085,7 +1085,7 @@ onUnmounted(() => {
   border-radius: 50%;
   border: 1px solid var(--border-color);
   background-color: var(--bg-app);
-  font-weight: 700;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1093,7 +1093,7 @@ onUnmounted(() => {
 }
 
 .item-qty {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
 }
 
@@ -1106,7 +1106,7 @@ onUnmounted(() => {
 
 .summary-row.total {
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-main);
 }
 
@@ -1142,7 +1142,7 @@ onUnmounted(() => {
 
 .cross-sell-title {
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #92400e;
   margin: 0 0 10px 0;
 }
@@ -1163,7 +1163,7 @@ onUnmounted(() => {
   border-radius: 99px;
   cursor: pointer;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-main);
   transition: var(--transition);
   box-shadow: var(--shadow-sm);
@@ -1183,7 +1183,7 @@ onUnmounted(() => {
 }
 
 .cross-sell-price {
-  font-weight: 700;
+  font-weight: 500;
   color: #d97706;
 }
 
@@ -1250,7 +1250,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-main);
   border-top: 1px dashed var(--border-color);
   padding-top: 10px;
@@ -1272,7 +1272,7 @@ onUnmounted(() => {
   padding: 12px 20px;
   background: linear-gradient(135deg, #25d366, #128c7e);
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 0.95rem;
   border-radius: var(--radius-sm);
   text-decoration: none;

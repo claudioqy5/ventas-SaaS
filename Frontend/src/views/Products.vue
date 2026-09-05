@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
-      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>◈</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -10,34 +10,34 @@
             <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">📊 <span class="sidebar-text">Dashboard</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">◫ <span class="sidebar-text">Dashboard</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">▸ <span class="sidebar-text">Historial de Negocio</span></router-link>
 
         <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">❖ <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">≡ <span class="sidebar-text">Historial Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">▫ <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">▪ <span class="sidebar-text">Formas de Pago</span></router-link>
 
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">📦 <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">🏷️ <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">🔄 <span class="sidebar-text">Movimientos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">🏢 <span class="sidebar-text">Proveedores</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">⌂ <span class="sidebar-text">Proveedores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">✧ <span class="sidebar-text">Compras</span></router-link>
 
         <!-- SECCIÓN: GESTIÓN -->
         <div class="nav-section-title">Gestión</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">👥 <span class="sidebar-text">Clientes</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Clientes</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">◦ <span class="sidebar-text">Recordatorios</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">↪ <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Area de contenido principal -->
@@ -45,7 +45,7 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">📦 Inventario</h1>
+            <h1 class="text-title">⬦ Inventario</h1>
             <p class="text-subtitle">Registra nuevos productos y ajusta el stock</p>
           </div>
           
@@ -69,7 +69,7 @@
       <div class="table-filters card">
         <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código o descripción..." class="filter-input" />
         <select v-model="selectedCategory" class="filter-select">
-          <option value="">🏷️ Todas las Categorías</option>
+          <option value="">✦ Todas las Categorías</option>
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
         </select>
       </div>
@@ -114,8 +114,8 @@
                 </span>
               </td>
               <td>
-                <span v-if="prod.stock <= prod.stockMinimo" class="status-indicator low">⚠️ Reabastecer</span>
-                <span v-else class="status-indicator ok">✅ Activo</span>
+                <span v-if="prod.stock <= prod.stockMinimo" class="status-indicator low">⚠ Reabastecer</span>
+                <span v-else class="status-indicator ok">✓ Activo</span>
               </td>
               <td v-if="authStore.hasPermission('modificar_productos')">
                 <div class="actions-cell">
@@ -131,7 +131,7 @@
       <!-- Modal para el registro/edicion de productos -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title" style="margin-bottom: 12px; font-size: 1.3rem;">{{ isEdit ? '✏️ Editar Producto' : '📦 Registrar Producto' }}</h2>
+          <h2 class="modal-title" style="margin-bottom: 12px; font-size: 1.3rem;">{{ isEdit ? '✏️ Editar Producto' : '⬦ Registrar Producto' }}</h2>
           <form @submit.prevent="saveProduct" class="compact-form">
 
             <!-- FILA 1: Nombre (span 2) y Categoría (span 1) -->
@@ -174,7 +174,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Costal'">
               <!-- BLOQUE INVENTARIO -->
               <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 800; color: #92400e; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">📦 Inventario</div>
+                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">⬦ Inventario</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Kg x Costal</label>
                   <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
@@ -187,7 +187,7 @@
 
               <!-- BLOQUE COMPRA -->
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 800; color: #475569; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Compra (Costos)</div>
+                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Compra (Costos)</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Costo Costal</label>
                   <input v-model.number="form.precioCostoCostal" type="number" step="0.01" min="0" required />
@@ -200,7 +200,7 @@
 
               <!-- BLOQUE VENTA -->
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 800; color: #166534; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">🏷️ Venta (Precios)</div>
+                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 500; color: #166534; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta (Precios)</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Venta Costal</label>
                   <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" required />
@@ -215,21 +215,21 @@
             <!-- FILA 3 (Alternativa): Precios y stock para Unidad (3 Bloques ordenados: Inventario -> Compra -> Venta) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Unidad'">
               <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 800; color: #92400e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📦 Inventario</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">⬦ Inventario</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>{{ isEdit ? 'Stock' : 'Inicial (Und)' }}</label>
                   <input v-model.number="form.stock" type="number" step="1" min="0" :disabled="isEdit" required />
                 </div>
               </div>
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 800; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Compra</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Compra</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Precio Costo (S/.)</label>
                   <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" required />
                 </div>
               </div>
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 800; color: #166534; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🏷️ Venta</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: #166534; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Precio Venta (S/.)</label>
                   <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
@@ -240,14 +240,14 @@
             <!-- FILA 3 (Alternativa): Precios para Servicio (2 Bloques visuales) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Servicio'">
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 800; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Costo</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Costo</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Costo Insumos (S/.)</label>
                   <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" />
                 </div>
               </div>
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 800; color: #166534; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🏷️ Venta</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: #166534; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Precio Servicio (S/.)</label>
                   <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
@@ -359,7 +359,7 @@ const costoKgCalculado = computed(() => {
 
 // Definicion de los tipos de producto disponibles
 const tiposProducto = [
-  { valor: 'Unidad',   label: 'Unidad',   icono: '📦', descripcion: 'Se vende por unidades (ej: cama, ropa, pollo vivo)' },
+  { valor: 'Unidad',   label: 'Unidad',   icono: '⬦', descripcion: 'Se vende por unidades (ej: cama, ropa, pollo vivo)' },
   { valor: 'Costal',   label: 'Costal',   icono: '🎒', descripcion: 'Precio por kg suelto Y precio especial por costal completo' },
   { valor: 'Servicio', label: 'Servicio', icono: '🐾', descripcion: 'No descuenta inventario (ej: baño, grooming, consulta)' },
 ]
@@ -629,14 +629,14 @@ onMounted(() => {
 .stat-label {
   font-size: 0.75rem;
   color: var(--text-muted);
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .stat-value {
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: 500;
   color: var(--primary);
 }
 
@@ -663,7 +663,7 @@ onMounted(() => {
 }
 
 .data-table th {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
@@ -671,7 +671,7 @@ onMounted(() => {
   padding: 4px 10px;
   border-radius: 99px;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .stock-badge.ok {
@@ -686,7 +686,7 @@ onMounted(() => {
 
 .status-indicator {
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .status-indicator.ok {
@@ -808,7 +808,7 @@ onMounted(() => {
 
 .modal-title {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 20px;
 }
 
@@ -821,7 +821,7 @@ onMounted(() => {
 
 .field label {
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
@@ -914,13 +914,13 @@ onMounted(() => {
 
 .analysis-rate {
   font-size: 0.78rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #6366f1;
 }
 
 .analysis-days {
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 500;
   padding: 2px 8px;
   border-radius: 99px;
   display: inline-block;
@@ -943,7 +943,7 @@ onMounted(() => {
 
 .analysis-suggest {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #0369a1;
 }
 
@@ -972,7 +972,7 @@ onMounted(() => {
   background: #ffffff;
   cursor: pointer;
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-main);
   transition: all 0.2s;
 }

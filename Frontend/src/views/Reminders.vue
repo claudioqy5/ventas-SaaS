@@ -2,7 +2,7 @@
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
-      <div class="sidebar-brand"><span>🍦</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
+      <div class="sidebar-brand"><span>◈</span><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
@@ -10,41 +10,41 @@
             <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">📊 <span class="sidebar-text">Dashboard</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">📈 <span class="sidebar-text">Historial de Negocio</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">◫ <span class="sidebar-text">Dashboard</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active">▸ <span class="sidebar-text">Historial de Negocio</span></router-link>
 
         <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">🛒 <span class="sidebar-text">POS Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">📋 <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">📒 <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">💳 <span class="sidebar-text">Formas de Pago</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">❖ <span class="sidebar-text">POS Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active">≡ <span class="sidebar-text">Historial Ventas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active">▫ <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active">▪ <span class="sidebar-text">Formas de Pago</span></router-link>
 
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">📦 <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">🏷️ <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">🔄 <span class="sidebar-text">Movimientos</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">🏢 <span class="sidebar-text">Proveedores</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">💵 <span class="sidebar-text">Compras</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">⌂ <span class="sidebar-text">Proveedores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active">✧ <span class="sidebar-text">Compras</span></router-link>
 
         <!-- SECCIÓN: GESTIÓN -->
         <div class="nav-section-title">Gestión</div>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">👥 <span class="sidebar-text">Clientes</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">📅 <span class="sidebar-text">Recordatorios</span></router-link>
-        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">👥 <span class="sidebar-text">Colaboradores</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Clientes</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active">◦ <span class="sidebar-text">Recordatorios</span></router-link>
+        <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active">⚇ <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">🚪 <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">↪ <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
       <header class="content-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
         <div>
-          <h1 class="text-title">📅 Recordatorios e Historial de Cuentas por Pagar</h1>
+          <h1 class="text-title">◦ Recordatorios e Historial de Cuentas por Pagar</h1>
           <p class="text-subtitle">Gestiona tus cuentas pendientes, vencimientos y recordatorios importantes</p>
         </div>
         <button @click="openAddModal" class="btn btn-primary">➕ Agregar Cuenta / Recordatorio</button>
@@ -53,12 +53,12 @@
       <!-- KPI Summary -->
       <div class="summary-kpis-container" style="display: flex; gap: 20px; margin-bottom: 24px; flex-wrap: wrap;">
         <div class="kpi-total-card pending" style="background: #fffbeb; border: 1px solid #fef3c7; padding: 12px 20px; border-radius: var(--radius-md); text-align: left; min-width: 200px; box-shadow: var(--shadow-sm);">
-          <div style="font-size: 0.8rem; font-weight: 700; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px;">Cuentas Pendientes</div>
-          <div style="font-size: 1.6rem; font-weight: 800; color: #78350f; margin-top: 4px;">S/. {{ totalPendiente.toFixed(2) }}</div>
+          <div style="font-size: 0.8rem; font-weight: 500; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px;">Cuentas Pendientes</div>
+          <div style="font-size: 1.6rem; font-weight: 500; color: #78350f; margin-top: 4px;">S/. {{ totalPendiente.toFixed(2) }}</div>
         </div>
         <div class="kpi-total-card paid" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px 20px; border-radius: var(--radius-md); text-align: left; min-width: 200px; box-shadow: var(--shadow-sm);">
-          <div style="font-size: 0.8rem; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Cuentas Pagadas / Listas</div>
-          <div style="font-size: 1.6rem; font-weight: 800; color: #14532d; margin-top: 4px;">S/. {{ totalPagado.toFixed(2) }}</div>
+          <div style="font-size: 0.8rem; font-weight: 500; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Cuentas Pagadas / Listas</div>
+          <div style="font-size: 1.6rem; font-weight: 500; color: #14532d; margin-top: 4px;">S/. {{ totalPagado.toFixed(2) }}</div>
         </div>
       </div>
 
@@ -105,7 +105,7 @@
                 </td>
                 <td>
                   <div class="actions-cell">
-                    <button v-if="rem.estado === 'Pendiente'" @click="markAsPaid(rem)" class="btn-action check" title="Marcar como Pagado" style="color: #16a34a; font-size: 1.1rem; font-weight: bold;">✓</button>
+                    <button v-if="rem.estado === 'Pendiente'" @click="markAsPaid(rem)" class="btn-action check" title="Marcar como Pagado" style="color: #16a34a; font-size: 1.1rem; font-weight: 500;">✓</button>
                     <button @click="openEditModal(rem)" class="btn-action edit" title="Editar">✏️</button>
                     <button @click="deleteReminder(rem.id)" class="btn-action delete" title="Eliminar">🗑️</button>
                   </div>
@@ -153,7 +153,7 @@
               <label for="estado" class="font-bold">Estado</label>
               <select id="estado" v-model="form.estado" class="form-input w-full" style="padding: 10px; margin-top: 6px; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
                 <option value="Pendiente">⏳ Pendiente</option>
-                <option value="Pagado">💵 Pagado</option>
+                <option value="Pagado">✧ Pagado</option>
                 <option value="Completado">✓ Completado</option>
               </select>
             </div>
@@ -389,14 +389,14 @@ onMounted(() => {
 .data-table th {
   background-color: var(--bg-app);
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .status-badge {
   padding: 4px 8px;
   border-radius: var(--radius-sm);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .status-badge.pendiente {
@@ -418,7 +418,7 @@ onMounted(() => {
   padding: 4px 8px;
   border-radius: var(--radius-sm);
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .date-badge.date-ok {
