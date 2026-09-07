@@ -7,6 +7,7 @@ import POS from '../views/POS.vue'
 import SalesHistory from '../views/SalesHistory.vue'
 import Products from '../views/Products.vue'
 import Categories from '../views/Categories.vue'
+import Brands from '../views/Brands.vue'
 import Clients from '../views/Clients.vue'
 import Suppliers from '../views/Suppliers.vue'
 import Purchases from '../views/Purchases.vue'
@@ -52,6 +53,12 @@ const routes = [
     path: '/categories', 
     component: Categories, 
     name: 'Categories',
+    meta: { requiresAuth: true, permission: 'categorias' } 
+  },
+  { 
+    path: '/marcas', 
+    component: Brands, 
+    name: 'Brands',
     meta: { requiresAuth: true, permission: 'categorias' } 
   },
   { 

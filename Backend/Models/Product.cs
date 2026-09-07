@@ -22,6 +22,10 @@ public class Product
     [BsonRepresentation(BsonType.ObjectId)]
     public string CategoriaId { get; set; } = string.Empty;
 
+    // Marca a la que pertenece el producto
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string MarcaId { get; set; } = string.Empty;
+
     public string CodigoBarras { get; set; } = string.Empty;
     public string Nombre { get; set; } = string.Empty;
     public string Descripcion { get; set; } = string.Empty;
@@ -86,5 +90,14 @@ public class Product
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal PrecioOferta { get; set; } = 0;
 
+    // Atributos dinámicos del producto (Color, Material, etc.)
+    public List<ProductAttribute> Atributos { get; set; } = new List<ProductAttribute>();
+
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+}
+
+public class ProductAttribute
+{
+    public string Nombre { get; set; } = string.Empty;
+    public string Valor { get; set; } = string.Empty;
 }

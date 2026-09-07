@@ -25,6 +25,7 @@ public class MongoDbContext
     public IMongoCollection<Empresa> Empresas => _database.GetCollection<Empresa>("Empresas");
     public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
     public IMongoCollection<Category> Categories => _database.GetCollection<Category>("Categories");
+    public IMongoCollection<Brand> Brands => _database.GetCollection<Brand>("Brands");
     public IMongoCollection<Product> Products => _database.GetCollection<Product>("Products");
     public IMongoCollection<Client> Clients => _database.GetCollection<Client>("Clients");
     public IMongoCollection<Supplier> Suppliers => _database.GetCollection<Supplier>("Suppliers");

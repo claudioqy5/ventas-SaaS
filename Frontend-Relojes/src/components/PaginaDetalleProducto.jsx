@@ -568,24 +568,35 @@ export default function PaginaDetalleProducto({
                 Especificaciones Técnicas y Manufactura
               </h3>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', fontSize: '0.82rem', fontFamily: 'var(--font-serif)' }}>
-                <div>
-                  <span style={{ color: 'var(--c-taupe)', display: 'block', fontSize: '0.74rem' }}>Calibre de Movimiento</span>
-                  <strong style={{ color: 'var(--c-deep-purple)' }}>{specs.calibre}</strong>
+              {product.atributos && product.atributos.length > 0 ? (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', fontSize: '0.82rem', fontFamily: 'var(--font-serif)' }}>
+                  {product.atributos.map((attr, idx) => (
+                    <div key={idx}>
+                      <span style={{ color: 'var(--c-taupe)', display: 'block', fontSize: '0.74rem', textTransform: 'capitalize' }}>{attr.nombre}</span>
+                      <strong style={{ color: 'var(--c-deep-purple)' }}>{attr.valor}</strong>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <span style={{ color: 'var(--c-taupe)', display: 'block', fontSize: '0.74rem' }}>Cristal</span>
-                  <strong style={{ color: 'var(--c-deep-purple)' }}>{specs.cristal}</strong>
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', fontSize: '0.82rem', fontFamily: 'var(--font-serif)' }}>
+                  <div>
+                    <span style={{ color: 'var(--c-taupe)', display: 'block', fontSize: '0.74rem' }}>Calibre de Movimiento</span>
+                    <strong style={{ color: 'var(--c-deep-purple)' }}>{specs.calibre}</strong>
+                  </div>
+                  <div>
+                    <span style={{ color: 'var(--c-taupe)', display: 'block', fontSize: '0.74rem' }}>Cristal</span>
+                    <strong style={{ color: 'var(--c-deep-purple)' }}>{specs.cristal}</strong>
+                  </div>
+                  <div>
+                    <span style={{ color: 'var(--c-taupe)', display: 'block', fontSize: '0.74rem' }}>Hermeticidad</span>
+                    <strong style={{ color: 'var(--c-deep-purple)' }}>{specs.hermeticidad}</strong>
+                  </div>
+                  <div>
+                    <span style={{ color: 'var(--c-taupe)', display: 'block', fontSize: '0.74rem' }}>Diámetro de Caja</span>
+                    <strong style={{ color: 'var(--c-deep-purple)' }}>{specs.diametro || '42 mm'}</strong>
+                  </div>
                 </div>
-                <div>
-                  <span style={{ color: 'var(--c-taupe)', display: 'block', fontSize: '0.74rem' }}>Hermeticidad</span>
-                  <strong style={{ color: 'var(--c-deep-purple)' }}>{specs.hermeticidad}</strong>
-                </div>
-                <div>
-                  <span style={{ color: 'var(--c-taupe)', display: 'block', fontSize: '0.74rem' }}>Diámetro de Caja</span>
-                  <strong style={{ color: 'var(--c-deep-purple)' }}>{specs.diametro || '42 mm'}</strong>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

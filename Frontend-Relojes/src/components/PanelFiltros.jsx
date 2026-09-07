@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, X, SlidersHorizontal } from 'lucide-react';
 
-export default function PanelFiltros({ filters, setFilters, isMobileOpen, onCloseMobile }) {
+export default function PanelFiltros({ filters, setFilters, availableMaterials = [], availableColors = [], isMobileOpen, onCloseMobile }) {
   const [openSections, setOpenSections] = useState({
     precio: true,
     disponibilidad: true,
     material: true,
+    color: true,
   });
 
   const toggleSection = (section) => {
@@ -22,7 +23,8 @@ export default function PanelFiltros({ filters, setFilters, isMobileOpen, onClos
 
   const activeCount = (filters.priceRange.min !== '' || filters.priceRange.max !== '' ? 1 : 0) +
                       (filters.inStockOnly ? 1 : 0) +
-                      filters.materials.length;
+                      filters.materials.length +
+                      (filters.colors ? filters.colors.length : 0);
 
   const SectionHeader = ({ title, section }) => (
     <div
@@ -123,10 +125,12 @@ export default function PanelFiltros({ filters, setFilters, isMobileOpen, onClos
       )}
 
       {/* Material */}
-      <SectionHeader title="Material" section="material" />
-      {openSections.material && (
-        <div style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {['Acero Inoxidable', 'Oro', 'Titanio', 'Piel', 'Diamantes'].map(mat => (
+      {availableMaterials.length > 0 && (
+        <>
+          <SectionHeader title="Material" section="material" />
+          {openSections.material && (
+            <div style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {availableMaterials.map(mat => (
             <label key={mat} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--c-deep-purple)', cursor: 'pointer' }}>
               <input
                 type="checkbox"
@@ -147,10 +151,41 @@ export default function PanelFiltros({ filters, setFilters, isMobileOpen, onClos
           ))}
         </div>
       )}
+      </>)}
+
+      {/* Color */}
+      {availableColors.length > 0 && (
+        <>
+          <SectionHeader title="Color" section="color" />
+          {openSections.color && (
+            <div style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {availableColors.map(col => (
+                <label key={col} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--c-deep-purple)', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={filters.colors?.includes(col)}
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      setFilters(prev => {
+                        const newCols = isChecked
+                          ? [...(prev.colors || []), col]
+                          : (prev.colors || []).filter(c => c !== col);
+                        return { ...prev, colors: newCols };
+                      });
+                    }}
+                    style={{ accentColor: 'var(--c-indigo)' }}
+                  />
+                  {col}
+                </label>
+              ))}
+            </div>
+          )}
+        </>
+      )}
       
       {/* Botón de limpiar filtros */}
       <button 
-        onClick={() => setFilters({ priceRange: { min: '', max: '' }, inStockOnly: false, materials: [] })}
+        onClick={() => setFilters({ priceRange: { min: '', max: '' }, inStockOnly: false, materials: [], colors: [] })}
         style={{
           width: '100%',
           marginTop: '16px',

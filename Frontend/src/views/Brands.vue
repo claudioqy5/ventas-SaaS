@@ -23,8 +23,7 @@
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/marcas" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z M7 7h.01"/></svg> <span class="sidebar-text">Marcas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/brands" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">Marcas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 2v6h-6 M3 12a9 9 0 0 1 15-6.7L21 8 M3 22v-6h6 M21 12a9 9 0 0 1-15 6.7L3 16"/></svg> <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
@@ -46,45 +45,41 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">⌂ Gestión de Proveedores</h1>
-            <p class="text-subtitle">Registra y administra tus proveedores comerciales</p>
+            <h1 class="text-title">Gestión de Marcas</h1>
+            <p class="text-subtitle">Organiza tus productos en el inventario</p>
           </div>
-          <button @click="openCreateModal" class="btn btn-primary">➕ Agregar Proveedor</button>
+          <button @click="openCreateModal" class="btn btn-primary">➕ Agregar Marca</button>
         </div>
       </header>
 
       <!-- Seccion de filtros de busqueda -->
       <div class="table-filters card">
-        <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, correo o teléfono..." class="filter-input" />
+        <input v-model="searchQuery" type="text" placeholder="Buscar por nombre o descripción..." class="filter-input" />
       </div>
 
-      <!-- Tabla de datos principal -->
+      <!-- Lista de categorias -->
       <div class="card font-card">
-        <div v-if="filteredSuppliers.length === 0" class="empty-state">
-          No se encontraron proveedores que coincidan con la búsqueda.
+        <div v-if="filteredBrands.length === 0" class="empty-state">
+          No se encontraron marcas que coincidan con la búsqueda.
         </div>
         <table v-else class="data-table">
           <thead>
             <tr>
               <th style="width: 50px;">N°</th>
-              <th>Nombre del Proveedor</th>
-              <th>Teléfono</th>
-              <th>Email</th>
-              <th>Dirección</th>
+              <th>Nombre</th>
+              <th>Descripción</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(sup, index) in filteredSuppliers" :key="sup.id">
+            <tr v-for="(brand, index) in filteredBrands" :key="brand.id">
               <td><strong>{{ index + 1 }}</strong></td>
-              <td><strong>{{ sup.nombre }}</strong></td>
-              <td>{{ sup.telefono || 'N/A' }}</td>
-              <td>{{ sup.correo || 'N/A' }}</td>
-              <td>{{ sup.direccion || 'N/A' }}</td>
+              <td><strong>{{ brand.nombre }}</strong></td>
+              <td>{{ brand.descripcion }}</td>
               <td>
                 <div class="actions-cell">
-                  <button @click="openEditModal(sup)" class="btn-action edit" title="Editar">✏️</button>
-                  <button @click="confirmDelete(sup.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                  <button @click="openEditModal(brand)" class="btn-action edit" title="Editar">✏️</button>
+                  <button @click="confirmDelete(brand.id)" class="btn-action delete" title="Eliminar">🗑️</button>
                 </div>
               </td>
             </tr>
@@ -92,35 +87,23 @@
         </table>
       </div>
 
-      <!-- Formulario modal de creacion/edicion -->
+      <!-- Modal para registrar o editar categoria -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Proveedor' : '⌂ Registrar Proveedor' }}</h2>
-          <form @submit.prevent="saveSupplier" class="grid">
+          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Marca' : 'Registrar Marca' }}</h2>
+          <form @submit.prevent="saveCategory" class="grid">
             <div class="field">
-              <label>Nombre Comercial / Razón Social</label>
-              <input v-model="form.nombre" type="text" placeholder="Ej. Distribuidora Central" required />
+              <label>Nombre de la Marca</label>
+              <input v-model="form.nombre" type="text" placeholder="Ej. Pastelería, Bebidas, etc." required />
             </div>
-
-            <div class="grid grid-2">
-              <div class="field">
-                <label>Teléfono de Contacto</label>
-                <input v-model="form.telefono" type="text" placeholder="987654321" />
-              </div>
-              <div class="field">
-                <label>Correo Electrónico</label>
-                <input v-model="form.correo" type="email" placeholder="ventas@distribuidora.com" />
-              </div>
-            </div>
-
             <div class="field">
-              <label>Dirección</label>
-              <input v-model="form.direccion" type="text" placeholder="Av. Principal 456" />
+              <label>Descripción</label>
+              <textarea v-model="form.descripcion" placeholder="Añade una breve descripción..."></textarea>
             </div>
 
             <div class="modal-actions">
               <button type="button" @click="showModal = false" class="btn btn-secondary">Cancelar</button>
-              <button type="submit" class="btn btn-primary">{{ isEdit ? 'Guardar Cambios' : 'Registrar Proveedor' }}</button>
+              <button type="submit" class="btn btn-primary">{{ isEdit ? 'Guardar Cambios' : 'Registrar Marca' }}</button>
             </div>
           </form>
         </div>
@@ -138,39 +121,35 @@ import { useAuthStore } from '../stores/auth'
 const router = useRouter()
 const authStore = useAuthStore()
 
-const suppliers = ref([])
+const brands = ref([])
 const showModal = ref(false)
 const isEdit = ref(false)
 const currentId = ref(null)
 
 const searchQuery = ref('')
 
-const filteredSuppliers = computed(() => {
+const filteredBrands = computed(() => {
   const q = searchQuery.value.toLowerCase()
-  return suppliers.value.filter(s => 
-    (s.nombre && s.nombre.toLowerCase().includes(q)) ||
-    (s.telefono && s.telefono.toLowerCase().includes(q)) ||
-    (s.correo && s.correo.toLowerCase().includes(q)) ||
-    (s.direccion && s.direccion.toLowerCase().includes(q))
+  return brands.value.filter(c => 
+    (c.nombre && c.nombre.toLowerCase().includes(q)) ||
+    (c.descripcion && c.descripcion.toLowerCase().includes(q))
   )
 })
 
 const form = reactive({
   nombre: '',
-  telefono: '',
-  correo: '',
-  direccion: ''
+  descripcion: ''
 })
 
-const fetchSuppliers = async () => {
+const fetchBrands = async () => {
   try {
-    const res = await fetch(`${API_URL}/api/suppliers`, {
+    const res = await fetch(`${API_URL}/api/brands`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
-    suppliers.value = await res.json()
+    brands.value = await res.json()
   } catch (err) {
-    console.error('Error fetching suppliers')
+    console.error('Error fetching brands')
   }
 }
 
@@ -178,27 +157,23 @@ const openCreateModal = () => {
   isEdit.value = false
   currentId.value = null
   form.nombre = ''
-  form.telefono = ''
-  form.correo = ''
-  form.direccion = ''
+  form.descripcion = ''
   showModal.value = true
 }
 
-const openEditModal = (sup) => {
+const openEditModal = (brand) => {
   isEdit.value = true
-  currentId.value = sup.id
-  form.nombre = sup.nombre
-  form.telefono = sup.telefono
-  form.correo = sup.correo
-  form.direccion = sup.direccion
+  currentId.value = brand.id
+  form.nombre = brand.nombre
+  form.descripcion = brand.descripcion
   showModal.value = true
 }
 
-const saveSupplier = async () => {
+const saveCategory = async () => {
   try {
     const url = isEdit.value 
-      ? `${API_URL}/api/suppliers/${currentId.value}`
-      : `${API_URL}/api/suppliers`
+      ? `${API_URL}/api/brands/${currentId.value}`
+      : `${API_URL}/api/brands`
     
     const method = isEdit.value ? 'PUT' : 'POST'
 
@@ -211,31 +186,31 @@ const saveSupplier = async () => {
       body: JSON.stringify(form)
     })
 
-    if (!res.ok) throw new Error('Error al guardar el proveedor.')
+    if (!res.ok) throw new Error('Error al procesar la operación.')
 
     showModal.value = false
-    alert(isEdit.value ? '¡Proveedor actualizado!' : '¡Proveedor registrado!')
-    fetchSuppliers()
+    alert(isEdit.value ? '¡Marca actualizada!' : '¡Marca registrada!')
+    fetchBrands()
   } catch (err) {
     alert(err.message)
   }
 }
 
 const confirmDelete = async (id) => {
-  if (!confirm('¿Estás seguro de que deseas eliminar este proveedor?')) return
+  if (!confirm('¿Estás seguro de que deseas eliminar esta marca?')) return
 
   try {
-    const res = await fetch(`${API_URL}/api/suppliers/${id}`, {
+    const res = await fetch(`${API_URL}/api/brands/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${authStore.token}`
       }
     })
 
-    if (!res.ok) throw new Error('Error al eliminar el proveedor.')
+    if (!res.ok) throw new Error('Error al eliminar la marca.')
 
-    alert('¡Proveedor eliminado!')
-    fetchSuppliers()
+    alert('¡Marca eliminada!')
+    fetchBrands()
   } catch (err) {
     alert(err.message)
   }
@@ -247,7 +222,7 @@ const handleLogout = () => {
 }
 
 onMounted(() => {
-  fetchSuppliers()
+  fetchBrands()
 })
 </script>
 
@@ -321,7 +296,7 @@ onMounted(() => {
 
 .modal-card {
   width: 100%;
-  max-width: 550px;
+  max-width: 500px;
   padding: 30px;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);

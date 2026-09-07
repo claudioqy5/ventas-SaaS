@@ -102,7 +102,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [advancedFilters, setAdvancedFilters] = useState({
     priceRange: { min: '', max: '' },
     inStockOnly: false,
-    materials: []
+    materials: [],
+    colors: []
   });
 
   // Modales, Notificaciones y Vistas
@@ -231,6 +232,30 @@ export default function App({ initialCategory, initialProductId, initialView = '
     localStorage.setItem(STORAGE_KEY_API_URL, url);
   };
 
+  // Opciones dinámicas para filtros
+  const { availableMaterials, availableColors } = useMemo(() => {
+    const matSet = new Set();
+    const colSet = new Set();
+    products.forEach(p => {
+      if (p.atributos && Array.isArray(p.atributos)) {
+        p.atributos.forEach(attr => {
+          if (attr.nombre && attr.valor) {
+            const nameLower = attr.nombre.toLowerCase();
+            if (nameLower.includes('material')) {
+              matSet.add(attr.valor);
+            } else if (nameLower.includes('color')) {
+              colSet.add(attr.valor);
+            }
+          }
+        });
+      }
+    });
+    return {
+      availableMaterials: Array.from(matSet).sort(),
+      availableColors: Array.from(colSet).sort()
+    };
+  }, [products]);
+
   // Categorías
   const categories = useMemo(() => {
     const list = new Set(['Todos']);
@@ -259,11 +284,19 @@ export default function App({ initialCategory, initialProductId, initialView = '
         
         let matchesMaterial = true;
         if (advancedFilters.materials.length > 0) {
-           const pMat = p.specs?.material?.toLowerCase() || '';
+           const pMatAttr = p.atributos?.find(a => a.nombre.toLowerCase().includes('material'));
+           const pMat = pMatAttr ? pMatAttr.valor.toLowerCase() : '';
            matchesMaterial = advancedFilters.materials.some(mat => pMat.includes(mat.toLowerCase()));
         }
 
-        return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice && matchesStock && matchesMaterial;
+        let matchesColor = true;
+        if (advancedFilters.colors && advancedFilters.colors.length > 0) {
+           const pColAttr = p.atributos?.find(a => a.nombre.toLowerCase().includes('color'));
+           const pCol = pColAttr ? pColAttr.valor.toLowerCase() : '';
+           matchesColor = advancedFilters.colors.some(col => pCol.includes(col.toLowerCase()));
+        }
+
+        return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice && matchesStock && matchesMaterial && matchesColor;
       })
       .sort((a, b) => {
         if (sortBy === 'price-desc') return b.precio - a.precio;
@@ -544,6 +577,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
                 <PanelFiltros
                   filters={advancedFilters}
                   setFilters={setAdvancedFilters}
+                  availableMaterials={availableMaterials}
+                  availableColors={availableColors}
                   isMobileOpen={isMobileFilterOpen}
                   onCloseMobile={() => setIsMobileFilterOpen(false)}
                 />
