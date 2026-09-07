@@ -16,15 +16,9 @@ export default function ModalProducto({
 
   if (!product) return null;
 
-  // Galería de imágenes (Imagen principal + 3 ángulos adicionales)
-  const images = product.imagenes && product.imagenes.length >= 4
+  const images = product.imagenes && product.imagenes.length > 0
     ? product.imagenes
-    : [
-        product.imagenUrl,
-        product.imagenUrl, // Ángulo 2: Bisel y Esfera
-        product.imagenUrl, // Ángulo 3: Correa y Broche
-        product.imagenUrl  // Ángulo 4: Caja Posterior y Calibre
-      ];
+    : (product.imagenUrl ? [product.imagenUrl] : ['/placeholder.jpg']);
 
   const angleLabels = ['Frontal', 'Esfera 45°', 'Correa & Broche', 'Tapa Posterior'];
 
@@ -174,7 +168,7 @@ export default function ModalProducto({
                 color: 'var(--c-indigo)',
                 letterSpacing: '0.05em'
               }}>
-                ✦ {angleLabels[selectedImageIndex]}
+                ✦ Ángulo {selectedImageIndex + 1}
               </span>
             </div>
 
@@ -186,7 +180,7 @@ export default function ModalProducto({
               width: '100%',
               marginTop: '14px'
             }}>
-              {images.slice(0, 4).map((imgUrl, idx) => {
+              {images.map((imgUrl, idx) => {
                 const isSelected = selectedImageIndex === idx;
                 return (
                   <div

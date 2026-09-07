@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, ShoppingBag, MessageCircle, ShieldCheck, Check, CreditCard, Sparkles, Truck, Lock, ChevronRight, ChevronLeft, Share2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import TarjetaProducto from './TarjetaProducto';
@@ -17,15 +17,9 @@ export default function PaginaDetalleProducto({
 
   if (!product) return null;
 
-  // Galería de imágenes (Imagen principal + 3 ángulos adicionales)
-  const images = product.imagenes && product.imagenes.length >= 4
+  const images = product.imagenes && product.imagenes.length > 0
     ? product.imagenes
-    : [
-        product.imagenUrl,
-        product.imagenUrl, // Ángulo 2: Bisel y Esfera
-        product.imagenUrl, // Ángulo 3: Correa y Broche
-        product.imagenUrl  // Ángulo 4: Caja Posterior
-      ];
+    : (product.imagenUrl ? [product.imagenUrl] : ['/placeholder.jpg']);
 
   const angleLabels = ['Vista Frontal', 'Esfera & Bisel 45°', 'Correa & Cierre', 'Caja Posterior'];
 
@@ -150,7 +144,7 @@ export default function PaginaDetalleProducto({
               width: '82px',
               flexShrink: 0
             }}>
-              {images.slice(0, 4).map((imgUrl, idx) => {
+              {images.map((imgUrl, idx) => {
                 const isSelected = selectedImageIndex === idx;
                 return (
                   <button
@@ -230,7 +224,7 @@ export default function PaginaDetalleProducto({
 
               <img
                 src={images[selectedImageIndex]}
-                alt={`${product.nombre} - ${angleLabels[selectedImageIndex]}`}
+                alt={`${product.nombre} - Ángulo ${selectedImageIndex + 1}`}
                 style={{
                   maxHeight: '92%',
                   maxWidth: '92%',

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -255,24 +255,7 @@
               </div>
             </div>
 
-            <!-- FILA 4: Stock Mínimo y Descripción (Alineados en 1fr y 2.2fr) -->
-            <div style="display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px;">
-              <div class="field">
-                <label>Stock Mínimo ({{ form.tipoProducto === 'Costal' ? 'Costales' : form.unidadMedida }})</label>
-                <input v-model.number="form.stockMinimo"
-                  type="number"
-                  :step="form.tipoProducto === 'Costal' ? '0.1' : '1'"
-                  :disabled="form.tipoProducto === 'Servicio'"
-                  placeholder="Ej. 2"
-                  min="0" required />
-              </div>
-              <div class="field">
-                <label>Descripción del Producto</label>
-                <input v-model="form.descripcion" type="text" placeholder="Ej. Alimento premium sabor cordero y arroz" />
-              </div>
-            </div>
-
-            <!-- FILA 5: Precio de Oferta -->
+            <!-- FILA INTERMEDIA: Precio de Oferta y Descuento -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;">
               <div style="background-color: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; padding: 10px;">
                 <div style="font-size: 0.75rem; font-weight: 500; color: #9f1239; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🏷️ Precio de Oferta</div>
@@ -289,7 +272,24 @@
                 </div>
               </div>
               <div v-else style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center;">
-                <span style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">Ingresa un precio de oferta mayor a 0 para activar el descuento</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">Ingresa un precio de oferta para activar el descuento</span>
+              </div>
+            </div>
+
+            <!-- FILA 4: Stock Mínimo y Descripción (Alineados en 1fr y 2.2fr) -->
+            <div style="display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px; margin-top: 4px;">
+              <div class="field">
+                <label>Stock Mínimo ({{ form.tipoProducto === 'Costal' ? 'Costales' : form.unidadMedida }})</label>
+                <input v-model.number="form.stockMinimo"
+                  type="number"
+                  :step="form.tipoProducto === 'Costal' ? '0.1' : '1'"
+                  :disabled="form.tipoProducto === 'Servicio'"
+                  placeholder="Ej. 2"
+                  min="0" required />
+              </div>
+              <div class="field">
+                <label>Descripción del Producto</label>
+                <textarea v-model="form.descripcion" placeholder="Ej. Alimento premium sabor cordero y arroz" rows="2" style="width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 0.9rem; font-family: inherit; resize: vertical;"></textarea>
               </div>
             </div>
 
@@ -310,7 +310,7 @@
               <div v-if="form.imagenes.length > 0" style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <div v-for="(img, idx) in form.imagenes" :key="idx" style="position: relative; width: 80px; height: 80px;">
                   <img :src="img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);" alt="Imagen producto" />
-                  <button type="button" @click="removeImage(idx)" style="position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1;">✕</button>
+                  <button type="button" @click="removeImage(idx)" style="position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; padding: 0; box-sizing: border-box; flex-shrink: 0; font-size: 0.8rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; z-index: 5;">✕</button>
                   <div v-if="idx === 0" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.55); color: white; font-size: 0.6rem; text-align: center; border-radius: 0 0 6px 6px; padding: 2px;">Principal</div>
                 </div>
               </div>

@@ -41,11 +41,11 @@ export default function BarraNavegacion({
       } else {
         const diff = currentScrollY - lastScrollY.current;
         if (diff > 3) {
-          // Desplazamiento hacia ABAJO -> Mostrar Header
-          setShowHeader(true);
-        } else if (diff < -3) {
-          // Desplazamiento hacia ARRIBA -> Ocultar Header
+          // Desplazamiento hacia ABAJO -> Ocultar Header
           setShowHeader(false);
+        } else if (diff < -3) {
+          // Desplazamiento hacia ARRIBA -> Mostrar Header
+          setShowHeader(true);
         }
       }
       
