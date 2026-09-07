@@ -9,9 +9,14 @@ export default function TarjetaProducto({
   onWhatsAppInquiry
 }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isImgHovered, setIsImgHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [added, setAdded] = useState(false);
+
+  // Imágenes del producto (Foto 1 y Foto 2 si existe)
+  const primaryImage = product.imagenUrl || (product.imagenes && product.imagenes[0]) || '/placeholder.jpg';
+  const secondImage = product.imagenes && product.imagenes.length > 1 ? product.imagenes[1] : null;
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -128,27 +133,58 @@ export default function TarjetaProducto({
         </div>
 
         {/* Imagen del Reloj sobre fondo perla suave */}
-        <div style={{
-          position: 'relative',
-          width: '100%',
-          height: '280px',
-          borderRadius: '14px',
-          overflow: 'hidden',
-          backgroundColor: '#f8f6f2',
-          border: '1px solid rgba(115, 96, 91, 0.1)',
-          marginBottom: '18px'
-        }}>
+        <div 
+          onMouseEnter={(e) => {
+            e.stopPropagation();
+            setIsImgHovered(true);
+          }}
+          onMouseLeave={(e) => {
+            e.stopPropagation();
+            setIsImgHovered(false);
+          }}
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '280px',
+            borderRadius: '14px',
+            overflow: 'hidden',
+            backgroundColor: '#f8f6f2',
+            border: '1px solid rgba(115, 96, 91, 0.1)',
+            marginBottom: '18px'
+          }}>
+          {/* Foto Principal */}
           <img
-            src={product.imagenUrl}
-            alt={`Reloj de Lujo ${product.nombre} - ${product.categoria || 'Colección Exclusiva'}`}
+            src={primaryImage}
+            alt={`Reloj de Lujo ${product.nombre}`}
             style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              transform: isHovered ? 'scale(1.06)' : 'scale(1)',
-              transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
+              opacity: (isImgHovered && secondImage) ? 0 : 1,
+              transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           />
+
+          {/* Segunda Foto (se muestra suavemente al hacer hover SOLO en la imagen) */}
+          {secondImage && (
+            <img
+              src={secondImage}
+              alt={`Reloj de Lujo ${product.nombre} - Ángulo 2`}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                opacity: isImgHovered ? 1 : 0,
+                transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+              }}
+            />
+          )}
 
           {/* Botón flotante para vista rápida */}
           <div style={{

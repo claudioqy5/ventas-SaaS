@@ -1,9 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/_global-error/page": "app/_global-error/page.js",
-  "/categoria/[slug]/page": "app/categoria/[slug]/page.js",
-  "/page": "app/page.js",
-  "/producto/[id]/page": "app/producto/[id]/page.js",
-  "/preguntas-frecuentes/page": "app/preguntas-frecuentes/page.js",
-  "/terminos-y-condiciones/page": "app/terminos-y-condiciones/page.js"
-}

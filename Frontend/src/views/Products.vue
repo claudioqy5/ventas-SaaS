@@ -369,18 +369,72 @@
       </div>
     </main>
 
-    <!-- Modal de Galería de Imágenes -->
-    <div v-if="showGalleryModal" class="modal-overlay" @click.self="closeGalleryModal">
-      <div class="modal-content gallery-modal" style="max-width: 600px; padding: 24px; text-align: center;">
-        <div class="modal-header" style="margin-bottom: 20px;">
-          <h3>Imágenes: {{ selectedGalleryProduct?.nombre }}</h3>
-          <button @click="closeGalleryModal" class="close-btn" style="font-size: 24px;">×</button>
-        </div>
-        <div class="gallery-container" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; justify-content: center;">
-          <img v-for="(img, idx) in galleryImages" :key="idx" :src="img" style="width: 250px; height: 250px; object-fit: contain; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc;" />
-          <div v-if="galleryImages.length === 0" style="padding: 40px; color: #64748b;">
-            No hay imágenes adicionales para este producto.
+    <!-- Modal de Galería de Imágenes Premium (Lightbox) -->
+    <div v-if="showGalleryModal" class="gallery-modal-overlay" @click.self="closeGalleryModal">
+      <div class="gallery-modal-card">
+        <!-- Header del Modal -->
+        <div class="gallery-modal-header">
+          <div class="gallery-header-info">
+            <span class="gallery-icon-badge">🖼️</span>
+            <div>
+              <h3 class="gallery-title">{{ selectedGalleryProduct?.nombre || 'Galería de Producto' }}</h3>
+              <span class="gallery-subtitle" v-if="galleryImages.length > 0">
+                Imagen {{ activeImageIndex + 1 }} de {{ galleryImages.length }}
+              </span>
+            </div>
           </div>
+          <button @click="closeGalleryModal" class="gallery-close-btn" title="Cerrar (Esc)">✕</button>
+        </div>
+
+        <!-- Visor Principal de Imagen -->
+        <div class="gallery-main-viewport">
+          <div v-if="galleryImages.length === 0" class="gallery-empty-state">
+            <span>📷</span>
+            <p>Este producto no tiene imágenes adicionales.</p>
+          </div>
+          <template v-else>
+            <!-- Botón Anterior -->
+            <button 
+              v-if="galleryImages.length > 1" 
+              @click="prevGalleryImage" 
+              class="gallery-nav-btn prev" 
+              title="Anterior">
+              ‹
+            </button>
+
+            <!-- Imagen Principal con Zoom al hacer Hover -->
+            <div 
+              class="gallery-image-wrapper"
+              @mousemove="handleGalleryMouseMove"
+              @mouseleave="handleGalleryMouseLeave">
+              <img 
+                :src="galleryImages[activeImageIndex]" 
+                :alt="selectedGalleryProduct?.nombre"
+                class="gallery-main-image" 
+                :style="galleryZoomStyle"
+              />
+            </div>
+
+            <!-- Botón Siguiente -->
+            <button 
+              v-if="galleryImages.length > 1" 
+              @click="nextGalleryImage" 
+              class="gallery-nav-btn next" 
+              title="Siguiente">
+              ›
+            </button>
+          </template>
+        </div>
+
+        <!-- Tira de Miniaturas (Thumbnails) -->
+        <div v-if="galleryImages.length > 1" class="gallery-thumbnails-strip">
+          <button
+            v-for="(img, idx) in galleryImages"
+            :key="idx"
+            :class="['gallery-thumb-btn', activeImageIndex === idx ? 'active' : '']"
+            @click="activeImageIndex = idx">
+            <img :src="img" alt="Thumbnail" />
+          </button>
         </div>
       </div>
     </div>
@@ -402,16 +456,48 @@ const showModal = ref(false);
 const showGalleryModal = ref(false);
 const selectedGalleryProduct = ref(null);
 const galleryImages = ref([]);
+const activeImageIndex = ref(0);
+
+const galleryZoomStyle = reactive({
+  transform: 'scale(1)',
+  transformOrigin: 'center center',
+  cursor: 'zoom-in'
+});
+
+const handleGalleryMouseMove = (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+  galleryZoomStyle.transform = 'scale(2.2)';
+  galleryZoomStyle.transformOrigin = `${x}% ${y}%`;
+};
+
+const handleGalleryMouseLeave = () => {
+  galleryZoomStyle.transform = 'scale(1)';
+  galleryZoomStyle.transformOrigin = 'center center';
+};
 
 const openImageGallery = (prod) => {
   selectedGalleryProduct.value = prod;
   galleryImages.value = prod.imagenes && prod.imagenes.length > 0 ? prod.imagenes : (prod.imagenUrl ? [prod.imagenUrl] : []);
+  activeImageIndex.value = 0;
   showGalleryModal.value = true;
 };
 const closeGalleryModal = () => {
   showGalleryModal.value = false;
   selectedGalleryProduct.value = null;
   galleryImages.value = [];
+  activeImageIndex.value = 0;
+};
+const nextGalleryImage = () => {
+  if (galleryImages.value.length > 0) {
+    activeImageIndex.value = (activeImageIndex.value + 1) % galleryImages.value.length;
+  }
+};
+const prevGalleryImage = () => {
+  if (galleryImages.value.length > 0) {
+    activeImageIndex.value = (activeImageIndex.value - 1 + galleryImages.value.length) % galleryImages.value.length;
+  }
 };
 const isEdit = ref(false)
 const currentProductId = ref(null)
@@ -874,16 +960,21 @@ onMounted(() => {
 .product-thumbnail {
   width: 45px;
   height: 60px;
-  border-radius: 6px;
+  border-radius: 8px;
   object-fit: cover;
   border: 1px solid var(--border-color);
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   background-color: var(--bg-app);
-  transition: transform 0.2s;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  cursor: pointer;
+  position: relative;
 }
 
 .product-thumbnail:hover {
-  transform: scale(1.1);
+  transform: scale(2.2);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+  z-index: 50;
+  border-color: #3b82f6;
 }
 
 .table-filters {
@@ -1132,5 +1223,221 @@ onMounted(() => {
   background-color: #dbeafe;
   color: var(--primary);
   box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.08);
+}
+
+/* ── Modal Galería de Imágenes Premium (Lightbox) ── */
+.gallery-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: galleryFadeIn 0.25s ease-out;
+}
+
+@keyframes galleryFadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.gallery-modal-card {
+  width: 100%;
+  max-width: 780px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.gallery-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  background: rgba(30, 41, 59, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gallery-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gallery-icon-badge {
+  font-size: 1.4rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 8px;
+  border-radius: 12px;
+}
+
+.gallery-title {
+  color: #f8fafc;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.gallery-subtitle {
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.gallery-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #94a3b8;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.gallery-close-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+.gallery-main-viewport {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  background: #020617;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gallery-image-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.gallery-main-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s ease-out, transform-origin 0.1s ease-out;
+  user-select: none;
+}
+
+.gallery-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(30, 41, 59, 0.75);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.gallery-nav-btn.prev {
+  left: 16px;
+}
+
+.gallery-nav-btn.next {
+  right: 16px;
+}
+
+.gallery-nav-btn:hover {
+  background: #3b82f6;
+  border-color: #60a5fa;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.gallery-thumbnails-strip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background: #0e1726;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+}
+
+.gallery-thumb-btn {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  padding: 0;
+  background: #1e293b;
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.gallery-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-thumb-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.gallery-thumb-btn.active {
+  opacity: 1;
+  border-color: #3b82f6;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+  transform: scale(1.06);
+}
+
+.gallery-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  font-size: 1rem;
+  gap: 12px;
+}
+
+.gallery-empty-state span {
+  font-size: 3rem;
+  opacity: 0.5;
 }
 </style>

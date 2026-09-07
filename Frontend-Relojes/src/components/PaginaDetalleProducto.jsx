@@ -15,6 +15,32 @@ export default function PaginaDetalleProducto({
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
+  // Zoom interactivo al posar el mouse sobre la imagen de la página de detalle
+  const [zoomStyle, setZoomStyle] = useState({
+    transform: 'scale(1)',
+    transformOrigin: 'center center',
+    cursor: 'zoom-in'
+  });
+
+  const handleZoomMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setZoomStyle({
+      transform: 'scale(2.2)',
+      transformOrigin: `${x}% ${y}%`,
+      cursor: 'zoom-in'
+    });
+  };
+
+  const handleZoomMouseLeave = () => {
+    setZoomStyle({
+      transform: 'scale(1)',
+      transformOrigin: 'center center',
+      cursor: 'zoom-in'
+    });
+  };
+
   if (!product) return null;
 
   const images = product.imagenes && product.imagenes.length > 0
@@ -180,20 +206,25 @@ export default function PaginaDetalleProducto({
               })}
             </div>
 
-            {/* Visualizador de Imagen Principal con Flechas de Navegación */}
-            <div className="product-detail-main-img" style={{
-              position: 'relative',
-              flex: 1,
-              height: '520px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#ffffff',
-              borderRadius: '20px',
-              overflow: 'hidden',
-              border: '1px solid rgba(115, 96, 91, 0.16)',
-              boxShadow: '0 10px 30px rgba(45, 66, 98, 0.08)'
-            }}>
+            {/* Visualizador de Imagen Principal con Flechas de Navegación y Zoom Lens */}
+            <div 
+              className="product-detail-main-img" 
+              onMouseMove={handleZoomMouseMove}
+              onMouseLeave={handleZoomMouseLeave}
+              style={{
+                position: 'relative',
+                flex: 1,
+                height: '520px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#ffffff',
+                borderRadius: '20px',
+                overflow: 'hidden',
+                border: '1px solid rgba(115, 96, 91, 0.16)',
+                boxShadow: '0 10px 30px rgba(45, 66, 98, 0.08)',
+                cursor: 'zoom-in'
+              }}>
               {/* Botón Flecha Izquierda */}
               <button
                 onClick={prevImage}
@@ -230,7 +261,8 @@ export default function PaginaDetalleProducto({
                   maxWidth: '92%',
                   objectFit: 'contain',
                   borderRadius: '16px',
-                  transition: 'all 0.3s ease'
+                  ...zoomStyle,
+                  transition: 'transform 0.15s ease-out, transform-origin 0.1s ease-out'
                 }}
               />
 

@@ -1,9 +1,0 @@
-{
-  "app": {
-    "[project]/Frontend-Relojes/src/app/page": [],
-    "[project]/Frontend-Relojes/src/app/producto/[id]/page": []
-  },
-  "appUsingSizeAdjust": false,
-  "pages": {},
-  "pagesUsingSizeAdjust": false
-}

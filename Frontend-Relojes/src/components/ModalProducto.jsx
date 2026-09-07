@@ -14,6 +14,32 @@ export default function ModalProducto({
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
+  // Zoom interactivo al posar el mouse sobre la imagen del modal
+  const [zoomStyle, setZoomStyle] = useState({
+    transform: 'scale(1)',
+    transformOrigin: 'center center',
+    cursor: 'zoom-in'
+  });
+
+  const handleZoomMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setZoomStyle({
+      transform: 'scale(2.2)',
+      transformOrigin: `${x}% ${y}%`,
+      cursor: 'zoom-in'
+    });
+  };
+
+  const handleZoomMouseLeave = () => {
+    setZoomStyle({
+      transform: 'scale(1)',
+      transformOrigin: 'center center',
+      cursor: 'zoom-in'
+    });
+  };
+
   if (!product) return null;
 
   const images = product.imagenes && product.imagenes.length > 0
@@ -132,19 +158,23 @@ export default function ModalProducto({
           {/* Columna Izquierda: Galería con 4 Ángulos */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {/* Imagen Principal Seleccionada */}
-            <div style={{
-              position: 'relative',
-              width: '100%',
-              height: '380px',
-              borderRadius: '20px',
-              overflow: 'hidden',
-              backgroundColor: '#f9f8f6',
-              border: '1px solid rgba(115, 96, 91, 0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.04)'
-            }}>
+            <div 
+              onMouseMove={handleZoomMouseMove}
+              onMouseLeave={handleZoomMouseLeave}
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '380px',
+                borderRadius: '20px',
+                overflow: 'hidden',
+                backgroundColor: '#f9f8f6',
+                border: '1px solid rgba(115, 96, 91, 0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.04)',
+                cursor: 'zoom-in'
+              }}>
               <img
                 src={images[selectedImageIndex]}
                 alt={`${product.nombre} - Ángulo ${selectedImageIndex + 1}`}
@@ -152,7 +182,8 @@ export default function ModalProducto({
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  transition: 'all 0.3s ease'
+                  ...zoomStyle,
+                  transition: 'transform 0.15s ease-out, transform-origin 0.1s ease-out'
                 }}
               />
               <span style={{
