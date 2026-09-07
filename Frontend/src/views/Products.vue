@@ -398,7 +398,7 @@ const authStore = useAuthStore()
 
 const products = ref([])
 const categories = ref([])
-const showProductModal = ref(false);
+const showModal = ref(false);
 const showGalleryModal = ref(false);
 const selectedGalleryProduct = ref(null);
 const galleryImages = ref([]);
