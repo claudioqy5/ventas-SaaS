@@ -11,8 +11,8 @@ const getEnvVar = (viteKey, nextKey, defaultValue) => {
   return defaultValue;
 };
 
-const DEFAULT_API_URL = getEnvVar('VITE_API_URL', 'NEXT_PUBLIC_API_URL', 'http://localhost:5000/api/public/store');
-const DEFAULT_EMPRESA_ID = getEnvVar('VITE_EMPRESA_ID', 'NEXT_PUBLIC_EMPRESA_ID', '');
+const DEFAULT_API_URL = getEnvVar('VITE_API_URL', 'NEXT_PUBLIC_API_URL', 'https://ventassaas-api.helifyferdigital.cloud/api/relojes-store');
+const DEFAULT_EMPRESA_ID = getEnvVar('VITE_EMPRESA_ID', 'NEXT_PUBLIC_EMPRESA_ID', '6a9a503000746b35867cddaf');
 
 // Catálogo de Alta Relojería exclusivo de demostración y respaldo
 export const LUXURY_SAMPLE_WATCHES = [];

@@ -386,8 +386,38 @@ function App({ initialCategory, initialProductId }) {
                                                     fontFamily: 'var(--font-serif)',
                                                     fontWeight: 500
                                                 },
-                                                children: showFullCatalog ? 'CATÁLOGO PRIVADO' : 'SELECCIÓN EXCLUSIVA'
-                                            }, void 0, false, {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                        xmlns: "http://www.w3.org/2000/svg",
+                                                        width: "10",
+                                                        height: "10",
+                                                        viewBox: "0 0 24 24",
+                                                        fill: "none",
+                                                        stroke: "currentColor",
+                                                        strokeWidth: "2",
+                                                        strokeLinecap: "round",
+                                                        strokeLinejoin: "round",
+                                                        style: {
+                                                            marginRight: '6px',
+                                                            display: 'inline',
+                                                            position: 'relative',
+                                                            top: '-1px'
+                                                        },
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                            d: "M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/frontend-relojes/src/App.jsx",
+                                                            lineNumber: 364,
+                                                            columnNumber: 282
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend-relojes/src/App.jsx",
+                                                        lineNumber: 364,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    showFullCatalog ? 'CATÁLOGO PRIVADO' : 'SELECCIÓN EXCLUSIVA'
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/frontend-relojes/src/App.jsx",
                                                 lineNumber: 356,
                                                 columnNumber: 17
@@ -404,7 +434,7 @@ function App({ initialCategory, initialProductId }) {
                                                 children: showFullCatalog ? 'Guardatiempos Exclusivos' : 'Los más Vendidos'
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                lineNumber: 366,
+                                                lineNumber: 367,
                                                 columnNumber: 17
                                             }, this)
                                         ]
@@ -446,20 +476,20 @@ function App({ initialCategory, initialProductId }) {
                                                         color: "var(--c-indigo)"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                        lineNumber: 400,
+                                                        lineNumber: 401,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "Filtros"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                        lineNumber: 401,
+                                                        lineNumber: 402,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                lineNumber: 381,
+                                                lineNumber: 382,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -481,7 +511,7 @@ function App({ initialCategory, initialProductId }) {
                                                         children: "Ordenar por:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                        lineNumber: 405,
+                                                        lineNumber: 406,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -506,7 +536,7 @@ function App({ initialCategory, initialProductId }) {
                                                                 children: "Colección Destacada"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                                lineNumber: 425,
+                                                                lineNumber: 426,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -514,7 +544,7 @@ function App({ initialCategory, initialProductId }) {
                                                                 children: "Mayor Valor"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                                lineNumber: 426,
+                                                                lineNumber: 427,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -522,7 +552,7 @@ function App({ initialCategory, initialProductId }) {
                                                                 children: "Menor Valor"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                                lineNumber: 427,
+                                                                lineNumber: 428,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -530,25 +560,25 @@ function App({ initialCategory, initialProductId }) {
                                                                 children: "Nombre Alfabético"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                                lineNumber: 428,
+                                                                lineNumber: 429,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                        lineNumber: 408,
+                                                        lineNumber: 409,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                lineNumber: 404,
+                                                lineNumber: 405,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                        lineNumber: 379,
+                                        lineNumber: 380,
                                         columnNumber: 17
                                     }, this)
                                 ]
@@ -589,13 +619,13 @@ function App({ initialCategory, initialProductId }) {
                                         children: cat
                                     }, cat, false, {
                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                        lineNumber: 448,
+                                        lineNumber: 449,
                                         columnNumber: 21
                                     }, this);
                                 })
                             }, void 0, false, {
                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                lineNumber: 437,
+                                lineNumber: 438,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -613,7 +643,7 @@ function App({ initialCategory, initialProductId }) {
                                         onCloseMobile: ()=>setIsMobileFilterOpen(false)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                        lineNumber: 485,
+                                        lineNumber: 486,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -636,7 +666,7 @@ function App({ initialCategory, initialProductId }) {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                    lineNumber: 497,
+                                                    lineNumber: 498,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -650,13 +680,13 @@ function App({ initialCategory, initialProductId }) {
                                                     children: "Sincronizando Manufactura con el Catálogo..."
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                    lineNumber: 498,
+                                                    lineNumber: 499,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend-relojes/src/App.jsx",
-                                            lineNumber: 496,
+                                            lineNumber: 497,
                                             columnNumber: 19
                                         }, this) : filteredProducts.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             style: {
@@ -676,7 +706,7 @@ function App({ initialCategory, initialProductId }) {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                    lineNumber: 511,
+                                                    lineNumber: 512,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -690,7 +720,7 @@ function App({ initialCategory, initialProductId }) {
                                                     children: "No se encontraron piezas con ese criterio"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                    lineNumber: 512,
+                                                    lineNumber: 513,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -702,7 +732,7 @@ function App({ initialCategory, initialProductId }) {
                                                     children: "Intenta restablecer los filtros de búsqueda o seleccionar otra categoría."
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                    lineNumber: 515,
+                                                    lineNumber: 516,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -714,13 +744,13 @@ function App({ initialCategory, initialProductId }) {
                                                     children: "Restablecer Búsqueda"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                    lineNumber: 518,
+                                                    lineNumber: 519,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend-relojes/src/App.jsx",
-                                            lineNumber: 503,
+                                            lineNumber: 504,
                                             columnNumber: 19
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -732,28 +762,28 @@ function App({ initialCategory, initialProductId }) {
                                                         onWhatsAppInquiry: handleWhatsAppInquiry
                                                     }, product.id, false, {
                                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                        lineNumber: 529,
+                                                        lineNumber: 530,
                                                         columnNumber: 25
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                                lineNumber: 527,
+                                                lineNumber: 528,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend-relojes/src/App.jsx",
-                                            lineNumber: 526,
+                                            lineNumber: 527,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                        lineNumber: 494,
+                                        lineNumber: 495,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                lineNumber: 481,
+                                lineNumber: 482,
                                 columnNumber: 13
                             }, this),
                             !showFullCatalog && filteredProducts.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -800,12 +830,12 @@ function App({ initialCategory, initialProductId }) {
                                     children: "Ver más modelos"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend-relojes/src/App.jsx",
-                                    lineNumber: 546,
+                                    lineNumber: 547,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                lineNumber: 545,
+                                lineNumber: 546,
                                 columnNumber: 15
                             }, this)
                         ]
@@ -852,7 +882,7 @@ function App({ initialCategory, initialProductId }) {
                                 backgroundColor: "#fbfaf8"
                             }, void 0, false, {
                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                lineNumber: 599,
+                                lineNumber: 600,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -878,7 +908,7 @@ function App({ initialCategory, initialProductId }) {
                                         children: "La Precisión del Movimiento"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                        lineNumber: 633,
+                                        lineNumber: 634,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -892,19 +922,19 @@ function App({ initialCategory, initialProductId }) {
                                         children: "Eternidad en cada Segundo"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                                        lineNumber: 645,
+                                        lineNumber: 646,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                                lineNumber: 626,
+                                lineNumber: 627,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                        lineNumber: 588,
+                        lineNumber: 589,
                         columnNumber: 9
                     }, this),
                     !initialCategory && filteredProducts.length > 4 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -937,7 +967,7 @@ function App({ initialCategory, initialProductId }) {
                                             children: "Descubre lo Último"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend-relojes/src/App.jsx",
-                                            lineNumber: 667,
+                                            lineNumber: 668,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -952,13 +982,13 @@ function App({ initialCategory, initialProductId }) {
                                             children: "Nuevos Ingresos"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend-relojes/src/App.jsx",
-                                            lineNumber: 677,
+                                            lineNumber: 678,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend-relojes/src/App.jsx",
-                                    lineNumber: 666,
+                                    lineNumber: 667,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -970,33 +1000,33 @@ function App({ initialCategory, initialProductId }) {
                                             onWhatsAppInquiry: handleWhatsAppInquiry
                                         }, product.id, false, {
                                             fileName: "[project]/frontend-relojes/src/App.jsx",
-                                            lineNumber: 689,
+                                            lineNumber: 690,
                                             columnNumber: 17
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/frontend-relojes/src/App.jsx",
-                                    lineNumber: 687,
+                                    lineNumber: 688,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend-relojes/src/App.jsx",
-                            lineNumber: 665,
+                            lineNumber: 666,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                        lineNumber: 660,
+                        lineNumber: 661,
                         columnNumber: 9
                     }, this),
                     !initialCategory && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2d$relojes$2f$src$2f$components$2f$Beneficios$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                        lineNumber: 703,
+                        lineNumber: 704,
                         columnNumber: 28
                     }, this),
                     !initialCategory && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2d$relojes$2f$src$2f$components$2f$Testimonios$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/frontend-relojes/src/App.jsx",
-                        lineNumber: 706,
+                        lineNumber: 707,
                         columnNumber: 28
                     }, this)
                 ]
@@ -1010,7 +1040,7 @@ function App({ initialCategory, initialProductId }) {
                 storeName: storeName
             }, void 0, false, {
                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                lineNumber: 712,
+                lineNumber: 713,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2d$relojes$2f$src$2f$components$2f$CajonCarrito$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1023,7 +1053,7 @@ function App({ initialCategory, initialProductId }) {
                 whatsappNumber: WHATSAPP_CONCIERGE
             }, void 0, false, {
                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                lineNumber: 718,
+                lineNumber: 719,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2d$relojes$2f$src$2f$components$2f$ModalAjustesInquilino$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1036,7 +1066,7 @@ function App({ initialCategory, initialProductId }) {
                 onReload: loadCatalog
             }, void 0, false, {
                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                lineNumber: 729,
+                lineNumber: 730,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2d$relojes$2f$src$2f$components$2f$ModalAuthCliente$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1047,14 +1077,14 @@ function App({ initialCategory, initialProductId }) {
                 onLogout: ()=>setCurrentUser(null)
             }, void 0, false, {
                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                lineNumber: 740,
+                lineNumber: 741,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2d$relojes$2f$src$2f$components$2f$BotonWhatsApp$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                 phoneNumber: WHATSAPP_CONCIERGE
             }, void 0, false, {
                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                lineNumber: 749,
+                lineNumber: 750,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2d$relojes$2f$src$2f$components$2f$ToastNotificacion$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1063,7 +1093,7 @@ function App({ initialCategory, initialProductId }) {
                 onOpenCart: ()=>setIsCartOpen(true)
             }, void 0, false, {
                 fileName: "[project]/frontend-relojes/src/App.jsx",
-                lineNumber: 752,
+                lineNumber: 753,
                 columnNumber: 7
             }, this)
         ]
@@ -4339,8 +4369,68 @@ function MarcasDestacadas() {
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     className: "marcas-title",
-                    children: "EXCLUSIVA SELECCIÓN DE MARCAS INTERNACIONALES"
-                }, void 0, false, {
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                            xmlns: "http://www.w3.org/2000/svg",
+                            width: "10",
+                            height: "10",
+                            viewBox: "0 0 24 24",
+                            fill: "none",
+                            stroke: "currentColor",
+                            strokeWidth: "2",
+                            strokeLinecap: "round",
+                            strokeLinejoin: "round",
+                            style: {
+                                marginRight: '6px',
+                                display: 'inline',
+                                position: 'relative',
+                                top: '-1px',
+                                color: 'var(--c-blush)'
+                            },
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                d: "M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"
+                            }, void 0, false, {
+                                fileName: "[project]/frontend-relojes/src/components/MarcasDestacadas.jsx",
+                                lineNumber: 147,
+                                columnNumber: 299
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/frontend-relojes/src/components/MarcasDestacadas.jsx",
+                            lineNumber: 147,
+                            columnNumber: 11
+                        }, this),
+                        "EXCLUSIVA SELECCIÓN DE MARCAS INTERNACIONALES",
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                            xmlns: "http://www.w3.org/2000/svg",
+                            width: "10",
+                            height: "10",
+                            viewBox: "0 0 24 24",
+                            fill: "none",
+                            stroke: "currentColor",
+                            strokeWidth: "2",
+                            strokeLinecap: "round",
+                            strokeLinejoin: "round",
+                            style: {
+                                marginLeft: '6px',
+                                display: 'inline',
+                                position: 'relative',
+                                top: '-1px',
+                                color: 'var(--c-blush)'
+                            },
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                d: "M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"
+                            }, void 0, false, {
+                                fileName: "[project]/frontend-relojes/src/components/MarcasDestacadas.jsx",
+                                lineNumber: 149,
+                                columnNumber: 298
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/frontend-relojes/src/components/MarcasDestacadas.jsx",
+                            lineNumber: 149,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
                     fileName: "[project]/frontend-relojes/src/components/MarcasDestacadas.jsx",
                     lineNumber: 146,
                     columnNumber: 9
@@ -4355,17 +4445,17 @@ function MarcasDestacadas() {
                                 children: marca.logo
                             }, i, false, {
                                 fileName: "[project]/frontend-relojes/src/components/MarcasDestacadas.jsx",
-                                lineNumber: 154,
+                                lineNumber: 156,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/frontend-relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 152,
+                        lineNumber: 154,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend-relojes/src/components/MarcasDestacadas.jsx",
-                    lineNumber: 151,
+                    lineNumber: 153,
                     columnNumber: 9
                 }, this)
             ]
@@ -7150,8 +7240,38 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                 fontWeight: 600,
                                 marginBottom: '6px'
                             },
-                            children: "SELECCIÓN EXCLUSIVA"
-                        }, void 0, false, {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                    xmlns: "http://www.w3.org/2000/svg",
+                                    width: "10",
+                                    height: "10",
+                                    viewBox: "0 0 24 24",
+                                    fill: "none",
+                                    stroke: "currentColor",
+                                    strokeWidth: "2",
+                                    strokeLinecap: "round",
+                                    strokeLinejoin: "round",
+                                    style: {
+                                        marginRight: '6px',
+                                        display: 'inline',
+                                        position: 'relative',
+                                        top: '-1px'
+                                    },
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                        d: "M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend-relojes/src/components/PaginaDetalleProducto.jsx",
+                                        lineNumber: 575,
+                                        columnNumber: 278
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/frontend-relojes/src/components/PaginaDetalleProducto.jsx",
+                                    lineNumber: 575,
+                                    columnNumber: 15
+                                }, this),
+                                "SELECCIÓN EXCLUSIVA"
+                            ]
+                        }, void 0, true, {
                             fileName: "[project]/frontend-relojes/src/components/PaginaDetalleProducto.jsx",
                             lineNumber: 564,
                             columnNumber: 13
@@ -7168,7 +7288,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                             children: "Otros Guardatiempos que te pueden interesar"
                         }, void 0, false, {
                             fileName: "[project]/frontend-relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 577,
+                            lineNumber: 578,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7189,12 +7309,12 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                     onWhatsAppInquiry: onWhatsAppInquiry
                                 }, rel.id, false, {
                                     fileName: "[project]/frontend-relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 589,
+                                    lineNumber: 590,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/frontend-relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 587,
+                            lineNumber: 588,
                             columnNumber: 13
                         }, this)
                     ]
@@ -10473,152 +10593,7 @@ const getEnvVar = (viteKey, nextKey, defaultValue)=>{
 };
 const DEFAULT_API_URL = getEnvVar('VITE_API_URL', 'NEXT_PUBLIC_API_URL', 'http://localhost:5000/api/public/store');
 const DEFAULT_EMPRESA_ID = getEnvVar('VITE_EMPRESA_ID', 'NEXT_PUBLIC_EMPRESA_ID', '');
-const LUXURY_SAMPLE_WATCHES = [
-    {
-        id: 'sample-1',
-        nombre: 'Vetruvius Chronograph Tourbillon',
-        descripcion: 'Caja en oro rosa de 18k con esfera verde esmeralda cepillada con efecto rayos de sol. Escape de tourbillon volante a las 6 en punto.',
-        precio: 14850.00,
-        categoria: 'Hombre',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 3,
-        imagenUrl: '/watches/chronograph_gold.jpg',
-        specs: {
-            calibre: 'Calibre VT-9080',
-            rubies: '38 Joyas',
-            reservaMarcha: '72 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Edición Limitada'
-    },
-    {
-        id: 'sample-2',
-        nombre: 'Vortex Titanium Skeleton',
-        descripcion: 'Esqueleto mecánico de titanio pulido grado aeroespacial con bisel de cerámica negra facetada. Visibilidad total del tren de engranajes.',
-        precio: 11200.00,
-        categoria: 'Hombre',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 5,
-        imagenUrl: '/watches/skeleton_titanium.jpg',
-        specs: {
-            calibre: 'Calibre VX-Skeleton',
-            rubies: '31 Joyas',
-            reservaMarcha: '55 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Buceo Extremo'
-    },
-    {
-        id: 'sample-3',
-        nombre: 'Celestial Master Moonphase',
-        descripcion: 'Elegancia pura en oro rosa con esfera azul noche guilloché artesanal. Indicador de fase lunar astronómica.',
-        precio: 16900.00,
-        categoria: 'Marcas',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 2,
-        imagenUrl: '/watches/moonphase_blue.jpg',
-        specs: {
-            calibre: 'Calibre Astrum 2800',
-            rubies: '29 Joyas',
-            reservaMarcha: '65 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Pieza de Colección'
-    },
-    {
-        id: 'sample-4',
-        nombre: 'Geneva Classic Heritage',
-        descripcion: 'Reloj de vestir clásico para hombre. Caja de oro amarillo de 18 quilates con esfera texturizada y correa de piel de aligátor marrón auténtica.',
-        precio: 9500.00,
-        categoria: 'Hombre',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 2,
-        imagenUrl: '/watches/mens_classic.png',
-        specs: {
-            calibre: 'Calibre GH-40 Auto',
-            rubies: '25 Joyas',
-            reservaMarcha: '48 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Clásico'
-    },
-    {
-        id: 'sample-5',
-        nombre: 'Empress Diamond Rose',
-        descripcion: 'Elegancia absoluta para mujer. Oro rosa engastado con diamantes corte brillante en el bisel, esfera de nácar natural y agujas facetadas.',
-        precio: 18200.00,
-        categoria: 'Mujer',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 1,
-        imagenUrl: '/watches/womens_diamond.png',
-        specs: {
-            calibre: 'Calibre Mini-Auto',
-            rubies: '21 Joyas',
-            reservaMarcha: '42 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Exclusivo Mujer'
-    },
-    {
-        id: 'sample-6',
-        nombre: 'Oceanic Pro Chrono',
-        descripcion: 'Robusto cronógrafo deportivo en acero inoxidable cepillado con esfera azul profundo. Diseñado para resistir condiciones extremas conservando el lujo intacto.',
-        precio: 8900.00,
-        categoria: 'Novedades',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 4,
-        imagenUrl: '/watches/sports_steel.png',
-        specs: {
-            calibre: 'Calibre C-300',
-            rubies: '33 Joyas',
-            reservaMarcha: '50 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Novedad'
-    },
-    {
-        id: 'sample-7',
-        nombre: 'Aviator Heritage 1945',
-        descripcion: 'Inspirado en la historia de la aviación. Esfera negra mate con números arábigos luminiscentes y correa de piel envejecida a mano.',
-        precio: 6500.00,
-        categoria: 'Ofertas',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 3,
-        imagenUrl: '/watches/aviator_vintage.png',
-        specs: {
-            calibre: 'Calibre Manual A-19',
-            rubies: '17 Joyas',
-            reservaMarcha: '40 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Oportunidad VIP'
-    },
-    {
-        id: 'sample-8',
-        nombre: 'Minimalist Ultra-Thin',
-        descripcion: 'La máxima expresión del minimalismo. Esfera blanca de esmalte con delgados números romanos y una caja ultraplana. Elegancia discreta.',
-        precio: 12400.00,
-        categoria: 'Accesorios',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 2,
-        imagenUrl: '/watches/minimalist_dress.png',
-        specs: {
-            calibre: 'Calibre Ultra-Plano',
-            rubies: '28 Joyas',
-            reservaMarcha: '45 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Alta Costura'
-    }
-];
+const LUXURY_SAMPLE_WATCHES = [];
 async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl = DEFAULT_API_URL) {
     if (!empresaId) {
         // Si aún no se ha configurado la EmpresaId del SaaS, usamos el catálogo exclusivo
@@ -10630,7 +10605,7 @@ async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl = DEFAU
         };
     }
     try {
-        const res = await fetch(`${apiUrl}/${empresaId}/products`);
+        const res = await fetch(`${apiUrl}/productos/${empresaId}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         // Traer información de la tienda

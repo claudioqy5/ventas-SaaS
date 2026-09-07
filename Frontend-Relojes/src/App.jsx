@@ -27,8 +27,8 @@ const WHATSAPP_CONCIERGE = '51962956919';
 
 
 export default function App({ initialCategory, initialProductId }) {
-  const [empresaId, setEmpresaId] = useState(process.env.NEXT_PUBLIC_EMPRESA_ID || '');
-  const [apiUrl, setApiUrl] = useState(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/public/store');
+  const [empresaId, setEmpresaId] = useState(process.env.NEXT_PUBLIC_EMPRESA_ID || '6a9a503000746b35867cddaf');
+  const [apiUrl, setApiUrl] = useState(process.env.NEXT_PUBLIC_API_URL || 'https://ventassaas-api.helifyferdigital.cloud/api/relojes-store');
 
   // Recuperar de localStorage solo después de montar (para evitar errores de hidratación de Next.js)
   useEffect(() => {

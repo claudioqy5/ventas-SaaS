@@ -28,7 +28,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$src$2
 var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sliders$2d$horizontal$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__SlidersHorizontal$3e$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/lucide-react/dist/esm/icons/sliders-horizontal.mjs [app-ssr] (ecmascript) <export default as SlidersHorizontal>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/lucide-react/dist/esm/icons/refresh-cw.mjs [app-ssr] (ecmascript) <export default as RefreshCw>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/lucide-react/dist/esm/icons/circle-alert.mjs [app-ssr] (ecmascript) <export default as AlertCircle>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$diamond$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Diamond$3e$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/lucide-react/dist/esm/icons/diamond.mjs [app-ssr] (ecmascript) <export default as Diamond>");
 "use client";
 ;
 ;
@@ -386,14 +385,29 @@ function App({ initialCategory, initialProductId }) {
                                                     fontWeight: 500
                                                 },
                                                 children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$diamond$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Diamond$3e$__["Diamond"], {
-                                                        size: 10,
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                        xmlns: "http://www.w3.org/2000/svg",
+                                                        width: "10",
+                                                        height: "10",
+                                                        viewBox: "0 0 24 24",
+                                                        fill: "none",
+                                                        stroke: "currentColor",
+                                                        strokeWidth: "2",
+                                                        strokeLinecap: "round",
+                                                        strokeLinejoin: "round",
                                                         style: {
                                                             marginRight: '6px',
                                                             display: 'inline',
                                                             position: 'relative',
                                                             top: '-1px'
-                                                        }
+                                                        },
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                            d: "M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Frontend-Relojes/src/App.jsx",
+                                                            lineNumber: 364,
+                                                            columnNumber: 282
+                                                        }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Frontend-Relojes/src/App.jsx",
                                                         lineNumber: 364,
@@ -3669,8 +3683,6 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$diamond$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Diamond$3e$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/lucide-react/dist/esm/icons/diamond.mjs [app-ssr] (ecmascript) <export default as Diamond>");
-;
 ;
 ;
 function MarcasDestacadas() {
@@ -3688,7 +3700,7 @@ function MarcasDestacadas() {
                         fill: "#006039"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 10,
+                        lineNumber: 9,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
@@ -3698,7 +3710,7 @@ function MarcasDestacadas() {
                         fill: "#006039"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 11,
+                        lineNumber: 10,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
@@ -3708,7 +3720,7 @@ function MarcasDestacadas() {
                         fill: "#006039"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 12,
+                        lineNumber: 11,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
@@ -3718,7 +3730,7 @@ function MarcasDestacadas() {
                         fill: "#006039"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 13,
+                        lineNumber: 12,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("text", {
@@ -3734,13 +3746,13 @@ function MarcasDestacadas() {
                         children: "ROLEX"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 14,
+                        lineNumber: 13,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 9,
+                lineNumber: 8,
                 columnNumber: 9
             }, this)
         },
@@ -3764,7 +3776,7 @@ function MarcasDestacadas() {
                         children: "Ω"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 22,
+                        lineNumber: 21,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("text", {
@@ -3780,13 +3792,13 @@ function MarcasDestacadas() {
                         children: "OMEGA"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 23,
+                        lineNumber: 22,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 21,
+                lineNumber: 20,
                 columnNumber: 9
             }, this)
         },
@@ -3812,7 +3824,7 @@ function MarcasDestacadas() {
                         children: "G-SHOCK"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 31,
+                        lineNumber: 30,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
@@ -3823,13 +3835,13 @@ function MarcasDestacadas() {
                         fill: "#e3000f"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 32,
+                        lineNumber: 31,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 30,
+                lineNumber: 29,
                 columnNumber: 9
             }, this)
         },
@@ -3849,7 +3861,7 @@ function MarcasDestacadas() {
                         fill: "#000"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 40,
+                        lineNumber: 39,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("text", {
@@ -3865,7 +3877,7 @@ function MarcasDestacadas() {
                         children: "TAG HEUER"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 41,
+                        lineNumber: 40,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -3873,7 +3885,7 @@ function MarcasDestacadas() {
                         fill: "#e3000f"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 42,
+                        lineNumber: 41,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("text", {
@@ -3888,13 +3900,13 @@ function MarcasDestacadas() {
                         children: "SWISS 1860"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 43,
+                        lineNumber: 42,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 39,
+                lineNumber: 38,
                 columnNumber: 9
             }, this)
         },
@@ -3918,12 +3930,12 @@ function MarcasDestacadas() {
                     children: "CASIO"
                 }, void 0, false, {
                     fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                    lineNumber: 51,
+                    lineNumber: 50,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 50,
+                lineNumber: 49,
                 columnNumber: 9
             }, this)
         },
@@ -3947,12 +3959,12 @@ function MarcasDestacadas() {
                     children: "Cartier"
                 }, void 0, false, {
                     fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                    lineNumber: 59,
+                    lineNumber: 58,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 58,
+                lineNumber: 57,
                 columnNumber: 9
             }, this)
         },
@@ -3977,12 +3989,12 @@ function MarcasDestacadas() {
                     children: "SEIKO"
                 }, void 0, false, {
                     fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                    lineNumber: 67,
+                    lineNumber: 66,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 66,
+                lineNumber: 65,
                 columnNumber: 9
             }, this)
         },
@@ -4007,7 +4019,7 @@ function MarcasDestacadas() {
                         children: "PATEK PHILIPPE"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 75,
+                        lineNumber: 74,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("text", {
@@ -4022,13 +4034,13 @@ function MarcasDestacadas() {
                         children: "GENEVE"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 76,
+                        lineNumber: 75,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 74,
+                lineNumber: 73,
                 columnNumber: 9
             }, this)
         },
@@ -4047,7 +4059,7 @@ function MarcasDestacadas() {
                         fill: "#ee2737"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 84,
+                        lineNumber: 83,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -4059,7 +4071,7 @@ function MarcasDestacadas() {
                         strokeLinejoin: "round"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 85,
+                        lineNumber: 84,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("text", {
@@ -4073,13 +4085,13 @@ function MarcasDestacadas() {
                         children: "CITIZEN"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 86,
+                        lineNumber: 85,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 83,
+                lineNumber: 82,
                 columnNumber: 9
             }, this)
         },
@@ -4098,7 +4110,7 @@ function MarcasDestacadas() {
                         fill: "none"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 94,
+                        lineNumber: 93,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("text", {
@@ -4114,13 +4126,13 @@ function MarcasDestacadas() {
                         children: "LONGINES"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 95,
+                        lineNumber: 94,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 93,
+                lineNumber: 92,
                 columnNumber: 9
             }, this)
         },
@@ -4137,7 +4149,7 @@ function MarcasDestacadas() {
                         fill: "#e3000f"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 103,
+                        lineNumber: 102,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
@@ -4147,7 +4159,7 @@ function MarcasDestacadas() {
                         fill: "#e3000f"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 104,
+                        lineNumber: 103,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("text", {
@@ -4163,13 +4175,13 @@ function MarcasDestacadas() {
                         children: "ORIENT"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 105,
+                        lineNumber: 104,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 102,
+                lineNumber: 101,
                 columnNumber: 9
             }, this)
         },
@@ -4194,7 +4206,7 @@ function MarcasDestacadas() {
                         children: "AUDEMARS PIGUET"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 113,
+                        lineNumber: 112,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("text", {
@@ -4209,13 +4221,13 @@ function MarcasDestacadas() {
                         children: "LE BRASSUS"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 114,
+                        lineNumber: 113,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 112,
+                lineNumber: 111,
                 columnNumber: 9
             }, this)
         },
@@ -4234,7 +4246,7 @@ function MarcasDestacadas() {
                         fill: "none"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 122,
+                        lineNumber: 121,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
@@ -4244,7 +4256,7 @@ function MarcasDestacadas() {
                         fill: "#777"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 123,
+                        lineNumber: 122,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("text", {
@@ -4260,13 +4272,13 @@ function MarcasDestacadas() {
                         children: "BULOVA"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 124,
+                        lineNumber: 123,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 121,
+                lineNumber: 120,
                 columnNumber: 9
             }, this)
         },
@@ -4289,7 +4301,7 @@ function MarcasDestacadas() {
                         children: "TISSOT"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 132,
+                        lineNumber: 131,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
@@ -4300,7 +4312,7 @@ function MarcasDestacadas() {
                         fill: "#e31e24"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 133,
+                        lineNumber: 132,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
@@ -4311,7 +4323,7 @@ function MarcasDestacadas() {
                         fill: "#fff"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 134,
+                        lineNumber: 133,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
@@ -4322,13 +4334,13 @@ function MarcasDestacadas() {
                         fill: "#fff"
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 135,
+                        lineNumber: 134,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                lineNumber: 131,
+                lineNumber: 130,
                 columnNumber: 9
             }, this)
         }
@@ -4347,39 +4359,69 @@ function MarcasDestacadas() {
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     className: "marcas-title",
                     children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$diamond$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Diamond$3e$__["Diamond"], {
-                            size: 10,
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                            xmlns: "http://www.w3.org/2000/svg",
+                            width: "10",
+                            height: "10",
+                            viewBox: "0 0 24 24",
+                            fill: "none",
+                            stroke: "currentColor",
+                            strokeWidth: "2",
+                            strokeLinecap: "round",
+                            strokeLinejoin: "round",
                             style: {
                                 marginRight: '6px',
                                 display: 'inline',
                                 position: 'relative',
                                 top: '-1px',
                                 color: 'var(--c-blush)'
-                            }
+                            },
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                d: "M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"
+                            }, void 0, false, {
+                                fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
+                                lineNumber: 147,
+                                columnNumber: 299
+                            }, this)
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                            lineNumber: 148,
+                            lineNumber: 147,
                             columnNumber: 11
                         }, this),
                         "EXCLUSIVA SELECCIÓN DE MARCAS INTERNACIONALES",
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$diamond$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Diamond$3e$__["Diamond"], {
-                            size: 10,
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                            xmlns: "http://www.w3.org/2000/svg",
+                            width: "10",
+                            height: "10",
+                            viewBox: "0 0 24 24",
+                            fill: "none",
+                            stroke: "currentColor",
+                            strokeWidth: "2",
+                            strokeLinecap: "round",
+                            strokeLinejoin: "round",
                             style: {
                                 marginLeft: '6px',
                                 display: 'inline',
                                 position: 'relative',
                                 top: '-1px',
                                 color: 'var(--c-blush)'
-                            }
+                            },
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                d: "M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"
+                            }, void 0, false, {
+                                fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
+                                lineNumber: 149,
+                                columnNumber: 298
+                            }, this)
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                            lineNumber: 150,
+                            lineNumber: 149,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                    lineNumber: 147,
+                    lineNumber: 146,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4392,28 +4434,28 @@ function MarcasDestacadas() {
                                 children: marca.logo
                             }, i, false, {
                                 fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                                lineNumber: 157,
+                                lineNumber: 156,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                        lineNumber: 155,
+                        lineNumber: 154,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-                    lineNumber: 154,
+                    lineNumber: 153,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-            lineNumber: 146,
+            lineNumber: 145,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Frontend-Relojes/src/components/MarcasDestacadas.jsx",
-        lineNumber: 145,
+        lineNumber: 144,
         columnNumber: 5
     }, this);
 }
@@ -5992,7 +6034,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_
 var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/lucide-react/dist/esm/icons/chevron-right.mjs [app-ssr] (ecmascript) <export default as ChevronRight>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeft$3e$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/lucide-react/dist/esm/icons/chevron-left.mjs [app-ssr] (ecmascript) <export default as ChevronLeft>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$share$2d$2$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Share2$3e$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/lucide-react/dist/esm/icons/share-2.mjs [app-ssr] (ecmascript) <export default as Share2>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$diamond$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Diamond$3e$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/lucide-react/dist/esm/icons/diamond.mjs [app-ssr] (ecmascript) <export default as Diamond>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$canvas$2d$confetti$2f$dist$2f$confetti$2e$module$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Frontend-Relojes/node_modules/canvas-confetti/dist/confetti.module.mjs [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$src$2f$components$2f$TarjetaProducto$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Frontend-Relojes/src/components/TarjetaProducto.jsx [app-ssr] (ecmascript)");
 ;
@@ -7192,14 +7233,29 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                 marginBottom: '6px'
                             },
                             children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$diamond$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Diamond$3e$__["Diamond"], {
-                                    size: 10,
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                    xmlns: "http://www.w3.org/2000/svg",
+                                    width: "10",
+                                    height: "10",
+                                    viewBox: "0 0 24 24",
+                                    fill: "none",
+                                    stroke: "currentColor",
+                                    strokeWidth: "2",
+                                    strokeLinecap: "round",
+                                    strokeLinejoin: "round",
                                     style: {
                                         marginRight: '6px',
                                         display: 'inline',
                                         position: 'relative',
                                         top: '-1px'
-                                    }
+                                    },
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                        d: "M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"
+                                    }, void 0, false, {
+                                        fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
+                                        lineNumber: 575,
+                                        columnNumber: 278
+                                    }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
                                     lineNumber: 575,
