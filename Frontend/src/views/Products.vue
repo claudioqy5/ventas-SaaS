@@ -547,7 +547,9 @@ const form = reactive({
   stockMinimo: 5,
   descripcion: '',
   categoriaId: '',
+  marcaId: '',
   imagenUrl: '',
+  atributos: [],
   imagenes: [],
   tipoProducto: 'Unidad',
   unidadMedida: 'Unidad',
@@ -664,7 +666,9 @@ const openAddModal = () => {
   form.stockMinimo = 5
   form.descripcion = ''
   form.categoriaId = ''
+  form.marcaId = ''
   form.imagenUrl = ''
+  form.atributos = []
   form.imagenes = []
   form.precioOferta = 0
   form.tipoProducto = 'Unidad'
@@ -685,7 +689,9 @@ const openEditModal = (product) => {
   form.precio = product.precio
   form.descripcion = product.descripcion
   form.categoriaId = product.categoriaId
+  form.marcaId = product.marcaId || ''
   form.imagenUrl = product.imagenUrl || ''
+  form.atributos = product.atributos ? JSON.parse(JSON.stringify(product.atributos)) : []
   form.imagenes = product.imagenes || []
   form.precioOferta = product.precioOferta || 0
   form.tipoProducto = product.tipoProducto || 'Unidad'
