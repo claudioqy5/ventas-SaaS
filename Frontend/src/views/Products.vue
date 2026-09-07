@@ -200,20 +200,29 @@
 
               <!-- BLOQUE VENTA -->
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 500; color: #166534; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta (Precios)</div>
+                <div style="grid-column: span 2; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta & Oferta</div>
+                  <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #15803d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold;">
+                    -{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}% OFF
+                  </div>
+                </div>
                 <div class="field" style="margin-bottom: 0 !important;">
-                  <label>Venta Costal</label>
+                  <label>Venta Costal Entero</label>
                   <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" required />
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
-                  <label>Venta Kg (suelto)</label>
+                  <label>Precio Venta x Kg</label>
                   <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                </div>
+                <div class="field" style="grid-column: span 2; margin-bottom: 0 !important;">
+                  <label>Precio Oferta x Kg (S/.) — 0 = Sin oferta</label>
+                  <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" />
                 </div>
               </div>
             </div>
 
             <!-- FILA 3 (Alternativa): Precios y stock para Unidad (3 Bloques ordenados: Inventario -> Compra -> Venta) -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Unidad'">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 2.2fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Unidad'">
               <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px;">
                 <div style="font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">⬦ Inventario</div>
                 <div class="field" style="margin-bottom: 0 !important;">
@@ -229,16 +238,27 @@
                 </div>
               </div>
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #166534; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta</div>
-                <div class="field" style="margin-bottom: 0 !important;">
-                  <label>Precio Venta (S/.)</label>
-                  <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta & Oferta</div>
+                  <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #15803d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold;">
+                    -{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}% OFF
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                  <div class="field" style="margin-bottom: 0 !important;">
+                    <label>Precio Venta Base</label>
+                    <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                  </div>
+                  <div class="field" style="margin-bottom: 0 !important;">
+                    <label>Precio Oferta (S/.)</label>
+                    <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" />
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- FILA 3 (Alternativa): Precios para Servicio (2 Bloques visuales) -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Servicio'">
+            <div style="display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Servicio'">
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
                 <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Costo</div>
                 <div class="field" style="margin-bottom: 0 !important;">
@@ -247,32 +267,22 @@
                 </div>
               </div>
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #166534; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta</div>
-                <div class="field" style="margin-bottom: 0 !important;">
-                  <label>Precio Servicio (S/.)</label>
-                  <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta & Oferta</div>
+                  <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #15803d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold;">
+                    -{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}% OFF
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            <!-- FILA INTERMEDIA: Precio de Oferta y Descuento -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;">
-              <div style="background-color: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #9f1239; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🏷️ Precio de Oferta</div>
-                <div class="field" style="margin-bottom: 0 !important;">
-                  <label>Precio Oferta (S/.) — 0 = Sin oferta</label>
-                  <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" />
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                  <div class="field" style="margin-bottom: 0 !important;">
+                    <label>Precio Servicio (S/.)</label>
+                    <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                  </div>
+                  <div class="field" style="margin-bottom: 0 !important;">
+                    <label>Precio Oferta (S/.)</label>
+                    <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" />
+                  </div>
                 </div>
-              </div>
-              <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center;">
-                <div style="text-align: center;">
-                  <div style="font-size: 0.8rem; color: #166534; margin-bottom: 4px;">Descuento calculado</div>
-                  <div style="font-size: 1.6rem; font-weight: 700; color: #15803d;">{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}%</div>
-                  <div style="font-size: 0.75rem; color: #166534;">OFF sobre precio base</div>
-                </div>
-              </div>
-              <div v-else style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center;">
-                <span style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">Ingresa un precio de oferta para activar el descuento</span>
               </div>
             </div>
 
@@ -289,7 +299,7 @@
               </div>
               <div class="field">
                 <label>Descripción del Producto</label>
-                <textarea v-model="form.descripcion" placeholder="Ej. Alimento premium sabor cordero y arroz" rows="2" style="width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 0.9rem; font-family: inherit; resize: vertical;"></textarea>
+                <textarea v-model="form.descripcion" placeholder="Ej. Alimento premium sabor cordero y arroz" rows="4" style="width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 0.9rem; font-family: inherit; resize: vertical;"></textarea>
               </div>
             </div>
 

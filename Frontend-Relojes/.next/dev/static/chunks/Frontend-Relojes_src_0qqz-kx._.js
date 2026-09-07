@@ -1201,11 +1201,11 @@ function BarraNavegacion({ cartCount, onOpenCart, onOpenSettings, isConnected, i
                     } else {
                         const diff = currentScrollY - lastScrollY.current;
                         if (diff > 3) {
-                            // Desplazamiento hacia ABAJO -> Mostrar Header
-                            setShowHeader(true);
-                        } else if (diff < -3) {
-                            // Desplazamiento hacia ARRIBA -> Ocultar Header
+                            // Desplazamiento hacia ABAJO -> Ocultar Header
                             setShowHeader(false);
+                        } else if (diff < -3) {
+                            // Desplazamiento hacia ARRIBA -> Mostrar Header
+                            setShowHeader(true);
                         }
                     }
                     lastScrollY.current = currentScrollY;
@@ -6155,12 +6155,10 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
     const [quantity, setQuantity] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(1);
     const [added, setAdded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     if (!product) return null;
-    // Galería de imágenes (Imagen principal + 3 ángulos adicionales)
-    const images = product.imagenes && product.imagenes.length >= 4 ? product.imagenes : [
-        product.imagenUrl,
-        product.imagenUrl,
-        product.imagenUrl,
-        product.imagenUrl // Ángulo 4: Caja Posterior
+    const images = product.imagenes && product.imagenes.length > 0 ? product.imagenes : product.imagenUrl ? [
+        product.imagenUrl
+    ] : [
+        '/placeholder.jpg'
     ];
     const angleLabels = [
         'Vista Frontal',
@@ -6263,21 +6261,21 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                     size: 15
                                 }, void 0, false, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 124,
+                                    lineNumber: 118,
                                     columnNumber: 13
                                 }, this),
                                 "Volver al Catálogo"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 102,
+                            lineNumber: 96,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                             children: "Inicio"
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 127,
+                            lineNumber: 121,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__["ChevronRight"], {
@@ -6285,14 +6283,14 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                             color: "var(--c-taupe)"
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 128,
+                            lineNumber: 122,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                             children: "Relojes"
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 129,
+                            lineNumber: 123,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__["ChevronRight"], {
@@ -6300,14 +6298,14 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                             color: "var(--c-taupe)"
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 130,
+                            lineNumber: 124,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                             children: product.categoria || 'Colección'
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 131,
+                            lineNumber: 125,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__["ChevronRight"], {
@@ -6315,7 +6313,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                             color: "var(--c-taupe)"
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 132,
+                            lineNumber: 126,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6326,13 +6324,13 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                             children: product.nombre
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 133,
+                            lineNumber: 127,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                    lineNumber: 92,
+                    lineNumber: 86,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6360,7 +6358,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                         width: '82px',
                                         flexShrink: 0
                                     },
-                                    children: images.slice(0, 4).map((imgUrl, idx)=>{
+                                    children: images.map((imgUrl, idx)=>{
                                         const isSelected = selectedImageIndex === idx;
                                         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                             onClick: ()=>setSelectedImageIndex(idx),
@@ -6389,18 +6387,18 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                lineNumber: 174,
+                                                lineNumber: 168,
                                                 columnNumber: 21
                                             }, this)
                                         }, idx, false, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 156,
+                                            lineNumber: 150,
                                             columnNumber: 19
                                         }, this);
                                     })
                                 }, void 0, false, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 146,
+                                    lineNumber: 140,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6447,17 +6445,17 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                 color: "var(--c-deep-purple)"
                                             }, void 0, false, {
                                                 fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                lineNumber: 228,
+                                                lineNumber: 222,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 204,
+                                            lineNumber: 198,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
                                             src: images[selectedImageIndex],
-                                            alt: `${product.nombre} - ${angleLabels[selectedImageIndex]}`,
+                                            alt: `${product.nombre} - Ángulo ${selectedImageIndex + 1}`,
                                             style: {
                                                 maxHeight: '92%',
                                                 maxWidth: '92%',
@@ -6467,7 +6465,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                             }
                                         }, void 0, false, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 231,
+                                            lineNumber: 225,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6498,24 +6496,24 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                 color: "var(--c-deep-purple)"
                                             }, void 0, false, {
                                                 fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                lineNumber: 268,
+                                                lineNumber: 262,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 244,
+                                            lineNumber: 238,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 190,
+                                    lineNumber: 184,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 144,
+                            lineNumber: 138,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6536,7 +6534,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 276,
+                                    lineNumber: 270,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -6551,7 +6549,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                     children: product.nombre
                                 }, void 0, false, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 289,
+                                    lineNumber: 283,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6567,7 +6565,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 300,
+                                    lineNumber: 294,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6593,7 +6591,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                lineNumber: 313,
+                                                lineNumber: 307,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6618,7 +6616,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                        lineNumber: 317,
+                                                        lineNumber: 311,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6640,19 +6638,19 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                        lineNumber: 320,
+                                                        lineNumber: 314,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                lineNumber: 316,
+                                                lineNumber: 310,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                        lineNumber: 312,
+                                        lineNumber: 306,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: {
@@ -6675,17 +6673,17 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 327,
+                                            lineNumber: 321,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                        lineNumber: 326,
+                                        lineNumber: 320,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 310,
+                                    lineNumber: 304,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6723,14 +6721,14 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                            lineNumber: 348,
+                                                            lineNumber: 342,
                                                             columnNumber: 25
                                                         }, this),
                                                         " o en 3 cuotas sin intereses."
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 347,
+                                                    lineNumber: 341,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6752,19 +6750,19 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                             children: "Más información"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                            lineNumber: 351,
+                                                            lineNumber: 345,
                                                             columnNumber: 53
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 350,
+                                                    lineNumber: 344,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 346,
+                                            lineNumber: 340,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6778,13 +6776,13 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                             children: "Powerpay"
                                         }, void 0, false, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 354,
+                                            lineNumber: 348,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 335,
+                                    lineNumber: 329,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6828,12 +6826,12 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                     children: num
                                                 }, num, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 388,
+                                                    lineNumber: 382,
                                                     columnNumber: 19
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 368,
+                                            lineNumber: 362,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6855,14 +6853,14 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                         size: 18
                                                     }, void 0, false, {
                                                         fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                        lineNumber: 409,
+                                                        lineNumber: 403,
                                                         columnNumber: 21
                                                     }, this),
                                                     "¡Añadido a la Bolsa!"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                lineNumber: 408,
+                                                lineNumber: 402,
                                                 columnNumber: 19
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                                 children: [
@@ -6870,25 +6868,25 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                         size: 18
                                                     }, void 0, false, {
                                                         fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                        lineNumber: 414,
+                                                        lineNumber: 408,
                                                         columnNumber: 21
                                                     }, this),
                                                     "Añadir a la Bolsa de Compras"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                lineNumber: 413,
+                                                lineNumber: 407,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 393,
+                                            lineNumber: 387,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 366,
+                                    lineNumber: 360,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6921,14 +6919,14 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                             size: 18
                                         }, void 0, false, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 448,
+                                            lineNumber: 442,
                                             columnNumber: 15
                                         }, this),
                                         "PAGAR CON TARJETA (MERCADO PAGO)"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 422,
+                                    lineNumber: 416,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6953,7 +6951,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 464,
+                                                    lineNumber: 458,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6966,13 +6964,13 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                     children: "Envíos a todo Perú"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 465,
+                                                    lineNumber: 459,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 463,
+                                            lineNumber: 457,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6985,7 +6983,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 468,
+                                                    lineNumber: 462,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6998,13 +6996,13 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                     children: "Envío Gratuito VIP"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 469,
+                                                    lineNumber: 463,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 467,
+                                            lineNumber: 461,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7017,7 +7015,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 472,
+                                                    lineNumber: 466,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7030,19 +7028,19 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                     children: "Garantía 3 Años"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 473,
+                                                    lineNumber: 467,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 471,
+                                            lineNumber: 465,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 453,
+                                    lineNumber: 447,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7071,7 +7069,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                     children: "Compartir guardatiempo:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 489,
+                                                    lineNumber: 483,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -7100,18 +7098,18 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                         size: 17
                                                     }, void 0, false, {
                                                         fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                        lineNumber: 502,
+                                                        lineNumber: 496,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 490,
+                                                    lineNumber: 484,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 488,
+                                            lineNumber: 482,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -7133,20 +7131,20 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                     size: 16
                                                 }, void 0, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 521,
+                                                    lineNumber: 515,
                                                     columnNumber: 17
                                                 }, this),
                                                 "Consultar por WhatsApp"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 506,
+                                            lineNumber: 500,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 478,
+                                    lineNumber: 472,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7171,7 +7169,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                             children: "✦ Especificaciones Técnicas y Manufactura"
                                         }, void 0, false, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 534,
+                                            lineNumber: 528,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7194,7 +7192,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                             children: "Calibre de Movimiento"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                            lineNumber: 547,
+                                                            lineNumber: 541,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
@@ -7204,13 +7202,13 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                             children: specs.calibre
                                                         }, void 0, false, {
                                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                            lineNumber: 548,
+                                                            lineNumber: 542,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 546,
+                                                    lineNumber: 540,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7224,7 +7222,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                             children: "Cristal"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                            lineNumber: 551,
+                                                            lineNumber: 545,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
@@ -7234,13 +7232,13 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                             children: specs.cristal
                                                         }, void 0, false, {
                                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                            lineNumber: 552,
+                                                            lineNumber: 546,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 550,
+                                                    lineNumber: 544,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7254,7 +7252,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                             children: "Hermeticidad"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                            lineNumber: 555,
+                                                            lineNumber: 549,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
@@ -7264,13 +7262,13 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                             children: specs.hermeticidad
                                                         }, void 0, false, {
                                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                            lineNumber: 556,
+                                                            lineNumber: 550,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 554,
+                                                    lineNumber: 548,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7284,7 +7282,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                             children: "Diámetro de Caja"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                            lineNumber: 559,
+                                                            lineNumber: 553,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
@@ -7294,37 +7292,37 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                             children: specs.diametro || '42 mm'
                                                         }, void 0, false, {
                                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                            lineNumber: 560,
+                                                            lineNumber: 554,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                                    lineNumber: 558,
+                                                    lineNumber: 552,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                            lineNumber: 545,
+                                            lineNumber: 539,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 527,
+                                    lineNumber: 521,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 274,
+                            lineNumber: 268,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                    lineNumber: 137,
+                    lineNumber: 131,
                     columnNumber: 9
                 }, this),
                 relatedProducts.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7349,7 +7347,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                             children: "✦ SELECCIÓN EXCLUSIVA"
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 570,
+                            lineNumber: 564,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -7364,7 +7362,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                             children: "Otros Guardatiempos que te pueden interesar"
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 583,
+                            lineNumber: 577,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7385,29 +7383,29 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                     onWhatsAppInquiry: onWhatsAppInquiry
                                 }, rel.id, false, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                                    lineNumber: 595,
+                                    lineNumber: 589,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                            lineNumber: 593,
+                            lineNumber: 587,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-                    lineNumber: 569,
+                    lineNumber: 563,
                     columnNumber: 11
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-            lineNumber: 86,
+            lineNumber: 80,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
-        lineNumber: 79,
+        lineNumber: 73,
         columnNumber: 5
     }, this);
 }
@@ -10749,152 +10747,7 @@ const getEnvVar = (viteKey, nextKey, defaultValue)=>{
 };
 const DEFAULT_API_URL = getEnvVar('VITE_API_URL', 'NEXT_PUBLIC_API_URL', 'http://localhost:5000/api/public/store');
 const DEFAULT_EMPRESA_ID = getEnvVar('VITE_EMPRESA_ID', 'NEXT_PUBLIC_EMPRESA_ID', '');
-const LUXURY_SAMPLE_WATCHES = [
-    {
-        id: 'sample-1',
-        nombre: 'Vetruvius Chronograph Tourbillon',
-        descripcion: 'Caja en oro rosa de 18k con esfera verde esmeralda cepillada con efecto rayos de sol. Escape de tourbillon volante a las 6 en punto.',
-        precio: 14850.00,
-        categoria: 'Hombre',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 3,
-        imagenUrl: '/watches/chronograph_gold.jpg',
-        specs: {
-            calibre: 'Calibre VT-9080',
-            rubies: '38 Joyas',
-            reservaMarcha: '72 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Edición Limitada'
-    },
-    {
-        id: 'sample-2',
-        nombre: 'Vortex Titanium Skeleton',
-        descripcion: 'Esqueleto mecánico de titanio pulido grado aeroespacial con bisel de cerámica negra facetada. Visibilidad total del tren de engranajes.',
-        precio: 11200.00,
-        categoria: 'Hombre',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 5,
-        imagenUrl: '/watches/skeleton_titanium.jpg',
-        specs: {
-            calibre: 'Calibre VX-Skeleton',
-            rubies: '31 Joyas',
-            reservaMarcha: '55 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Buceo Extremo'
-    },
-    {
-        id: 'sample-3',
-        nombre: 'Celestial Master Moonphase',
-        descripcion: 'Elegancia pura en oro rosa con esfera azul noche guilloché artesanal. Indicador de fase lunar astronómica.',
-        precio: 16900.00,
-        categoria: 'Marcas',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 2,
-        imagenUrl: '/watches/moonphase_blue.jpg',
-        specs: {
-            calibre: 'Calibre Astrum 2800',
-            rubies: '29 Joyas',
-            reservaMarcha: '65 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Pieza de Colección'
-    },
-    {
-        id: 'sample-4',
-        nombre: 'Geneva Classic Heritage',
-        descripcion: 'Reloj de vestir clásico para hombre. Caja de oro amarillo de 18 quilates con esfera texturizada y correa de piel de aligátor marrón auténtica.',
-        precio: 9500.00,
-        categoria: 'Hombre',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 2,
-        imagenUrl: '/watches/mens_classic.png',
-        specs: {
-            calibre: 'Calibre GH-40 Auto',
-            rubies: '25 Joyas',
-            reservaMarcha: '48 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Clásico'
-    },
-    {
-        id: 'sample-5',
-        nombre: 'Empress Diamond Rose',
-        descripcion: 'Elegancia absoluta para mujer. Oro rosa engastado con diamantes corte brillante en el bisel, esfera de nácar natural y agujas facetadas.',
-        precio: 18200.00,
-        categoria: 'Mujer',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 1,
-        imagenUrl: '/watches/womens_diamond.png',
-        specs: {
-            calibre: 'Calibre Mini-Auto',
-            rubies: '21 Joyas',
-            reservaMarcha: '42 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Exclusivo Mujer'
-    },
-    {
-        id: 'sample-6',
-        nombre: 'Oceanic Pro Chrono',
-        descripcion: 'Robusto cronógrafo deportivo en acero inoxidable cepillado con esfera azul profundo. Diseñado para resistir condiciones extremas conservando el lujo intacto.',
-        precio: 8900.00,
-        categoria: 'Novedades',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 4,
-        imagenUrl: '/watches/sports_steel.png',
-        specs: {
-            calibre: 'Calibre C-300',
-            rubies: '33 Joyas',
-            reservaMarcha: '50 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Novedad'
-    },
-    {
-        id: 'sample-7',
-        nombre: 'Aviator Heritage 1945',
-        descripcion: 'Inspirado en la historia de la aviación. Esfera negra mate con números arábigos luminiscentes y correa de piel envejecida a mano.',
-        precio: 6500.00,
-        categoria: 'Ofertas',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 3,
-        imagenUrl: '/watches/aviator_vintage.png',
-        specs: {
-            calibre: 'Calibre Manual A-19',
-            rubies: '17 Joyas',
-            reservaMarcha: '40 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Oportunidad VIP'
-    },
-    {
-        id: 'sample-8',
-        nombre: 'Minimalist Ultra-Thin',
-        descripcion: 'La máxima expresión del minimalismo. Esfera blanca de esmalte con delgados números romanos y una caja ultraplana. Elegancia discreta.',
-        precio: 12400.00,
-        categoria: 'Accesorios',
-        tipoProducto: 'Unidad',
-        unidadMedida: 'Pieza',
-        stock: 2,
-        imagenUrl: '/watches/minimalist_dress.png',
-        specs: {
-            calibre: 'Calibre Ultra-Plano',
-            rubies: '28 Joyas',
-            reservaMarcha: '45 Horas'
-        },
-        destacado: true,
-        etiqueta: 'Alta Costura'
-    }
-];
+const LUXURY_SAMPLE_WATCHES = [];
 async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl = DEFAULT_API_URL) {
     if (!empresaId) {
         // Si aún no se ha configurado la EmpresaId del SaaS, usamos el catálogo exclusivo
