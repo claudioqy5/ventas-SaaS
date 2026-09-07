@@ -41,28 +41,48 @@ const CardBadge = ({ children, bg, color }) => (
   </div>
 );
 
-const FooterLink = ({ href = "#", children }) => (
+const BookOpenIcon = ({ size = 16, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+  </svg>
+);
+
+const FooterLink = ({ href = "#", onClick, children }) => (
   <li>
-    <a href={href} style={{
-      color: 'rgba(255, 255, 255, 0.75)',
-      textDecoration: 'none',
-      transition: 'color 0.2s',
-      fontSize: '0.85rem'
-    }}
-    onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
-    onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)'}
+    <a 
+      href={href} 
+      onClick={onClick}
+      style={{
+        color: 'rgba(255, 255, 255, 0.75)',
+        textDecoration: 'none',
+        transition: 'color 0.2s',
+        fontSize: '0.85rem',
+        cursor: 'pointer'
+      }}
+      onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
+      onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)'}
     >
       {children}
     </a>
   </li>
 );
 
-export default function PieDePagina({ onOpenWhatsAppConcierge, storeName }) {
+export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavigate }) {
   const marcas = [
     "Rolex", "Cartier", "Patek Philippe", "Audemars Piguet",
     "Omega", "Tag Heuer", "Breitling", "Hublot",
     "IWC", "Jaeger-LeCoultre", "Tudor", "Panerai"
   ];
+
+  const handleLinkClick = (viewName, fallbackUrl) => (e) => {
+    e.preventDefault();
+    if (onNavigate) {
+      onNavigate(viewName);
+    } else {
+      window.location.href = fallbackUrl;
+    }
+  };
 
   return (
     <footer id="garantia" className="footer-main" style={{
@@ -145,14 +165,14 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName }) {
             <div style={{ width: '100%', height: '1px', backgroundColor: '#ffffff', marginBottom: '24px' }}></div>
             
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <FooterLink>Relojes para Hombre</FooterLink>
-              <FooterLink>Relojes para Mujer</FooterLink>
-              <FooterLink>Nuevos Ingresos</FooterLink>
-              <FooterLink>Alta Relojería</FooterLink>
-              <FooterLink>Accesorios y Cajas</FooterLink>
-              <FooterLink>Nuestra Herencia</FooterLink>
-              <FooterLink>Boutiques</FooterLink>
-              <FooterLink>Contáctanos</FooterLink>
+              <FooterLink href="/categoria/hombre">Relojes para Hombre</FooterLink>
+              <FooterLink href="/categoria/mujer">Relojes para Mujer</FooterLink>
+              <FooterLink href="/categoria/novedades">Nuevos Ingresos</FooterLink>
+              <FooterLink href="/categoria/marcas">Alta Relojería</FooterLink>
+              <FooterLink href="/categoria/accesorios">Accesorios y Cajas</FooterLink>
+              <FooterLink href="/" onClick={handleLinkClick('catalog', '/')}>Nuestra Herencia</FooterLink>
+              <FooterLink href="/" onClick={handleLinkClick('catalog', '/')}>Boutiques</FooterLink>
+              <FooterLink href="#" onClick={(e) => { e.preventDefault(); if (onOpenWhatsAppConcierge) onOpenWhatsAppConcierge(); }}>Contáctanos</FooterLink>
             </ul>
           </div>
 
@@ -181,7 +201,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName }) {
               rowGap: '14px' 
             }}>
               {marcas.map(marca => (
-                <FooterLink key={marca}>{marca}</FooterLink>
+                <FooterLink key={marca} href="/categoria/marcas">{marca}</FooterLink>
               ))}
             </ul>
           </div>
@@ -202,28 +222,46 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName }) {
             <div style={{ width: '100%', height: '1px', backgroundColor: '#ffffff', marginBottom: '24px' }}></div>
             
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <FooterLink>Preguntas Frecuentes</FooterLink>
-              <FooterLink>Términos y Condiciones</FooterLink>
-              <FooterLink>Políticas de Privacidad</FooterLink>
-              <FooterLink>Cambios y Devoluciones</FooterLink>
-              <FooterLink>Servicio Técnico Autorizado</FooterLink>
+              <FooterLink href="/preguntas-frecuentes" onClick={handleLinkClick('faq', '/preguntas-frecuentes')}>
+                Preguntas Frecuentes
+              </FooterLink>
+              <FooterLink href="/terminos-y-condiciones" onClick={handleLinkClick('terminos', '/terminos-y-condiciones')}>
+                Términos y Condiciones
+              </FooterLink>
+              <FooterLink href="/terminos-y-condiciones" onClick={handleLinkClick('terminos', '/terminos-y-condiciones')}>
+                Políticas de Privacidad
+              </FooterLink>
+              <FooterLink href="/terminos-y-condiciones" onClick={handleLinkClick('terminos', '/terminos-y-condiciones')}>
+                Cambios y Devoluciones
+              </FooterLink>
+              <FooterLink href="/preguntas-frecuentes" onClick={handleLinkClick('faq', '/preguntas-frecuentes')}>
+                Servicio Técnico Autorizado
+              </FooterLink>
               
-              {/* Libro de reclamaciones con icono representativo */}
+              {/* Libro de reclamaciones con icono representativo SVG limpio (sin emojis) */}
               <li style={{ marginTop: '10px' }}>
-                <a href="#" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  color: '#ffffff',
-                  textDecoration: 'none',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  backgroundColor: 'rgba(255,255,255,0.1)',
-                  padding: '8px 12px',
-                  borderRadius: '6px',
-                  border: '1px solid rgba(255,255,255,0.2)'
-                }}>
-                  📖 Libro de Reclamaciones
+                <a 
+                  href="/terminos-y-condiciones" 
+                  onClick={handleLinkClick('terminos', '/terminos-y-condiciones')}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    color: '#ffffff',
+                    textDecoration: 'none',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    padding: '8px 12px',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    transition: 'background-color 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.18)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+                >
+                  <BookOpenIcon size={16} color="var(--c-blush)" />
+                  Libro de Reclamaciones Virtual
                 </a>
               </li>
             </ul>

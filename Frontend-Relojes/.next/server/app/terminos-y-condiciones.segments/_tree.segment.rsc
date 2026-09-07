@@ -1,0 +1,4 @@
+:HL["/_next/static/css/b774327fe678775e.css","style"]
+:HL["/_next/static/css/adcef2716ae8e986.css","style"]
+:HL["https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;600;700&family=Cinzel:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"terminos-y-condiciones","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"EYA5EDWS6GdYcepMaGHFI"}

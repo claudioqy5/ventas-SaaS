@@ -3,5 +3,7 @@
   "/_global-error/page": "/_global-error",
   "/categoria/[slug]/page": "/categoria/[slug]",
   "/page": "/",
-  "/producto/[id]/page": "/producto/[id]"
+  "/producto/[id]/page": "/producto/[id]",
+  "/preguntas-frecuentes/page": "/preguntas-frecuentes",
+  "/terminos-y-condiciones/page": "/terminos-y-condiciones"
 }

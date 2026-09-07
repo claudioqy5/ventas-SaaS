@@ -57,6 +57,18 @@
       "regex": "^/_not\\-found(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/preguntas-frecuentes",
+      "regex": "^/preguntas\\-frecuentes(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/preguntas\\-frecuentes(?:/)?$"
+    },
+    {
+      "page": "/terminos-y-condiciones",
+      "regex": "^/terminos\\-y\\-condiciones(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terminos\\-y\\-condiciones(?:/)?$"
     }
   ],
   "dataRoutes": [],

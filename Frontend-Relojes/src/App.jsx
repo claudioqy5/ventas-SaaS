@@ -18,6 +18,8 @@ import MarcasDestacadas from './components/MarcasDestacadas';
 import ToastNotificacion from './components/ToastNotificacion';
 import WebThreads from './components/WebThreads';
 import Beneficios from './components/Beneficios';
+import VistaPreguntasFrecuentes from './components/VistaPreguntasFrecuentes';
+import VistaTerminosCondiciones from './components/VistaTerminosCondiciones';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 
 const STORAGE_KEY_CART = 'aurelia_vip_cart_v1';
@@ -26,7 +28,7 @@ const STORAGE_KEY_API_URL = 'aurelia_saas_api_url';
 const WHATSAPP_CONCIERGE = '51962956919';
 
 
-export default function App({ initialCategory, initialProductId }) {
+export default function App({ initialCategory, initialProductId, initialView = 'catalog' }) {
   const [empresaId, setEmpresaId] = useState(process.env.NEXT_PUBLIC_EMPRESA_ID || '6a9a503000746b35867cddaf');
   const [apiUrl, setApiUrl] = useState(process.env.NEXT_PUBLIC_API_URL || 'https://ventassaas-api.helifyferdigital.cloud/api/relojes-store');
 
@@ -103,8 +105,9 @@ export default function App({ initialCategory, initialProductId }) {
     materials: []
   });
 
-  // Modales y Notificaciones
+  // Modales, Notificaciones y Vistas
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [activeView, setActiveView] = useState(initialView || 'catalog');
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -114,6 +117,7 @@ export default function App({ initialCategory, initialProductId }) {
 
   const handleSelectProduct = (product) => {
     setSelectedProduct(product);
+    setActiveView('product');
     if (typeof window !== 'undefined' && product) {
       window.history.pushState({}, '', `/producto/${product.id}`);
     }
@@ -122,11 +126,56 @@ export default function App({ initialCategory, initialProductId }) {
 
   const handleBackToCatalog = () => {
     setSelectedProduct(null);
+    setActiveView('catalog');
     if (typeof window !== 'undefined') {
       window.history.pushState({}, '', '/');
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const handleNavigateView = (viewName) => {
+    setSelectedProduct(null);
+    setActiveView(viewName);
+    if (typeof window !== 'undefined') {
+      if (viewName === 'faq') {
+        window.history.pushState({}, '', '/preguntas-frecuentes');
+      } else if (viewName === 'terminos') {
+        window.history.pushState({}, '', '/terminos-y-condiciones');
+      } else {
+        window.history.pushState({}, '', '/');
+      }
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Manejar historial del navegador (Atrás / Adelante)
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path.includes('/preguntas-frecuentes')) {
+        setActiveView('faq');
+        setSelectedProduct(null);
+      } else if (path.includes('/terminos-y-condiciones')) {
+        setActiveView('terminos');
+        setSelectedProduct(null);
+      } else if (path.includes('/producto/')) {
+        const id = path.split('/producto/')[1];
+        if (id && products.length > 0) {
+          const found = products.find(p => String(p.id) === String(id));
+          if (found) {
+            setSelectedProduct(found);
+            setActiveView('product');
+          }
+        }
+      } else {
+        setActiveView('catalog');
+        setSelectedProduct(null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [products]);
 
 
   const [cart, setCart] = useState(() => {
@@ -311,7 +360,7 @@ export default function App({ initialCategory, initialProductId }) {
         onOpenAuth={() => setIsAuthOpen(true)}
       />
 
-      {/* VISTA PRINCIPAL: Si hay un producto seleccionado, mostramos la Página Completa de Detalle */}
+      {/* VISTA PRINCIPAL: Producto, Preguntas Frecuentes, Términos o Catálogo General */}
       {selectedProduct ? (
         <PaginaDetalleProducto
           product={selectedProduct}
@@ -320,6 +369,15 @@ export default function App({ initialCategory, initialProductId }) {
           onWhatsAppInquiry={handleWhatsAppInquiry}
           allProducts={products}
           onSelectProduct={handleSelectProduct}
+        />
+      ) : activeView === 'faq' ? (
+        <VistaPreguntasFrecuentes
+          onBack={handleBackToCatalog}
+          onOpenWhatsAppConcierge={handleOpenWhatsAppConcierge}
+        />
+      ) : activeView === 'terminos' ? (
+        <VistaTerminosCondiciones
+          onBack={handleBackToCatalog}
         />
       ) : (
         <>
@@ -713,6 +771,7 @@ export default function App({ initialCategory, initialProductId }) {
       <PieDePagina
         onOpenWhatsAppConcierge={handleOpenWhatsAppConcierge}
         storeName={storeName}
+        onNavigate={handleNavigateView}
       />
 
       {/* Bolsa de Compras VIP / Drawer */}

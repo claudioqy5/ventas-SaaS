@@ -1,4 +1,4 @@
-// File: C:\Users\ADMIN\Desktop\MIS PROYECTOS\Ventas SaaS\ventas-SaaS\Frontend-Relojes\src\app\categoria\[slug]\page.jsx
+// File: C:\Users\FAMHURP\Desktop\CFQY\VENTASSAAS\ventas-SaaS\Frontend-Relojes\src\app\categoria\[slug]\page.jsx
 import * as entry from '../../../../../src/app/categoria/[slug]/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

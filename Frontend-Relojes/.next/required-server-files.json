@@ -105,7 +105,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS",
+    "outputFileTracingRoot": "C:\\Users\\FAMHURP\\Desktop\\CFQY\\VENTASSAAS\\ventas-SaaS",
     "enablePrerenderSourceMaps": true,
     "cacheComponents": false,
     "cacheLife": {
@@ -175,7 +175,7 @@
       "proxyPrefetch": "flexible",
       "optimisticClientCache": true,
       "manualClientBasePath": false,
-      "cpus": 11,
+      "cpus": 31,
       "memoryBasedWorkersCount": false,
       "imgOptConcurrency": null,
       "imgOptOperationCache": null,
@@ -320,14 +320,14 @@
     "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight",
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.mjs",
-    "repoRoot": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS",
+    "repoRoot": "C:\\Users\\FAMHURP\\Desktop\\CFQY\\VENTASSAAS\\ventas-SaaS",
     "turbopack": {
-      "root": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS"
+      "root": "C:\\Users\\FAMHURP\\Desktop\\CFQY\\VENTASSAAS\\ventas-SaaS"
     },
     "distDirRoot": ".next",
     "supportsImmutableAssets": false
   },
-  "appDir": "C:\\Users\\ADMIN\\Desktop\\MIS PROYECTOS\\Ventas SaaS\\ventas-SaaS\\Frontend-Relojes",
+  "appDir": "C:\\Users\\FAMHURP\\Desktop\\CFQY\\VENTASSAAS\\ventas-SaaS\\Frontend-Relojes",
   "relativeAppDir": "Frontend-Relojes",
   "files": [
     ".next\\package.json",
