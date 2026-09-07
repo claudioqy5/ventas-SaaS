@@ -174,7 +174,10 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Costal'">
               <!-- BLOQUE INVENTARIO -->
               <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">Inventario</div>
+                <div style="grid-column: span 2; display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #d97706;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                  Inventario
+                </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Kg x Costal</label>
                   <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
@@ -187,7 +190,10 @@
 
               <!-- BLOQUE COMPRA -->
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">Compra (Costos)</div>
+                <div style="grid-column: span 2; display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #64748b;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  Compra (Costos)
+                </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Costo Costal</label>
                   <input v-model.number="form.precioCostoCostal" type="number" step="0.01" min="0" required />
@@ -201,7 +207,10 @@
               <!-- BLOQUE VENTA -->
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <div style="grid-column: span 2; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">Venta & Oferta</div>
+                  <div style="display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #4ade80;"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    Venta & Oferta
+                  </div>
                   <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #15803d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold;">
                     -{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}% OFF
                   </div>
@@ -224,14 +233,20 @@
             <!-- FILA 3 (Alternativa): Precios y stock para Unidad (3 Bloques ordenados: Inventario -> Compra -> Venta) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 2.2fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Unidad'">
               <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Inventario</div>
+                <div style="display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #d97706;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                  Inventario
+                </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>{{ isEdit ? 'Stock' : 'Inicial (Und)' }}</label>
                   <input v-model.number="form.stock" type="number" step="1" min="0" :disabled="isEdit" required />
                 </div>
               </div>
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Compra</div>
+                <div style="display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #64748b;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  Compra
+                </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Precio Costo (S/.)</label>
                   <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" required />
@@ -239,7 +254,10 @@
               </div>
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">Venta & Oferta</div>
+                  <div style="display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #4ade80;"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    Venta & Oferta
+                  </div>
                   <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #15803d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold;">
                     -{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}% OFF
                   </div>
@@ -260,7 +278,10 @@
             <!-- FILA 3 (Alternativa): Precios para Servicio (2 Bloques visuales) -->
             <div style="display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Servicio'">
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Costo</div>
+                <div style="display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #64748b;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  Costo
+                </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Costo Insumos (S/.)</label>
                   <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" />
@@ -268,7 +289,10 @@
               </div>
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">Venta & Oferta</div>
+                  <div style="display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #4ade80;"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    Venta & Oferta
+                  </div>
                   <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #15803d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold;">
                     -{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}% OFF
                   </div>
@@ -305,7 +329,10 @@
 
             <!-- FILA 6: Subida de imágenes múltiples -->
             <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; margin-top: 4px;">
-              <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">📷 Imágenes del Producto (máx. 5 imágenes, 5MB c/u)</div>
+              <div style="display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #64748b;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                Imágenes del Producto (máx. 5 imágenes, 5MB c/u)
+              </div>
               
               <!-- Botón de subida -->
               <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
