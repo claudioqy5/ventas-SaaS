@@ -582,7 +582,7 @@ export default function PaginaDetalleProducto({
               marginBottom: '28px',
               textAlign: 'center'
             }}>
-              Otros Guardatiempos que te pueden interesar
+              Tambien te pueden interesar
             </h3>
 
             <div className="grid-4-products">
