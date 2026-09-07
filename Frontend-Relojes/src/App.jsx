@@ -361,7 +361,7 @@ export default function App({ initialCategory, initialProductId }) {
                   fontFamily: 'var(--font-serif)',
                   fontWeight: 500
                 }}>
-                  {showFullCatalog ? '✦ CATÁLOGO PRIVADO' : '✦ SELECCIÓN EXCLUSIVA'}
+                  {showFullCatalog ? 'CATÁLOGO PRIVADO' : 'SELECCIÓN EXCLUSIVA'}
                 </span>
                 <h2 className="font-serif" style={{
                   fontSize: 'clamp(1.8rem, 3vw, 2.4rem)',

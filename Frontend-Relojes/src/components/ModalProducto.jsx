@@ -168,7 +168,7 @@ export default function ModalProducto({
                 color: 'var(--c-indigo)',
                 letterSpacing: '0.05em'
               }}>
-                ✦ Ángulo {selectedImageIndex + 1}
+                Ángulo {selectedImageIndex + 1}
               </span>
             </div>
 
@@ -331,7 +331,7 @@ export default function ModalProducto({
                   fontWeight: 800,
                   marginBottom: '10px'
                 }}>
-                  ✦ Especificaciones Técnicas
+                  Especificaciones Técnicas
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '0.8rem' }}>
@@ -477,7 +477,7 @@ export default function ModalProducto({
                 fontWeight: 700,
                 margin: 0
               }}>
-                ✦ TAMBIÉN TE PUEDE INTERESAR
+                TAMBIÉN TE PUEDE INTERESAR
               </h3>
               <span style={{ fontSize: '0.75rem', color: 'var(--c-taupe)', letterSpacing: '0.05em' }}>
                 Explora más guardatiempos exclusivos

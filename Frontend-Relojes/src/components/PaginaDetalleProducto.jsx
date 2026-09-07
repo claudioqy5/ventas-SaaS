@@ -276,7 +276,7 @@ export default function PaginaDetalleProducto({
               fontFamily: 'var(--font-serif)',
               marginBottom: '6px'
             }}>
-              ✦ {brandName}
+              {brandName}
             </div>
 
             {/* Título Principal */}
@@ -533,7 +533,7 @@ export default function PaginaDetalleProducto({
                 marginBottom: '14px',
                 color: 'var(--c-indigo)'
               }}>
-                ✦ Especificaciones Técnicas y Manufactura
+                Especificaciones Técnicas y Manufactura
               </h3>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', fontSize: '0.82rem', fontFamily: 'var(--font-serif)' }}>
@@ -572,7 +572,7 @@ export default function PaginaDetalleProducto({
               fontWeight: 600,
               marginBottom: '6px'
             }}>
-              ✦ SELECCIÓN EXCLUSIVA
+              SELECCIÓN EXCLUSIVA
             </span>
             <h3 className="font-serif" style={{
               fontSize: '1.4rem',

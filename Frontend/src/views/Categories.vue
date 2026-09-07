@@ -23,7 +23,7 @@
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
@@ -45,7 +45,7 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">✦ Gestión de Categorías</h1>
+            <h1 class="text-title">Gestión de Categorías</h1>
             <p class="text-subtitle">Organiza tus productos en el inventario</p>
           </div>
           <button @click="openCreateModal" class="btn btn-primary">➕ Agregar Categoría</button>
@@ -90,7 +90,7 @@
       <!-- Modal para registrar o editar categoria -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Categoría' : '✦ Registrar Categoría' }}</h2>
+          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Categoría' : 'Registrar Categoría' }}</h2>
           <form @submit.prevent="saveCategory" class="grid">
             <div class="field">
               <label>Nombre de la Categoría</label>

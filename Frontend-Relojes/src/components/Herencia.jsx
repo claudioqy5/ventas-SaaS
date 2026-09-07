@@ -23,7 +23,7 @@ export default function Herencia() {
             fontFamily: 'var(--font-serif)',
             fontWeight: 700
           }}>
-            ✦ LA BÚSQUEDA DE LA PERFECCIÓN
+            LA BÚSQUEDA DE LA PERFECCIÓN
           </span>
           <h2 className="font-serif" style={{
             fontSize: 'clamp(2rem, 3.5vw, 2.9rem)',

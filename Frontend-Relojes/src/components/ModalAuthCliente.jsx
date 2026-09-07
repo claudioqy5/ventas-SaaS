@@ -200,7 +200,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                     {user.nombre}
                   </h3>
                   <p style={{ fontSize: '0.82rem', color: 'var(--c-indigo)', fontWeight: 500 }}>
-                    ✦ {user.nivel || 'Cliente VIP Concierge'}
+                    {user.nivel || 'Cliente VIP Concierge'}
                   </p>
                   <p style={{ fontSize: '0.78rem', color: 'var(--c-taupe)', marginTop: '2px', fontWeight: 400 }}>
                     {user.email} • {user.ciudad}

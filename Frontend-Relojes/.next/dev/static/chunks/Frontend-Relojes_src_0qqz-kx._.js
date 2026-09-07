@@ -430,7 +430,7 @@ function App({ initialCategory, initialProductId }) {
                                                     fontFamily: 'var(--font-serif)',
                                                     fontWeight: 500
                                                 },
-                                                children: showFullCatalog ? '✦ CATÁLOGO PRIVADO' : '✦ SELECCIÓN EXCLUSIVA'
+                                                children: showFullCatalog ? 'CATÁLOGO PRIVADO' : 'SELECCIÓN EXCLUSIVA'
                                             }, void 0, false, {
                                                 fileName: "[project]/Frontend-Relojes/src/App.jsx",
                                                 lineNumber: 356,
@@ -5242,11 +5242,8 @@ function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLogout }) {
                                                         color: 'var(--c-indigo)',
                                                         fontWeight: 500
                                                     },
-                                                    children: [
-                                                        "✦ ",
-                                                        user.nivel || 'Cliente VIP Concierge'
-                                                    ]
-                                                }, void 0, true, {
+                                                    children: user.nivel || 'Cliente VIP Concierge'
+                                                }, void 0, false, {
                                                     fileName: "[project]/Frontend-Relojes/src/components/ModalAuthCliente.jsx",
                                                     lineNumber: 202,
                                                     columnNumber: 19
@@ -6528,11 +6525,8 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                         fontFamily: 'var(--font-serif)',
                                         marginBottom: '6px'
                                     },
-                                    children: [
-                                        "✦ ",
-                                        brandName
-                                    ]
-                                }, void 0, true, {
+                                    children: brandName
+                                }, void 0, false, {
                                     fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
                                     lineNumber: 270,
                                     columnNumber: 13
@@ -7166,7 +7160,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                                 marginBottom: '14px',
                                                 color: 'var(--c-indigo)'
                                             },
-                                            children: "✦ Especificaciones Técnicas y Manufactura"
+                                            children: "Especificaciones Técnicas y Manufactura"
                                         }, void 0, false, {
                                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
                                             lineNumber: 528,
@@ -7344,7 +7338,7 @@ function PaginaDetalleProducto({ product, onBack, onAddToCart, onWhatsAppInquiry
                                 fontWeight: 600,
                                 marginBottom: '6px'
                             },
-                            children: "✦ SELECCIÓN EXCLUSIVA"
+                            children: "SELECCIÓN EXCLUSIVA"
                         }, void 0, false, {
                             fileName: "[project]/Frontend-Relojes/src/components/PaginaDetalleProducto.jsx",
                             lineNumber: 564,

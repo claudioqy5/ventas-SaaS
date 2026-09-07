@@ -23,7 +23,7 @@
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
@@ -267,7 +267,7 @@
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="categorias" v-model="form.permisos" />
-                  <span>✦ Categorías</span>
+                  <span>Categorías</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="modificar_productos" v-model="form.permisos" />
@@ -443,7 +443,7 @@ const formatPermissionName = (perm) => {
     'historial_negocio': '▸ Historial Negocio',
     'ventas': '❖ POS Ventas',
     'productos': '⬦ Productos',
-    'categorias': '✦ Categorías',
+    'categorias': 'Categorías',
     'clientes': '⚇ Clientes',
     'proveedores': '⌂ Proveedores',
     'compras': '✧ Compras',

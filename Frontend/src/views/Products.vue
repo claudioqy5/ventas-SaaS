@@ -23,7 +23,7 @@
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">⬦ <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active">✦ <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">⟳ <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
@@ -69,7 +69,7 @@
       <div class="table-filters card">
         <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código o descripción..." class="filter-input" />
         <select v-model="selectedCategory" class="filter-select">
-          <option value="">✦ Todas las Categorías</option>
+          <option value="">Todas las Categorías</option>
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
         </select>
       </div>
@@ -174,7 +174,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Costal'">
               <!-- BLOQUE INVENTARIO -->
               <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">⬦ Inventario</div>
+                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">Inventario</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Kg x Costal</label>
                   <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
@@ -187,7 +187,7 @@
 
               <!-- BLOQUE COMPRA -->
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Compra (Costos)</div>
+                <div style="grid-column: span 2; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">Compra (Costos)</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Costo Costal</label>
                   <input v-model.number="form.precioCostoCostal" type="number" step="0.01" min="0" required />
@@ -201,7 +201,7 @@
               <!-- BLOQUE VENTA -->
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <div style="grid-column: span 2; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta & Oferta</div>
+                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">Venta & Oferta</div>
                   <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #15803d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold;">
                     -{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}% OFF
                   </div>
@@ -224,14 +224,14 @@
             <!-- FILA 3 (Alternativa): Precios y stock para Unidad (3 Bloques ordenados: Inventario -> Compra -> Venta) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 2.2fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Unidad'">
               <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">⬦ Inventario</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: #92400e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Inventario</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>{{ isEdit ? 'Stock' : 'Inicial (Und)' }}</label>
                   <input v-model.number="form.stock" type="number" step="1" min="0" :disabled="isEdit" required />
                 </div>
               </div>
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Compra</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Compra</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Precio Costo (S/.)</label>
                   <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" required />
@@ -239,7 +239,7 @@
               </div>
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta & Oferta</div>
+                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">Venta & Oferta</div>
                   <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #15803d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold;">
                     -{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}% OFF
                   </div>
@@ -260,7 +260,7 @@
             <!-- FILA 3 (Alternativa): Precios para Servicio (2 Bloques visuales) -->
             <div style="display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px; margin-top: 4px;" v-if="form.tipoProducto === 'Servicio'">
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📥 Costo</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Costo</div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Costo Insumos (S/.)</label>
                   <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" />
@@ -268,7 +268,7 @@
               </div>
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">✦ Venta & Oferta</div>
+                  <div style="font-size: 0.75rem; font-weight: 500; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">Venta & Oferta</div>
                   <div v-if="form.precioOferta > 0 && form.precio > 0" style="background-color: #15803d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold;">
                     -{{ Math.round((1 - form.precioOferta / form.precio) * 100) }}% OFF
                   </div>
