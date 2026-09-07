@@ -142,7 +142,7 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
   }
 
   try {
-    const res = await fetch(`${apiUrl}/${empresaId}/products`);
+    const res = await fetch(`${apiUrl}/productos/${empresaId}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     

@@ -1,5 +1,5 @@
 (globalThis["TURBOPACK_CHUNK_LISTS"] || (globalThis["TURBOPACK_CHUNK_LISTS"] = [])).push({
     script: typeof document === "object" ? document.currentScript : undefined,
-    chunks: ["static/chunks/frontend-relojes_src_index_001_cd8.css","static/chunks/02w4_next_dist_0bvq-j2._.js","static/chunks/frontend-relojes_src_1a7b_lm._.js","static/chunks/02w4_0vh7rdb._.js","static/chunks/frontend-relojes_src_1m0feri._.css"],
+    chunks: ["static/chunks/Frontend-Relojes_src_index_0d5djz8.css","static/chunks/21a0_next_dist_1_ldfku._.js","static/chunks/Frontend-Relojes_src_0_vpw69._.js","static/chunks/21a0_13-3ass._.js","static/chunks/Frontend-Relojes_src_0uaq0np._.css"],
     source: "entry"
 });

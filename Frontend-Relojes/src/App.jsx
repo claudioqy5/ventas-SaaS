@@ -27,8 +27,19 @@ const WHATSAPP_CONCIERGE = '51962956919';
 
 
 export default function App({ initialCategory, initialProductId }) {
-  const [empresaId, setEmpresaId] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY_EMPRESA) || '' : ''));
-  const [apiUrl, setApiUrl] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY_API_URL) || 'http://localhost:5000/api/public/store' : 'http://localhost:5000/api/public/store'));
+  const [empresaId, setEmpresaId] = useState(process.env.NEXT_PUBLIC_EMPRESA_ID || '');
+  const [apiUrl, setApiUrl] = useState(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/public/store');
+
+  // Recuperar de localStorage solo después de montar (para evitar errores de hidratación de Next.js)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedEmpresa = localStorage.getItem(STORAGE_KEY_EMPRESA);
+      if (storedEmpresa) setEmpresaId(storedEmpresa);
+
+      const storedUrl = localStorage.getItem(STORAGE_KEY_API_URL);
+      if (storedUrl) setApiUrl(storedUrl);
+    }
+  }, []);
 
   const [products, setProducts] = useState([]);
   const [storeName, setStoreName] = useState('Aurelia Haute Horlogerie');
