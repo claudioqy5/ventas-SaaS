@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Eye, ShoppingBag, MessageCircle, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -238,7 +238,7 @@ export default function TarjetaProducto({
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '6px' }}>
           <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500 }}>
-            Valor de Cat\u00e1logo
+            Valor de Catálogo
           </span>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
             {product.precioOferta > 0 ? (

@@ -54,8 +54,8 @@ const STORAGE_KEY_EMPRESA = 'aurelia_saas_empresa_id';
 const STORAGE_KEY_API_URL = 'aurelia_saas_api_url';
 const WHATSAPP_CONCIERGE = '51962956919';
 function App({ initialCategory, initialProductId }) {
-    const [empresaId, setEmpresaId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(("TURBOPACK compile-time value", "6a9a503000746b35867cddaf") || '');
-    const [apiUrl, setApiUrl] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(("TURBOPACK compile-time value", "https://ventassaas-api.helifyferdigital.cloud/api/relojes-store") || 'http://localhost:5000/api/public/store');
+    const [empresaId, setEmpresaId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(("TURBOPACK compile-time value", "6a9a503000746b35867cddaf") || '6a9a503000746b35867cddaf');
+    const [apiUrl, setApiUrl] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(("TURBOPACK compile-time value", "https://ventassaas-api.helifyferdigital.cloud/api/relojes-store") || 'https://ventassaas-api.helifyferdigital.cloud/api/relojes-store');
     // Recuperar de localStorage solo después de montar (para evitar errores de hidratación de Next.js)
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Frontend$2d$Relojes$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
@@ -10567,8 +10567,8 @@ const getEnvVar = (viteKey, nextKey, defaultValue)=>{
     }
     return defaultValue;
 };
-const DEFAULT_API_URL = getEnvVar('VITE_API_URL', 'NEXT_PUBLIC_API_URL', 'http://localhost:5000/api/public/store');
-const DEFAULT_EMPRESA_ID = getEnvVar('VITE_EMPRESA_ID', 'NEXT_PUBLIC_EMPRESA_ID', '');
+const DEFAULT_API_URL = getEnvVar('VITE_API_URL', 'NEXT_PUBLIC_API_URL', 'https://ventassaas-api.helifyferdigital.cloud/api/relojes-store');
+const DEFAULT_EMPRESA_ID = getEnvVar('VITE_EMPRESA_ID', 'NEXT_PUBLIC_EMPRESA_ID', '6a9a503000746b35867cddaf');
 const LUXURY_SAMPLE_WATCHES = [];
 async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl = DEFAULT_API_URL) {
     if (!empresaId) {

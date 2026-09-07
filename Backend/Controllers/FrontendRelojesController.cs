@@ -52,6 +52,10 @@ public class FrontendRelojesController : ControllerBase
         var filter = Builders<Product>.Filter.Eq(p => p.EmpresaId, empresaId);
         var productos = await _context.Products.Find(filter).ToListAsync();
 
+        var catFilter = Builders<Category>.Filter.Eq(c => c.EmpresaId, empresaId);
+        var categorias = await _context.Categories.Find(catFilter).ToListAsync();
+        var catDict = categorias.ToDictionary(c => c.Id, c => c.Nombre);
+
         // Mapeo 100% seguro: Filtramos cualquier dato interno como "PrecioCosto"
         var catalogo = productos.Select(p => new
         {
@@ -61,7 +65,8 @@ public class FrontendRelojesController : ControllerBase
             p.Precio,
             p.PrecioOferta,
             p.Stock,
-            p.CategoriaId,
+            CategoriaId = p.CategoriaId,
+            Categoria = catDict.TryGetValue(p.CategoriaId ?? "", out var catName) ? catName : "Colección Destacada",
             p.ImagenUrl,
             p.Imagenes,
             p.CodigoBarras,

@@ -44,14 +44,29 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
       // Si falla info básica, continuamos con los productos
     }
 
+    // Mapeo de respaldo para nombres de categoría si el backend solo envía el ID
+    const FALLBACK_CATEGORIES = {
+      '6a9bbb08e8664e218790b637': 'G-Shock',
+      '6a9bbbe7e8664e218790b63f': 'Vintage',
+      '6a9bbb13e8664e218790b639': 'Baby-G',
+      '6a9bbbe0e8664e218790b63e': 'Edifice',
+      '6a9bbbede8664e218790b640': 'Accesorios'
+    };
+
     // Mapear productos del SaaS
-    const mapped = data.map(item => ({
+    const mapped = data.map(item => {
+      let catName = item.categoria || item.categoriaId || 'Colección Principal';
+      if (FALLBACK_CATEGORIES[item.categoriaId?.toLowerCase()]) {
+        catName = FALLBACK_CATEGORIES[item.categoriaId.toLowerCase()];
+      }
+      
+      return {
       id: item.id || item._id,
       nombre: item.nombre,
       descripcion: item.descripcion || 'Pieza exclusiva de alta relojería.',
       precio: item.precio || 0,
       precioOferta: item.precioOferta || 0,
-      categoria: item.categoriaId || 'Colección Principal',
+      categoria: catName,
       tipoProducto: item.tipoProducto,
       unidadMedida: item.unidadMedida,
       stock: item.stock,
@@ -65,7 +80,8 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
         hermeticidad: '100m Water Resistant'
       },
       etiqueta: item.stock <= 2 ? 'Últimas Piezas' : 'Disponible'
-    }));
+    };
+    });
 
     return {
       connected: true,
