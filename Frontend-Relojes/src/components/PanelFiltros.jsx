@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, X, SlidersHorizontal } from 'lucide-react';
 
-export default function PanelFiltros({ filters, setFilters, availableMaterials = [], availableColors = [], isMobileOpen, onCloseMobile }) {
+export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap, isMobileOpen, onCloseMobile }) {
   const [openSections, setOpenSections] = useState({
     precio: true,
     disponibilidad: true,
-    material: true,
-    color: true,
   });
 
   const toggleSection = (section) => {
@@ -23,8 +21,7 @@ export default function PanelFiltros({ filters, setFilters, availableMaterials =
 
   const activeCount = (filters.priceRange.min !== '' || filters.priceRange.max !== '' ? 1 : 0) +
                       (filters.inStockOnly ? 1 : 0) +
-                      filters.materials.length +
-                      (filters.colors ? filters.colors.length : 0);
+                      (filters.dynamic ? Object.values(filters.dynamic).reduce((acc, val) => acc + (val ? val.length : 0), 0) : 0);
 
   const SectionHeader = ({ title, section }) => (
     <div
@@ -45,6 +42,20 @@ export default function PanelFiltros({ filters, setFilters, availableMaterials =
       {openSections[section] ? <ChevronUp size={16} color="var(--c-taupe)" /> : <ChevronDown size={16} color="var(--c-taupe)" />}
     </div>
   );
+
+  const toggleDynamicAttr = (attrName, val) => {
+    setFilters(prev => {
+      const dynamic = { ...(prev.dynamic || {}) };
+      const currentSelected = dynamic[attrName] || [];
+      const isSelected = currentSelected.includes(val);
+      
+      dynamic[attrName] = isSelected
+        ? currentSelected.filter(v => v !== val)
+        : [...currentSelected, val];
+        
+      return { ...prev, dynamic };
+    });
+  };
 
   const filterBody = (
     <>
@@ -124,68 +135,31 @@ export default function PanelFiltros({ filters, setFilters, availableMaterials =
         </div>
       )}
 
-      {/* Material */}
-      {availableMaterials.length > 0 && (
-        <>
-          <SectionHeader title="Material" section="material" />
-          {openSections.material && (
-            <div style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {availableMaterials.map(mat => (
-            <label key={mat} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--c-deep-purple)', cursor: 'pointer' }}>
-              <input
-                type="checkbox"
-                checked={filters.materials.includes(mat)}
-                onChange={(e) => {
-                  const isChecked = e.target.checked;
-                  setFilters(prev => {
-                    const newMats = isChecked
-                      ? [...prev.materials, mat]
-                      : prev.materials.filter(m => m !== mat);
-                    return { ...prev, materials: newMats };
-                  });
-                }}
-                style={{ accentColor: 'var(--c-indigo)' }}
-              />
-              {mat}
-            </label>
-          ))}
-        </div>
-      )}
-      </>)}
-
-      {/* Color */}
-      {availableColors.length > 0 && (
-        <>
-          <SectionHeader title="Color" section="color" />
-          {openSections.color && (
-            <div style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {availableColors.map(col => (
-                <label key={col} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--c-deep-purple)', cursor: 'pointer' }}>
+      {/* FILTROS DINÁMICOS (Material, Color, Correa, etc.) */}
+      {dynamicAttributesMap && Object.entries(dynamicAttributesMap).map(([attrName, options]) => (
+        options.length > 0 && (
+          <div key={attrName} style={{ padding: '16px 0px', borderBottom: '1px solid var(--border-light)' }}>
+            <SectionHeader title={attrName} section={attrName} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '12px' }}>
+              {options.map(val => (
+                <label key={val} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--c-deep-purple)', textTransform: 'capitalize' }}>
                   <input
                     type="checkbox"
-                    checked={filters.colors?.includes(col)}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-                      setFilters(prev => {
-                        const newCols = isChecked
-                          ? [...(prev.colors || []), col]
-                          : (prev.colors || []).filter(c => c !== col);
-                        return { ...prev, colors: newCols };
-                      });
-                    }}
-                    style={{ accentColor: 'var(--c-indigo)' }}
+                    checked={(filters.dynamic?.[attrName] || []).includes(val)}
+                    onChange={() => toggleDynamicAttr(attrName, val)}
+                    style={{ accentColor: 'var(--c-primary)', width: '16px', height: '16px' }}
                   />
-                  {col}
+                  <span>{val}</span>
                 </label>
               ))}
             </div>
-          )}
-        </>
-      )}
+          </div>
+        )
+      ))}
       
       {/* Botón de limpiar filtros */}
       <button 
-        onClick={() => setFilters({ priceRange: { min: '', max: '' }, inStockOnly: false, materials: [], colors: [] })}
+        onClick={() => setFilters({ priceRange: { min: '', max: '' }, inStockOnly: false, dynamic: {} })}
         style={{
           width: '100%',
           marginTop: '16px',
@@ -248,4 +222,3 @@ export default function PanelFiltros({ filters, setFilters, availableMaterials =
     </>
   );
 }
-

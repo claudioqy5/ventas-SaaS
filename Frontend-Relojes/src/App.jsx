@@ -255,6 +255,28 @@ export default function App({ initialCategory, initialProductId, initialView = '
     };
   }, [products]);
 
+  // Extraer atributos dinámicos de todos los productos (Correa, Color, Material, etc.)
+  const dynamicAttributesMap = useMemo(() => {
+    const map = {};
+    products.forEach(p => {
+      if (p.atributos && Array.isArray(p.atributos)) {
+        p.atributos.forEach(attr => {
+          if (!attr.nombre || !attr.valor) return;
+          const name = attr.nombre.trim();
+          const val = attr.valor.trim();
+          if (!map[name]) map[name] = new Set();
+          map[name].add(val);
+        });
+      }
+    });
+    // Convertir Sets a Arrays ordenados
+    const result = {};
+    for (const [key, set] of Object.entries(map)) {
+      result[key] = Array.from(set).sort();
+    }
+    return result;
+  }, [products]);
+
   // Categorías
   const categories = useMemo(() => {
     const list = new Set(['Todos']);
