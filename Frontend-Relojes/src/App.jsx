@@ -102,8 +102,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [advancedFilters, setAdvancedFilters] = useState({
     priceRange: { min: '', max: '' },
     inStockOnly: false,
-    materials: [],
-    colors: []
+    dynamic: {} // Store selected attributes like { "Color": ["Negro"], "Correa": ["Goma"] }
   });
 
   // Modales, Notificaciones y Vistas
@@ -282,21 +281,20 @@ export default function App({ initialCategory, initialProductId, initialView = '
         const matchesMaxPrice = advancedFilters.priceRange.max === '' || pPrice <= Number(advancedFilters.priceRange.max);
         const matchesStock = !advancedFilters.inStockOnly || p.stock > 0;
         
-        let matchesMaterial = true;
-        if (advancedFilters.materials.length > 0) {
-           const pMatAttr = p.atributos?.find(a => a.nombre.toLowerCase().includes('material'));
-           const pMat = pMatAttr ? pMatAttr.valor.toLowerCase() : '';
-           matchesMaterial = advancedFilters.materials.some(mat => pMat.includes(mat.toLowerCase()));
+        let matchesDynamic = true;
+        if (advancedFilters.dynamic && Object.keys(advancedFilters.dynamic).length > 0) {
+          for (const [attrName, selectedValues] of Object.entries(advancedFilters.dynamic)) {
+            if (selectedValues && selectedValues.length > 0) {
+              const pAttr = p.atributos?.find(a => a.nombre.toLowerCase() === attrName.toLowerCase());
+              if (!pAttr || !selectedValues.some(val => pAttr.valor.toLowerCase().includes(val.toLowerCase()))) {
+                matchesDynamic = false;
+                break;
+              }
+            }
+          }
         }
 
-        let matchesColor = true;
-        if (advancedFilters.colors && advancedFilters.colors.length > 0) {
-           const pColAttr = p.atributos?.find(a => a.nombre.toLowerCase().includes('color'));
-           const pCol = pColAttr ? pColAttr.valor.toLowerCase() : '';
-           matchesColor = advancedFilters.colors.some(col => pCol.includes(col.toLowerCase()));
-        }
-
-        return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice && matchesStock && matchesMaterial && matchesColor;
+        return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice && matchesStock && matchesDynamic;
       })
       .sort((a, b) => {
         if (sortBy === 'price-desc') return b.precio - a.precio;
@@ -577,8 +575,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                 <PanelFiltros
                   filters={advancedFilters}
                   setFilters={setAdvancedFilters}
-                  availableMaterials={availableMaterials}
-                  availableColors={availableColors}
+                  dynamicAttributesMap={dynamicAttributesMap}
                   isMobileOpen={isMobileFilterOpen}
                   onCloseMobile={() => setIsMobileFilterOpen(false)}
                 />

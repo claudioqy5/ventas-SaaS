@@ -7,7 +7,7 @@
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
-            <nav class="nav-links">
+      <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg> <span class="sidebar-text">Dashboard</span></router-link>
@@ -23,8 +23,7 @@
         <!-- SECCIÓN: LOGÍSTICA -->
         <div class="nav-section-title">Logística</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">Categorías</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/marcas" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z M7 7h.01"/></svg> <span class="sidebar-text">Marcas</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">Características</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 2v6h-6 M3 12a9 9 0 0 1 15-6.7L21 8 M3 22v-6h6 M21 12a9 9 0 0 1-15 6.7L3 16"/></svg> <span class="sidebar-text">Movimientos</span></router-link>
 
         <!-- SECCIÓN: COMPRAS -->
@@ -46,41 +45,69 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">Gestión de Categorías</h1>
-            <p class="text-subtitle">Organiza tus productos en el inventario</p>
+            <h1 class="text-title">Características del Inventario</h1>
+            <p class="text-subtitle">Gestiona Categorías, Marcas y Atributos Personalizados (Colores, Correas, etc.)</p>
           </div>
-          <button @click="openCreateModal" class="btn btn-primary">➕ Agregar Categoría</button>
         </div>
       </header>
 
-      <!-- Seccion de filtros de busqueda -->
-      <div class="table-filters card">
-        <input v-model="searchQuery" type="text" placeholder="Buscar por nombre o descripción..." class="filter-input" />
+      <!-- Pestañas -->
+      <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+        <button 
+          @click="activeTab = 'categorias'" 
+          :class="['btn', activeTab === 'categorias' ? 'btn-primary' : 'btn-secondary']">
+          Categorías
+        </button>
+        <button 
+          @click="activeTab = 'marcas'" 
+          :class="['btn', activeTab === 'marcas' ? 'btn-primary' : 'btn-secondary']">
+          Marcas
+        </button>
+        <button 
+          @click="activeTab = 'atributos'" 
+          :class="['btn', activeTab === 'atributos' ? 'btn-primary' : 'btn-secondary']">
+          Atributos / Otros
+        </button>
       </div>
 
-      <!-- Lista de categorias -->
+      <div class="header-flex" style="margin-bottom: 16px;">
+        <div class="table-filters" style="margin-bottom: 0; flex-grow: 1; max-width: 400px; padding: 10px;">
+          <input v-model="searchQuery" type="text" :placeholder="'Buscar en ' + activeTabLabel + '...'" class="filter-input" />
+        </div>
+        <button @click="openCreateModal" class="btn btn-primary">➕ Agregar {{ activeTabLabel }}</button>
+      </div>
+
+      <!-- Lista de Datos (Dinámica según Tab) -->
       <div class="card font-card">
-        <div v-if="filteredCategories.length === 0" class="empty-state">
-          No se encontraron categorías que coincidan con la búsqueda.
+        <div v-if="filteredItems.length === 0" class="empty-state">
+          No se encontraron {{ activeTabLabel }} que coincidan.
         </div>
         <table v-else class="data-table">
           <thead>
             <tr>
               <th style="width: 50px;">N°</th>
               <th>Nombre</th>
-              <th>Descripción</th>
+              <th v-if="activeTab === 'categorias'">Descripción</th>
+              <th v-if="activeTab === 'atributos'">Opciones</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(cat, index) in filteredCategories" :key="cat.id">
+            <tr v-for="(item, index) in filteredItems" :key="item.id">
               <td><strong>{{ index + 1 }}</strong></td>
-              <td><strong>{{ cat.nombre }}</strong></td>
-              <td>{{ cat.descripcion }}</td>
+              <td><strong>{{ item.nombre }}</strong></td>
+              <td v-if="activeTab === 'categorias'">{{ item.descripcion }}</td>
+              <td v-if="activeTab === 'atributos'">
+                <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                  <span v-for="(opt, i) in item.opciones" :key="i" style="background: #e2e8f0; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; color: #475569;">
+                    {{ opt }}
+                  </span>
+                </div>
+              </td>
               <td>
                 <div class="actions-cell">
-                  <button @click="openEditModal(cat)" class="btn-action edit" title="Editar">✏️</button>
-                  <button @click="confirmDelete(cat.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                  <button @click="openEditModal(item)" class="btn-action edit" title="Editar">✏️</button>
+                  <button @click="confirmDelete(item.id)" class="btn-action delete" title="Eliminar">🗑️</button>
                 </div>
               </td>
             </tr>
@@ -88,23 +115,33 @@
         </table>
       </div>
 
-      <!-- Modal para registrar o editar categoria -->
+      <!-- Modal Unificado -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Categoría' : 'Registrar Categoría' }}</h2>
-          <form @submit.prevent="saveCategory" class="grid">
+          <h2 class="modal-title">{{ isEdit ? '✏️ Editar ' + activeTabLabel : 'Registrar ' + activeTabLabel }}</h2>
+          <form @submit.prevent="saveItem" class="grid">
             <div class="field">
-              <label>Nombre de la Categoría</label>
-              <input v-model="form.nombre" type="text" placeholder="Ej. Pastelería, Bebidas, etc." required />
+              <label>Nombre de {{ activeTabLabel }}</label>
+              <input v-model="form.nombre" type="text" placeholder="Ej. Pastelería, Casio, Color..." required />
             </div>
-            <div class="field">
+            
+            <div class="field" v-if="activeTab === 'categorias'">
               <label>Descripción</label>
               <textarea v-model="form.descripcion" placeholder="Añade una breve descripción..."></textarea>
             </div>
 
+            <div v-if="activeTab === 'atributos'">
+              <label style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 8px;">Opciones (ej. Rojo, Azul, Cuero)</label>
+              <div v-for="(opt, i) in form.opciones" :key="i" style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <input v-model="form.opciones[i]" type="text" placeholder="Nueva Opción" required style="flex-grow: 1; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color);" />
+                <button type="button" @click="form.opciones.splice(i, 1)" class="btn btn-danger" style="padding: 4px 10px;">✕</button>
+              </div>
+              <button type="button" @click="form.opciones.push('')" class="btn btn-secondary-compact" style="font-size: 0.75rem; margin-top: 4px;">➕ Agregar Opción</button>
+            </div>
+
             <div class="modal-actions">
               <button type="button" @click="showModal = false" class="btn btn-secondary">Cancelar</button>
-              <button type="submit" class="btn btn-primary">{{ isEdit ? 'Guardar Cambios' : 'Registrar Categoría' }}</button>
+              <button type="submit" class="btn btn-primary">{{ isEdit ? 'Guardar Cambios' : 'Registrar' }}</button>
             </div>
           </form>
         </div>
@@ -115,23 +152,30 @@
 
 <script setup>
 import { API_URL } from '../config'
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const categories = ref([])
+const activeTab = ref('categorias')
+const activeTabLabel = computed(() => {
+  if (activeTab.value === 'categorias') return 'Categoría'
+  if (activeTab.value === 'marcas') return 'Marca'
+  return 'Atributo'
+})
+
+const items = ref([])
 const showModal = ref(false)
 const isEdit = ref(false)
 const currentId = ref(null)
 
 const searchQuery = ref('')
 
-const filteredCategories = computed(() => {
+const filteredItems = computed(() => {
   const q = searchQuery.value.toLowerCase()
-  return categories.value.filter(c => 
+  return items.value.filter(c => 
     (c.nombre && c.nombre.toLowerCase().includes(q)) ||
     (c.descripcion && c.descripcion.toLowerCase().includes(q))
   )
@@ -139,44 +183,64 @@ const filteredCategories = computed(() => {
 
 const form = reactive({
   nombre: '',
-  descripcion: ''
+  descripcion: '',
+  opciones: []
 })
 
-const fetchCategories = async () => {
+const fetchItems = async () => {
   try {
-    const res = await fetch(`${API_URL}/api/categories`, {
+    let endpoint = '/api/categories';
+    if (activeTab.value === 'marcas') endpoint = '/api/brands';
+    if (activeTab.value === 'atributos') endpoint = '/api/attributes';
+
+    const res = await fetch(`${API_URL}${endpoint}`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (!res.ok) throw new Error()
-    categories.value = await res.json()
+    items.value = await res.json()
   } catch (err) {
-    console.error('Error fetching categories')
+    console.error('Error fetching data')
   }
 }
+
+watch(activeTab, () => {
+  searchQuery.value = ''
+  fetchItems()
+})
 
 const openCreateModal = () => {
   isEdit.value = false
   currentId.value = null
   form.nombre = ''
   form.descripcion = ''
+  form.opciones = []
   showModal.value = true
 }
 
-const openEditModal = (cat) => {
+const openEditModal = (item) => {
   isEdit.value = true
-  currentId.value = cat.id
-  form.nombre = cat.nombre
-  form.descripcion = cat.descripcion
+  currentId.value = item.id
+  form.nombre = item.nombre
+  form.descripcion = item.descripcion || ''
+  form.opciones = item.opciones ? [...item.opciones] : []
   showModal.value = true
 }
 
-const saveCategory = async () => {
+const saveItem = async () => {
   try {
+    let endpoint = '/api/categories';
+    if (activeTab.value === 'marcas') endpoint = '/api/brands';
+    if (activeTab.value === 'atributos') endpoint = '/api/attributes';
+
     const url = isEdit.value 
-      ? `${API_URL}/api/categories/${currentId.value}`
-      : `${API_URL}/api/categories`
+      ? `${API_URL}${endpoint}/${currentId.value}`
+      : `${API_URL}${endpoint}`
     
     const method = isEdit.value ? 'PUT' : 'POST'
+
+    const payload = { nombre: form.nombre }
+    if (activeTab.value === 'categorias') payload.descripcion = form.descripcion;
+    if (activeTab.value === 'atributos') payload.opciones = form.opciones.filter(o => o.trim() !== '');
 
     const res = await fetch(url, {
       method: method,
@@ -184,34 +248,38 @@ const saveCategory = async () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authStore.token}`
       },
-      body: JSON.stringify(form)
+      body: JSON.stringify(payload)
     })
 
     if (!res.ok) throw new Error('Error al procesar la operación.')
 
     showModal.value = false
-    alert(isEdit.value ? '¡Categoría actualizada!' : '¡Categoría registrada!')
-    fetchCategories()
+    alert(isEdit.value ? '¡Actualizado!' : '¡Registrado!')
+    fetchItems()
   } catch (err) {
     alert(err.message)
   }
 }
 
 const confirmDelete = async (id) => {
-  if (!confirm('¿Estás seguro de que deseas eliminar esta categoría?')) return
+  if (!confirm('¿Estás seguro de que deseas eliminar este registro?')) return
 
   try {
-    const res = await fetch(`${API_URL}/api/categories/${id}`, {
+    let endpoint = '/api/categories';
+    if (activeTab.value === 'marcas') endpoint = '/api/brands';
+    if (activeTab.value === 'atributos') endpoint = '/api/attributes';
+
+    const res = await fetch(`${API_URL}${endpoint}/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${authStore.token}`
       }
     })
 
-    if (!res.ok) throw new Error('Error al eliminar la categoría.')
+    if (!res.ok) throw new Error('Error al eliminar.')
 
-    alert('¡Categoría eliminada!')
-    fetchCategories()
+    alert('¡Eliminado!')
+    fetchItems()
   } catch (err) {
     alert(err.message)
   }
@@ -223,14 +291,13 @@ const handleLogout = () => {
 }
 
 onMounted(() => {
-  fetchCategories()
+  fetchItems()
 })
 </script>
 
 <style scoped>
-
 .content-header {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-align: left;
 }
 
@@ -332,8 +399,7 @@ onMounted(() => {
 .table-filters {
   display: flex;
   gap: 16px;
-  padding: 16px 20px;
-  margin-bottom: 20px;
+  padding: 10px;
   background-color: #ffffff;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
@@ -342,14 +408,14 @@ onMounted(() => {
 
 .filter-input {
   flex-grow: 1;
-  padding: 10px 16px 10px 40px;
+  padding: 8px 16px 8px 36px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: 12px center;
-  background-size: 18px;
+  background-position: 10px center;
+  background-size: 16px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }

@@ -643,6 +643,18 @@ const computeStockAnalysis = async () => {
   }
 }
 
+const attributeTypes = ref([])
+const fetchAttributeTypes = async () => {
+  try {
+    const res = await fetch(`${API_URL}/api/attributes`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (!res.ok) throw new Error()
+    attributeTypes.value = await res.json()
+  } catch (err) {
+    console.error('Error fetching attributes')
+  }
+}
 const fetchCategories = async () => {
   try {
     const res = await fetch(`${API_URL}/api/categories`, {
