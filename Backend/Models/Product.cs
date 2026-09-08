@@ -27,6 +27,9 @@ public class Product
     public string MarcaId { get; set; } = string.Empty;
 
     public string CodigoBarras { get; set; } = string.Empty;
+
+    // Código para agrupar diferentes variaciones del mismo modelo (ej: colores del mismo reloj)
+    public string CodigoModelo { get; set; } = string.Empty;
     public string Nombre { get; set; } = string.Empty;
     public string Descripcion { get; set; } = string.Empty;
 

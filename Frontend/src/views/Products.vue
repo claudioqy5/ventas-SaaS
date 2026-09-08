@@ -161,11 +161,15 @@
               </div>
             </div>
 
-            <!-- FILA 2: Código/SKU y Tipo de Producto (Horizontal pills) -->
-            <div style="display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px; align-items: end;">
+            <!-- FILA 2: Código/SKU, Modelo y Tipo de Producto -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 12px; align-items: end;">
               <div class="field">
                 <label>Código de Barra / SKU</label>
                 <input v-model="form.codigoBarras" type="text" placeholder="7501234567" required />
+              </div>
+              <div class="field">
+                <label>Agrupador (Modelo)</label>
+                <input v-model="form.codigoModelo" type="text" placeholder="Ej. CASIO-VINT" />
               </div>
               <div class="field">
                 <label>Tipo de Producto</label>
@@ -557,6 +561,7 @@ const uploadingImage = ref(false)
 const form = reactive({
   nombre: '',
   codigoBarras: '',
+  codigoModelo: '',
   precioCosto: 0,
   precio: 0,
   precioOferta: 0,
@@ -689,6 +694,7 @@ const openAddModal = () => {
   currentProductId.value = null
   form.nombre = ''
   form.codigoBarras = ''
+  form.codigoModelo = ''
   form.precioCosto = 0
   form.precio = 0
   form.stock = 0
@@ -714,6 +720,7 @@ const openEditModal = (product) => {
   currentProductId.value = product.id
   form.nombre = product.nombre
   form.codigoBarras = product.codigoBarras
+  form.codigoModelo = product.codigoModelo || ''
   form.precioCosto = product.precioCosto
   form.precio = product.precio
   form.descripcion = product.descripcion
@@ -1035,7 +1042,7 @@ onMounted(() => {
 .modal-card {
   width: 92%;
   max-width: 840px;
-  max-height: 80vh;
+  max-height: 95vh;
   overflow-y: auto;
   background-color: var(--bg-card);
   padding: 1.5rem;
