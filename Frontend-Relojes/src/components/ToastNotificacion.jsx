@@ -41,7 +41,7 @@ export default function ToastNotificacion({ product, onClose, onOpenCart }) {
         style={{
           width: '380px',
           backgroundColor: '#ffffff',
-          boxShadow: '0 20px 40px rgba(45, 66, 98, 0.15), 0 0 0 1px rgba(115, 96, 91, 0.1)',
+          boxShadow: '0 20px 40px rgba(11, 11, 12, 0.18), 0 0 0 1px rgba(212, 175, 55, 0.25)',
           padding: '24px',
           position: 'relative',
         }}
@@ -100,7 +100,7 @@ export default function ToastNotificacion({ product, onClose, onOpenCart }) {
             width: '90px',
             height: '110px',
             backgroundColor: '#f8f6f2',
-            border: '1px solid rgba(115, 96, 91, 0.1)',
+            border: '1px solid rgba(59, 60, 65, 0.15)',
             padding: '4px'
           }}>
             <img

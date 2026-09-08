@@ -57,7 +57,7 @@ export default function PaginaDetalleProducto({
       particleCount: 50,
       spread: 70,
       origin: { y: 0.6 },
-      colors: ['#2D4262', '#D09683', '#73605B']
+      colors: ['#0B0B0C', '#D4AF37', '#F5E6C8', '#3B3C41']
     });
 
     setTimeout(() => {
@@ -221,8 +221,8 @@ export default function PaginaDetalleProducto({
                 backgroundColor: '#ffffff',
                 borderRadius: '20px',
                 overflow: 'hidden',
-                border: '1px solid rgba(115, 96, 91, 0.16)',
-                boxShadow: '0 10px 30px rgba(45, 66, 98, 0.08)',
+                border: '1px solid rgba(59, 60, 65, 0.16)',
+                boxShadow: '0 10px 30px rgba(11, 11, 12, 0.08)',
                 cursor: 'zoom-in'
               }}>
               {/* Botón Flecha Izquierda */}
@@ -244,7 +244,7 @@ export default function PaginaDetalleProducto({
                   justifyContent: 'center',
                   cursor: 'pointer',
                   zIndex: 10,
-                  boxShadow: '0 4px 12px rgba(45, 66, 98, 0.1)',
+                  boxShadow: '0 4px 12px rgba(11, 11, 12, 0.1)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--c-blush)'}
@@ -285,7 +285,7 @@ export default function PaginaDetalleProducto({
                   justifyContent: 'center',
                   cursor: 'pointer',
                   zIndex: 10,
-                  boxShadow: '0 4px 12px rgba(45, 66, 98, 0.1)',
+                  boxShadow: '0 4px 12px rgba(11, 11, 12, 0.1)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--c-blush)'}

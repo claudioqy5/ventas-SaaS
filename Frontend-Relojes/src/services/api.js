@@ -23,7 +23,7 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     return {
       connected: false,
       isFallback: true,
-      storeName: 'TEMPO PRECISO',
+      storeName: "L'gant",
       products: LUXURY_SAMPLE_WATCHES
     };
   }
@@ -34,7 +34,7 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     const data = await res.json();
     
     // Traer información de la tienda
-    let storeInfo = { nombre: 'TEMPO PRECISO' };
+    let storeInfo = { nombre: "L'gant" };
     try {
       const storeRes = await fetch(`${apiUrl}/${empresaId}`);
       if (storeRes.ok) {
@@ -86,7 +86,7 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     return {
       connected: true,
       isFallback: false,
-      storeName: storeInfo.nombre || 'TEMPO PRECISO • Boutique Perú',
+      storeName: storeInfo.nombre || "L'gant • Boutique Perú",
       products: mapped.length > 0 ? mapped : LUXURY_SAMPLE_WATCHES
     };
   } catch (err) {
@@ -94,7 +94,7 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     return {
       connected: false,
       isFallback: true,
-      storeName: 'TEMPO PRECISO • Boutique Perú',
+      storeName: "L'gant • Boutique Perú",
       products: LUXURY_SAMPLE_WATCHES,
       error: err.message
     };

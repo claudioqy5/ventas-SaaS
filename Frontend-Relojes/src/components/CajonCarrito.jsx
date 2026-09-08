@@ -88,8 +88,8 @@ export default function CajonCarrito({
           maxWidth: '440px',
           height: '100%',
           backgroundColor: '#ffffff',
-          borderLeft: '1px solid rgba(115, 96, 91, 0.2)',
-          boxShadow: visible ? '-20px 0 60px rgba(45, 66, 98, 0.25)' : 'none',
+          borderLeft: '1px solid rgba(59, 60, 65, 0.16)',
+          boxShadow: visible ? '-20px 0 60px rgba(11, 11, 12, 0.25)' : 'none',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -107,7 +107,7 @@ export default function CajonCarrito({
             justifyContent: 'space-between',
             alignItems: 'center',
             paddingBottom: '18px',
-            borderBottom: '1px solid rgba(115, 96, 91, 0.15)',
+            borderBottom: '1px solid rgba(59, 60, 65, 0.15)',
             marginBottom: '20px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -125,7 +125,7 @@ export default function CajonCarrito({
               onClick={onClose}
               style={{
                 background: '#f8f6f2',
-                border: '1px solid rgba(115, 96, 91, 0.2)',
+                border: '1px solid rgba(59, 60, 65, 0.2)',
                 borderRadius: '50%',
                 width: '32px',
                 height: '32px',
@@ -167,7 +167,7 @@ export default function CajonCarrito({
                     padding: '12px',
                     borderRadius: '12px',
                     backgroundColor: '#f9f7f4',
-                    border: '1px solid rgba(115, 96, 91, 0.12)'
+                    border: '1px solid rgba(59, 60, 65, 0.12)'
                   }}
                 >
                   <img
@@ -178,7 +178,7 @@ export default function CajonCarrito({
                       height: '56px',
                       borderRadius: '8px',
                       objectFit: 'cover',
-                      border: '1px solid rgba(115, 96, 91, 0.15)'
+                      border: '1px solid rgba(59, 60, 65, 0.15)'
                     }}
                   />
 
@@ -205,7 +205,7 @@ export default function CajonCarrito({
                         onClick={() => onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
                         style={{
                           background: '#ffffff',
-                          border: '1px solid rgba(115, 96, 91, 0.2)',
+                          border: '1px solid rgba(59, 60, 65, 0.2)',
                           color: 'var(--c-deep-purple)',
                           width: '24px',
                           height: '24px',
@@ -224,7 +224,7 @@ export default function CajonCarrito({
                         onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
                         style={{
                           background: '#ffffff',
-                          border: '1px solid rgba(115, 96, 91, 0.2)',
+                          border: '1px solid rgba(59, 60, 65, 0.2)',
                           color: 'var(--c-deep-purple)',
                           width: '24px',
                           height: '24px',
@@ -261,7 +261,7 @@ export default function CajonCarrito({
         {/* Footer y Botón Ir a Comprar */}
         {items.length > 0 && (
           <div style={{
-            borderTop: '1px solid rgba(115, 96, 91, 0.15)',
+            borderTop: '1px solid rgba(59, 60, 65, 0.15)',
             paddingTop: '20px',
             marginTop: '20px'
           }}>

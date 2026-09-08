@@ -96,25 +96,25 @@ export default function BarraNavegacion({
         backgroundColor: 'rgba(255, 255, 255, 0.96)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(115, 96, 91, 0.16)',
-        boxShadow: '0 4px 20px rgba(45, 66, 98, 0.08)',
+        borderBottom: '1px solid rgba(59, 60, 65, 0.14)',
+        boxShadow: '0 4px 20px rgba(11, 11, 12, 0.06)',
         transform: showHeader ? 'translateY(0)' : 'translateY(-100%)',
         transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease'
       }}>
-        {/* Top micro-bar en perla suave */}
+        {/* Top micro-bar en carbón de lujo con texto dorado */}
         <div style={{
-          backgroundColor: '#f6f3ee',
-          borderBottom: '1px solid rgba(115, 96, 91, 0.12)',
+          backgroundColor: '#1A1B1F',
+          borderBottom: '1px solid rgba(212, 175, 55, 0.25)',
           padding: '7px 24px',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           fontSize: '0.74rem',
           letterSpacing: '0.08em',
-          color: 'var(--c-taupe)'
+          color: 'var(--c-gold)'
         }}>
           <div className="marquee-container" style={{ width: '100%' }}>
-            <div className="marquee-text">
+            <div className="marquee-text" style={{ color: 'var(--c-gold)' }}>
               ENVIOS A TODO EL PERÚ &nbsp;&nbsp;•&nbsp;&nbsp; ENTREGA EN TU DOMICILIO &nbsp;&nbsp;•&nbsp;&nbsp; 3 AÑOS DE GARANTIA &nbsp;&nbsp;•&nbsp;&nbsp; ESCRIBE A NUESTRA LINEA DE VENTAS POR WHATSAPP +51 962956919
             </div>
           </div>
@@ -157,22 +157,27 @@ export default function BarraNavegacion({
             }}
             style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <Watch size={28} color="#5e1743" strokeWidth={1.5} />
-              <div style={{ width: '1.5px', height: '36px', backgroundColor: '#000' }}></div>
-              <div style={{ fontSize: '2.2rem', fontFamily: '"Cinzel", serif', color: '#5e1743', lineHeight: 1, letterSpacing: '0.05em' }}>
-                TP
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <img
+                src="/logo-lgant-gold.png"
+                alt="L'gant"
+                style={{ height: '42px', width: 'auto', objectFit: 'contain' }}
+              />
+              <div style={{ width: '1.5px', height: '36px', backgroundColor: 'var(--c-gold)', opacity: 0.6 }}></div>
+              <div style={{ fontSize: '2.1rem', fontFamily: '"Cinzel", serif', color: 'var(--c-obsidian)', lineHeight: 1, letterSpacing: '0.06em', fontWeight: 700 }}>
+                L'GANT
               </div>
             </div>
             <div style={{
-              fontSize: '0.65rem',
-              letterSpacing: '0.45em',
+              fontSize: '0.58rem',
+              letterSpacing: '0.42em',
               fontFamily: '"Cinzel", serif',
-              color: '#000',
+              color: 'var(--c-steel)',
               textTransform: 'uppercase',
-              marginLeft: '0.45em'
+              marginLeft: '0.42em',
+              fontWeight: 600
             }}>
-              TEMPO PRECISO
+              HAUTE HORLOGERIE
             </div>
           </a>
 
@@ -253,7 +258,7 @@ export default function BarraNavegacion({
               justifyContent: 'center',
               gap: '8px',
               cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(45, 66, 98, 0.08)',
+              boxShadow: '0 2px 8px rgba(11, 11, 12, 0.08)',
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
@@ -290,8 +295,8 @@ export default function BarraNavegacion({
               backgroundColor: '#ffffff',
               border: `1px solid ${showSearch ? 'var(--c-indigo)' : 'var(--border-light)'}`,
               boxShadow: showSearch
-                ? '0 4px 18px rgba(45, 66, 98, 0.12)'
-                : '0 2px 8px rgba(45, 66, 98, 0.06)',
+                ? '0 4px 18px rgba(11, 11, 12, 0.12)'
+                : '0 2px 8px rgba(11, 11, 12, 0.06)',
               transition: 'width 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease',
               overflow: 'hidden',
               padding: showSearch ? '0 10px 0 13px' : '0',
@@ -421,7 +426,7 @@ export default function BarraNavegacion({
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(45, 66, 98, 0.06)',
+              boxShadow: '0 2px 8px rgba(11, 11, 12, 0.06)',
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
@@ -439,8 +444,8 @@ export default function BarraNavegacion({
                 position: 'absolute',
                 top: '-4px',
                 right: '-4px',
-                backgroundColor: 'var(--c-blush)',
-                color: '#ffffff',
+                backgroundColor: 'var(--c-gold)',
+                color: 'var(--c-obsidian)',
                 fontSize: '0.65rem',
                 fontWeight: 800,
                 width: '18px',
@@ -449,7 +454,7 @@ export default function BarraNavegacion({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 0 6px rgba(208, 150, 131, 0.6)'
+                boxShadow: '0 0 8px rgba(212, 175, 55, 0.6)'
               }}>
                 {cartCount}
               </span>

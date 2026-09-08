@@ -44,7 +44,7 @@ export default function TarjetaProducto({
       particleCount: 30,
       spread: 50,
       origin: { y: 0.8 },
-      colors: ['#2D4262', '#D09683', '#73605B']
+      colors: ['#0B0B0C', '#D4AF37', '#F5E6C8', '#3B3C41']
     });
 
     setTimeout(() => {
@@ -62,28 +62,28 @@ export default function TarjetaProducto({
         position: 'relative',
         borderRadius: '20px',
         backgroundColor: '#ffffff',
-        border: isHovered ? '1px solid var(--c-blush)' : '1px solid rgba(115, 96, 91, 0.16)',
+        border: isHovered ? '1px solid var(--c-gold)' : '1px solid rgba(59, 60, 65, 0.16)',
         padding: '20px',
         cursor: 'pointer',
         transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(${isHovered ? '-6px' : '0'})`,
         transition: 'transform 0.2s ease-out, border-color 0.3s ease, box-shadow 0.3s ease',
         boxShadow: isHovered
-          ? '0 20px 45px -10px rgba(45, 66, 98, 0.15), 0 0 25px -5px rgba(208, 150, 131, 0.25)'
-          : '0 8px 25px -5px rgba(54, 50, 55, 0.06)',
+          ? '0 20px 45px -10px rgba(11, 11, 12, 0.15), 0 0 25px -5px rgba(212, 175, 55, 0.25)'
+          : '0 8px 25px -5px rgba(26, 27, 31, 0.06)',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between'
       }}
     >
-      {/* Reflejo de luz especular interactivo en tono Blush suave */}
+      {/* Reflejo de luz especular interactivo en tono Dorado suave */}
       <div style={{
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        background: `radial-gradient(circle 280px at ${mousePos.x}% ${mousePos.y}%, rgba(208, 150, 131, 0.14) 0%, transparent 80%)`,
+        background: `radial-gradient(circle 280px at ${mousePos.x}% ${mousePos.y}%, rgba(212, 175, 55, 0.12) 0%, transparent 80%)`,
         pointerEvents: 'none',
         zIndex: 4
       }} />
@@ -104,9 +104,9 @@ export default function TarjetaProducto({
             textTransform: 'uppercase',
             fontFamily: 'var(--font-serif)',
             fontWeight: 500,
-            color: 'var(--c-deep-purple)',
-            background: 'rgba(208, 150, 131, 0.18)',
-            border: '1px solid rgba(208, 150, 131, 0.45)',
+            color: 'var(--c-obsidian)',
+            background: 'rgba(212, 175, 55, 0.14)',
+            border: '1px solid rgba(212, 175, 55, 0.35)',
             padding: '4px 10px',
             borderRadius: '9999px'
           }}>
@@ -149,7 +149,7 @@ export default function TarjetaProducto({
             borderRadius: '14px',
             overflow: 'hidden',
             backgroundColor: '#f8f6f2',
-            border: '1px solid rgba(115, 96, 91, 0.1)',
+            border: '1px solid rgba(59, 60, 65, 0.1)',
             marginBottom: '18px'
           }}>
           {/* Foto Principal */}
@@ -218,7 +218,7 @@ export default function TarjetaProducto({
                 gap: '6px',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                boxShadow: '0 4px 15px rgba(45, 66, 98, 0.15)'
+                boxShadow: '0 4px 15px rgba(11, 11, 12, 0.15)'
               }}
             >
               <Eye size={13} color="var(--c-indigo)" />
@@ -268,7 +268,7 @@ export default function TarjetaProducto({
 
       {/* Footer de la tarjeta */}
       <div style={{
-        borderTop: '1px solid rgba(115, 96, 91, 0.12)',
+        borderTop: '1px solid rgba(59, 60, 65, 0.12)',
         paddingTop: '14px',
         marginTop: '10px'
       }}>
@@ -283,18 +283,27 @@ export default function TarjetaProducto({
                   S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className="font-serif" style={{ fontSize: '1.35rem', fontWeight: 600, color: 'var(--c-indigo)', whiteSpace: 'nowrap' }}>
+                  <span className="font-serif" style={{ fontSize: '1.28rem', fontWeight: 600, color: 'var(--c-indigo)', whiteSpace: 'nowrap' }}>
                     S/ {Number(product.precioOferta).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                   </span>
-                  <span style={{ backgroundColor: '#ef4444', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '2px 7px', borderRadius: '6px', whiteSpace: 'nowrap' }}>
+                  <span style={{
+                    fontSize: '0.62rem',
+                    backgroundColor: 'var(--c-blush)',
+                    color: '#ffffff',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontFamily: 'var(--font-serif)',
+                    fontWeight: 600,
+                    letterSpacing: '0.04em'
+                  }}>
                     -{Math.round((1 - product.precioOferta / product.precio) * 100)}%
                   </span>
                 </div>
               </>
             ) : (
-              <div className="font-serif" style={{ fontSize: '1.35rem', fontWeight: 600, color: 'var(--c-indigo)', whiteSpace: 'nowrap' }}>
+              <span className="font-serif" style={{ fontSize: '1.28rem', fontWeight: 600, color: 'var(--c-indigo)', whiteSpace: 'nowrap' }}>
                 S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
-              </div>
+              </span>
             )}
           </div>
         </div>
@@ -324,7 +333,7 @@ export default function TarjetaProducto({
               justifyContent: 'center',
               gap: '6px',
               transition: 'all 0.25s ease',
-              boxShadow: '0 4px 14px rgba(45, 66, 98, 0.2)'
+              boxShadow: '0 4px 14px rgba(11, 11, 12, 0.2)'
             }}
             onMouseEnter={(e) => {
               if (!added && product.stock > 0) e.currentTarget.style.background = 'var(--c-indigo-hover)';

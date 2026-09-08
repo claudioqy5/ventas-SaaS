@@ -5,16 +5,23 @@ export default function Herencia() {
   return (
     <section id="artesania" style={{
       padding: '90px 24px',
-      backgroundColor: '#f7f4ef',
-      borderBottom: '1px solid rgba(115, 96, 91, 0.15)',
+      backgroundColor: '#f9f6f0',
+      borderBottom: '1px solid rgba(59, 60, 65, 0.15)',
       position: 'relative'
     }}>
       <div style={{
         maxWidth: '1360px',
         margin: '0 auto'
       }}>
-        {/* Encabezado de Sección */}
+        {/* Encabezado de Sección con Emblema L'gant */}
         <div style={{ textAlign: 'center', marginBottom: '55px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '18px' }}>
+            <img
+              src="/logo-lgant-gold.png"
+              alt="L'gant"
+              style={{ height: '52px', width: 'auto', objectFit: 'contain', opacity: 0.95 }}
+            />
+          </div>
           <span style={{
             fontSize: '0.74rem',
             letterSpacing: '0.22em',
@@ -44,7 +51,7 @@ export default function Herencia() {
             textAlign: 'justify'
           }}>
             <p style={{ marginBottom: '16px' }}>
-              Bienvenidos a <strong>Tempo Preciso</strong>, la boutique líder en <strong>relojes de lujo en Perú</strong>. Nuestra pasión por la <strong>alta relojería</strong> nos ha llevado a crear un catálogo privado con la más exclusiva curaduría de marcas internacionales. Si buscas adquirir relojes originales, automáticos y de inversión, te encuentras en el lugar indicado.
+              Bienvenidos a <strong>L'gant</strong>, la boutique líder en <strong>relojes de lujo en Perú</strong>. Nuestra pasión por la <strong>alta relojería</strong> nos ha llevado a crear un catálogo privado con la más exclusiva curaduría de marcas internacionales. Si buscas adquirir relojes originales, automáticos y de inversión, te encuentras en el lugar indicado.
             </p>
             <p style={{ marginBottom: '16px' }}>
               Cada guardatiempo de nuestra selección multimarca representa la cúspide de la ingeniería de precisión suiza. Entendemos que adquirir piezas de casas históricas (como <strong>Rolex, Omega, Cartier o Patek Philippe</strong>) es una inversión para toda la vida. Por ello, todos nuestros modelos son inspeccionados meticulosamente, entregados en su estuche original y cuentan con garantía internacional certificada.
@@ -65,18 +72,18 @@ export default function Herencia() {
           {/* Pilar 1 */}
           <div style={{
             backgroundColor: '#ffffff',
-            border: '1px solid rgba(115, 96, 91, 0.15)',
+            border: '1px solid rgba(59, 60, 65, 0.15)',
             borderRadius: '18px',
             padding: '36px 28px',
-            boxShadow: '0 8px 25px rgba(45, 66, 98, 0.05)',
+            boxShadow: '0 8px 25px rgba(11, 11, 12, 0.05)',
             transition: 'all 0.3s ease'
           }}>
             <div style={{
               width: '52px',
               height: '52px',
               borderRadius: '12px',
-              backgroundColor: 'rgba(45, 66, 98, 0.08)',
-              border: '1px solid rgba(45, 66, 98, 0.2)',
+              backgroundColor: 'rgba(11, 11, 12, 0.06)',
+              border: '1px solid rgba(11, 11, 12, 0.15)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -95,18 +102,18 @@ export default function Herencia() {
           {/* Pilar 2 */}
           <div style={{
             backgroundColor: '#ffffff',
-            border: '1px solid rgba(115, 96, 91, 0.15)',
+            border: '1px solid rgba(59, 60, 65, 0.15)',
             borderRadius: '18px',
             padding: '36px 28px',
-            boxShadow: '0 8px 25px rgba(45, 66, 98, 0.05)',
+            boxShadow: '0 8px 25px rgba(11, 11, 12, 0.05)',
             transition: 'all 0.3s ease'
           }}>
             <div style={{
               width: '52px',
               height: '52px',
               borderRadius: '12px',
-              backgroundColor: 'rgba(208, 150, 131, 0.15)',
-              border: '1px solid rgba(208, 150, 131, 0.35)',
+              backgroundColor: 'rgba(212, 175, 55, 0.12)',
+              border: '1px solid rgba(212, 175, 55, 0.35)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -125,18 +132,18 @@ export default function Herencia() {
           {/* Pilar 3 */}
           <div style={{
             backgroundColor: '#ffffff',
-            border: '1px solid rgba(115, 96, 91, 0.15)',
+            border: '1px solid rgba(59, 60, 65, 0.15)',
             borderRadius: '18px',
             padding: '36px 28px',
-            boxShadow: '0 8px 25px rgba(45, 66, 98, 0.05)',
+            boxShadow: '0 8px 25px rgba(11, 11, 12, 0.05)',
             transition: 'all 0.3s ease'
           }}>
             <div style={{
               width: '52px',
               height: '52px',
               borderRadius: '12px',
-              backgroundColor: 'rgba(54, 50, 55, 0.08)',
-              border: '1px solid rgba(54, 50, 55, 0.2)',
+              backgroundColor: 'rgba(245, 230, 200, 0.25)',
+              border: '1px solid rgba(212, 175, 55, 0.25)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -161,8 +168,8 @@ export default function Herencia() {
           padding: '38px',
           borderRadius: '20px',
           background: '#ffffff',
-          border: '1px solid rgba(208, 150, 131, 0.35)',
-          boxShadow: '0 10px 30px rgba(45, 66, 98, 0.06)'
+          border: '1px solid rgba(212, 175, 55, 0.35)',
+          boxShadow: '0 10px 30px rgba(11, 11, 12, 0.06)'
         }}>
           <Sparkles size={24} color="var(--c-blush)" style={{ margin: '0 auto 16px' }} />
           <blockquote className="font-classic" style={{
@@ -182,7 +189,7 @@ export default function Herencia() {
             fontStyle: 'normal',
             fontWeight: 700
           }}>
-            — TEMPO PRECISO • Boutique de Alta Relojería en Perú
+            — L'GANT • Boutique de Alta Relojería en Perú
           </cite>
         </div>
       </div>

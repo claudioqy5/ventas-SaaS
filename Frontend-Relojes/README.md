@@ -1,4 +1,4 @@
-# AURELIA • Haute Horlogerie & Tienda de Lujo Multi-Tenant
+# L'GANT • Haute Horlogerie & Tienda de Lujo Multi-Tenant
 
 Frontend exclusivo y de ultra-alta gama diseñado para clientes de tu SaaS de ventas que comercializan relojes, joyería o productos exclusivos.
 

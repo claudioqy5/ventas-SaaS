@@ -8,38 +8,47 @@
 }
 
 :root {
-  /* PALETA EXACTA DEL CLIENTE */
-  --c-deep-purple: #363237;   /* Deep Purple elegante */
-  --c-indigo: #2D4262;        /* Indigo sofisticado */
-  --c-indigo-hover: #1f2f47;
-  --c-taupe: #73605B;         /* Taupe cÃ¡lido */
-  --c-blush: #D09683;         /* Blush terracota/oro rosa */
-  --c-blush-light: #faece7;
-  --c-blush-glow: rgba(208, 150, 131, 0.35);
+  /* PALETA EXACTA DE 5 COLORES (L'GANT) */
+  --c-obsidian: #0B0B0C;       /* Color 1: Obsidian Noir / Negro Profundo */
+  --c-charcoal: #1A1B1F;       /* Color 2: Slate Noir / Carbón Oscuro */
+  --c-steel: #3B3C41;          /* Color 3: Acero Grafito / Gris Pizarra */
+  --c-gold: #D4AF37;           /* Color 4: Oro Metálico / Gold */
+  --c-champagne: #F5E6C8;      /* Color 5: Champaña Cálido / Crema Suave */
+
+  /* MAPEO DE TOKENS SEMÁNTICOS */
+  --c-deep-purple: #1A1B1F;    /* Carbón elegante para fondos oscuros y tarjetas */
+  --c-indigo: #0B0B0C;         /* Obsidian Noir de alto contraste para botones y acentos */
+  --c-indigo-hover: #1A1B1F;
+  --c-taupe: #3B3C41;          /* Acero grafito para subtítulos, metadatos y notas */
+  --c-blush: #D4AF37;          /* Oro metálico para acentos de lujo, insignias y CTAs */
+  --c-blush-light: #F5E6C8;    /* Champaña suave para fondos de etiquetas y badges */
+  --c-blush-glow: rgba(212, 175, 55, 0.35);
 
   /* BLANCOS Y FONDOS LUMINOSOS */
-  --bg-main: #fbfaf8;         /* Fondo perla claro, cÃ¡lido y elegante */
-  --bg-surface: #ffffff;      /* Blanco puro */
+  --bg-main: #fcfbf8;          /* Fondo perla claro, cálido y elegante */
+  --bg-surface: #ffffff;       /* Blanco puro */
   --bg-card: #ffffff;
-  --bg-card-alt: #f6f3ee;
-  --bg-glass-light: rgba(255, 255, 255, 0.88);
-  --bg-glass-card: rgba(255, 255, 255, 0.95);
+  --bg-card-alt: #f5e6c8;
+  --bg-glass-light: rgba(255, 255, 255, 0.92);
+  --bg-glass-card: rgba(255, 255, 255, 0.96);
   
   /* BORDES Y SOMBRAS */
-  --border-light: rgba(115, 96, 91, 0.14);
-  --border-indigo: rgba(45, 66, 98, 0.22);
-  --border-blush: rgba(208, 150, 131, 0.45);
-  --shadow-subtle: 0 4px 20px rgba(45, 66, 98, 0.05);
-  --shadow-card: 0 10px 30px -5px rgba(54, 50, 55, 0.08);
-  --shadow-hover: 0 20px 45px -10px rgba(45, 66, 98, 0.16), 0 0 20px -5px rgba(208, 150, 131, 0.3);
+  --border-light: rgba(59, 60, 65, 0.16);
+  --border-indigo: rgba(26, 27, 31, 0.22);
+  --border-blush: rgba(212, 175, 55, 0.45);
+  --shadow-subtle: 0 4px 20px rgba(11, 11, 12, 0.05);
+  --shadow-card: 0 10px 30px -5px rgba(26, 27, 31, 0.08);
+  --shadow-hover: 0 20px 45px -10px rgba(11, 11, 12, 0.16), 0 0 20px -5px rgba(212, 175, 55, 0.3);
 
   /* TEXTO */
-  --text-primary: #363237;    /* Deep purple oscuro para mÃ¡xima legibilidad */
-  --text-secondary: #73605B;  /* Taupe para subtÃ­tulos y notas */
-  --text-muted: #8e7c77;      /* Taupe suave */
+  --text-primary: #0B0B0C;     /* Obsidian para máxima legibilidad y lujo */
+  --text-secondary: #3B3C41;   /* Acero grafito para subtítulos y especificaciones */
+  --text-muted: #6A6B73;       /* Acero suave */
   --text-light: #ffffff;
+  --text-gold: #D4AF37;
+  --text-champagne: #F5E6C8;
 
-  /* TIPOGRAFÃAS */
+  /* TIPOGRAFÍAS */
   --font-main: 'Montserrat', sans-serif;
   --font-serif: 'Montserrat', sans-serif;
   --font-classic: 'Montserrat', sans-serif;
@@ -76,25 +85,24 @@ body {
   min-height: 100vh;
   position: relative;
   background-image: 
-    radial-gradient(circle at 15% 10%, rgba(208, 150, 131, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 85% 25%, rgba(45, 66, 98, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 50% 75%, rgba(115, 96, 91, 0.06) 0%, transparent 50%);
+    radial-gradient(circle at 15% 10%, rgba(212, 175, 55, 0.1) 0%, transparent 45%),
+    radial-gradient(circle at 85% 25%, rgba(245, 230, 200, 0.22) 0%, transparent 40%),
+    radial-gradient(circle at 50% 75%, rgba(59, 60, 65, 0.04) 0%, transparent 50%);
 }
 
-
-/* Scrollbar estilizado en la paleta del cliente */
+/* Scrollbar estilizado en la nueva paleta de 5 colores */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1eeea;
+  background: #f4efe6;
 }
 ::-webkit-scrollbar-thumb {
   background: var(--c-blush);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--c-indigo);
+  background: var(--c-charcoal);
 }
 
 /* TipografÃ­a Global: Montserrat (Pesos suaves y finos para mÃ¡xima elegancia) */
@@ -109,7 +117,7 @@ body {
   font-weight: 400;
 }
 
-/* Clase preservada exclusivamente para el Logo TEMPO PRECISO */
+/* Clase preservada exclusivamente para el Logo L'GANT */
 .brand-logo-font {
   font-family: 'Cinzel', serif !important;
 }
@@ -137,15 +145,15 @@ body {
   margin-left: 2px;
 }
 
-/* Gradientes con la paleta: Deep Purple -> Indigo -> Blush */
+/* Gradientes con la nueva paleta: Obsidian -> Charcoal -> Gold -> Champagne */
 .palette-gradient-text {
-  background: linear-gradient(135deg, var(--c-deep-purple) 0%, var(--c-indigo) 60%, var(--c-blush) 100%);
+  background: linear-gradient(135deg, var(--c-obsidian) 0%, var(--c-steel) 45%, var(--c-gold) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
 
-/* TipografÃ­as de Alto Status y Lujo */
+/* Tipografías de Alto Status y Lujo */
 .font-cormorant {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
@@ -156,7 +164,7 @@ body {
   font-weight: 400;
 }
 
-/* Kicker de lujo con lÃ­neas sutiles en oro rosa/blush */
+/* Kicker de lujo con líneas sutiles en oro metálico */
 .hero-luxury-kicker {
   display: inline-flex;
   align-items: center;
@@ -166,7 +174,7 @@ body {
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--c-blush);
+  color: var(--c-gold);
   margin-bottom: 18px;
 }
 .hero-luxury-kicker::before {
@@ -174,54 +182,54 @@ body {
   display: inline-block;
   width: 28px;
   height: 1px;
-  background: linear-gradient(to right, transparent, var(--c-blush));
+  background: linear-gradient(to right, transparent, var(--c-gold));
 }
 .hero-luxury-kicker::after {
   content: '';
   display: inline-block;
   width: 28px;
   height: 1px;
-  background: linear-gradient(to left, transparent, var(--c-blush));
+  background: linear-gradient(to left, transparent, var(--c-gold));
 }
 
-/* TÃ­tulo de Status Principal */
+/* Título de Status Principal */
 .hero-luxury-title {
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(3.2rem, 5.8vw, 5.2rem);
   line-height: 1.06;
-  color: var(--c-deep-purple);
+  color: var(--c-obsidian);
   margin-bottom: 24px;
   letter-spacing: 0.01em;
   font-weight: 500;
 }
 
-/* Variante 1: Montserrat con ItÃ¡lica Dorada */
+/* Variante 1: Montserrat con Oro Metálico y Champaña */
 .hero-luxury-title-v1 {
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(3.2rem, 5.8vw, 5.2rem);
   line-height: 1.06;
-  color: var(--c-deep-purple);
+  color: var(--c-obsidian);
   margin-bottom: 24px;
 }
 .hero-luxury-title-v1 .line-1 {
   font-weight: 400;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #2c272e;
+  color: var(--c-obsidian);
   display: block;
 }
 .hero-luxury-title-v1 .line-2 {
   font-weight: 600;
   letter-spacing: 0.03em;
-  background: linear-gradient(135deg, var(--c-indigo) 0%, #1b2838 40%, #b8860b 80%, var(--c-blush) 100%);
+  background: linear-gradient(135deg, var(--c-obsidian) 0%, var(--c-charcoal) 30%, var(--c-gold) 75%, var(--c-champagne) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
 
-/* Accent Shimmer MetÃ¡lico para texto de lujo */
+/* Accent Shimmer Metálico para texto de lujo */
 .luxury-title-accent {
-  background: linear-gradient(135deg, var(--c-indigo) 0%, #1b263b 35%, #b8860b 70%, var(--c-blush) 100%);
+  background: linear-gradient(135deg, var(--c-charcoal) 0%, var(--c-steel) 35%, var(--c-gold) 75%, var(--c-champagne) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -243,8 +251,8 @@ body {
   background: linear-gradient(
     60deg,
     transparent 20%,
-    rgba(255, 255, 255, 0.4) 45%,
-    rgba(208, 150, 131, 0.3) 50%,
+    rgba(245, 230, 200, 0.4) 45%,
+    rgba(212, 175, 55, 0.35) 50%,
     transparent 60%
   );
   transform: rotate(30deg);
@@ -262,9 +270,9 @@ body {
   50% { transform: translateY(-7px); }
 }
 
-/* BotÃ³n Primario: Indigo con realce Blush */
+/* Botón Primario: Obsidian / Charcoal con realce Dorado */
 .btn-indigo {
-  background: var(--c-indigo);
+  background: var(--c-charcoal);
   color: #ffffff;
   font-family: var(--font-serif);
   font-size: 0.85rem;
@@ -273,26 +281,26 @@ body {
   text-transform: uppercase;
   padding: 14px 28px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--c-indigo);
+  border: 1px solid var(--c-charcoal);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   transition: var(--transition-smooth);
-  box-shadow: 0 6px 20px rgba(45, 66, 98, 0.2);
+  box-shadow: 0 6px 20px rgba(11, 11, 12, 0.25);
 }
 .btn-indigo:hover {
-  background: var(--c-indigo-hover);
-  border-color: var(--c-indigo-hover);
+  background: var(--c-obsidian);
+  border-color: var(--c-obsidian);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(45, 66, 98, 0.3);
+  box-shadow: 0 10px 25px rgba(11, 11, 12, 0.35);
 }
 
-/* BotÃ³n Secundario: Blanco con borde Taupe y hover Blush */
+/* Botón Secundario: Blanco con borde Steel y hover Dorado / Champagne */
 .btn-outline-luxury {
   background: #ffffff;
-  color: var(--c-deep-purple);
+  color: var(--c-obsidian);
   font-family: var(--font-serif);
   font-size: 0.85rem;
   font-weight: 500;
@@ -310,20 +318,20 @@ body {
   box-shadow: var(--shadow-subtle);
 }
 .btn-outline-luxury:hover {
-  border-color: var(--c-blush);
-  color: var(--c-indigo);
-  background: var(--c-blush-light);
+  border-color: var(--c-gold);
+  color: var(--c-obsidian);
+  background: var(--c-champagne);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px var(--c-blush-glow);
 }
 
-/* BotÃ³n Blush cÃ¡lido */
+/* Botón Dorado Cálido */
 .btn-blush {
-  background: var(--c-blush);
-  color: #ffffff;
+  background: var(--c-gold);
+  color: var(--c-obsidian);
   font-family: var(--font-serif);
   font-size: 0.82rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 12px 20px;
@@ -335,15 +343,15 @@ body {
   justify-content: center;
   gap: 8px;
   transition: var(--transition-smooth);
-  box-shadow: 0 6px 20px rgba(208, 150, 131, 0.35);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
 }
 .btn-blush:hover {
   filter: brightness(1.08);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(208, 150, 131, 0.5);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5);
 }
 
-/* AnimaciÃ³n Marquee para Top Bar */
+/* Animación Marquee para Top Bar */
 @keyframes marquee-scroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
@@ -363,7 +371,7 @@ body {
   padding-left: 100%;
   animation: marquee-scroll 35s linear infinite;
   font-weight: 700;
-  color: var(--c-indigo);
+  color: var(--c-gold);
   letter-spacing: 0.12em;
 }
 
@@ -399,13 +407,13 @@ body {
     padding: 20px 24px !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
     z-index: 100 !important;
-    border-top: 1px solid rgba(115, 96, 91, 0.1) !important;
+    border-top: 1px solid rgba(59, 60, 65, 0.1) !important;
     gap: 20px !important;
   }
   .navbar-links.mobile-open > a {
     width: 100% !important;
     padding: 10px 0 !important;
-    border-bottom: 1px solid rgba(115, 96, 91, 0.05) !important;
+    border-bottom: 1px solid rgba(59, 60, 65, 0.05) !important;
   }
   .navbar-links::-webkit-scrollbar {
     display: none;
@@ -478,7 +486,7 @@ body {
     max-width: 520px !important;
     margin: 32px auto 0 !important;
     padding: 30px 24px !important;
-    box-shadow: 0 15px 35px rgba(45, 66, 98, 0.22) !important;
+    box-shadow: 0 15px 35px rgba(11, 11, 12, 0.25) !important;
   }
   .hero-promo-card:hover {
     transform: translateY(-4px) !important;
@@ -553,7 +561,7 @@ body {
     display: flex !important;
     position: fixed !important;
     inset: 0 !important;
-    background-color: rgba(24, 18, 25, 0.6) !important;
+    background-color: rgba(11, 11, 12, 0.6) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
     z-index: 100 !important;
@@ -607,7 +615,7 @@ body {
   background-color: #ffffff;
   padding: 24px;
   border-radius: 12px;
-  border: 1px solid rgba(115, 96, 91, 0.15);
+  border: 1px solid rgba(59, 60, 65, 0.15);
   align-self: flex-start;
   position: sticky;
   top: 100px;
@@ -633,8 +641,8 @@ body {
 .marcas-section {
   width: 100%;
   background-color: #fdfdfd;
-  border-top: 1px solid rgba(115, 96, 91, 0.1);
-  border-bottom: 1px solid rgba(115, 96, 91, 0.1);
+  border-top: 1px solid rgba(59, 60, 65, 0.1);
+  border-bottom: 1px solid rgba(59, 60, 65, 0.1);
   padding: 130px 0 50px;
   overflow: hidden;
 }

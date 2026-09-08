@@ -13,7 +13,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
 
   // Cargar credenciales demo con 1 clic
   const handleFillDemoCredentials = () => {
-    setEmail('cliente@tempopreciso.pe');
+    setEmail('cliente@lgant.pe');
     setPassword('123456');
     setNombre('Aurelio de la Torre');
     setError('');
@@ -27,11 +27,11 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
       handleFillDemoCredentials();
       const demoData = {
         nombre: 'Aurelio de la Torre',
-        email: 'cliente@tempopreciso.pe',
+        email: 'cliente@lgant.pe',
         nivel: 'Cliente VIP Concierge',
         ciudad: 'San Isidro, Lima - Perú',
         pedidos: [
-          { codigo: 'TP-2026-8891', producto: 'Vetruvius Chronograph Tourbillon', fecha: '02 Sep 2026', estado: 'En Tránsito a San Isidro', monto: 'S/ 14,850.00' }
+          { codigo: 'LG-2026-8891', producto: 'Vetruvius Chronograph Tourbillon', fecha: '02 Sep 2026', estado: 'En Tránsito a San Isidro', monto: 'S/ 14,850.00' }
         ],
         garantias: [
           { serie: 'VT-9080-PERU-004', modelo: 'Vetruvius Tourbillon', validoHasta: 'Sep 2031' }
@@ -96,7 +96,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
       alignItems: 'center',
       justifyContent: 'center',
       padding: '20px',
-      backgroundColor: 'rgba(24, 18, 25, 0.75)',
+      backgroundColor: 'rgba(11, 11, 12, 0.75)',
       backdropFilter: 'blur(12px)',
       WebkitBackdropFilter: 'blur(12px)',
       animation: 'fadeIn 0.3s ease'
@@ -108,8 +108,8 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
         maxHeight: '90vh',
         overflowY: 'auto',
         borderRadius: '24px',
-        border: '1px solid rgba(208, 150, 131, 0.4)',
-        boxShadow: '0 25px 50px -12px rgba(45, 66, 98, 0.35)',
+        border: '1px solid rgba(212, 175, 55, 0.35)',
+        boxShadow: '0 25px 50px -12px rgba(11, 11, 12, 0.35)',
         position: 'relative'
 
       }}>
@@ -176,7 +176,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                 padding: '20px',
                 borderRadius: '16px',
                 backgroundColor: '#fbf9f6',
-                border: '1px solid rgba(115, 96, 91, 0.15)',
+                border: '1px solid rgba(59, 60, 65, 0.15)',
                 marginBottom: '24px'
               }}>
                 <div style={{
@@ -191,7 +191,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                   fontFamily: '"Cinzel", serif',
                   fontSize: '1.4rem',
                   fontWeight: 600,
-                  boxShadow: '0 4px 14px rgba(45, 66, 98, 0.2)'
+                  boxShadow: '0 4px 14px rgba(11, 11, 12, 0.2)'
                 }}>
                   {user.nombre.charAt(0)}
                 </div>
@@ -221,7 +221,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                   <div key={idx} style={{
                     padding: '14px 18px',
                     borderRadius: '12px',
-                    border: '1px solid rgba(45, 66, 98, 0.15)',
+                    border: '1px solid rgba(59, 60, 65, 0.15)',
                     backgroundColor: '#ffffff',
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -236,7 +236,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                       </div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '0.72rem', backgroundColor: 'rgba(208, 150, 131, 0.15)', color: 'var(--c-deep-purple)', padding: '3px 8px', borderRadius: '6px', fontWeight: 500 }}>
+                      <div style={{ fontSize: '0.72rem', backgroundColor: 'rgba(212, 175, 55, 0.15)', color: 'var(--c-deep-purple)', padding: '3px 8px', borderRadius: '6px', fontWeight: 500 }}>
                         {ped.estado}
                       </div>
                       <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--c-indigo)', marginTop: '4px' }}>
@@ -251,8 +251,8 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
               <div style={{
                 padding: '14px 18px',
                 borderRadius: '12px',
-                backgroundColor: 'rgba(45, 66, 98, 0.05)',
-                border: '1px solid rgba(45, 66, 98, 0.15)',
+                backgroundColor: 'rgba(212, 175, 55, 0.08)',
+                border: '1px solid rgba(212, 175, 55, 0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
@@ -275,7 +275,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                   width: '100%',
                   padding: '12px',
                   borderRadius: '12px',
-                  border: '1px solid rgba(115, 96, 91, 0.25)',
+                  border: '1px solid rgba(59, 60, 65, 0.25)',
                   backgroundColor: '#ffffff',
                   color: 'var(--c-deep-purple)',
                   fontWeight: 500,
@@ -313,6 +313,13 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
             )}
 
             <div style={{ marginBottom: '28px', textAlign: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
+                <img
+                  src="/logo-lgant-gold.png"
+                  alt="L'gant"
+                  style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
+                />
+              </div>
               <h2 className="font-serif" style={{ fontSize: '1.6rem', color: 'var(--c-deep-purple)', fontWeight: 600, marginBottom: '6px' }}>
                 {isRegister ? 'Crear Cuenta VIP' : 'Acceso Clientes VIP'}
               </h2>
@@ -339,14 +346,14 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                       width: '100%',
                       padding: '12px 14px 12px 42px',
                       borderRadius: '8px',
-                      border: '1px solid rgba(115, 96, 91, 0.2)',
+                      border: '1px solid rgba(59, 60, 65, 0.2)',
                       fontSize: '0.9rem',
                       outline: 'none',
                       color: 'var(--c-deep-purple)',
                       transition: 'border-color 0.2s ease'
                     }}
                     onFocus={(e) => e.target.style.borderColor = 'var(--c-indigo)'}
-                    onBlur={(e) => e.target.style.borderColor = 'rgba(115, 96, 91, 0.2)'}
+                    onBlur={(e) => e.target.style.borderColor = 'rgba(59, 60, 65, 0.2)'}
                   />
                 </div>
               </div>
@@ -367,14 +374,14 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                     width: '100%',
                     padding: '12px 14px 12px 42px',
                     borderRadius: '8px',
-                    border: '1px solid rgba(115, 96, 91, 0.2)',
+                    border: '1px solid rgba(59, 60, 65, 0.2)',
                     fontSize: '0.9rem',
                     outline: 'none',
                     color: 'var(--c-deep-purple)',
                     transition: 'border-color 0.2s ease'
                   }}
                   onFocus={(e) => e.target.style.borderColor = 'var(--c-indigo)'}
-                  onBlur={(e) => e.target.style.borderColor = 'rgba(115, 96, 91, 0.2)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(59, 60, 65, 0.2)'}
                 />
               </div>
             </div>
@@ -394,14 +401,14 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                     width: '100%',
                     padding: '12px 14px 12px 42px',
                     borderRadius: '8px',
-                    border: '1px solid rgba(115, 96, 91, 0.2)',
+                    border: '1px solid rgba(59, 60, 65, 0.2)',
                     fontSize: '0.9rem',
                     outline: 'none',
                     color: 'var(--c-deep-purple)',
                     transition: 'border-color 0.2s ease'
                   }}
                   onFocus={(e) => e.target.style.borderColor = 'var(--c-indigo)'}
-                  onBlur={(e) => e.target.style.borderColor = 'rgba(115, 96, 91, 0.2)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(59, 60, 65, 0.2)'}
                 />
               </div>
             </div>
@@ -432,7 +439,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                 cursor: 'pointer',
                 transition: 'all 0.25s ease',
                 marginBottom: '24px',
-                boxShadow: '0 4px 12px rgba(45, 66, 98, 0.2)'
+                boxShadow: '0 4px 12px rgba(11, 11, 12, 0.2)'
               }}
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--c-deep-purple)'}
@@ -451,9 +458,9 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-              <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(115, 96, 91, 0.15)' }}></div>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(59, 60, 65, 0.15)' }}></div>
               <span style={{ fontSize: '0.85rem', color: 'var(--c-taupe)' }}>O continuar con</span>
-              <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(115, 96, 91, 0.15)' }}></div>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(59, 60, 65, 0.15)' }}></div>
             </div>
 
             <div style={{ display: 'flex', gap: '16px' }}>
@@ -468,7 +475,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                   gap: '8px',
                   padding: '10px',
                   borderRadius: '8px',
-                  border: '1px solid rgba(115, 96, 91, 0.2)',
+                  border: '1px solid rgba(59, 60, 65, 0.2)',
                   backgroundColor: '#ffffff',
                   color: 'var(--c-deep-purple)',
                   fontSize: '0.9rem',
@@ -493,7 +500,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
                   gap: '8px',
                   padding: '10px',
                   borderRadius: '8px',
-                  border: '1px solid rgba(115, 96, 91, 0.2)',
+                  border: '1px solid rgba(59, 60, 65, 0.2)',
                   backgroundColor: '#ffffff',
                   color: 'var(--c-deep-purple)',
                   fontSize: '0.9rem',

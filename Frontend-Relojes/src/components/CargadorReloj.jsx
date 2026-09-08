@@ -121,7 +121,7 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
           width: '520px',
           height: '520px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(45, 66, 98, 0.45) 0%, rgba(208, 150, 131, 0.1) 45%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, rgba(245, 230, 200, 0.08) 45%, transparent 70%)',
           filter: 'blur(60px)',
           pointerEvents: 'none'
         }}
@@ -140,14 +140,14 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
         >
           <defs>
             <linearGradient id="chronoBezel" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.35)" />
-              <stop offset="50%" stopColor="rgba(45, 66, 98, 0.6)" />
-              <stop offset="100%" stopColor="rgba(208, 150, 131, 0.35)" />
+              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.45)" />
+              <stop offset="50%" stopColor="rgba(212, 175, 55, 0.7)" />
+              <stop offset="100%" stopColor="rgba(245, 230, 200, 0.35)" />
             </linearGradient>
           </defs>
 
           {/* Cuerpo principal del dial */}
-          <circle cx="150" cy="150" r="144" fill="rgba(9, 15, 26, 0.96)" stroke="url(#chronoBezel)" strokeWidth="2.5" />
+          <circle cx="150" cy="150" r="144" fill="#0B0B0C" stroke="url(#chronoBezel)" strokeWidth="2.5" />
           <circle cx="150" cy="150" r="136" fill="none" stroke="rgba(255, 255, 255, 0.12)" strokeWidth="1" />
           <circle cx="150" cy="150" r="88" fill="none" stroke="rgba(255, 255, 255, 0.08)" strokeWidth="1" strokeDasharray="3 3" />
 
@@ -183,26 +183,27 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
             </text>
           ))}
 
-          {/* Firmas de Manufactura en estilo Cinzel idéntico al Header */}
+          {/* Firmas de Manufactura en estilo Cinzel con Emblema León L'gant */}
+          <image href="/logo-lgant-gold.png" x="137" y="38" width="26" height="34" />
           <text
             x="150"
-            y="74"
+            y="84"
             textAnchor="middle"
             fill="#ffffff"
             fontFamily="'Cinzel', serif"
-            fontSize="10"
+            fontSize="9"
             fontWeight="700"
-            letterSpacing="0.35em"
+            letterSpacing="0.32em"
           >
-            TEMPO PRECISO
+            L'GANT
           </text>
           <text
             x="150"
-            y="85"
+            y="93"
             textAnchor="middle"
-            fill="#D09683"
+            fill="#D4AF37"
             fontFamily="'Cinzel', serif"
-            fontSize="6"
+            fontSize="5.5"
             fontWeight="700"
             letterSpacing="0.2em"
           >
@@ -291,22 +292,22 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
           opacity: 0.95
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <Watch size={28} color="#D09683" strokeWidth={1.5} />
-          <div style={{ width: '1.5px', height: '36px', backgroundColor: 'rgba(255, 255, 255, 0.4)' }}></div>
-          <div style={{ fontSize: '2.4rem', fontFamily: '"Cinzel", serif', color: '#D09683', lineHeight: 1, letterSpacing: '0.05em' }}>
-            TP
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <img src="/logo-lgant-gold.png" alt="L'gant" style={{ height: '44px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.35))' }} />
+          <div style={{ width: '1.5px', height: '32px', backgroundColor: 'rgba(212, 175, 55, 0.6)' }}></div>
+          <div style={{ fontSize: '2.2rem', fontFamily: '"Cinzel", serif', color: '#D4AF37', lineHeight: 1, letterSpacing: '0.08em', fontWeight: 700 }}>
+            L'GANT
           </div>
         </div>
         <div style={{
-          fontSize: '0.65rem',
+          fontSize: '0.62rem',
           letterSpacing: '0.45em',
           fontFamily: '"Cinzel", serif',
           color: 'rgba(255, 255, 255, 0.8)',
           textTransform: 'uppercase',
           marginLeft: '0.45em'
         }}>
-          TEMPO PRECISO
+          BOUTIQUE DE ALTA RELOJERÍA
         </div>
       </div>
 

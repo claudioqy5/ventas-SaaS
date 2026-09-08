@@ -22,9 +22,9 @@ import VistaPreguntasFrecuentes from './components/VistaPreguntasFrecuentes';
 import VistaTerminosCondiciones from './components/VistaTerminosCondiciones';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 
-const STORAGE_KEY_CART = 'aurelia_vip_cart_v1';
-const STORAGE_KEY_EMPRESA = 'aurelia_saas_empresa_id';
-const STORAGE_KEY_API_URL = 'aurelia_saas_api_url';
+const STORAGE_KEY_CART = 'lgant_vip_cart_v1';
+const STORAGE_KEY_EMPRESA = 'lgant_saas_empresa_id';
+const STORAGE_KEY_API_URL = 'lgant_saas_api_url';
 const WHATSAPP_CONCIERGE = '51962956919';
 
 
@@ -35,16 +35,16 @@ export default function App({ initialCategory, initialProductId, initialView = '
   // Recuperar de localStorage solo después de montar (para evitar errores de hidratación de Next.js)
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const storedEmpresa = localStorage.getItem(STORAGE_KEY_EMPRESA);
+      const storedEmpresa = localStorage.getItem(STORAGE_KEY_EMPRESA) || localStorage.getItem('aurelia_saas_empresa_id');
       if (storedEmpresa) setEmpresaId(storedEmpresa);
 
-      const storedUrl = localStorage.getItem(STORAGE_KEY_API_URL);
+      const storedUrl = localStorage.getItem(STORAGE_KEY_API_URL) || localStorage.getItem('aurelia_saas_api_url');
       if (storedUrl) setApiUrl(storedUrl);
     }
   }, []);
 
   const [products, setProducts] = useState([]);
-  const [storeName, setStoreName] = useState('Aurelia Haute Horlogerie');
+  const [storeName, setStoreName] = useState("L'gant");
   const [isConnected, setIsConnected] = useState(false);
   const [isFallback, setIsFallback] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -181,7 +181,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [cart, setCart] = useState(() => {
     if (typeof window === 'undefined') return [];
     try {
-      const saved = localStorage.getItem(STORAGE_KEY_CART);
+      const saved = localStorage.getItem(STORAGE_KEY_CART) || localStorage.getItem('aurelia_vip_cart_v1');
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -350,7 +350,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
 
   const handleWhatsAppInquiry = (product) => {
     const text = encodeURIComponent(
-      `👋 *CONSULTA DE DISPONIBILIDAD - AURELIA*\n\n` +
+      `👋 *CONSULTA DE DISPONIBILIDAD - L'GANT*\n\n` +
       `Hola, me interesa conocer más detalles y coordinar la adquisición del guardatiempo:\n` +
       `⚜️ *${product.nombre}*\n` +
       `💰 Precio: S/ ${Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}\n` +
@@ -361,7 +361,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
 
   const handleOpenWhatsAppConcierge = () => {
     const text = encodeURIComponent(
-      `👋 *ATENCIÓN VIP - CONCIERGE AURELIA*\n\n` +
+      `👋 *ATENCIÓN VIP - CONCIERGE L'GANT*\n\n` +
       `Hola, deseo comunicarme con un asesor de la boutique para recibir asesoramiento sobre su colección de alta relojería.`
     );
     window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_CONCIERGE}&text=${text}`, '_blank');
@@ -477,14 +477,14 @@ export default function App({ initialCategory, initialProductId, initialView = '
                       gap: '8px',
                       backgroundColor: '#ffffff',
                       color: 'var(--c-deep-purple)',
-                      border: '1px solid rgba(115, 96, 91, 0.25)',
+                      border: '1px solid rgba(59, 60, 65, 0.25)',
                       borderRadius: '8px',
                       padding: '8px 16px',
                       fontSize: '0.84rem',
                       fontFamily: 'var(--font-serif)',
                       fontWeight: 600,
                       cursor: 'pointer',
-                      boxShadow: '0 2px 8px rgba(45, 66, 98, 0.05)'
+                      boxShadow: '0 2px 8px rgba(11, 11, 12, 0.06)'
                     }}
                   >
                     <SlidersHorizontal size={16} color="var(--c-indigo)" />
@@ -500,7 +500,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                       onChange={(e) => setSortBy(e.target.value)}
                       style={{
                         backgroundColor: '#ffffff',
-                        border: '1px solid rgba(115, 96, 91, 0.25)',
+                        border: '1px solid rgba(59, 60, 65, 0.25)',
                         borderRadius: '8px',
                         padding: '8px 14px',
                         color: 'var(--c-deep-purple)',
@@ -509,7 +509,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                         fontWeight: 600,
                         outline: 'none',
                         cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(45, 66, 98, 0.05)'
+                        boxShadow: '0 2px 8px rgba(11, 11, 12, 0.06)'
                       }}
                     >
                       <option value="featured">Colección Destacada</option>
@@ -530,7 +530,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                 gap: '10px',
                 marginBottom: '36px',
                 paddingBottom: '16px',
-                borderBottom: '1px solid rgba(115, 96, 91, 0.12)'
+                borderBottom: '1px solid rgba(59, 60, 65, 0.12)'
               }}>
                 {categories.map((cat) => {
                   const isSelected = selectedCategory === cat;
@@ -544,7 +544,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                           : '#ffffff',
                         border: isSelected
                           ? '1px solid var(--c-indigo)'
-                          : '1px solid rgba(115, 96, 91, 0.18)',
+                          : '1px solid rgba(59, 60, 65, 0.18)',
                         color: isSelected ? '#ffffff' : 'var(--c-deep-purple)',
                         fontFamily: 'var(--font-serif)',
                         fontSize: '0.78rem',
@@ -556,8 +556,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
                         cursor: 'pointer',
                         transition: 'all 0.25s ease',
                         boxShadow: isSelected
-                          ? '0 6px 18px rgba(45, 66, 98, 0.25)'
-                          : '0 2px 8px rgba(45, 66, 98, 0.04)'
+                          ? '0 6px 18px rgba(11, 11, 12, 0.25)'
+                          : '0 2px 8px rgba(11, 11, 12, 0.04)'
                       }}
                     >
                       {cat}
@@ -596,8 +596,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
                     padding: '70px 20px',
                     backgroundColor: '#ffffff',
                     borderRadius: '20px',
-                    border: '1px solid rgba(115, 96, 91, 0.15)',
-                    boxShadow: '0 4px 20px rgba(45, 66, 98, 0.05)'
+                    border: '1px solid rgba(59, 60, 65, 0.15)',
+                    boxShadow: '0 4px 20px rgba(11, 11, 12, 0.06)'
                   }}>
                     <AlertCircle size={42} color="var(--c-blush)" style={{ margin: '0 auto 16px' }} />
                     <h3 className="font-serif" style={{ fontSize: '1.2rem', color: 'var(--c-deep-purple)', marginBottom: '8px', fontWeight: 800 }}>
@@ -652,19 +652,19 @@ export default function App({ initialCategory, initialProductId, initialView = '
                     textTransform: 'uppercase',
                     cursor: 'pointer',
                     transition: 'all 0.3s ease',
-                    boxShadow: '0 8px 24px rgba(45, 66, 98, 0.12)'
+                    boxShadow: '0 8px 24px rgba(11, 11, 12, 0.12)'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = 'var(--c-indigo)';
                     e.currentTarget.style.color = '#ffffff';
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 12px 30px rgba(45, 66, 98, 0.2)';
+                    e.currentTarget.style.boxShadow = '0 12px 30px rgba(11, 11, 12, 0.2)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = '#ffffff';
                     e.currentTarget.style.color = 'var(--c-indigo)';
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(45, 66, 98, 0.12)';
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(11, 11, 12, 0.12)';
                   }}
                 >
                   Ver más modelos
@@ -674,7 +674,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
           </main>
 
 
-      {/* Sección Transicional con Animación WebThreads */}
+      {/* Sección Transicional con Animación WebThreads en la Nueva Paleta */}
       {!initialCategory && (
         <section style={{ 
           position: 'relative', 
@@ -683,14 +683,14 @@ export default function App({ initialCategory, initialProductId, initialView = '
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
-          backgroundColor: '#fbfaf8', // Fondo exacto de la página principal
+          backgroundColor: '#fcfbf8', // Fondo perla exacto de la página principal
           overflow: 'hidden'
         }}>
-          {/* Fondo animado WebGL */}
+          {/* Fondo animado WebGL en Oro Metálico, Charcoal y Champaña */}
           <WebThreads
-            color1="#FFB6A0" // Blush brillante
-            color2="#5271FF" // Indigo brillante
-            color3="#FFFFFF" // Núcleo blanco
+            color1="#D4AF37" // Oro Metálico
+            color2="#1A1B1F" // Charcoal Noir
+            color3="#F5E6C8" // Champaña Cálido
             speed={0.35}
             threadCount={3}
             frequency={9.5}
@@ -710,7 +710,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
             mouseInteraction={true}
             mouseStrength={0.25}
             lightMode={true}
-            backgroundColor="#fbfaf8" // Para que coincida con el fondo de la sección
+            backgroundColor="#fcfbf8"
           />
           
           {/* Texto superpuesto */}
@@ -718,7 +718,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
             position: 'relative',
             zIndex: 10,
             textAlign: 'center',
-            color: '#2D4262', // Color oscuro para contrastar con el fondo claro
+            color: 'var(--c-obsidian)',
             pointerEvents: 'none'
           }}>
             <span style={{
@@ -734,7 +734,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
               La Precisión del Movimiento
             </span>
             <h2 style={{
-              fontFamily: '"Cinzel", serif', // Fuente del logo Tempo Preciso
+              fontFamily: '"Cinzel", serif', // Fuente del logo L'gant
               fontSize: 'clamp(2rem, 4vw, 3.5rem)',
               fontWeight: 400, // Más delgado, como solicitó el usuario
               letterSpacing: '0.04em',

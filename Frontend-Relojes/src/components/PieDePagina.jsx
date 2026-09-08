@@ -86,13 +86,51 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
 
   return (
     <footer id="garantia" className="footer-main" style={{
-      backgroundColor: 'var(--c-deep-purple)',
-      borderTop: '2px solid var(--c-blush)',
+      backgroundColor: '#0B0B0C',
+      borderTop: '2px solid var(--c-gold)',
       padding: '80px 24px 30px',
       color: 'rgba(255, 255, 255, 0.75)'
     }}>
       <div style={{ maxWidth: '1360px', margin: '0 auto' }}>
         
+        {/* HEADER DE MARCA L'GANT */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '18px',
+          marginBottom: '50px',
+          paddingBottom: '30px',
+          borderBottom: '1px solid rgba(212, 175, 55, 0.25)'
+        }}>
+          <img
+            src="/logo-lgant-gold.png"
+            alt="L'gant"
+            style={{ height: '54px', width: 'auto', objectFit: 'contain' }}
+          />
+          <div>
+            <div style={{
+              fontFamily: '"Cinzel", serif',
+              fontSize: '1.8rem',
+              color: '#ffffff',
+              letterSpacing: '0.08em',
+              fontWeight: 700,
+              lineHeight: 1
+            }}>
+              L'GANT
+            </div>
+            <div style={{
+              fontFamily: '"Cinzel", serif',
+              fontSize: '0.64rem',
+              color: 'var(--c-gold)',
+              letterSpacing: '0.35em',
+              textTransform: 'uppercase',
+              marginTop: '5px'
+            }}>
+              Haute Horlogerie • Boutique Perú
+            </div>
+          </div>
+        </div>
+
         {/* TOP GRID: 4 COLUMNS */}
         <div style={{
           display: 'grid',
@@ -115,24 +153,24 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             }}>
               Canales de Atención
             </h4>
-            <div style={{ width: '100%', height: '1px', backgroundColor: '#ffffff', marginBottom: '24px' }}></div>
+            <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(212, 175, 55, 0.35)', marginBottom: '24px' }}></div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                <Mail size={22} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <Mail size={22} color="var(--c-gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ fontSize: '0.85rem' }}>
                   <p style={{ margin: '0 0 4px 0', color: '#ffffff', fontWeight: 600 }}>Comercial:</p>
-                  <a href="mailto:concierge@tempopreciso.pe" style={{ color: 'rgba(255, 255, 255, 0.75)', textDecoration: 'none' }}>concierge@tempopreciso.pe</a>
+                  <a href="mailto:concierge@lgant.pe" style={{ color: 'rgba(255, 255, 255, 0.75)', textDecoration: 'none' }}>concierge@lgant.pe</a>
                 </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                <Phone size={22} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <Phone size={22} color="var(--c-gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ fontSize: '0.85rem' }}>
                   <p style={{ margin: '0 0 4px 0', color: '#ffffff', fontWeight: 600 }}>Atención 24/7 (WhatsApp):</p>
                   <button 
                     onClick={onOpenWhatsAppConcierge}
-                    style={{ background: 'none', border: 'none', padding: 0, color: 'rgba(255, 255, 255, 0.75)', cursor: 'pointer', textAlign: 'left' }}
+                    style={{ background: 'none', border: 'none', padding: 0, color: '#25D366', fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}
                   >
                     +51 962 956 919
                   </button>
@@ -140,7 +178,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               </div>
               
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                <MapPin size={22} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <MapPin size={22} color="var(--c-gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ fontSize: '0.85rem' }}>
                   <p style={{ margin: '0 0 4px 0', color: '#ffffff', fontWeight: 600 }}>Boutique Principal:</p>
                   <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.75)' }}>Av. Camino Real 1225,<br/>San Isidro, Lima - Perú</p>
@@ -149,7 +187,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             </div>
           </div>
 
-          {/* COL 2: TEMPO PRECISO */}
+          {/* COL 2: L'GANT */}
           <div>
             <h4 style={{
               fontFamily: 'var(--font-sans)',
@@ -158,11 +196,15 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               color: '#ffffff',
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
-              marginBottom: '10px'
+              marginBottom: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
             }}>
-              Tempo Preciso
+              <img src="/logo-lgant-gold.png" alt="" style={{ height: '18px', width: 'auto' }} />
+              L'gant
             </h4>
-            <div style={{ width: '100%', height: '1px', backgroundColor: '#ffffff', marginBottom: '24px' }}></div>
+            <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(212, 175, 55, 0.35)', marginBottom: '24px' }}></div>
             
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <FooterLink href="/categoria/hombre">Relojes para Hombre</FooterLink>
@@ -189,7 +231,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             }}>
               Marcas
             </h4>
-            <div style={{ width: '100%', height: '1px', backgroundColor: '#ffffff', marginBottom: '24px' }}></div>
+            <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(212, 175, 55, 0.35)', marginBottom: '24px' }}></div>
             
             <ul style={{ 
               listStyle: 'none', 
@@ -197,7 +239,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               margin: 0, 
               display: 'grid', 
               gridTemplateColumns: '1fr 1fr', 
-              columnGap: '10px',
+              columnGap: '10px', 
               rowGap: '14px' 
             }}>
               {marcas.map(marca => (
@@ -219,7 +261,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             }}>
               Otros Enlaces
             </h4>
-            <div style={{ width: '100%', height: '1px', backgroundColor: '#ffffff', marginBottom: '24px' }}></div>
+            <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(212, 175, 55, 0.35)', marginBottom: '24px' }}></div>
             
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <FooterLink href="/preguntas-frecuentes" onClick={handleLinkClick('faq', '/preguntas-frecuentes')}>
@@ -320,7 +362,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             color: 'rgba(255, 255, 255, 0.4)'
           }}>
             <div>
-              © {new Date().getFullYear()} TEMPO PRECISO. Boutique de Alta Relojería en Perú. Todos los derechos reservados.
+              © {new Date().getFullYear()} L'GANT. Boutique de Alta Relojería en Perú. Todos los derechos reservados.
             </div>
             <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
               <span>Relojes 100% Auténticos</span>

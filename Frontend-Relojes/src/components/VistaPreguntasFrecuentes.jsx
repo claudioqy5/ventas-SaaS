@@ -78,7 +78,7 @@ const FAQ_DATA = [
     categoria: 'Garantía y Autenticidad',
     icon: ShieldCheckIcon,
     pregunta: '¿Los relojes son 100% originales y nuevos?',
-    respuesta: 'Sí, absolutamente. Cada guardatiempo comercializado en Tempo Preciso Boutique es 100% original, legítimo y sin estrenar. Todas las piezas se entregan en su caja y estuche de fábrica original, con sus respectivos manuales de usuario, certificado de procedencia y tarjeta de garantía oficial sellada.'
+    respuesta: 'Sí, absolutamente. Cada guardatiempo comercializado en L\'gant Boutique es 100% original, legítimo y sin estrenar. Todas las piezas se entregan en su caja y estuche de fábrica original, con sus respectivos manuales de usuario, certificado de procedencia y tarjeta de garantía oficial sellada.'
   },
   {
     id: 'orig-2',
@@ -181,7 +181,7 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
             alignItems: 'center',
             gap: '8px',
             backgroundColor: 'transparent',
-            border: '1px solid rgba(52, 21, 57, 0.15)',
+            border: '1px solid rgba(59, 60, 65, 0.18)',
             color: 'var(--c-deep-purple)',
             padding: '8px 18px',
             borderRadius: '999px',
@@ -192,19 +192,19 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
             fontFamily: 'var(--font-sans)'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(52, 21, 57, 0.05)';
+            e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.08)';
             e.currentTarget.style.borderColor = 'var(--c-deep-purple)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.borderColor = 'rgba(52, 21, 57, 0.15)';
+            e.currentTarget.style.borderColor = 'rgba(59, 60, 65, 0.18)';
           }}
         >
           <ArrowLeftIcon size={16} color="var(--c-deep-purple)" />
           Volver al Catálogo
         </button>
 
-        <nav style={{ fontSize: '0.8rem', color: 'rgba(52, 21, 57, 0.5)', letterSpacing: '0.04em' }}>
+        <nav style={{ fontSize: '0.8rem', color: 'rgba(59, 60, 65, 0.6)', letterSpacing: '0.04em' }}>
           <span style={{ cursor: 'pointer' }} onClick={onBack}>Inicio</span>
           <span style={{ margin: '0 8px' }}>/</span>
           <span style={{ color: 'var(--c-blush)', fontWeight: 600 }}>Preguntas Frecuentes</span>
@@ -237,7 +237,7 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
         </h1>
         <p style={{
           fontSize: '0.95rem',
-          color: 'rgba(52, 21, 57, 0.7)',
+          color: 'rgba(59, 60, 65, 0.85)',
           lineHeight: 1.6,
           margin: 0
         }}>
@@ -256,7 +256,7 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
           left: '16px',
           top: '50%',
           transform: 'translateY(-50%)',
-          color: 'rgba(52, 21, 57, 0.4)',
+          color: 'rgba(59, 60, 65, 0.45)',
           display: 'flex',
           alignItems: 'center'
         }}>
@@ -272,20 +272,20 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
             padding: '14px 16px 14px 48px',
             fontSize: '0.95rem',
             backgroundColor: '#ffffff',
-            border: '1px solid rgba(52, 21, 57, 0.12)',
+            border: '1px solid rgba(59, 60, 65, 0.15)',
             borderRadius: '12px',
             color: 'var(--c-deep-purple)',
             outline: 'none',
             transition: 'border-color 0.2s, box-shadow 0.2s',
-            boxShadow: '0 2px 8px rgba(52, 21, 57, 0.04)'
+            boxShadow: '0 2px 8px rgba(11, 11, 12, 0.04)'
           }}
           onFocus={(e) => {
             e.currentTarget.style.borderColor = 'var(--c-blush)';
-            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(183, 121, 135, 0.15)';
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212, 175, 55, 0.2)';
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = 'rgba(52, 21, 57, 0.12)';
-            e.currentTarget.style.boxShadow = '0 2px 8px rgba(52, 21, 57, 0.04)';
+            e.currentTarget.style.borderColor = 'rgba(59, 60, 65, 0.15)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(11, 11, 12, 0.04)';
           }}
         />
         {busqueda && (
@@ -298,7 +298,7 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
               transform: 'translateY(-50%)',
               background: 'none',
               border: 'none',
-              color: 'rgba(52, 21, 57, 0.4)',
+              color: 'rgba(59, 60, 65, 0.5)',
               cursor: 'pointer',
               fontSize: '0.85rem'
             }}
@@ -329,9 +329,9 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
                 fontWeight: isActive ? 600 : 500,
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                border: isActive ? '1px solid var(--c-deep-purple)' : '1px solid rgba(52, 21, 57, 0.1)',
+                border: isActive ? '1px solid var(--c-deep-purple)' : '1px solid rgba(59, 60, 65, 0.15)',
                 backgroundColor: isActive ? 'var(--c-deep-purple)' : '#ffffff',
-                color: isActive ? '#ffffff' : 'rgba(52, 21, 57, 0.75)'
+                color: isActive ? '#ffffff' : 'rgba(59, 60, 65, 0.85)'
               }}
             >
               {cat}
@@ -348,12 +348,12 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
             padding: '50px 20px',
             backgroundColor: '#ffffff',
             borderRadius: '16px',
-            border: '1px dashed rgba(52, 21, 57, 0.15)'
+            border: '1px dashed rgba(59, 60, 65, 0.2)'
           }}>
             <p style={{ margin: '0 0 10px', color: 'var(--c-deep-purple)', fontWeight: 600 }}>
               No encontramos respuestas para "{busqueda}"
             </p>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: 'rgba(52, 21, 57, 0.6)' }}>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: 'rgba(59, 60, 65, 0.7)' }}>
               Intenta con otra palabra clave o pregúntale directamente a nuestro asesor por WhatsApp.
             </p>
           </div>
@@ -368,8 +368,8 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
                 style={{
                   backgroundColor: '#ffffff',
                   borderRadius: '14px',
-                  border: isOpen ? '1px solid rgba(183, 121, 135, 0.4)' : '1px solid rgba(52, 21, 57, 0.08)',
-                  boxShadow: isOpen ? '0 4px 16px rgba(52, 21, 57, 0.05)' : 'none',
+                  border: isOpen ? '1px solid rgba(212, 175, 55, 0.5)' : '1px solid rgba(59, 60, 65, 0.12)',
+                  boxShadow: isOpen ? '0 4px 16px rgba(11, 11, 12, 0.05)' : 'none',
                   overflow: 'hidden',
                   transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
@@ -394,7 +394,7 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
                       width: '36px',
                       height: '36px',
                       borderRadius: '10px',
-                      backgroundColor: isOpen ? 'rgba(183, 121, 135, 0.12)' : 'rgba(52, 21, 57, 0.04)',
+                      backgroundColor: isOpen ? 'rgba(212, 175, 55, 0.14)' : 'rgba(59, 60, 65, 0.06)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -434,13 +434,13 @@ export default function VistaPreguntasFrecuentes({ onBack, onOpenWhatsAppConcier
                 {isOpen && (
                   <div style={{
                     padding: '0 24px 22px 74px',
-                    borderTop: '1px solid rgba(52, 21, 57, 0.04)'
+                    borderTop: '1px solid rgba(59, 60, 65, 0.08)'
                   }}>
                     <p style={{
                       margin: '14px 0 0 0',
                       fontSize: '0.92rem',
                       lineHeight: 1.65,
-                      color: 'rgba(52, 21, 57, 0.8)',
+                      color: 'rgba(26, 27, 31, 0.85)',
                       whiteSpace: 'pre-line'
                     }}>
                       {item.respuesta}

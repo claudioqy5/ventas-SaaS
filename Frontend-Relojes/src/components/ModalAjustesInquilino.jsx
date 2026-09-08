@@ -55,7 +55,7 @@ export default function ModalAjustesInquilino({
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(45, 66, 98, 0.45)',
+      backgroundColor: 'rgba(11, 11, 12, 0.65)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
       zIndex: 110,
@@ -68,12 +68,12 @@ export default function ModalAjustesInquilino({
         onClick={(e) => e.stopPropagation()}
         style={{
           backgroundColor: '#ffffff',
-          border: '1px solid rgba(115, 96, 91, 0.25)',
+          border: '1px solid rgba(212, 175, 55, 0.3)',
           borderRadius: '20px',
           maxWidth: '520px',
           width: '100%',
           padding: '28px',
-          boxShadow: '0 25px 70px rgba(45, 66, 98, 0.25)'
+          boxShadow: '0 25px 70px rgba(11, 11, 12, 0.35)'
         }}
       >
         {/* Header */}
@@ -117,7 +117,7 @@ export default function ModalAjustesInquilino({
                 style={{
                   width: '100%',
                   backgroundColor: '#ffffff',
-                  border: '1px solid rgba(115, 96, 91, 0.25)',
+                  border: '1px solid rgba(59, 60, 65, 0.25)',
                   borderRadius: '8px',
                   padding: '10px 12px 10px 38px',
                   color: 'var(--c-deep-purple)',
@@ -141,7 +141,7 @@ export default function ModalAjustesInquilino({
               style={{
                 width: '100%',
                 backgroundColor: '#ffffff',
-                border: '1px solid rgba(115, 96, 91, 0.25)',
+                border: '1px solid rgba(59, 60, 65, 0.25)',
                 borderRadius: '8px',
                 padding: '10px 12px',
                 color: 'var(--c-deep-purple)',

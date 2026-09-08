@@ -29,8 +29,8 @@ export default function Beneficios() {
     <section style={{
       padding: '70px 24px',
       backgroundColor: 'var(--bg-main)', // Fondo igual al de la página principal
-      borderTop: '1px solid rgba(115, 96, 91, 0.15)',
-      borderBottom: '1px solid rgba(115, 96, 91, 0.15)',
+      borderTop: '1px solid rgba(59, 60, 65, 0.15)',
+      borderBottom: '1px solid rgba(59, 60, 65, 0.15)',
     }}>
       <div style={{
         maxWidth: '1200px',

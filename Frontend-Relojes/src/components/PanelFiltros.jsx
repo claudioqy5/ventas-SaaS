@@ -221,7 +221,7 @@ export default function PanelFiltros({ filters, setFilters, availableMaterials =
             cursor: 'pointer',
             letterSpacing: '0.05em',
             textTransform: 'uppercase',
-            boxShadow: '0 4px 14px rgba(45, 66, 98, 0.25)'
+            boxShadow: '0 4px 14px rgba(11, 11, 12, 0.25)'
           }}
         >
           Ver Resultados

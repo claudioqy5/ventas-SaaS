@@ -68,7 +68,7 @@ export default function Testimonios() {
               boxShadow: 'var(--shadow-card)',
               position: 'relative',
               transition: 'transform 0.3s ease',
-              border: '1px solid rgba(115, 96, 91, 0.08)',
+              border: '1px solid rgba(59, 60, 65, 0.12)',
               display: 'flex',
               flexDirection: 'column'
             }}

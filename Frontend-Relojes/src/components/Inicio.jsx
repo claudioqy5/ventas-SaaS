@@ -62,14 +62,14 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         }} />
       </div>
 
-      {/* Halos ambientales suaves en Indigo (Solo en lado izquierdo) */}
+      {/* Halos ambientales dorados suaves */}
       <div style={{
         position: 'absolute',
         bottom: '10%',
         left: '5%',
         width: '550px',
         height: '450px',
-        background: 'radial-gradient(circle, rgba(45, 66, 98, 0.08) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%)',
         filter: 'blur(70px)',
         pointerEvents: 'none',
         zIndex: 0
@@ -95,16 +95,16 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             fontWeight: 600,
             letterSpacing: '0.28em',
             textTransform: 'uppercase',
-            color: 'var(--c-blush)',
+            color: 'var(--c-gold)',
             marginBottom: '16px'
           }}>
-            <span style={{ width: '24px', height: '1px', background: 'var(--c-blush)', opacity: 0.6 }}></span>
+            <span style={{ width: '24px', height: '1px', background: 'var(--c-gold)', opacity: 0.6 }}></span>
             ALTA RELOJERÍA
           </div>
 
           {/* Titular SEO Oculto pero indexable */}
           <h1 style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', borderWidth: 0 }}>
-            Tempo Preciso: Boutique de Alta Relojería y Relojes de Lujo en Perú
+            L'gant: Boutique de Alta Relojería y Relojes de Lujo en Perú
           </h1>
 
           {/* Título Poético Visual (Ahora es H2 para mantener la jerarquía) */}
@@ -112,7 +112,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             fontFamily: '"Cormorant Garamond", "Cinzel", serif',
             fontSize: 'clamp(2.8rem, 4.8vw, 4.4rem)',
             lineHeight: 1.05,
-            color: 'var(--c-deep-purple)',
+            color: 'var(--c-obsidian)',
             marginBottom: '24px',
             letterSpacing: '0.03em',
           }}>
@@ -121,7 +121,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
               fontWeight: 300,
               letterSpacing: '0.09em',
               textTransform: 'uppercase',
-              color: '#2b272c'
+              color: 'var(--c-obsidian)'
 
             }}>
               VALOR EN CADA
@@ -140,12 +140,12 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             </span>
           </h2>
 
-          {/* Subtítulo en Taupe cálido */}
+          {/* Subtítulo en Steel Slate cálido */}
           <p style={{
             fontFamily: '"Plus Jakarta Sans", sans-serif',
             fontSize: '1.25rem',
             lineHeight: 1.6,
-            color: 'var(--c-taupe)',
+            color: 'var(--c-steel)',
             marginBottom: '40px',
             maxWidth: '520px',
             fontWeight: 300,
@@ -176,23 +176,23 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
             gap: '20px',
-            borderTop: '1px solid rgba(115, 96, 91, 0.15)',
+            borderTop: '1px solid rgba(59, 60, 65, 0.15)',
             paddingTop: '26px',
             maxWidth: '380px' // Limitar el ancho para dar espacio a la tarjeta
           }}>
             <div>
-              <div className="font-serif" style={{ color: 'var(--c-indigo)', fontSize: '1.35rem', fontWeight: 600 }}>
+              <div className="font-serif" style={{ color: 'var(--c-gold)', fontSize: '1.35rem', fontWeight: 600 }}>
                 100%
               </div>
-              <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 400 }}>
+              <div style={{ fontSize: '0.76rem', color: 'var(--c-steel)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 400 }}>
                 Originales Multimarca
               </div>
             </div>
             <div>
-              <div className="font-serif" style={{ color: 'var(--c-blush)', fontSize: '1.35rem', fontWeight: 600 }}>
+              <div className="font-serif" style={{ color: 'var(--c-gold)', fontSize: '1.35rem', fontWeight: 600 }}>
                 5 AÑOS
               </div>
-              <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 400 }}>
+              <div style={{ fontSize: '0.76rem', color: 'var(--c-steel)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 400 }}>
                 Garantía Internacional
               </div>
             </div>
@@ -208,12 +208,13 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
           position: 'absolute',
           left: 'max(25%, calc(50vw - 650px))', /* Alinear con el contenido izquierdo */
           bottom: '-120px', /* Cuelga por debajo del Hero, mitad adentro mitad afuera */
-          background: 'linear-gradient(135deg, var(--c-deep-purple) 0%, var(--c-indigo) 100%)',
+          background: 'linear-gradient(135deg, var(--c-obsidian) 0%, var(--c-charcoal) 100%)',
+          border: '1px solid rgba(212, 175, 55, 0.35)',
           color: '#fff',
           padding: '45px 50px',
           borderRadius: '24px',
           width: 'min(90%, 550px)',
-          boxShadow: '0 30px 60px rgba(45, 66, 98, 0.4)',
+          boxShadow: '0 30px 60px rgba(11, 11, 12, 0.45)',
           zIndex: 30,
           cursor: 'pointer',
           transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
@@ -224,13 +225,13 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         <div style={{ fontSize: '0.9rem', letterSpacing: '0.2em', textTransform: 'uppercase', opacity: 0.8, marginBottom: '14px', fontWeight: 600 }}>
           Beneficio Exclusivo
         </div>
-        <div className="font-serif" style={{ fontSize: '3.6rem', lineHeight: 1.1, marginBottom: '10px', color: 'var(--c-blush)' }}>
+        <div className="font-serif" style={{ fontSize: '3.6rem', lineHeight: 1.1, marginBottom: '10px', color: 'var(--c-gold)' }}>
           30% <span style={{ fontSize: '1.6rem', fontWeight: 400, fontStyle: 'italic', fontFamily: 'var(--font-sans)' }}>OFF</span>
         </div>
         <div style={{ fontSize: '1.1rem', opacity: 0.9, marginBottom: '35px', lineHeight: 1.5, maxWidth: '400px' }}>
           En tu primer pedido de Alta Relojería. Aplica para colecciones seleccionadas.
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--c-champagne)' }}>
           Descubrir Ahora <ArrowRight size={20} />
         </div>
       </div>

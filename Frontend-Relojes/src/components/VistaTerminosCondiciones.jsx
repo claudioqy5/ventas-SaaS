@@ -74,7 +74,7 @@ export default function VistaTerminosCondiciones({ onBack }) {
             alignItems: 'center',
             gap: '8px',
             backgroundColor: 'transparent',
-            border: '1px solid rgba(52, 21, 57, 0.15)',
+            border: '1px solid rgba(59, 60, 65, 0.18)',
             color: 'var(--c-deep-purple)',
             padding: '8px 18px',
             borderRadius: '999px',
@@ -85,19 +85,19 @@ export default function VistaTerminosCondiciones({ onBack }) {
             fontFamily: 'var(--font-sans)'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(52, 21, 57, 0.05)';
+            e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.08)';
             e.currentTarget.style.borderColor = 'var(--c-deep-purple)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.borderColor = 'rgba(52, 21, 57, 0.15)';
+            e.currentTarget.style.borderColor = 'rgba(59, 60, 65, 0.18)';
           }}
         >
           <ArrowLeftIcon size={16} color="var(--c-deep-purple)" />
           Volver al Catálogo
         </button>
 
-        <nav style={{ fontSize: '0.8rem', color: 'rgba(52, 21, 57, 0.5)', letterSpacing: '0.04em' }}>
+        <nav style={{ fontSize: '0.8rem', color: 'rgba(59, 60, 65, 0.6)', letterSpacing: '0.04em' }}>
           <span style={{ cursor: 'pointer' }} onClick={onBack}>Inicio</span>
           <span style={{ margin: '0 8px' }}>/</span>
           <span style={{ color: 'var(--c-blush)', fontWeight: 600 }}>Términos y Condiciones</span>
@@ -112,7 +112,7 @@ export default function VistaTerminosCondiciones({ onBack }) {
           gap: '8px',
           padding: '4px 14px',
           borderRadius: '999px',
-          backgroundColor: 'rgba(183, 121, 135, 0.1)',
+          backgroundColor: 'rgba(212, 175, 55, 0.12)',
           color: 'var(--c-blush)',
           fontSize: '0.74rem',
           fontWeight: 600,
@@ -136,7 +136,7 @@ export default function VistaTerminosCondiciones({ onBack }) {
         </h1>
         <p style={{
           fontSize: '0.92rem',
-          color: 'rgba(52, 21, 57, 0.7)',
+          color: 'rgba(59, 60, 65, 0.85)',
           lineHeight: 1.6,
           margin: 0
         }}>
@@ -157,8 +157,8 @@ export default function VistaTerminosCondiciones({ onBack }) {
           backgroundColor: '#ffffff',
           borderRadius: '16px',
           padding: '24px',
-          border: '1px solid rgba(52, 21, 57, 0.08)',
-          boxShadow: '0 2px 12px rgba(52, 21, 57, 0.03)',
+          border: '1px solid rgba(59, 60, 65, 0.12)',
+          boxShadow: '0 2px 12px rgba(11, 11, 12, 0.04)',
           position: 'sticky',
           top: '100px'
         }}>
@@ -186,18 +186,18 @@ export default function VistaTerminosCondiciones({ onBack }) {
                   onClick={() => scrollToSection(sec.id)}
                   style={{
                     textAlign: 'left',
-                    background: isSelected ? 'rgba(183, 121, 135, 0.1)' : 'none',
+                    background: isSelected ? 'rgba(212, 175, 55, 0.14)' : 'none',
                     border: 'none',
                     borderRadius: '8px',
                     padding: '8px 12px',
                     fontSize: '0.82rem',
-                    color: isSelected ? 'var(--c-blush)' : 'rgba(52, 21, 57, 0.8)',
+                    color: isSelected ? 'var(--c-blush)' : 'rgba(26, 27, 31, 0.85)',
                     fontWeight: isSelected ? 600 : 400,
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
                   }}
                   onMouseEnter={(e) => {
-                    if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(52, 21, 57, 0.03)';
+                    if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(11, 11, 12, 0.04)';
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected) e.currentTarget.style.backgroundColor = 'none';
@@ -223,19 +223,19 @@ export default function VistaTerminosCondiciones({ onBack }) {
             backgroundColor: '#ffffff',
             borderRadius: '16px',
             padding: '32px',
-            border: '1px solid rgba(52, 21, 57, 0.08)'
+            border: '1px solid rgba(59, 60, 65, 0.12)'
           }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--c-deep-purple)', marginTop: 0, marginBottom: '14px', fontWeight: 600 }}>
               1. Identificación del Titular y la Plataforma
             </h2>
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(52, 21, 57, 0.8)', margin: '0 0 12px' }}>
-              El presente sitio web y plataforma de comercio electrónico opera bajo la marca comercial <strong>TEMPO PRECISO BOUTIQUE</strong>, debidamente constituida conforme a las leyes de la República del Perú.
+            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(26, 27, 31, 0.85)', margin: '0 0 12px' }}>
+              El presente sitio web y plataforma de comercio electrónico opera bajo la marca comercial <strong>L'GANT BOUTIQUE</strong>, debidamente constituida conforme a las leyes de la República del Perú.
             </p>
-            <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(52, 21, 57, 0.8)', paddingLeft: '20px', margin: 0 }}>
-              <li><strong>Razón Social:</strong> TEMPO PRECISO S.A.C.</li>
+            <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(26, 27, 31, 0.85)', paddingLeft: '20px', margin: 0 }}>
+              <li><strong>Razón Social:</strong> L'GANT S.A.C.</li>
               <li><strong>RUC:</strong> 20608945123</li>
               <li><strong>Domicilio Fiscal:</strong> Av. Camino Real 1225, San Isidro, Lima - Perú</li>
-              <li><strong>Canal Oficial de Atención:</strong> concierge@tempopreciso.pe | +51 962 956 919</li>
+              <li><strong>Canal Oficial de Atención:</strong> concierge@lgant.pe | +51 962 956 919</li>
             </ul>
           </section>
 
@@ -244,12 +244,12 @@ export default function VistaTerminosCondiciones({ onBack }) {
             backgroundColor: '#ffffff',
             borderRadius: '16px',
             padding: '32px',
-            border: '1px solid rgba(52, 21, 57, 0.08)'
+            border: '1px solid rgba(59, 60, 65, 0.12)'
           }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--c-deep-purple)', marginTop: 0, marginBottom: '14px', fontWeight: 600 }}>
               2. Aceptación de los Términos y Marco Normativo
             </h2>
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(52, 21, 57, 0.8)', margin: 0 }}>
+            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(26, 27, 31, 0.85)', margin: 0 }}>
               Al navegar, registrarse o concretar una transacción a través de este portal, el usuario declara ser mayor de edad con capacidad legal para contratar y manifiesta su plena conformidad con estos Términos y Condiciones. Nuestras operaciones se rigen íntegramente por la <strong>Ley N° 29571 (Código de Protección y Defensa del Consumidor)</strong> y la normativa emitida por el <strong>INDECOPI</strong>.
             </p>
           </section>
@@ -259,16 +259,16 @@ export default function VistaTerminosCondiciones({ onBack }) {
             backgroundColor: '#ffffff',
             borderRadius: '16px',
             padding: '32px',
-            border: '1px solid rgba(52, 21, 57, 0.08)'
+            border: '1px solid rgba(59, 60, 65, 0.12)'
           }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--c-deep-purple)', marginTop: 0, marginBottom: '14px', fontWeight: 600 }}>
               3. Precios, Moneda e Impuestos (IGV)
             </h2>
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(52, 21, 57, 0.8)', margin: '0 0 14px' }}>
+            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(26, 27, 31, 0.85)', margin: '0 0 14px' }}>
               Todos los precios exhibidos en la tienda virtual están expresados en <strong>Soles Peruanos (PEN - S/)</strong> e incluyen taxativamente el <strong>18% del Impuesto General a las Ventas (IGV)</strong> conforme a las disposiciones tributarias de la SUNAT.
             </p>
             <div style={{
-              backgroundColor: 'rgba(183, 121, 135, 0.08)',
+              backgroundColor: 'rgba(212, 175, 55, 0.08)',
               borderLeft: '4px solid var(--c-blush)',
               padding: '14px 18px',
               borderRadius: '0 8px 8px 0',
@@ -284,15 +284,15 @@ export default function VistaTerminosCondiciones({ onBack }) {
             backgroundColor: '#ffffff',
             borderRadius: '16px',
             padding: '32px',
-            border: '1px solid rgba(52, 21, 57, 0.08)'
+            border: '1px solid rgba(59, 60, 65, 0.12)'
           }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--c-deep-purple)', marginTop: 0, marginBottom: '14px', fontWeight: 600 }}>
               4. Medios de Pago y Seguridad en Transacciones
             </h2>
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(52, 21, 57, 0.8)', margin: '0 0 12px' }}>
+            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(26, 27, 31, 0.85)', margin: '0 0 12px' }}>
               Ponemos a disposición de nuestros clientes métodos de pago que cumplen los protocolos internacionales de seguridad PCI-DSS y tokenización bancaria:
             </p>
-            <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(52, 21, 57, 0.8)', paddingLeft: '20px', margin: 0 }}>
+            <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(26, 27, 31, 0.85)', paddingLeft: '20px', margin: 0 }}>
               <li><strong>Tarjetas de crédito o débito:</strong> Visa, Mastercard, American Express y Diners Club.</li>
               <li><strong>Billeteras Móviles:</strong> Pagos directos vía Yape y Plin mediante código QR o número de contacto corporativo.</li>
               <li><strong>Transferencia Bancaria:</strong> Cuentas corrientes corporativas en BCP, BBVA e Interbank.</li>
@@ -304,15 +304,15 @@ export default function VistaTerminosCondiciones({ onBack }) {
             backgroundColor: '#ffffff',
             borderRadius: '16px',
             padding: '32px',
-            border: '1px solid rgba(52, 21, 57, 0.08)'
+            border: '1px solid rgba(59, 60, 65, 0.12)'
           }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--c-deep-purple)', marginTop: 0, marginBottom: '14px', fontWeight: 600 }}>
               5. Despacho, Cobertura y Tiempos de Entrega
             </h2>
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(52, 21, 57, 0.8)', margin: '0 0 12px' }}>
+            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(26, 27, 31, 0.85)', margin: '0 0 12px' }}>
               Realizamos envíos a toda la República del Perú asegurando la integridad física de cada reloj mediante embalajes de alta resistencia y precintos inviolables:
             </p>
-            <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(52, 21, 57, 0.8)', paddingLeft: '20px', margin: 0 }}>
+            <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(26, 27, 31, 0.85)', paddingLeft: '20px', margin: 0 }}>
               <li><strong>Lima Metropolitana y Callao:</strong> Entrega entre 24 y 48 horas hábiles siguientes a la validación de la orden.</li>
               <li><strong>Provincias del Perú:</strong> Entrega entre 48 y 72 horas hábiles a través de couriers certificados (Olva Courier, Shalom).</li>
               <li><strong>Recepción del Paquete:</strong> Toda entrega requiere la firma y DNI del titular o persona debidamente autorizada en la dirección de entrega.</li>
@@ -324,15 +324,15 @@ export default function VistaTerminosCondiciones({ onBack }) {
             backgroundColor: '#ffffff',
             borderRadius: '16px',
             padding: '32px',
-            border: '1px solid rgba(52, 21, 57, 0.08)'
+            border: '1px solid rgba(59, 60, 65, 0.12)'
           }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--c-deep-purple)', marginTop: 0, marginBottom: '14px', fontWeight: 600 }}>
               6. Garantía de Autenticidad y Funcionamiento
             </h2>
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(52, 21, 57, 0.8)', margin: '0 0 12px' }}>
+            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(26, 27, 31, 0.85)', margin: '0 0 12px' }}>
               Garantizamos que el 100% de los guardatiempos ofertados son piezas auténticas, legítimas y manufacturadas con los más rigurosos estándares de la relojería.
             </p>
-            <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(52, 21, 57, 0.8)', paddingLeft: '20px', margin: 0 }}>
+            <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(26, 27, 31, 0.85)', paddingLeft: '20px', margin: 0 }}>
               <li><strong>Plazo de Garantía:</strong> Entre 12 y 24 meses según la marca y fabricante sobre defectos de manufactura en la maquinaria y movimiento interno.</li>
               <li><strong>Exclusiones de Garantía:</strong> No ampara daños por golpes accidentales, caídas, rayaduras externas, manipulación por técnicos no autorizados o uso fuera de los parámetros de resistencia al agua (ATM) establecidos en la ficha técnica.</li>
             </ul>
@@ -343,15 +343,15 @@ export default function VistaTerminosCondiciones({ onBack }) {
             backgroundColor: '#ffffff',
             borderRadius: '16px',
             padding: '32px',
-            border: '1px solid rgba(52, 21, 57, 0.08)'
+            border: '1px solid rgba(59, 60, 65, 0.12)'
           }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--c-deep-purple)', marginTop: 0, marginBottom: '14px', fontWeight: 600 }}>
               7. Políticas de Cambio y Devoluciones
             </h2>
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(52, 21, 57, 0.8)', margin: '0 0 12px' }}>
+            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(26, 27, 31, 0.85)', margin: '0 0 12px' }}>
               En consonancia con el Código de Protección al Consumidor:
             </p>
-            <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(52, 21, 57, 0.8)', paddingLeft: '20px', margin: 0 }}>
+            <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(26, 27, 31, 0.85)', paddingLeft: '20px', margin: 0 }}>
               <li><strong>Plazo:</strong> El cliente puede solicitar el cambio dentro de los <strong>7 días calendario</strong> contados a partir del día siguiente a la recepción del bien.</li>
               <li><strong>Condiciones del producto:</strong> La pieza no debe presentar marcas de uso, debe mantener íntegros los plásticos protectores, manuales de fábrica, caja original y comprobante de pago respectivo.</li>
             </ul>
@@ -362,12 +362,12 @@ export default function VistaTerminosCondiciones({ onBack }) {
             backgroundColor: '#ffffff',
             borderRadius: '16px',
             padding: '32px',
-            border: '1px solid rgba(52, 21, 57, 0.08)'
+            border: '1px solid rgba(59, 60, 65, 0.12)'
           }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--c-deep-purple)', marginTop: 0, marginBottom: '14px', fontWeight: 600 }}>
               8. Protección de Datos Personales (Ley N° 29733)
             </h2>
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(52, 21, 57, 0.8)', margin: 0 }}>
+            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(26, 27, 31, 0.85)', margin: 0 }}>
               En estricto acatamiento de la <strong>Ley N° 29733</strong>, los datos proporcionados por el usuario serán tratados de manera confidencial y con la exclusiva finalidad de gestionar compras, facturación y despacho. No comercializamos bases de datos. El cliente podrá en todo momento ejercer sus derechos <strong>ARCO (Acceso, Rectificación, Cancelación y Oposición)</strong> mediante solicitud dirigida a nuestro correo institucional.
             </p>
           </section>
@@ -377,12 +377,12 @@ export default function VistaTerminosCondiciones({ onBack }) {
             backgroundColor: '#ffffff',
             borderRadius: '16px',
             padding: '32px',
-            border: '1px solid rgba(52, 21, 57, 0.08)'
+            border: '1px solid rgba(59, 60, 65, 0.12)'
           }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--c-deep-purple)', marginTop: 0, marginBottom: '14px', fontWeight: 600 }}>
               9. Libro de Reclamaciones Virtual
             </h2>
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(52, 21, 57, 0.8)', margin: 0 }}>
+            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(26, 27, 31, 0.85)', margin: 0 }}>
               Conforme a lo ordenado por el <strong>Decreto Supremo N° 011-2011-PCM</strong> y el Código de Protección y Defensa del Consumidor, nuestra tienda pone a disposición del público el <strong>Libro de Reclamaciones Virtual</strong> en el pie de página de este portal para registrar formalmente cualquier queja o reclamo respecto a los bienes y servicios adquiridos.
             </p>
           </section>
@@ -392,12 +392,12 @@ export default function VistaTerminosCondiciones({ onBack }) {
             backgroundColor: '#ffffff',
             borderRadius: '16px',
             padding: '32px',
-            border: '1px solid rgba(52, 21, 57, 0.08)'
+            border: '1px solid rgba(59, 60, 65, 0.12)'
           }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--c-deep-purple)', marginTop: 0, marginBottom: '14px', fontWeight: 600 }}>
               10. Jurisdicción y Solución de Controversias
             </h2>
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(52, 21, 57, 0.8)', margin: 0 }}>
+            <p style={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(26, 27, 31, 0.85)', margin: 0 }}>
               Cualquier discrepancia o controversia derivada de la interpretación o ejecución de los presentes términos se resolverá en primera instancia de mutuo acuerdo. En su defecto, las partes se someten expresamente a la competencia de los jueces y tribunales del <strong>Distrito Judicial de Lima, Perú</strong>, y a las instancias administrativas del <strong>INDECOPI</strong>.
             </p>
           </section>

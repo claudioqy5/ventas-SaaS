@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const category = capitalizeCategory(resolvedParams.slug);
   return {
-    title: `Relojes para ${category} | Tempo Preciso Boutique`,
+    title: `Relojes para ${category} | L'gant Boutique`,
     description: `Descubre nuestra exclusiva selección de relojes de lujo para ${category}. Piezas originales, automáticas y con garantía internacional en Perú.`,
     openGraph: {
       title: `Catálogo Exclusivo: Relojes de ${category}`,

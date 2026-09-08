@@ -56,7 +56,7 @@ export default function ModalProducto({
       particleCount: 40,
       spread: 60,
       origin: { y: 0.7 },
-      colors: ['#2D4262', '#D09683', '#73605B']
+      colors: ['#0B0B0C', '#D4AF37', '#F5E6C8', '#3B3C41']
     });
 
     setTimeout(() => {
@@ -93,7 +93,7 @@ export default function ModalProducto({
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(24, 18, 25, 0.65)',
+      backgroundColor: 'rgba(11, 11, 12, 0.65)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
       zIndex: 100,
@@ -107,13 +107,13 @@ export default function ModalProducto({
         style={{
           position: 'relative',
           backgroundColor: '#ffffff',
-          border: '1px solid rgba(115, 96, 91, 0.2)',
+          border: '1px solid rgba(59, 60, 65, 0.2)',
           borderRadius: '24px',
           maxWidth: '1020px',
           width: '100%',
           maxHeight: '92vh',
           overflowY: 'auto',
-          boxShadow: '0 30px 80px rgba(45, 66, 98, 0.3), 0 0 40px rgba(208, 150, 131, 0.2)',
+          boxShadow: '0 30px 80px rgba(11, 11, 12, 0.35), 0 0 40px rgba(212, 175, 55, 0.2)',
           padding: '36px'
         }}
       >
@@ -125,7 +125,7 @@ export default function ModalProducto({
             top: '20px',
             right: '20px',
             background: '#f8f6f2',
-            border: '1px solid rgba(115, 96, 91, 0.2)',
+            border: '1px solid rgba(59, 60, 65, 0.2)',
             borderRadius: '50%',
             width: '38px',
             height: '38px',
@@ -142,7 +142,7 @@ export default function ModalProducto({
             e.currentTarget.style.color = 'var(--c-indigo)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'rgba(115, 96, 91, 0.2)';
+            e.currentTarget.style.borderColor = 'rgba(59, 60, 65, 0.2)';
             e.currentTarget.style.color = 'var(--c-deep-purple)';
           }}
         >
@@ -168,7 +168,7 @@ export default function ModalProducto({
                 borderRadius: '20px',
                 overflow: 'hidden',
                 backgroundColor: '#f9f8f6',
-                border: '1px solid rgba(115, 96, 91, 0.15)',
+                border: '1px solid rgba(59, 60, 65, 0.15)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -226,8 +226,8 @@ export default function ModalProducto({
                       cursor: 'pointer',
                       border: isSelected
                         ? '2px solid var(--c-indigo)'
-                        : '1px solid rgba(115, 96, 91, 0.2)',
-                      boxShadow: isSelected ? '0 4px 14px rgba(45, 66, 98, 0.25)' : 'none',
+                        : '1px solid rgba(59, 60, 65, 0.2)',
+                      boxShadow: isSelected ? '0 4px 14px rgba(11, 11, 12, 0.25)' : 'none',
                       transition: 'all 0.2s ease',
                       backgroundColor: '#f8f6f2'
                     }}
@@ -257,7 +257,7 @@ export default function ModalProducto({
               backgroundColor: '#f8f6f3',
               padding: '14px 18px',
               borderRadius: '14px',
-              border: '1px solid rgba(115, 96, 91, 0.12)'
+              border: '1px solid rgba(59, 60, 65, 0.12)'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--c-indigo)', fontSize: '0.78rem', fontWeight: 600 }}>
                 <ShieldCheck size={16} color="var(--c-blush)" />
@@ -348,7 +348,7 @@ export default function ModalProducto({
               {/* Ficha de Manufactura */}
               <div style={{
                 backgroundColor: '#f9f7f4',
-                border: '1px solid rgba(115, 96, 91, 0.18)',
+                border: '1px solid rgba(59, 60, 65, 0.18)',
                 borderRadius: '14px',
                 padding: '16px',
                 marginBottom: '22px'
@@ -498,7 +498,7 @@ export default function ModalProducto({
           <div style={{
             marginTop: '36px',
             paddingTop: '28px',
-            borderTop: '1px solid rgba(115, 96, 91, 0.15)'
+            borderTop: '1px solid rgba(59, 60, 65, 0.15)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
               <h3 className="font-serif" style={{
@@ -531,7 +531,7 @@ export default function ModalProducto({
                   }}
                   style={{
                     backgroundColor: '#ffffff',
-                    border: '1px solid rgba(115, 96, 91, 0.16)',
+                    border: '1px solid rgba(59, 60, 65, 0.16)',
                     borderRadius: '14px',
                     padding: '12px',
                     cursor: 'pointer',
@@ -543,10 +543,10 @@ export default function ModalProducto({
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = 'var(--c-blush)';
                     e.currentTarget.style.transform = 'translateY(-3px)';
-                    e.currentTarget.style.boxShadow = '0 8px 20px rgba(45, 66, 98, 0.1)';
+                    e.currentTarget.style.boxShadow = '0 8px 20px rgba(11, 11, 12, 0.1)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(115, 96, 91, 0.16)';
+                    e.currentTarget.style.borderColor = 'rgba(59, 60, 65, 0.16)';
                     e.currentTarget.style.transform = 'translateY(0)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
