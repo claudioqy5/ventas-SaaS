@@ -268,7 +268,14 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const filteredProducts = useMemo(() => {
     return products
       .filter((p) => {
-        const matchesCategory = selectedCategory === 'Todos' || p.categoria === selectedCategory;
+        let matchesCategory = false;
+        if (selectedCategory === 'Todos') {
+          matchesCategory = true;
+        } else if (selectedCategory.toLowerCase() === 'ofertas') {
+          matchesCategory = p.precioOferta > 0;
+        } else {
+          matchesCategory = p.categoria && p.categoria.toLowerCase() === selectedCategory.toLowerCase();
+        }
         const query = searchQuery.toLowerCase();
         const matchesSearch = !query ||
           p.nombre.toLowerCase().includes(query) ||
