@@ -114,7 +114,9 @@ public class ProductsController : ControllerBase
             .Set(p => p.KilosPorCostal, product.KilosPorCostal)
             .Set(p => p.ImagenUrl, product.ImagenUrl)
             .Set(p => p.Imagenes, product.Imagenes)
-            .Set(p => p.PrecioOferta, product.PrecioOferta);
+            .Set(p => p.PrecioOferta, product.PrecioOferta)
+            .Set(p => p.MarcaId, product.MarcaId)
+            .Set(p => p.Atributos, product.Atributos);
 
         var result = await _context.Products.UpdateOneAsync(filter, update);
         if (result.MatchedCount == 0) return NotFound();
