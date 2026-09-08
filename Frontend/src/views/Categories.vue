@@ -362,12 +362,13 @@ onMounted(() => {
   justify-content: center;
   z-index: 1000;
   padding: 2vh 2vw;
+  box-sizing: border-box;
 }
 
 .modal-card {
   width: 90%;
   max-width: 500px;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: auto;
   padding: 30px;
   border-radius: var(--radius-lg);

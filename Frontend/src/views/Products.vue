@@ -1035,7 +1035,7 @@ onMounted(() => {
 .modal-card {
   width: 92%;
   max-width: 840px;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: auto;
   background-color: var(--bg-card);
   padding: 1.5rem;
