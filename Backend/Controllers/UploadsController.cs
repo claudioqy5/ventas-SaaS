@@ -26,7 +26,7 @@ public class UploadsController : ControllerBase
     {
         ".jpg", ".jpeg", ".png", ".webp"
     };
-    private const long MaxFileSizeBytes = 5 * 1024 * 1024; // 5 MB
+    private const long MaxFileSizeBytes = 1 * 1024 * 1024; // 1 MB (Optimizado para SEO)
 
     public UploadsController(IUserContext userContext, IWebHostEnvironment env)
     {
@@ -47,7 +47,7 @@ public class UploadsController : ControllerBase
             return BadRequest(new { message = "No se recibio ningun archivo." });
 
         if (file.Length > MaxFileSizeBytes)
-            return BadRequest(new { message = "El archivo supera el limite de 5 MB." });
+            return BadRequest(new { message = "El archivo supera el límite de 1 MB (Optimiza tus imágenes para SEO)." });
 
         var ext = Path.GetExtension(file.FileName);
         if (!AllowedExtensions.Contains(ext))

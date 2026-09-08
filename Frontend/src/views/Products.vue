@@ -369,7 +369,7 @@
             <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; margin-top: 4px;">
               <div style="display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #64748b;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                Imágenes del Producto (máx. 5 imágenes, 5MB c/u)
+                Imágenes del Producto (máx. 5 imágenes, 1MB c/u - Optimizado para SEO)
               </div>
               
               <!-- Botón de subida -->
