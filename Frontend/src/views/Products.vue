@@ -750,6 +750,11 @@ const saveProduct = async () => {
   try {
     const payload = { ...form }
 
+    // Fix empty marcaId parsing error in backend
+    if (!payload.marcaId) {
+      payload.marcaId = null
+    }
+
     // Si es Costal, hacemos las conversiones de costo y stock a Kilogramos para la base de datos
     if (payload.tipoProducto === 'Costal' && payload.kilosPorCostal > 0) {
       payload.precioCosto = Number((payload.precioCostoCostal / payload.kilosPorCostal).toFixed(4))
@@ -772,13 +777,30 @@ const saveProduct = async () => {
       },
       body: JSON.stringify(payload)
     })
-    if (!res.ok) throw new Error('Error al guardar el producto.')
+    
+    if (!res.ok) {
+      let errorMsg = 'Error al guardar el producto.';
+      try {
+        const errData = await res.json();
+        if (errData.errors) {
+          const firstErrorKey = Object.keys(errData.errors)[0];
+          errorMsg = errData.errors[firstErrorKey][0];
+        } else if (errData.message) {
+          errorMsg = errData.message;
+        } else if (errData.title) {
+          errorMsg = errData.title;
+        }
+      } catch (e) {
+        // ignore
+      }
+      throw new Error(errorMsg);
+    }
     
     showModal.value = false
     alert(isEdit.value ? '¡Producto actualizado con éxito!' : '¡Producto agregado al inventario con éxito!')
     fetchProducts()
   } catch (err) {
-    alert(err.message)
+    alert(err.message || 'Error de conexión con el servidor.')
   }
 }
 
@@ -998,22 +1020,27 @@ onMounted(() => {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 2vh 2vw;
 }
 
 .modal-card {
-  width: 100%;
-  max-width: 820px;
+  width: 92%;
+  max-width: 840px;
+  max-height: 90vh;
+  overflow-y: auto;
   background-color: var(--bg-card);
-  padding: 20px;
+  padding: 1.5rem;
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   text-align: left;
 }
 
