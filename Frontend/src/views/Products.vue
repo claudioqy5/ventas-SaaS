@@ -139,8 +139,8 @@
           <h2 class="modal-title" style="margin-bottom: 12px; font-size: 1.3rem;">{{ isEdit ? '✏️ Editar Producto' : '⬦ Registrar Producto' }}</h2>
           <form @submit.prevent="saveProduct" class="compact-form">
 
-            <!-- FILA 1: Nombre (span 2) y Categoría (span 1) -->
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;">
+            <!-- FILA 1: Nombre (span 2), Categoría (span 1), Marca (span 1) -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px;">
               <div class="field">
                 <label>Nombre del Producto</label>
                 <input v-model="form.nombre" type="text" placeholder="Ej. Alimento Royal Canin" required />
@@ -150,6 +150,13 @@
                 <select v-model="form.categoriaId" required>
                   <option value="" disabled>Seleccione...</option>
                   <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Marca (Opcional)</label>
+                <select v-model="form.marcaId">
+                  <option value="">Ninguna</option>
+                  <option v-for="brand in brands" :key="brand.id" :value="brand.id">{{ brand.nombre }}</option>
                 </select>
               </div>
             </div>
@@ -845,9 +852,24 @@ const handleLogout = () => {
   router.push('/login')
 }
 
+const brands = ref([])
+const fetchBrands = async () => {
+  try {
+    const res = await fetch(`${API_URL}/api/brands`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (!res.ok) throw new Error()
+    brands.value = await res.json()
+  } catch (err) {
+    console.error('Error fetching brands')
+  }
+}
+
 onMounted(() => {
   fetchProducts()
   fetchCategories()
+  fetchBrands()
+  fetchAttributeTypes()
   fetchInventoryStats()
 })
 </script>
