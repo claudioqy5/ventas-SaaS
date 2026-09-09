@@ -138,8 +138,9 @@
         <div class="modal-card card">
           <h2 class="modal-title" style="margin-bottom: 12px; font-size: 1.3rem;">{{ isEdit ? '✏️ Editar Producto' : '⬦ Registrar Producto' }}</h2>
           <form @submit.prevent="saveProduct" class="compact-form">
-
-            <!-- FILA 1: Nombre (span 2), Categoría (span 1), Marca (span 1) -->
+            <div style="display: grid; grid-template-columns: 2fr 1.1fr; gap: 24px; margin-bottom: 16px;">
+              <!-- COLUMNA IZQUIERDA: Datos Básicos -->
+              <div style="display: flex; flex-direction: column; gap: 12px;">
             <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px;">
               <div class="field">
                 <label>Nombre del Producto</label>
@@ -343,34 +344,37 @@
               </div>
             </div>
 
-            <!-- ATRIBUTOS DINÁMICOS -->
-            <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; margin-top: 12px; margin-bottom: 12px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">
-                  📋 Especificaciones (Opcional)
-                </div>
-                <button type="button" @click="form.atributos.push({nombre: '', valor: ''})" class="btn btn-secondary-compact" style="font-size: 0.75rem; padding: 4px 8px;">➕ Añadir Atributo</button>
-              </div>
-              <div v-if="form.atributos.length === 0" style="font-size: 0.8rem; color: var(--text-muted);">Sin atributos. Puedes agregar color, material, talla, etc.</div>
-              <div v-for="(attr, idx) in form.atributos" :key="idx" style="display: grid; grid-template-columns: 1fr 1fr 30px; gap: 8px; margin-bottom: 8px; align-items: center;">
-                <select v-model="attr.nombre" style="padding: 6px; font-size: 0.85rem; border-radius: 4px; border: 1px solid #cbd5e1;" required>
-                  <option value="" disabled>Seleccionar Atributo</option>
-                  <option v-for="type in attributeTypes" :key="type.id" :value="type.nombre">{{ type.nombre }}</option>
-                </select>
-                <select v-model="attr.valor" style="padding: 6px; font-size: 0.85rem; border-radius: 4px; border: 1px solid #cbd5e1;" required>
-                  <option value="" disabled>Seleccionar Valor</option>
-                  <template v-for="type in attributeTypes" :key="'opt-'+type.id">
-                    <template v-if="type.nombre === attr.nombre">
-                      <option v-for="opt in type.opciones" :key="opt" :value="opt">{{ opt }}</option>
-                    </template>
-                  </template>
-                </select>
-                <button type="button" @click="form.atributos.splice(idx, 1)" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 6px; cursor: pointer;">✕</button>
               </div>
             </div>
 
-            <!-- FILA 6: Subida de imágenes múltiples -->
-            <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; margin-top: 4px;">
+            <!-- COLUMNA DERECHA: Especificaciones -->
+            <div>
+              <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; height: 100%;">
+                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                  📋 Especificaciones
+                </div>
+                
+                <div v-if="form.atributos.length === 0" style="font-size: 0.8rem; color: var(--text-muted);">
+                  Cargando especificaciones...
+                </div>
+                
+                <div v-for="(attr, idx) in form.atributos" :key="idx" style="margin-bottom: 12px;">
+                  <label style="display: block; font-size: 0.78rem; font-weight: 500; margin-bottom: 4px; color: #334155;">{{ attr.nombre }}</label>
+                  <select v-model="attr.valor" style="width: 100%; padding: 8px; font-size: 0.85rem; border-radius: 6px; border: 1px solid #cbd5e1; outline: none; background-color: #fff; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                    <option value="">No aplica / En blanco</option>
+                    <template v-for="type in attributeTypes" :key="'opt-'+type.id">
+                      <template v-if="type.nombre === attr.nombre">
+                        <option v-for="opt in type.opciones" :key="opt" :value="opt">{{ opt }}</option>
+                      </template>
+                    </template>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FILA INFERIOR: Subida de imágenes múltiples -->
+          <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
               <div style="display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #64748b;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                 Imágenes del Producto (máx. 5 imágenes, 1MB c/u - Optimizado para SEO)
@@ -643,6 +647,18 @@ const selectTipo = (tipo) => {
   }
 }
 
+// Inicializar atributos con valores en blanco por defecto
+const initializeAttributes = (existingAttributes = []) => {
+  if (!attributeTypes.value || attributeTypes.value.length === 0) return [];
+  return attributeTypes.value.map(type => {
+    const existing = existingAttributes.find(a => a.nombre === type.nombre);
+    return {
+      nombre: type.nombre,
+      valor: existing ? existing.valor : ''
+    };
+  });
+};
+
 const fetchProducts = async () => {
   try {
     const res = await fetch(`${API_URL}/api/products`, {
@@ -729,7 +745,7 @@ const openAddModal = () => {
   form.categoriaId = ''
   form.marcaId = ''
   form.imagenUrl = ''
-  form.atributos = []
+  form.atributos = initializeAttributes([])
   form.imagenes = []
   form.precioOferta = 0
   form.tipoProducto = 'Unidad'
@@ -753,7 +769,7 @@ const openEditModal = (product) => {
   form.categoriaId = product.categoriaId
   form.marcaId = product.marcaId || ''
   form.imagenUrl = product.imagenUrl || ''
-  form.atributos = product.atributos ? JSON.parse(JSON.stringify(product.atributos)) : []
+  form.atributos = initializeAttributes(product.atributos || [])
   form.imagenes = product.imagenes || []
   form.precioOferta = product.precioOferta || 0
   form.tipoProducto = product.tipoProducto || 'Unidad'
@@ -787,6 +803,9 @@ const saveProduct = async () => {
     if (!payload.marcaId) {
       payload.marcaId = null
     }
+
+    // Filtrar atributos vacíos antes de enviarlos al backend para mantener limpia la DB
+    payload.atributos = payload.atributos.filter(a => a.valor && a.valor.trim() !== '')
 
     // Si es Costal, hacemos las conversiones de costo y stock a Kilogramos para la base de datos
     if (payload.tipoProducto === 'Costal' && payload.kilosPorCostal > 0) {
