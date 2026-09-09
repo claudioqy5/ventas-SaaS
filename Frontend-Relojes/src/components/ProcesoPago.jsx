@@ -210,7 +210,84 @@ export default function ProcesoPago({ items = [], onUpdateQuantity, onRemoveItem
                 </div>
               </div>
             )}
-            {currentStep > 2 && (
+            {currentStep === 3 && (
+              <div style={{ padding: '10px 0' }}>
+                <h2 style={{ fontSize: '1.2rem', color: 'var(--c-obsidian)', fontWeight: 600, marginBottom: '20px' }}>Datos de Entrega</h2>
+                <p style={{ fontSize: '0.85rem', color: 'var(--c-taupe)', marginBottom: '30px' }}>
+                  Indícanos dónde deseas recibir tu pedido. Todos nuestros envíos cuentan con custodia y seguro VIP.
+                </p>
+
+                <div style={{ marginBottom: '25px', display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '15px', border: '2px solid var(--c-blush)', borderRadius: '8px', cursor: 'pointer', flex: 1, minWidth: '200px', backgroundColor: 'rgba(212, 175, 55, 0.05)' }}>
+                    <input type="radio" name="deliveryType" defaultChecked style={{ accentColor: 'var(--c-obsidian)' }} />
+                    <span style={{ fontSize: '0.9rem', color: 'var(--c-obsidian)', fontWeight: 600 }}>Envío a Domicilio</span>
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '15px', border: '1px solid var(--border-light)', borderRadius: '8px', cursor: 'pointer', flex: 1, minWidth: '200px' }}>
+                    <input type="radio" name="deliveryType" style={{ accentColor: 'var(--c-obsidian)' }} />
+                    <span style={{ fontSize: '0.9rem', color: 'var(--c-taupe)', fontWeight: 500 }}>Recojo en Tienda Boutique</span>
+                  </label>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px', marginBottom: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Departamento *</label>
+                    <select style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)', backgroundColor: '#fff', color: 'var(--c-obsidian)' }}>
+                      <option value="">Seleccionar</option>
+                      <option value="LIMA">Lima</option>
+                      <option value="AREQUIPA">Arequipa</option>
+                      <option value="CUSCO">Cusco</option>
+                      <option value="PIURA">Piura</option>
+                      <option value="LA_LIBERTAD">La Libertad</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Provincia *</label>
+                    <select style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)', backgroundColor: '#fff', color: 'var(--c-obsidian)' }}>
+                      <option value="">Seleccionar</option>
+                      <option value="LIMA">Lima</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Distrito *</label>
+                    <select style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)', backgroundColor: '#fff', color: 'var(--c-obsidian)' }}>
+                      <option value="">Seleccionar</option>
+                      <option value="MIRAFLORES">Miraflores</option>
+                      <option value="SAN_ISIDRO">San Isidro</option>
+                      <option value="SANTIAGO_DE_SURCO">Santiago de Surco</option>
+                      <option value="LA_MOLINA">La Molina</option>
+                      <option value="SAN_BORJA">San Borja</option>
+                      <option value="BARRANCO">Barranco</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Dirección de Entrega *</label>
+                  <input type="text" style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Av., Calle, Jr. / N° / Dpto" />
+                </div>
+
+                <div style={{ marginBottom: '30px' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Referencia (Opcional)</label>
+                  <input type="text" style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Ej. Frente a parque, rejas verdes, etc." />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px solid var(--border-light)' }}>
+                  <button 
+                    onClick={() => setCurrentStep(2)} 
+                    style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', color: 'var(--c-taupe)', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}
+                  >
+                    <ChevronLeft size={18} /> Volver a datos personales
+                  </button>
+                  <button 
+                    onClick={() => setCurrentStep(4)} 
+                    style={{ padding: '14px 28px', background: 'var(--c-obsidian)', color: 'var(--text-light)', border: 'none', borderRadius: '6px', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.05em', cursor: 'pointer' }}
+                  >
+                    CONTINUAR
+                  </button>
+                </div>
+              </div>
+            )}
+            {currentStep > 3 && (
               <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--c-taupe)' }}>
                 <p style={{ fontSize: '1.2rem', color: 'var(--c-obsidian)', fontWeight: 600, marginBottom: '10px' }}>
                   Paso: {steps.find(s => s.id === currentStep).label}
