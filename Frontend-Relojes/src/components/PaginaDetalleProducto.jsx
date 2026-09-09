@@ -90,6 +90,11 @@ export default function PaginaDetalleProducto({
   const brandName = product.marca || product.categoria || 'HAUTE HORLOGERIE';
   const skuCode = `REL${String(product.id).padStart(7, '0')}`;
 
+  // Variantes del mismo modelo
+  const variants = (product.codigoModelo && allProducts.length > 0)
+    ? allProducts.filter(p => p.codigoModelo === product.codigoModelo)
+    : [];
+
   // Productos relacionados
   const relatedProducts = allProducts
     .filter((item) => item.id !== product.id)
@@ -331,9 +336,56 @@ export default function PaginaDetalleProducto({
             }}>
               SKU: {skuCode}
             </div>
+            <p style={{ fontSize: '0.9rem', color: 'var(--c-taupe)', lineHeight: 1.6, marginBottom: '28px', fontFamily: 'var(--font-serif)' }}>
+              {product.descripcion}
+            </p>
 
-            {/* Sección de Precios */}
-            <div style={{ marginBottom: '22px' }}>
+            {/* Variantes (Circulitos de colores/modelos) */}
+            {variants.length > 1 && (
+              <div style={{ marginBottom: '28px' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--c-obsidian)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '10px' }}>
+                  Otras versiones disponibles
+                </span>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  {variants.map(variant => {
+                    const isSelected = product.id === variant.id;
+                    const vImage = variant.imagenUrl || (variant.imagenes && variant.imagenes[0]);
+                    return (
+                      <div
+                        key={variant.id}
+                        onClick={() => onSelectProduct && onSelectProduct(variant)}
+                        title={variant.nombre}
+                        style={{
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: '50%',
+                          padding: '2px',
+                          border: isSelected ? '2px solid var(--c-indigo)' : '1px solid var(--border-light)',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <div style={{
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '50%',
+                          backgroundImage: `url(${vImage})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                        }} />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Sección de Precio */}
+            <div style={{ marginBottom: '24px' }}>
               {product.precioOferta > 0 ? (
                 <>
                   <div style={{ fontSize: '1.05rem', textDecoration: 'line-through', color: 'var(--c-taupe)', opacity: 0.6, marginBottom: '2px', fontFamily: 'var(--font-serif)' }}>

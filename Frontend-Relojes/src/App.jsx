@@ -333,6 +333,23 @@ export default function App({ initialCategory, initialProductId, initialView = '
       });
   }, [products, selectedCategory, searchQuery, sortBy]);
 
+  const groupedProducts = useMemo(() => {
+    const groups = {};
+    const result = [];
+    
+    filteredProducts.forEach(p => {
+      // Usar codigoModelo si existe, de lo contrario usar el ID para que no se agrupe
+      const key = p.codigoModelo ? p.codigoModelo : p.id;
+      if (!groups[key]) {
+        groups[key] = { main: p, variants: [p] };
+        result.push(groups[key]);
+      } else {
+        groups[key].variants.push(p);
+      }
+    });
+    return result;
+  }, [filteredProducts]);
+
   // Carrito
   const handleAddToCart = (product, qty = 1) => {
     setCart((prev) => {
@@ -645,10 +662,11 @@ export default function App({ initialCategory, initialProductId, initialView = '
                 ) : (
                   <>
                     <div className="grid-4-products">
-                      {(showFullCatalog ? filteredProducts : filteredProducts.slice(0, 4)).map((product) => (
+                      {(showFullCatalog ? groupedProducts : groupedProducts.slice(0, 4)).map((group) => (
                         <TarjetaProducto
-                          key={product.id}
-                          product={product}
+                          key={group.main.id}
+                          product={group.main}
+                          variants={group.variants}
                           onQuickView={handleSelectProduct}
                           onAddToCart={handleAddToCart}
                           onWhatsAppInquiry={handleWhatsAppInquiry}

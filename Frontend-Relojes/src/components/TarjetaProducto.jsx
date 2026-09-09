@@ -4,10 +4,19 @@ import confetti from 'canvas-confetti';
 
 export default function TarjetaProducto({
   product,
+  variants = [],
   onQuickView,
   onAddToCart,
   onWhatsAppInquiry
 }) {
+  const [selectedVariant, setSelectedVariant] = React.useState(product);
+
+  React.useEffect(() => {
+    setSelectedVariant(product);
+  }, [product]);
+
+  const activeProduct = selectedVariant || product;
+
   const [isHovered, setIsHovered] = useState(false);
   const [isImgHovered, setIsImgHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
@@ -15,8 +24,8 @@ export default function TarjetaProducto({
   const [added, setAdded] = useState(false);
 
   // Imágenes del producto (Foto 1 y Foto 2 si existe)
-  const primaryImage = product.imagenUrl || (product.imagenes && product.imagenes[0]) || '/placeholder.jpg';
-  const secondImage = product.imagenes && product.imagenes.length > 1 ? product.imagenes[1] : null;
+  const primaryImage = activeProduct.imagenUrl || (activeProduct.imagenes && activeProduct.imagenes[0]) || '/placeholder.jpg';
+  const secondImage = activeProduct.imagenes && activeProduct.imagenes.length > 1 ? activeProduct.imagenes[1] : null;
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -37,7 +46,7 @@ export default function TarjetaProducto({
 
   const handleAdd = (e) => {
     e.stopPropagation();
-    onAddToCart(product);
+    onAddToCart(activeProduct);
     setAdded(true);
 
     confetti({
@@ -57,7 +66,7 @@ export default function TarjetaProducto({
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onClick={() => onQuickView(product)}
+      onClick={() => onQuickView(activeProduct)}
       style={{
         position: 'relative',
         borderRadius: '20px',
@@ -110,7 +119,7 @@ export default function TarjetaProducto({
             padding: '4px 10px',
             borderRadius: '9999px'
           }}>
-            {product.etiqueta || 'Haute Horlogerie'}
+            {activeProduct.etiqueta || 'Haute Horlogerie'}
           </span>
 
           <span style={{
@@ -119,16 +128,16 @@ export default function TarjetaProducto({
             gap: '4px',
             fontSize: '0.74rem',
             fontWeight: 600,
-            color: product.stock > 0 ? '#10b981' : '#f43f5e'
+            color: activeProduct.stock > 0 ? '#10b981' : '#f43f5e'
           }}>
             <span style={{
               width: '6px',
               height: '6px',
               borderRadius: '50%',
-              backgroundColor: product.stock > 0 ? '#10b981' : '#f43f5e',
+              backgroundColor: activeProduct.stock > 0 ? '#10b981' : '#f43f5e',
               display: 'inline-block'
             }}></span>
-            {product.stock > 0 ? `${product.stock} disponibles` : 'Agotado'}
+            {activeProduct.stock > 0 ? `${activeProduct.stock} disponibles` : 'Agotado'}
           </span>
         </div>
 
@@ -155,7 +164,7 @@ export default function TarjetaProducto({
           {/* Foto Principal */}
           <img
             src={primaryImage}
-            alt={`Reloj de Lujo ${product.nombre}`}
+            alt={`Reloj de Lujo ${activeProduct.nombre}`}
             style={{
               position: 'absolute',
               top: 0,
@@ -172,7 +181,7 @@ export default function TarjetaProducto({
           {secondImage && (
             <img
               src={secondImage}
-              alt={`Reloj de Lujo ${product.nombre} - Ángulo 2`}
+              alt={`Reloj de Lujo ${activeProduct.nombre} - Ángulo 2`}
               style={{
                 position: 'absolute',
                 top: 0,
@@ -199,7 +208,7 @@ export default function TarjetaProducto({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onQuickView(product);
+                onQuickView(activeProduct);
               }}
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.95)',
@@ -237,7 +246,7 @@ export default function TarjetaProducto({
             fontWeight: 500,
             marginBottom: '6px'
           }}>
-            {product.categoria || 'Reloj de Lujo'}
+            {activeProduct.categoria || 'Reloj de Lujo'}
           </div>
 
           <h3 className="font-serif" style={{
@@ -248,7 +257,7 @@ export default function TarjetaProducto({
             marginBottom: '8px',
             lineHeight: 1.3
           }}>
-            {product.nombre}
+            {activeProduct.nombre}
           </h3>
 
           <p style={{
@@ -261,8 +270,50 @@ export default function TarjetaProducto({
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden'
           }}>
-            {product.descripcion}
+            {activeProduct.descripcion}
           </p>
+
+          {/* Variantes (Circulitos de colores/modelos) */}
+          {variants.length > 1 && (
+            <div style={{ display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
+              {variants.map(variant => {
+                const isSelected = activeProduct.id === variant.id;
+                const vImage = variant.imagenUrl || (variant.imagenes && variant.imagenes[0]);
+                return (
+                  <div
+                    key={variant.id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedVariant(variant);
+                    }}
+                    title={variant.nombre}
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      padding: '2px',
+                      border: isSelected ? '1px solid var(--c-indigo)' : '1px solid transparent',
+                      cursor: 'pointer',
+                      transition: 'border-color 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '50%',
+                      backgroundImage: `url(${vImage})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    }} />
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 
@@ -277,14 +328,14 @@ export default function TarjetaProducto({
             Valor de Catálogo
           </span>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
-            {product.precioOferta > 0 ? (
+            {activeProduct.precioOferta > 0 ? (
               <>
                 <span style={{ fontSize: '0.85rem', textDecoration: 'line-through', color: 'var(--c-taupe)', opacity: 0.6, fontFamily: 'var(--font-serif)', whiteSpace: 'nowrap' }}>
-                  S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                  S/ {Number(activeProduct.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span className="font-serif" style={{ fontSize: '1.28rem', fontWeight: 600, color: 'var(--c-indigo)', whiteSpace: 'nowrap' }}>
-                    S/ {Number(product.precioOferta).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                    S/ {Number(activeProduct.precioOferta).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                   </span>
                   <span style={{
                     fontSize: '0.62rem',
@@ -296,13 +347,13 @@ export default function TarjetaProducto({
                     fontWeight: 600,
                     letterSpacing: '0.04em'
                   }}>
-                    -{Math.round((1 - product.precioOferta / product.precio) * 100)}%
+                    -{Math.round((1 - activeProduct.precioOferta / activeProduct.precio) * 100)}%
                   </span>
                 </div>
               </>
             ) : (
               <span className="font-serif" style={{ fontSize: '1.28rem', fontWeight: 600, color: 'var(--c-indigo)', whiteSpace: 'nowrap' }}>
-                S/ {Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                S/ {Number(activeProduct.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
               </span>
             )}
           </div>
@@ -312,7 +363,7 @@ export default function TarjetaProducto({
         <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '8px' }}>
           <button
             onClick={handleAdd}
-            disabled={product.stock <= 0}
+            disabled={activeProduct.stock <= 0}
             style={{
               background: added
                 ? '#10b981'
@@ -336,10 +387,10 @@ export default function TarjetaProducto({
               boxShadow: '0 4px 14px rgba(11, 11, 12, 0.2)'
             }}
             onMouseEnter={(e) => {
-              if (!added && product.stock > 0) e.currentTarget.style.background = 'var(--c-indigo-hover)';
+              if (!added && activeProduct.stock > 0) e.currentTarget.style.background = 'var(--c-indigo-hover)';
             }}
             onMouseLeave={(e) => {
-              if (!added && product.stock > 0) e.currentTarget.style.background = 'var(--c-indigo)';
+              if (!added && activeProduct.stock > 0) e.currentTarget.style.background = 'var(--c-indigo)';
             }}
           >
             {added ? (
@@ -358,7 +409,7 @@ export default function TarjetaProducto({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onWhatsAppInquiry(product);
+              onWhatsAppInquiry(activeProduct);
             }}
             title="Consultar disponibilidad con el Concierge por WhatsApp"
             style={{

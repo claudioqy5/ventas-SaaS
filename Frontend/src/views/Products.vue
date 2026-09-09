@@ -169,7 +169,7 @@
               </div>
               <div class="field">
                 <label>Agrupador (Modelo)</label>
-                <input v-model="form.codigoModelo" type="text" placeholder="Ej. CASIO-VINT" />
+                <input v-model="form.codigoModelo" @blur="handleCodigoModeloBlur" type="text" placeholder="Ej. CASIO-VINT" />
               </div>
               <div class="field">
                 <label>Tipo de Producto</label>
@@ -200,7 +200,7 @@
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>{{ isEdit ? 'Stock' : 'Inicial (Costales)' }}</label>
-                  <input v-model.number="form.stock" type="number" step="0.1" min="0" :disabled="isEdit" required />
+                  <input v-model.number="form.stock" type="number" step="0.1" min="0" required />
                 </div>
               </div>
 
@@ -255,7 +255,7 @@
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>{{ isEdit ? 'Stock' : 'Inicial (Und)' }}</label>
-                  <input v-model.number="form.stock" type="number" step="1" min="0" :disabled="isEdit" required />
+                  <input v-model.number="form.stock" type="number" step="1" min="0" required />
                 </div>
               </div>
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
@@ -595,6 +595,32 @@ const tiposProducto = [
   { valor: 'Costal',   label: 'Costal',   icono: '🎒', descripcion: 'Precio por kg suelto Y precio especial por costal completo' },
   { valor: 'Servicio', label: 'Servicio', icono: '🐾', descripcion: 'No descuenta inventario (ej: baño, grooming, consulta)' },
 ]
+
+// Autocompletar cuando se teclea un codigo de modelo que ya existe
+const handleCodigoModeloBlur = () => {
+  if (isEdit.value || !form.codigoModelo) return;
+  const existing = products.value.find(p => p.codigoModelo === form.codigoModelo);
+  if (existing) {
+    form.nombre = existing.nombre;
+    form.categoriaId = existing.categoriaId;
+    form.marcaId = existing.marcaId;
+    form.precioCosto = existing.precioCosto;
+    form.precio = existing.precio;
+    form.precioOferta = existing.precioOferta;
+    form.stockMinimo = existing.stockMinimo;
+    form.descripcion = existing.descripcion;
+    form.tipoProducto = existing.tipoProducto;
+    form.unidadMedida = existing.unidadMedida;
+    form.esServicio = existing.esServicio;
+    
+    // Si tiene atributos, copiar todos excepto el color
+    if (existing.atributos && existing.atributos.length > 0) {
+      form.atributos = existing.atributos
+        .filter(a => a.nombre.toLowerCase() !== 'color')
+        .map(a => ({ ...a }));
+    }
+  }
+};
 
 // Cuando el usuario selecciona un tipo, actualiza automaticamente la unidad de medida
 const selectTipo = (tipo) => {
