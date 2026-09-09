@@ -344,7 +344,6 @@
               </div>
             </div>
 
-              </div>
             </div>
 
             <!-- COLUMNA DERECHA: Especificaciones -->
