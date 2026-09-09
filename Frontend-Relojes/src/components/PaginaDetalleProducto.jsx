@@ -585,8 +585,10 @@ export default function PaginaDetalleProducto({
               <button
                 onClick={() => onWhatsAppInquiry(product)}
                 style={{
-                  background: 'none',
-                  border: 'none',
+                  background: 'rgba(37, 211, 102, 0.08)',
+                  border: '1px solid rgba(37, 211, 102, 0.3)',
+                  borderRadius: '20px',
+                  padding: '6px 14px',
                   color: '#15803d',
                   fontFamily: 'var(--font-serif)',
                   fontSize: '0.78rem',
@@ -594,7 +596,18 @@ export default function PaginaDetalleProducto({
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px'
+                  gap: '6px',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(37, 211, 102, 0.16)';
+                  e.currentTarget.style.borderColor = 'rgba(37, 211, 102, 0.6)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(37, 211, 102, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(37, 211, 102, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
                 <MessageCircle size={16} />

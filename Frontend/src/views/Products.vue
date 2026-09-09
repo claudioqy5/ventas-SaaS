@@ -67,11 +67,38 @@
 
       <!-- Seccion de filtros de busqueda -->
       <div class="table-filters card">
-        <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código o descripción..." class="filter-input" />
+        <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código, modelo o color..." class="filter-input" />
         <select v-model="selectedCategory" class="filter-select">
           <option value="">Todas las Categorías</option>
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
         </select>
+
+        <!-- Selector de Vista: Agrupado por Modelo vs Lista Completa -->
+        <div class="view-mode-pill-group">
+          <button 
+            type="button" 
+            :class="['btn-view-pill', viewMode === 'grouped' ? 'active' : '']"
+            @click="viewMode = 'grouped'"
+            title="Agrupar variantes por modelo">
+            🗂️ Agrupado
+          </button>
+          <button 
+            type="button" 
+            :class="['btn-view-pill', viewMode === 'flat' ? 'active' : '']"
+            @click="viewMode = 'flat'"
+            title="Ver lista plana individual">
+            📋 Todo
+          </button>
+        </div>
+
+        <button 
+          v-if="viewMode === 'grouped'" 
+          type="button" 
+          class="btn-expand-all-pill"
+          @click="toggleAllExpand"
+          title="Expandir o colapsar todos los modelos">
+          {{ areAllExpanded ? '▾ Colapsar Todo' : '▸ Expandir Todo' }}
+        </button>
       </div>
 
       <!-- Tabla de inventario de productos -->
@@ -82,53 +109,252 @@
         <table v-else class="data-table">
           <thead>
             <tr>
-              <th style="width: 50px;">N°</th>
-              <th>Código</th>
+              <th style="width: 65px;">N°</th>
+              <th style="width: 135px;">Código</th>
               <th>Producto</th>
-              <th>Costo</th>
-              <th>Precio Venta</th>
-              <th>Stock</th>
-              <th>Estado</th>
-              <th v-if="authStore.hasPermission('modificar_productos')">Acciones</th>
+              <th style="width: 110px;">Costo</th>
+              <th style="width: 125px;">Precio Venta</th>
+              <th style="width: 125px;">Stock</th>
+              <th style="width: 120px;">Estado</th>
+              <th v-if="authStore.hasPermission('modificar_productos')" style="width: 95px;">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(prod, index) in filteredProducts" :key="prod.id">
-              <td><strong>{{ index + 1 }}</strong></td>
-              <td><code>{{ prod.codigoBarras }}</code></td>
-              <td>
-                <div class="product-info-cell" style="cursor: pointer;" @click="openImageGallery(prod)">
-                  <img :src="prod.imagenUrl || defaultImage" class="product-thumbnail" alt="thumbnail" />
-                  <strong>{{ prod.nombre }}</strong>
-                </div>
-              </td>
-              <td>S/. {{ prod.precioCosto.toFixed(2) }}</td>
-              <td>
-                <span v-if="prod.precioOferta > 0" style="text-decoration: line-through; color: #a0aec0; font-size: 0.85em; display: block; margin-bottom: 2px;">S/. {{ prod.precio.toFixed(2) }}</span>
-                <span :style="{ color: prod.precioOferta > 0 ? '#10b981' : 'inherit', fontWeight: prod.precioOferta > 0 ? '600' : 'normal' }">
-                  S/. {{ prod.precioOferta > 0 ? prod.precioOferta.toFixed(2) : prod.precio.toFixed(2) }}
-                </span>
-              </td>
-              <td>
-                <span :class="['stock-badge', prod.stock <= prod.stockMinimo ? 'low' : 'ok']">
-                  <template v-if="prod.esServicio">— Servicio —</template>
-                  <template v-else-if="prod.tipoProducto === 'Costal'">
-                    {{ (Number(prod.stock) / Number(prod.kilosPorCostal || 1)).toFixed(1) }} Costal(es)
+            <!-- VISTA AGRUPADA POR MODELO (ACORDEÓN) -->
+            <template v-if="viewMode === 'grouped'">
+              <template v-for="(group, groupIndex) in groupedProductsList" :key="group.key">
+                <!-- CASO 1: MODELO CON MÚLTIPLES VARIANTES -->
+                <template v-if="group.isGroup && group.items.length > 1">
+                  <!-- Fila Maestra / Cabecera del Modelo -->
+                  <tr class="model-group-row" @click="toggleModelExpand(group.key)">
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 4px;">
+                        <button 
+                          type="button" 
+                          class="btn-expand-arrow" 
+                          :class="{ 'expanded': isModelExpanded(group.key) }"
+                          title="Abrir o cerrar variantes"
+                          @click.stop="toggleModelExpand(group.key)">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                          </svg>
+                        </button>
+                        <strong>{{ groupIndex + 1 }}</strong>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="model-code-badge" :title="`Modelo: ${group.codigoModelo}`">
+                        📦 {{ group.codigoModelo }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="product-info-cell">
+                        <img :src="group.imagenUrl || defaultImage" class="product-thumbnail" alt="thumbnail" @click.stop="openImageGallery(group.items[0])" />
+                        <div>
+                          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <strong style="font-size: 0.95rem;">{{ group.nombre }}</strong>
+                            <span class="variants-count-pill">{{ group.items.length }} variantes</span>
+                          </div>
+                          <!-- Miniaturas con preview de colores disponibles -->
+                          <div class="model-variants-preview" @click.stop>
+                            <div 
+                              v-for="v in group.previewImages" 
+                              :key="v.id" 
+                              class="mini-variant-dot"
+                              :title="v.color ? `${v.color} (Stock: ${v.stock})` : `Stock: ${v.stock}`">
+                              <img :src="v.img" alt="variante" />
+                              <span v-if="v.color" class="mini-variant-color-label">{{ v.color }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span v-if="group.precioCostoMin === group.precioCostoMax">
+                        S/. {{ group.precioCostoMin.toFixed(2) }}
+                      </span>
+                      <span v-else>
+                        S/. {{ group.precioCostoMin.toFixed(2) }} - {{ group.precioCostoMax.toFixed(2) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span v-if="group.precioMin === group.precioMax" style="font-weight: 600;">
+                        S/. {{ group.precioMin.toFixed(2) }}
+                      </span>
+                      <span v-else style="font-weight: 600;">
+                        S/. {{ group.precioMin.toFixed(2) }} - {{ group.precioMax.toFixed(2) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span :class="['stock-badge', group.anyLowStock ? 'low' : 'ok']" style="font-weight: 600;">
+                        {{ group.totalStock }} {{ group.unidadMedida }} (Total)
+                      </span>
+                    </td>
+                    <td>
+                      <span v-if="group.anyLowStock" class="status-indicator low">⚠ Reabastecer</span>
+                      <span v-else class="status-indicator ok">✓ Activo</span>
+                    </td>
+                    <td v-if="authStore.hasPermission('modificar_productos')">
+                      <button 
+                        type="button" 
+                        class="btn-toggle-subtable" 
+                        @click.stop="toggleModelExpand(group.key)">
+                        {{ isModelExpanded(group.key) ? 'Ocultar' : 'Ver (' + group.items.length + ')' }}
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Subfilas Desplegadas con Sangría de cada Variante -->
+                  <template v-if="isModelExpanded(group.key)">
+                    <tr v-for="(item, vIdx) in group.items" :key="item.id" class="variant-sub-row">
+                      <td class="sub-index-cell">
+                        <span class="tree-connector">↳</span> {{ groupIndex + 1 }}.{{ vIdx + 1 }}
+                      </td>
+                      <td>
+                        <code>{{ item.codigoBarras }}</code>
+                      </td>
+                      <td>
+                        <div class="product-info-cell pl-variant">
+                          <img :src="item.imagenUrl || defaultImage" class="product-thumbnail sm" alt="thumbnail" @click="openImageGallery(item)" />
+                          <div>
+                            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                              <span v-if="getProductColor(item)" class="color-attribute-tag">
+                                🎨 {{ getProductColor(item) }}
+                              </span>
+                              <span style="font-size: 0.9rem; color: var(--text-primary);">{{ item.nombre }}</span>
+                            </div>
+                            <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">
+                              Código SKU: {{ item.codigoBarras }}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>S/. {{ item.precioCosto.toFixed(2) }}</td>
+                      <td>
+                        <span v-if="item.precioOferta > 0" style="text-decoration: line-through; color: #a0aec0; font-size: 0.8em; display: block;">
+                          S/. {{ item.precio.toFixed(2) }}
+                        </span>
+                        <span :style="{ color: item.precioOferta > 0 ? '#10b981' : 'inherit', fontWeight: item.precioOferta > 0 ? '600' : 'normal' }">
+                          S/. {{ item.precioOferta > 0 ? item.precioOferta.toFixed(2) : item.precio.toFixed(2) }}
+                        </span>
+                      </td>
+                      <td>
+                        <span :class="['stock-badge', item.stock <= item.stockMinimo ? 'low' : 'ok']">
+                          {{ Number(item.stock).toFixed(0) }} {{ item.unidadMedida }}
+                        </span>
+                      </td>
+                      <td>
+                        <span v-if="item.stock <= item.stockMinimo" class="status-indicator low">⚠ Reabastecer</span>
+                        <span v-else class="status-indicator ok">✓ Activo</span>
+                      </td>
+                      <td v-if="authStore.hasPermission('modificar_productos')">
+                        <div class="actions-cell">
+                          <button @click="openEditModal(item)" class="btn-action edit" title="Editar Variante">✏️</button>
+                          <button @click="confirmDelete(item.id)" class="btn-action delete" title="Eliminar Variante">🗑️</button>
+                        </div>
+                      </td>
+                    </tr>
                   </template>
-                  <template v-else>{{ Number(prod.stock).toFixed(0) }} {{ prod.unidadMedida }}</template>
-                </span>
-              </td>
-              <td>
-                <span v-if="prod.stock <= prod.stockMinimo" class="status-indicator low">⚠ Reabastecer</span>
-                <span v-else class="status-indicator ok">✓ Activo</span>
-              </td>
-              <td v-if="authStore.hasPermission('modificar_productos')">
-                <div class="actions-cell">
-                  <button @click="openEditModal(prod)" class="btn-action edit" title="Editar">✏️</button>
-                  <button @click="confirmDelete(prod.id)" class="btn-action delete" title="Eliminar">🗑️</button>
-                </div>
-              </td>
-            </tr>
+                </template>
+
+                <!-- CASO 2: PRODUCTO INDIVIDUAL DIRECTO (SIN MÚLTIPLES VARIANTES) -->
+                <template v-else>
+                  <tr v-for="prod in group.items" :key="prod.id" class="standalone-row">
+                    <td><strong>{{ groupIndex + 1 }}</strong></td>
+                    <td>
+                      <code>{{ prod.codigoBarras }}</code>
+                      <span v-if="prod.codigoModelo" class="single-model-tag" :title="`Modelo: ${prod.codigoModelo}`">
+                        {{ prod.codigoModelo }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="product-info-cell" style="cursor: pointer;" @click="openImageGallery(prod)">
+                        <img :src="prod.imagenUrl || defaultImage" class="product-thumbnail" alt="thumbnail" />
+                        <div>
+                          <strong>{{ prod.nombre }}</strong>
+                          <div v-if="getProductColor(prod)" style="margin-top: 2px;">
+                            <span class="color-attribute-tag">🎨 {{ getProductColor(prod) }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>S/. {{ prod.precioCosto.toFixed(2) }}</td>
+                    <td>
+                      <span v-if="prod.precioOferta > 0" style="text-decoration: line-through; color: #a0aec0; font-size: 0.85em; display: block; margin-bottom: 2px;">
+                        S/. {{ prod.precio.toFixed(2) }}
+                      </span>
+                      <span :style="{ color: prod.precioOferta > 0 ? '#10b981' : 'inherit', fontWeight: prod.precioOferta > 0 ? '600' : 'normal' }">
+                        S/. {{ prod.precioOferta > 0 ? prod.precioOferta.toFixed(2) : prod.precio.toFixed(2) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span :class="['stock-badge', prod.stock <= prod.stockMinimo ? 'low' : 'ok']">
+                        <template v-if="prod.esServicio">— Servicio —</template>
+                        <template v-else-if="prod.tipoProducto === 'Costal'">
+                          {{ (Number(prod.stock) / Number(prod.kilosPorCostal || 1)).toFixed(1) }} Costal(es)
+                        </template>
+                        <template v-else>{{ Number(prod.stock).toFixed(0) }} {{ prod.unidadMedida }}</template>
+                      </span>
+                    </td>
+                    <td>
+                      <span v-if="prod.stock <= prod.stockMinimo" class="status-indicator low">⚠ Reabastecer</span>
+                      <span v-else class="status-indicator ok">✓ Activo</span>
+                    </td>
+                    <td v-if="authStore.hasPermission('modificar_productos')">
+                      <div class="actions-cell">
+                        <button @click="openEditModal(prod)" class="btn-action edit" title="Editar">✏️</button>
+                        <button @click="confirmDelete(prod.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
+              </template>
+            </template>
+
+            <!-- VISTA PLANA TRADICIONAL -->
+            <template v-else>
+              <tr v-for="(prod, index) in filteredProducts" :key="prod.id">
+                <td><strong>{{ index + 1 }}</strong></td>
+                <td><code>{{ prod.codigoBarras }}</code></td>
+                <td>
+                  <div class="product-info-cell" style="cursor: pointer;" @click="openImageGallery(prod)">
+                    <img :src="prod.imagenUrl || defaultImage" class="product-thumbnail" alt="thumbnail" />
+                    <div>
+                      <strong>{{ prod.nombre }}</strong>
+                      <div v-if="getProductColor(prod)" style="margin-top: 2px;">
+                        <span class="color-attribute-tag">🎨 {{ getProductColor(prod) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>S/. {{ prod.precioCosto.toFixed(2) }}</td>
+                <td>
+                  <span v-if="prod.precioOferta > 0" style="text-decoration: line-through; color: #a0aec0; font-size: 0.85em; display: block; margin-bottom: 2px;">S/. {{ prod.precio.toFixed(2) }}</span>
+                  <span :style="{ color: prod.precioOferta > 0 ? '#10b981' : 'inherit', fontWeight: prod.precioOferta > 0 ? '600' : 'normal' }">
+                    S/. {{ prod.precioOferta > 0 ? prod.precioOferta.toFixed(2) : prod.precio.toFixed(2) }}
+                  </span>
+                </td>
+                <td>
+                  <span :class="['stock-badge', prod.stock <= prod.stockMinimo ? 'low' : 'ok']">
+                    <template v-if="prod.esServicio">— Servicio —</template>
+                    <template v-else-if="prod.tipoProducto === 'Costal'">
+                      {{ (Number(prod.stock) / Number(prod.kilosPorCostal || 1)).toFixed(1) }} Costal(es)
+                    </template>
+                    <template v-else>{{ Number(prod.stock).toFixed(0) }} {{ prod.unidadMedida }}</template>
+                  </span>
+                </td>
+                <td>
+                  <span v-if="prod.stock <= prod.stockMinimo" class="status-indicator low">⚠ Reabastecer</span>
+                  <span v-else class="status-indicator ok">✓ Activo</span>
+                </td>
+                <td v-if="authStore.hasPermission('modificar_productos')">
+                  <div class="actions-cell">
+                    <button @click="openEditModal(prod)" class="btn-action edit" title="Editar">✏️</button>
+                    <button @click="confirmDelete(prod.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
       </div>
@@ -548,15 +774,145 @@ const productAnalysis = ref({})
 
 const defaultImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><rect width='100%25' height='100%25' fill='%23f1f5f9'/><path d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M11 11.5L5 17h14l-4.5-6-3.5 4.5z'/></svg>"
 
+const viewMode = ref('grouped') // 'grouped' (acordeón) o 'flat' (lista plana)
+const expandedModels = ref(new Set())
+
+const isModelExpanded = (key) => {
+  return expandedModels.value.has(key)
+}
+
+const toggleModelExpand = (key) => {
+  const next = new Set(expandedModels.value)
+  if (next.has(key)) {
+    next.delete(key)
+  } else {
+    next.add(key)
+  }
+  expandedModels.value = next
+}
+
+const areAllExpanded = computed(() => {
+  const multiGroups = groupedProductsList.value.filter(g => g.isGroup && g.items.length > 1)
+  if (multiGroups.length === 0) return false
+  return multiGroups.every(g => expandedModels.value.has(g.key))
+})
+
+const toggleAllExpand = () => {
+  const multiGroups = groupedProductsList.value.filter(g => g.isGroup && g.items.length > 1)
+  if (areAllExpanded.value) {
+    expandedModels.value = new Set()
+  } else {
+    expandedModels.value = new Set(multiGroups.map(g => g.key))
+  }
+}
+
+const getProductColor = (prod) => {
+  if (!prod.atributos || prod.atributos.length === 0) return ''
+  const attr = prod.atributos.find(a => (a.nombre || a.Nombre)?.toLowerCase() === 'color')
+  return attr ? (attr.valor || attr.Valor || '') : ''
+}
+
 const filteredProducts = computed(() => {
   const q = searchQuery.value.toLowerCase()
   return products.value.filter(p => {
     const matchesSearch = (p.nombre && p.nombre.toLowerCase().includes(q)) || 
                           (p.codigoBarras && p.codigoBarras.toLowerCase().includes(q)) ||
-                          (p.descripcion && p.descripcion.toLowerCase().includes(q))
+                          (p.codigoModelo && p.codigoModelo.toLowerCase().includes(q)) ||
+                          (p.descripcion && p.descripcion.toLowerCase().includes(q)) ||
+                          (p.atributos && p.atributos.some(a => a.valor && a.valor.toLowerCase().includes(q)))
     const matchesCategory = !selectedCategory.value || p.categoriaId === selectedCategory.value
     return matchesSearch && matchesCategory
   })
+})
+
+const groupedProductsList = computed(() => {
+  const groupsMap = new Map()
+  const result = []
+
+  filteredProducts.value.forEach(prod => {
+    const rawModel = (prod.codigoModelo || '').trim()
+    if (rawModel) {
+      const key = rawModel.toUpperCase()
+      if (!groupsMap.has(key)) {
+        const groupObj = {
+          isGroup: true,
+          key,
+          codigoModelo: prod.codigoModelo,
+          nombre: prod.nombre,
+          tipoProducto: prod.tipoProducto,
+          unidadMedida: prod.unidadMedida,
+          kilosPorCostal: prod.kilosPorCostal,
+          esServicio: prod.esServicio,
+          items: []
+        }
+        groupsMap.set(key, groupObj)
+        result.push(groupObj)
+      }
+      groupsMap.get(key).items.push(prod)
+    } else {
+      result.push({
+        isGroup: false,
+        key: prod.id,
+        items: [prod]
+      })
+    }
+  })
+
+  // Calcular métricas consolidadas por modelo
+  result.forEach(group => {
+    if (group.isGroup) {
+      let totalStock = 0
+      let minStockMinimo = Infinity
+      let minCost = Infinity
+      let maxCost = -Infinity
+      let minPrice = Infinity
+      let maxPrice = -Infinity
+      let hasDiscount = false
+      let anyLowStock = false
+
+      group.items.forEach(item => {
+        const s = Number(item.stock) || 0
+        const sm = Number(item.stockMinimo) || 0
+        const c = Number(item.precioCosto) || 0
+        const p = Number(item.precio) || 0
+
+        totalStock += s
+        if (sm < minStockMinimo) minStockMinimo = sm
+        if (c < minCost) minCost = c
+        if (c > maxCost) maxCost = c
+        if (p < minPrice) minPrice = p
+        if (p > maxPrice) maxPrice = p
+        if (item.precioOferta > 0) hasDiscount = true
+        if (s <= sm) anyLowStock = true
+      })
+
+      group.totalStock = totalStock
+      group.stockMinimo = minStockMinimo === Infinity ? 5 : minStockMinimo
+      group.precioCostoMin = minCost === Infinity ? 0 : minCost
+      group.precioCostoMax = maxCost === -Infinity ? 0 : maxCost
+      group.precioMin = minPrice === Infinity ? 0 : minPrice
+      group.precioMax = maxPrice === -Infinity ? 0 : maxPrice
+      group.hasDiscount = hasDiscount
+      group.anyLowStock = anyLowStock
+
+      const itemWithImg = group.items.find(i => (i.imagenes && i.imagenes.length > 0) || i.imagenUrl)
+      group.imagenUrl = itemWithImg
+        ? (itemWithImg.imagenes?.[0] || itemWithImg.imagenUrl)
+        : defaultImage
+
+      group.previewImages = group.items
+        .map(i => ({
+          id: i.id,
+          img: i.imagenes?.[0] || i.imagenUrl || defaultImage,
+          color: getProductColor(i),
+          stock: i.stock
+        }))
+        .filter(p => p.img)
+        .slice(0, 6)
+    }
+  })
+
+  return result
 })
 
 const uploadingImage = ref(false)
@@ -1583,5 +1939,215 @@ onMounted(() => {
 .gallery-empty-state span {
   font-size: 3rem;
   opacity: 0.5;
+}
+
+/* ========================================================
+   ESTILOS DE AGRUPACIÓN POR MODELO (ACORDEÓN DE INVENTARIO)
+   ======================================================== */
+.view-mode-pill-group {
+  display: flex;
+  background-color: var(--bg-app, #f1f5f9);
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.btn-view-pill {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted, #64748b);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-view-pill.active {
+  background: #ffffff;
+  color: #2563eb;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-expand-all-pill {
+  padding: 6px 12px;
+  border: 1px solid var(--border-color, #cbd5e1);
+  background: #ffffff;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-expand-all-pill:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+/* Fila de Cabecera del Modelo (Padre) */
+.model-group-row {
+  background-color: #f8fafc !important;
+  border-top: 2px solid #e2e8f0;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.model-group-row:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.btn-expand-arrow {
+  background: transparent;
+  border: none;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  border-radius: 4px;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s;
+}
+
+.btn-expand-arrow.expanded {
+  transform: rotate(90deg);
+  color: #2563eb;
+}
+
+.model-code-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.single-model-tag {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  margin-left: 6px;
+}
+
+.variants-count-pill {
+  background: #e0e7ff;
+  color: #4338ca;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 12px;
+}
+
+.model-variants-preview {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mini-variant-dot {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 2px 6px 2px 2px;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  font-size: 0.7rem;
+}
+
+.mini-variant-dot img {
+  width: 18px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.mini-variant-color-label {
+  color: #334155;
+  font-weight: 500;
+}
+
+.btn-toggle-subtable {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #2563eb;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-toggle-subtable:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+/* Sub-filas de Variantes Indentadas */
+.variant-sub-row {
+  background-color: #ffffff;
+  border-left: 3px solid #3b82f6;
+  transition: background-color 0.15s ease;
+}
+
+.variant-sub-row:hover {
+  background-color: #f8fafc;
+}
+
+.sub-index-cell {
+  color: #64748b;
+  font-size: 0.8rem;
+  padding-left: 18px !important;
+}
+
+.tree-connector {
+  color: #94a3b8;
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+.product-thumbnail.sm {
+  width: 38px;
+  height: 50px;
+}
+
+.pl-variant {
+  padding-left: 6px;
+}
+
+.color-attribute-tag {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.standalone-row:hover {
+  background-color: #f8fafc;
 }
 </style>

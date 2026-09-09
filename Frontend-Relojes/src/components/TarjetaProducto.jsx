@@ -414,9 +414,9 @@ export default function TarjetaProducto({
             }}
             title="Consultar disponibilidad con el Concierge por WhatsApp"
             style={{
-              background: 'rgba(37, 211, 102, 0.1)',
-              border: '1px solid rgba(37, 211, 102, 0.35)',
-              color: '#25d366',
+              background: 'rgba(37, 211, 102, 0.12)',
+              border: '1px solid rgba(37, 211, 102, 0.4)',
+              color: '#1da851',
               borderRadius: '8px',
               width: '42px',
               height: '42px',
@@ -424,15 +424,20 @@ export default function TarjetaProducto({
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              boxShadow: '0 2px 6px rgba(37, 211, 102, 0.15)'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = '#25d366';
               e.currentTarget.style.color = '#ffffff';
+              e.currentTarget.style.transform = 'scale(1.08)';
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 211, 102, 0.45)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(37, 211, 102, 0.1)';
-              e.currentTarget.style.color = '#25d366';
+              e.currentTarget.style.background = 'rgba(37, 211, 102, 0.12)';
+              e.currentTarget.style.color = '#1da851';
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 2px 6px rgba(37, 211, 102, 0.15)';
             }}
           >
             <MessageCircle size={18} />
