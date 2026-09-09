@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
-export default function BotonWhatsApp({ phoneNumber, message = "Hola, me gustaría recibir más información." }) {
+export default function BotonWhatsApp({ phoneNumber, message = "Hola, me gustaría recibir más información.", isVisible = true }) {
   const [showPill, setShowPill] = useState(true);
+
+  if (!isVisible) return null;
 
   const handleClick = () => {
     const text = encodeURIComponent(message);

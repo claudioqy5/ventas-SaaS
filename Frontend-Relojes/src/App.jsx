@@ -5,6 +5,7 @@ import Inicio from './components/Inicio';
 import TarjetaProducto from './components/TarjetaProducto';
 import PaginaDetalleProducto from './components/PaginaDetalleProducto';
 import CajonCarrito from './components/CajonCarrito';
+import ProcesoPago from './components/ProcesoPago';
 
 import ModalAjustesInquilino from './components/ModalAjustesInquilino';
 import ModalAuthCliente from './components/ModalAuthCliente';
@@ -456,6 +457,13 @@ export default function App({ initialCategory, initialProductId, initialView = '
         <VistaTerminosCondiciones
           onBack={handleBackToCatalog}
         />
+      ) : activeView === 'checkout' ? (
+        <ProcesoPago
+          items={cart}
+          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveItem={handleRemoveItem}
+          onBack={handleBackToCatalog}
+        />
       ) : (
         <>
           {/* Hero Section: Solo se muestra en la página principal, no en páginas de categoría ni catálogo expandido */}
@@ -862,6 +870,10 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onRemoveItem={handleRemoveItem}
         onClearCart={handleClearCart}
         whatsappNumber={WHATSAPP_CONCIERGE}
+        onGoToCheckout={() => {
+          window.scrollTo(0,0);
+          setActiveView('checkout');
+        }}
       />
 
       {/* Modal de Vinculación SaaS Multi-Tenant */}
@@ -885,7 +897,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
       />
 
       {/* Botón flotante de WhatsApp global */}
-      <BotonWhatsApp phoneNumber={WHATSAPP_CONCIERGE} />
+      <BotonWhatsApp phoneNumber={WHATSAPP_CONCIERGE} isVisible={!isCartOpen} />
 
       {/* Notificación Toast al agregar al carrito */}
       <ToastNotificacion

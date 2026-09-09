@@ -2237,7 +2237,13 @@ onUnmounted(() => {
   gap: 10px;
   margin-top: 10px;
   border-top: 1px solid var(--border-color);
-  padding-top: 12px;
+  padding: 15px 1.5rem;
+  position: sticky;
+  bottom: -1.5rem;
+  background-color: var(--bg-card);
+  z-index: 10;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
 }
 
 .btn-secondary-compact {
@@ -3050,6 +3056,15 @@ onUnmounted(() => {
   display: flex;
   gap: 10px;
   align-items: center;
+  position: sticky;
+  bottom: -24px;
+  background-color: #0f172a;
+  z-index: 10;
+  padding-bottom: 24px;
+  margin-left: -28px;
+  margin-right: -28px;
+  padding-left: 28px;
+  padding-right: 28px;
 }
 
 .studio-btn-edit {

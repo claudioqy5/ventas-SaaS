@@ -8,6 +8,7 @@ export default function CajonCarrito({
   onUpdateQuantity,
   onRemoveItem,
   onClearCart,
+  onGoToCheckout,
   whatsappNumber = '51962956919'
 }) {
   // Control de animación suave de entrada y salida
@@ -59,8 +60,8 @@ export default function CajonCarrito({
 
   const handleGoToCheckout = () => {
     onClose();
-    if (typeof window !== 'undefined') {
-      window.location.href = '/';
+    if (onGoToCheckout) {
+      onGoToCheckout();
     }
   };
 
