@@ -142,6 +142,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
         window.history.pushState({}, '', '/preguntas-frecuentes');
       } else if (viewName === 'terminos') {
         window.history.pushState({}, '', '/terminos-y-condiciones');
+      } else if (viewName === 'checkout') {
+        window.history.pushState({}, '', '/checkout');
       } else {
         window.history.pushState({}, '', '/');
       }
@@ -158,6 +160,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
         setSelectedProduct(null);
       } else if (path.includes('/terminos-y-condiciones')) {
         setActiveView('terminos');
+        setSelectedProduct(null);
+      } else if (path.includes('/checkout')) {
+        setActiveView('checkout');
         setSelectedProduct(null);
       } else if (path.includes('/producto/')) {
         const id = path.split('/producto/')[1];
@@ -438,8 +443,15 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onOpenAuth={() => setIsAuthOpen(true)}
       />
 
-      {/* VISTA PRINCIPAL: Producto, Preguntas Frecuentes, Términos o Catálogo General */}
-      {selectedProduct ? (
+      {/* VISTA PRINCIPAL: Checkout, Producto, Preguntas Frecuentes, Términos o Catálogo General */}
+      {activeView === 'checkout' ? (
+        <ProcesoPago
+          items={cart}
+          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveItem={handleRemoveItem}
+          onBack={handleBackToCatalog}
+        />
+      ) : selectedProduct ? (
         <PaginaDetalleProducto
           product={selectedProduct}
           onBack={handleBackToCatalog}
@@ -455,13 +467,6 @@ export default function App({ initialCategory, initialProductId, initialView = '
         />
       ) : activeView === 'terminos' ? (
         <VistaTerminosCondiciones
-          onBack={handleBackToCatalog}
-        />
-      ) : activeView === 'checkout' ? (
-        <ProcesoPago
-          items={cart}
-          onUpdateQuantity={handleUpdateQuantity}
-          onRemoveItem={handleRemoveItem}
           onBack={handleBackToCatalog}
         />
       ) : (
@@ -871,8 +876,12 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onClearCart={handleClearCart}
         whatsappNumber={WHATSAPP_CONCIERGE}
         onGoToCheckout={() => {
-          window.scrollTo(0,0);
+          setSelectedProduct(null);
           setActiveView('checkout');
+          if (typeof window !== 'undefined') {
+            window.history.pushState({}, '', '/checkout');
+          }
+          window.scrollTo(0, 0);
         }}
       />
 
@@ -896,8 +905,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onLogout={() => setCurrentUser(null)}
       />
 
-      {/* Botón flotante de WhatsApp global */}
-      <BotonWhatsApp phoneNumber={WHATSAPP_CONCIERGE} isVisible={!isCartOpen} />
+      {/* Botón flotante de WhatsApp global (oculto en el carrito y durante el checkout) */}
+      <BotonWhatsApp phoneNumber={WHATSAPP_CONCIERGE} isVisible={!isCartOpen && activeView !== 'checkout'} />
 
       {/* Notificación Toast al agregar al carrito */}
       <ToastNotificacion
