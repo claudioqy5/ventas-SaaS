@@ -36,10 +36,25 @@ export default function ProcesoPago({ items = [], onUpdateQuantity, onRemoveItem
           {steps.map((step, idx) => {
             const isActive = currentStep === step.id;
             const isPassed = currentStep > step.id;
+            const isClickable = step.id < currentStep; // Can go back to previous steps
             const StepIcon = step.icon;
+            
             return (
               <React.Fragment key={step.id}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '110px' }}>
+                <div 
+                  onClick={() => { if (isClickable) setCurrentStep(step.id); }}
+                  style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'center', 
+                    width: '110px',
+                    cursor: isClickable ? 'pointer' : 'default',
+                    opacity: isClickable ? 0.85 : 1,
+                    transition: 'opacity 0.2s'
+                  }}
+                  onMouseEnter={(e) => { if (isClickable) e.currentTarget.style.opacity = '1'; }}
+                  onMouseLeave={(e) => { if (isClickable) e.currentTarget.style.opacity = '0.85'; }}
+                >
                   <div style={{ 
                     width: '46px', height: '46px', 
                     borderRadius: '50%', 
@@ -132,7 +147,70 @@ export default function ProcesoPago({ items = [], onUpdateQuantity, onRemoveItem
                 )}
               </>
             )}
-            {currentStep > 1 && (
+            {currentStep === 2 && (
+              <div style={{ padding: '10px 0' }}>
+                <h2 style={{ fontSize: '1.2rem', color: 'var(--c-obsidian)', fontWeight: 600, marginBottom: '20px' }}>Datos Personales</h2>
+                <p style={{ fontSize: '0.85rem', color: 'var(--c-taupe)', marginBottom: '30px' }}>
+                  Completa tus datos para enviarte la confirmación de la compra. Si ya tienes una cuenta, puedes <a href="#" style={{ color: 'var(--c-blush)', textDecoration: 'underline', fontWeight: 500 }}>iniciar sesión</a>.
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Nombres *</label>
+                    <input type="text" style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Ej. Juan Carlos" />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Apellidos *</label>
+                    <input type="text" style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Ej. Pérez Gómez" />
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Correo Electrónico *</label>
+                  <input type="email" style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="ejemplo@correo.com" />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px', marginBottom: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Tipo Documento *</label>
+                    <select style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)', backgroundColor: '#fff', color: 'var(--c-obsidian)' }}>
+                      <option value="DNI">DNI</option>
+                      <option value="CE">CE</option>
+                      <option value="PASAPORTE">Pasaporte</option>
+                      <option value="RUC">RUC</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Número de Documento *</label>
+                    <input type="text" style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Tu número de documento" />
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '30px' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Teléfono Móvil (WhatsApp) *</label>
+                  <div style={{ display: 'flex' }}>
+                    <span style={{ padding: '12px 14px', border: '1px solid var(--border-light)', borderRight: 'none', borderRadius: '6px 0 0 6px', background: '#f9f7f4', color: 'var(--c-taupe)', fontSize: '0.9rem' }}>+51</span>
+                    <input type="tel" style={{ flex: 1, padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '0 6px 6px 0', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="999 999 999" />
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px solid var(--border-light)' }}>
+                  <button 
+                    onClick={() => setCurrentStep(1)} 
+                    style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', color: 'var(--c-taupe)', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}
+                  >
+                    <ChevronLeft size={18} /> Volver al carrito
+                  </button>
+                  <button 
+                    onClick={() => setCurrentStep(3)} 
+                    style={{ padding: '14px 28px', background: 'var(--c-obsidian)', color: 'var(--text-light)', border: 'none', borderRadius: '6px', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.05em', cursor: 'pointer' }}
+                  >
+                    CONTINUAR
+                  </button>
+                </div>
+              </div>
+            )}
+            {currentStep > 2 && (
               <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--c-taupe)' }}>
                 <p style={{ fontSize: '1.2rem', color: 'var(--c-obsidian)', fontWeight: 600, marginBottom: '10px' }}>
                   Paso: {steps.find(s => s.id === currentStep).label}
