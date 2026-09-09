@@ -3341,3 +3341,32 @@ Todo el flujo de agrupación y las mejoras en el panel de administrador están t
 
 **¿Dónde nos quedamos?**
 Todos los cambios están aplicados, probados y verificados en código. El repositorio local está listo con las nuevas funcionalidades operativas tanto en el panel administrativo de Vue como en el frontend Next.js de la tienda de relojes.
+
+---
+
+### Resumen de la Nueva Sesión (Refactorización UI Modal y Checkout Avanzado de 4 Pasos)
+
+**¿Qué avanzamos hoy?**
+
+1. **Refactorización de Interfaz del Panel Administrativo (`Products.vue`):**
+   - **Corrección de botones ocultos:** Se desacopló el área de contenido del modal (`tbody`/formularios) de la botonera inferior. Se les aplicó `position: sticky; bottom: 0;` con control de `overflow`, asegurando que, sin importar cuán extenso sea el formulario de variantes, los botones "Cancelar" y "Guardar" permanezcan perpetuamente visibles en pantalla.
+   - **Erradicación de Emojis:** Se eliminaron los emojis genéricos del código (por petición del cliente) y se integraron íconos vectoriales SVG profesionales (`lucide-vue-next` y `lucide-react`) para lograr una estética formal.
+   - **Formulario Compacto de Especificaciones:** La sección de atributos del reloj, que antes requería mucho scroll, se reorganizó en una cuadrícula CSS lateral, colocando los selectores al costado de los títulos para optimizar drásticamente el espacio de la interfaz.
+
+2. **Flujo de Pago Avanzado (Checkout de Alta Gama en `Frontend-Relojes`):**
+   - **Interacción Inteligente del Botón WhatsApp:** Se corrigió el problema de solapamiento donde el botón flotante del Concierge tapaba la Bolsa de Compras al abrirla. Ahora el componente `BotonWhatsApp.jsx` recibe un prop `isVisible={!isCartOpen}`, ocultándose de forma dinámica cuando se despliega el carrito.
+   - **Nuevo Sistema Stepper Multipaso (`ProcesoPago.jsx`):**
+     - Se reemplazó el redireccionamiento vacío del botón "IR A COMPRAR" hacia la ruta principal, derivándolo a una nueva y elegante vista deCheckout en 4 etapas.
+     - **Navegación Interactiva:** La barra superior visualiza el estado de la compra. Los íconos se iluminan con la paleta de la marca (dorado/obsidiana) y permiten dar click sobre pasos anteriores para regresar, corrigiendo o revisando el pedido sin perder la sesión.
+     - **Paso 1 (Carrito):** Exhibe una tabla analítica con las imágenes del producto, nombre, y controles interactivos `[-]/[+]` para alterar las cantidades en tiempo real. Cuenta con un "Resumen de Compra" lateral persistente y campo para Cupones.
+     - **Paso 2 (Datos Personales):** Se implementó un esquema *"Guest Checkout"* (compras como invitado). Facilita una alta tasa de conversión al no exigir la creación de una cuenta/contraseña, pidiendo únicamente Nombres, Correo, Celular/WhatsApp y el combo de Tipo/N° de Documento (DNI/CE/RUC/Pasaporte) crucial para la facturación electrónica peruana.
+     - **Paso 3 (Datos de Entrega):** Contiene campos limpios para organizar un "Envío a Domicilio" (Se retiró la opción de recojo en tienda a petición). Se despliegan combos nativos para el ingreso del Departamento, Provincia, Distrito, Dirección exacta y Referencias.
+
+3. **Decisiones Arquitectónicas (Backend):**
+   - **Refactorización de Modelo `Client.cs`:** Se detectó que la tabla de clientes guardaba un único campo `Nombre`. Se tomó la decisión arquitectónica de refactorizar la base de datos a `Nombres` y `Apellidos` por separado. Esta separación será crucial más adelante para:
+     - Facturación electrónica en SUNAT.
+     - Email Marketing personalizado ("Hola [Nombre]").
+     - Integración futura con APIs logísticas (Scharff, Olva, DHL).
+
+**¿Dónde nos quedamos?**
+Queda pendiente la implementación técnica de la separación de `Nombres` y `Apellidos` en el Backend de C# (modelos y controladores), así como la decisión final de la pasarela para el **Paso 4 (Método de Pago)** del e-commerce.

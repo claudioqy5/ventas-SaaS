@@ -217,17 +217,6 @@ export default function ProcesoPago({ items = [], onUpdateQuantity, onRemoveItem
                   Indícanos dónde deseas recibir tu pedido. Todos nuestros envíos cuentan con custodia y seguro VIP.
                 </p>
 
-                <div style={{ marginBottom: '25px', display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '15px', border: '2px solid var(--c-blush)', borderRadius: '8px', cursor: 'pointer', flex: 1, minWidth: '200px', backgroundColor: 'rgba(212, 175, 55, 0.05)' }}>
-                    <input type="radio" name="deliveryType" defaultChecked style={{ accentColor: 'var(--c-obsidian)' }} />
-                    <span style={{ fontSize: '0.9rem', color: 'var(--c-obsidian)', fontWeight: 600 }}>Envío a Domicilio</span>
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '15px', border: '1px solid var(--border-light)', borderRadius: '8px', cursor: 'pointer', flex: 1, minWidth: '200px' }}>
-                    <input type="radio" name="deliveryType" style={{ accentColor: 'var(--c-obsidian)' }} />
-                    <span style={{ fontSize: '0.9rem', color: 'var(--c-taupe)', fontWeight: 500 }}>Recojo en Tienda Boutique</span>
-                  </label>
-                </div>
-
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px', marginBottom: '20px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Departamento *</label>

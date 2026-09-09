@@ -17,9 +17,13 @@ Frontend exclusivo y de ultra-alta gama diseñado para clientes de tu SaaS de ve
    * **Efecto de Confeti Dorado:** Micro-animación de partículas al añadir piezas a la bolsa VIP.
    * **Modal de Manufactura:** Ficha técnica completa de calibres, rubíes, cristal de zafiro y hermeticidad.
 
-3. **Checkout Directo a WhatsApp:**
-   * Bolsa de compra deslizante con cálculo automático de totales en Soles (`S/`).
-   * Envío del pedido con formato formal de concierge directo al WhatsApp del negocio.
+3. **Flujo de Checkout Avanzado:**
+   * Bolsa de compra deslizante (Drawer) con cálculo de totales y ocultamiento inteligente del botón flotante de WhatsApp.
+   * **Stepper Interactivo de 4 Pasos** (`ProcesoPago.jsx`):
+     * **Paso 1 - Carrito:** Resumen tabular con edición de cantidades y eliminación de ítems.
+     * **Paso 2 - Datos Personales:** Formulario de invitado optimizado para alta conversión (Nombres, Correo, Documento y Teléfono).
+     * **Paso 3 - Datos de Entrega:** Opciones para 'Envío a Domicilio' o 'Recojo en Tienda' con selectores de destino.
+     * **Paso 4 - Método de Pago:** (En desarrollo).
 
 4. **Multi-Tenancy y Seguridad:**
    * Consume el endpoint público `GET /api/public/store/{empresaId}/products` del Backend.
