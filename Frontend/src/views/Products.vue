@@ -585,7 +585,7 @@
             <span>{{ isEdit ? 'Editar Producto' : 'Registrar Nuevo Producto' }}</span>
           </h2>
           <form @submit.prevent="saveProduct" class="compact-form">
-            <div style="display: grid; grid-template-columns: 2fr 1.1fr; gap: 24px; margin-bottom: 16px;">
+            <div style="display: grid; grid-template-columns: 1.55fr 1.45fr; gap: 20px; margin-bottom: 16px;">
               <!-- COLUMNA IZQUIERDA: Datos Básicos -->
               <div style="display: flex; flex-direction: column; gap: 12px;">
             <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px;">
@@ -797,26 +797,33 @@
 
             <!-- COLUMNA DERECHA: Especificaciones -->
             <div>
-              <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; height: 100%;">
-                <div style="font-size: 0.75rem; font-weight: 500; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #64748b; flex-shrink: 0;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-                  <span>Especificaciones</span>
+              <div class="specifications-panel">
+                <div class="specifications-header">
+                  <div class="specifications-header-left">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #2563eb; flex-shrink: 0;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                    <span>Especificaciones</span>
+                  </div>
+                  <span v-if="form.atributos.length > 0" class="spec-counter-badge" :title="`${form.atributos.filter(a => a.valor).length} de ${form.atributos.length} especificadas`">
+                    {{ form.atributos.filter(a => a.valor).length }}/{{ form.atributos.length }}
+                  </span>
                 </div>
                 
-                <div v-if="form.atributos.length === 0" style="font-size: 0.8rem; color: var(--text-muted);">
+                <div v-if="form.atributos.length === 0" class="specifications-empty">
                   Cargando especificaciones...
                 </div>
                 
-                <div v-for="(attr, idx) in form.atributos" :key="idx" style="margin-bottom: 12px;">
-                  <label style="display: block; font-size: 0.78rem; font-weight: 500; margin-bottom: 4px; color: #334155;">{{ attr.nombre }}</label>
-                  <select v-model="attr.valor" style="width: 100%; padding: 8px; font-size: 0.85rem; border-radius: 6px; border: 1px solid #cbd5e1; outline: none; background-color: #fff; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                    <option value="">No aplica / En blanco</option>
-                    <template v-for="type in attributeTypes" :key="'opt-'+type.id">
-                      <template v-if="type.nombre === attr.nombre">
-                        <option v-for="opt in type.opciones" :key="opt" :value="opt">{{ opt }}</option>
+                <div v-else class="specifications-list">
+                  <div v-for="(attr, idx) in form.atributos" :key="idx" class="spec-inline-row">
+                    <label class="spec-inline-label" :title="attr.nombre">{{ attr.nombre }}</label>
+                    <select v-model="attr.valor" :class="['spec-inline-select', attr.valor ? 'has-value' : '']">
+                      <option value="">No aplica / En blanco</option>
+                      <template v-for="type in attributeTypes" :key="'opt-'+type.id">
+                        <template v-if="type.nombre === attr.nombre">
+                          <option v-for="opt in type.opciones" :key="opt" :value="opt">{{ opt }}</option>
+                        </template>
                       </template>
-                    </template>
-                  </select>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2255,6 +2262,137 @@ onUnmounted(() => {
 
 .btn-primary-compact:hover {
   background-color: var(--primary-hover);
+}
+
+/* ── Panel de Especificaciones Horizontal Compacto ── */
+.specifications-panel {
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 14px 14px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.specifications-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.specifications-header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spec-counter-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 2px 8px;
+  border-radius: 99px;
+  border: 1px solid #bfdbfe;
+}
+
+.specifications-empty {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.specifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.specifications-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.specifications-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.specifications-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.spec-inline-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.spec-inline-row:hover {
+  border-color: #cbd5e1;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.spec-inline-label {
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+  cursor: default;
+}
+
+.compact-form select.spec-inline-select,
+.spec-inline-select {
+  width: 100% !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  padding: 4px 8px !important;
+  font-size: 0.82rem !important;
+  border-radius: 5px !important;
+  border: 1px solid #cbd5e1 !important;
+  outline: none !important;
+  background-color: #ffffff !important;
+  color: #334155 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s, background-color 0.15s !important;
+}
+
+.compact-form select.spec-inline-select:focus,
+.spec-inline-select:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12) !important;
+}
+
+.compact-form select.spec-inline-select.has-value,
+.spec-inline-select.has-value {
+  border-color: #93c5fd !important;
+  background-color: #eff6ff !important;
+  color: #1d4ed8 !important;
+  font-weight: 500 !important;
 }
 
 /* ── Análisis de stock por IA ── */
