@@ -1,8 +1,60 @@
-import React, { useState } from 'react';
-import { ShoppingBag, User, Truck, CreditCard, ChevronLeft, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShoppingBag, User, Truck, CreditCard, ChevronLeft, Trash2, MapPin } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
+import L from 'leaflet';
+
+// Fix leaflet icon
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png'
+});
+
+function LocationMarker({ position, setPosition, setAddressData }) {
+  const map = useMap();
+  
+  useMapEvents({
+    click: async (e) => {
+      const { lat, lng } = e.latlng;
+      setPosition({ lat, lng });
+      map.flyTo(e.latlng, map.getZoom());
+      
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`, {
+          headers: { 'Accept-Language': 'es' }
+        });
+        const data = await res.json();
+        if (data && data.address) {
+          const addr = data.address;
+          setAddressData(prev => ({
+            ...prev,
+            departamento: addr.state || addr.region || prev.departamento || '',
+            provincia: addr.city || addr.county || prev.provincia || '',
+            distrito: addr.suburb || addr.town || addr.village || addr.city_district || prev.distrito || '',
+            direccion: `${addr.road || ''} ${addr.house_number || ''}`.trim() || prev.direccion || ''
+          }));
+        }
+      } catch (err) {
+        console.error("Error reverse geocoding:", err);
+      }
+    }
+  });
+
+  return position === null ? null : (
+    <Marker position={position}></Marker>
+  );
+}
 
 export default function ProcesoPago({ items = [], onUpdateQuantity, onRemoveItem, onBack }) {
   const [currentStep, setCurrentStep] = useState(1);
+  const [recipientType, setRecipientType] = useState('yo');
+  const [recipientData, setRecipientData] = useState({ nombres: '', apellidos: '', dni: '' });
+  const [deliveryAddress, setDeliveryAddress] = useState({
+    departamento: '', provincia: '', distrito: '', direccion: '', referencia: ''
+  });
+  const [mapPosition, setMapPosition] = useState({ lat: -12.0464, lng: -77.0428 });
+  const [additionalNotes, setAdditionalNotes] = useState('');
 
   const subtotal = items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
   const discount = 0;
@@ -213,51 +265,82 @@ export default function ProcesoPago({ items = [], onUpdateQuantity, onRemoveItem
             {currentStep === 3 && (
               <div style={{ padding: '10px 0' }}>
                 <h2 style={{ fontSize: '1.2rem', color: 'var(--c-obsidian)', fontWeight: 600, marginBottom: '20px' }}>Datos de Entrega</h2>
-                <p style={{ fontSize: '0.85rem', color: 'var(--c-taupe)', marginBottom: '30px' }}>
-                  Indícanos dónde deseas recibir tu pedido. Todos nuestros envíos cuentan con custodia y seguro VIP.
-                </p>
+                
+                <div style={{ marginBottom: '25px', display: 'flex', gap: '20px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem', color: 'var(--c-obsidian)' }}>
+                    <input type="radio" name="recipient" value="yo" checked={recipientType === 'yo'} onChange={() => setRecipientType('yo')} style={{ accentColor: 'var(--c-obsidian)' }} />
+                    Yo recibiré el pedido
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem', color: 'var(--c-obsidian)' }}>
+                    <input type="radio" name="recipient" value="otro" checked={recipientType === 'otro'} onChange={() => setRecipientType('otro')} style={{ accentColor: 'var(--c-obsidian)' }} />
+                    Otra persona recibirá el pedido
+                  </label>
+                </div>
+
+                {recipientType === 'otro' && (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px', padding: '20px', background: '#fcfbf8', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Nombres del receptor *</label>
+                      <input type="text" value={recipientData.nombres} onChange={e => setRecipientData({...recipientData, nombres: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Ej. Ana" />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Apellidos del receptor *</label>
+                      <input type="text" value={recipientData.apellidos} onChange={e => setRecipientData({...recipientData, apellidos: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Ej. Silva" />
+                    </div>
+                    <div style={{ gridColumn: '1 / -1' }}>
+                      <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>DNI del receptor *</label>
+                      <input type="text" value={recipientData.dni} onChange={e => setRecipientData({...recipientData, dni: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Número de DNI" />
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ marginBottom: '30px' }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--c-obsidian)', fontWeight: 600, marginBottom: '8px' }}>
+                    <MapPin size={16} style={{ display: 'inline', verticalAlign: 'text-bottom', marginRight: '4px' }} />
+                    Selecciona tu ubicación en el mapa
+                  </label>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--c-taupe)', marginBottom: '12px' }}>
+                    Haz clic en el mapa para ubicar tu dirección. Los campos se completarán automáticamente.
+                  </p>
+                  <div style={{ height: '300px', width: '100%', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-light)', marginBottom: '15px' }}>
+                    <MapContainer center={[mapPosition.lat, mapPosition.lng]} zoom={13} style={{ height: '100%', width: '100%', zIndex: 1 }}>
+                      <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                      <LocationMarker position={mapPosition} setPosition={setMapPosition} setAddressData={setDeliveryAddress} />
+                    </MapContainer>
+                  </div>
+                </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px', marginBottom: '20px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Departamento *</label>
-                    <select style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)', backgroundColor: '#fff', color: 'var(--c-obsidian)' }}>
-                      <option value="">Seleccionar</option>
-                      <option value="LIMA">Lima</option>
-                      <option value="AREQUIPA">Arequipa</option>
-                      <option value="CUSCO">Cusco</option>
-                      <option value="PIURA">Piura</option>
-                      <option value="LA_LIBERTAD">La Libertad</option>
-                    </select>
+                    <input type="text" value={deliveryAddress.departamento} onChange={e => setDeliveryAddress({...deliveryAddress, departamento: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Ej. Lima" />
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Provincia *</label>
-                    <select style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)', backgroundColor: '#fff', color: 'var(--c-obsidian)' }}>
-                      <option value="">Seleccionar</option>
-                      <option value="LIMA">Lima</option>
-                    </select>
+                    <input type="text" value={deliveryAddress.provincia} onChange={e => setDeliveryAddress({...deliveryAddress, provincia: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Ej. Lima" />
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Distrito *</label>
-                    <select style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)', backgroundColor: '#fff', color: 'var(--c-obsidian)' }}>
-                      <option value="">Seleccionar</option>
-                      <option value="MIRAFLORES">Miraflores</option>
-                      <option value="SAN_ISIDRO">San Isidro</option>
-                      <option value="SANTIAGO_DE_SURCO">Santiago de Surco</option>
-                      <option value="LA_MOLINA">La Molina</option>
-                      <option value="SAN_BORJA">San Borja</option>
-                      <option value="BARRANCO">Barranco</option>
-                    </select>
+                    <input type="text" value={deliveryAddress.distrito} onChange={e => setDeliveryAddress({...deliveryAddress, distrito: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Ej. Miraflores" />
                   </div>
                 </div>
 
                 <div style={{ marginBottom: '20px' }}>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Dirección de Entrega *</label>
-                  <input type="text" style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Av., Calle, Jr. / N° / Dpto" />
+                  <input type="text" value={deliveryAddress.direccion} onChange={e => setDeliveryAddress({...deliveryAddress, direccion: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Av., Calle, Jr. / N° / Dpto" />
                 </div>
 
-                <div style={{ marginBottom: '30px' }}>
+                <div style={{ marginBottom: '20px' }}>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Referencia (Opcional)</label>
-                  <input type="text" style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Ej. Frente a parque, rejas verdes, etc." />
+                  <input type="text" value={deliveryAddress.referencia} onChange={e => setDeliveryAddress({...deliveryAddress, referencia: e.target.value})} style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} placeholder="Ej. Frente a parque, rejas verdes, etc." />
+                </div>
+                
+                <div style={{ marginBottom: '30px' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Información adicional para la entrega</label>
+                  <textarea value={additionalNotes} onChange={e => setAdditionalNotes(e.target.value)} rows="3" style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)', resize: 'vertical' }} placeholder="Ej. Dejar en recepción, horario preferido, etc."></textarea>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px solid var(--border-light)' }}>

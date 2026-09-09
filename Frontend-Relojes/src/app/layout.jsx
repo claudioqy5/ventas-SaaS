@@ -1,4 +1,5 @@
 import '../index.css';
+import 'leaflet/dist/leaflet.css';
 
 export const metadata = {
   title: "L'gant | Boutique de Alta Relojería en Perú",
