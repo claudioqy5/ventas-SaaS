@@ -101,6 +101,8 @@ public class ProductsController : ControllerBase
             .Set(p => p.Nombre, product.Nombre)
             .Set(p => p.Descripcion, product.Descripcion)
             .Set(p => p.CodigoBarras, product.CodigoBarras)
+            .Set(p => p.CodigoModelo, product.CodigoModelo) // Agregado para permitir editar el agrupador
+            .Set(p => p.Stock, product.Stock)               // Agregado para permitir editar el stock
             .Set(p => p.CategoriaId, product.CategoriaId)
             .Set(p => p.Precio, product.Precio)
             .Set(p => p.PrecioCosto, product.PrecioCosto)
@@ -112,7 +114,6 @@ public class ProductsController : ControllerBase
             .Set(p => p.EsServicio, product.EsServicio)
             .Set(p => p.PrecioCostal, product.PrecioCostal)
             .Set(p => p.KilosPorCostal, product.KilosPorCostal)
-            .Set(p => p.ImagenUrl, product.ImagenUrl)
             .Set(p => p.Imagenes, product.Imagenes)
             .Set(p => p.PrecioOferta, product.PrecioOferta)
             .Set(p => p.MarcaId, product.MarcaId)
