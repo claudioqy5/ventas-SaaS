@@ -44,9 +44,18 @@
     <main class="main-content">
       <header class="content-header">
         <div class="header-flex">
-          <div>
-            <h1 class="text-title">⬦ Inventario</h1>
-            <p class="text-subtitle">Registra nuevos productos y ajusta el stock</p>
+          <div class="header-title-container">
+            <div class="header-icon-box">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-title">Inventario de Productos</h1>
+              <p class="text-subtitle">Gestión de catálogo, variantes agrupadas y control de existencias</p>
+            </div>
           </div>
           
           <div v-if="inventoryStats" class="inventory-stats-card">
@@ -61,13 +70,26 @@
             </div>
           </div>
 
-          <button v-if="authStore.hasPermission('modificar_productos')" @click="openAddModal" class="btn btn-primary">➕ Agregar Producto</button>
+          <button v-if="authStore.hasPermission('modificar_productos')" @click="openAddModal" class="btn-primary-action">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Nuevo Producto</span>
+          </button>
         </div>
       </header>
 
       <!-- Seccion de filtros de busqueda -->
       <div class="table-filters card">
-        <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código, modelo o color..." class="filter-input" />
+        <div class="filter-input-wrap">
+          <svg class="search-icon-svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código, modelo o color..." class="filter-input" />
+        </div>
+
         <select v-model="selectedCategory" class="filter-select">
           <option value="">Todas las Categorías</option>
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
@@ -80,14 +102,27 @@
             :class="['btn-view-pill', viewMode === 'grouped' ? 'active' : '']"
             @click="viewMode = 'grouped'"
             title="Agrupar variantes por modelo">
-            🗂️ Agrupado
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            Por Modelo
           </button>
           <button 
             type="button" 
             :class="['btn-view-pill', viewMode === 'flat' ? 'active' : '']"
             @click="viewMode = 'flat'"
             title="Ver lista plana individual">
-            📋 Todo
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            Lista Plana
           </button>
         </div>
 
@@ -97,7 +132,10 @@
           class="btn-expand-all-pill"
           @click="toggleAllExpand"
           title="Expandir o colapsar todos los modelos">
-          {{ areAllExpanded ? '▾ Colapsar Todo' : '▸ Expandir Todo' }}
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline :points="areAllExpanded ? '18 15 12 9 6 15' : '6 9 12 15 18 9'"></polyline>
+          </svg>
+          {{ areAllExpanded ? 'Colapsar Todo' : 'Expandir Todo' }}
         </button>
       </div>
 
@@ -128,14 +166,14 @@
                   <!-- Fila Maestra / Cabecera del Modelo -->
                   <tr class="model-group-row" @click="toggleModelExpand(group.key)">
                     <td>
-                      <div style="display: flex; align-items: center; gap: 4px;">
+                      <div style="display: flex; align-items: center; gap: 6px;">
                         <button 
                           type="button" 
                           class="btn-expand-arrow" 
                           :class="{ 'expanded': isModelExpanded(group.key) }"
                           title="Abrir o cerrar variantes"
                           @click.stop="toggleModelExpand(group.key)">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="9 18 15 12 9 6"></polyline>
                           </svg>
                         </button>
@@ -144,7 +182,11 @@
                     </td>
                     <td>
                       <span class="model-code-badge" :title="`Modelo: ${group.codigoModelo}`">
-                        📦 {{ group.codigoModelo }}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                        </svg>
+                        {{ group.codigoModelo }}
                       </span>
                     </td>
                     <td>
@@ -163,7 +205,10 @@
                               class="mini-variant-dot"
                               :title="v.color ? `${v.color} (Stock: ${v.stock})` : `Stock: ${v.stock}`">
                               <img :src="v.img" alt="variante" />
-                              <span v-if="v.color" class="mini-variant-color-label">{{ v.color }}</span>
+                              <span v-if="v.color" class="mini-variant-color-label">
+                                <span class="color-swatch-dot" :style="{ backgroundColor: getSwatchHex(v.color) }"></span>
+                                {{ v.color }}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -191,15 +236,22 @@
                       </span>
                     </td>
                     <td>
-                      <span v-if="group.anyLowStock" class="status-indicator low">⚠ Reabastecer</span>
-                      <span v-else class="status-indicator ok">✓ Activo</span>
+                      <span v-if="group.anyLowStock" class="status-pill warning">
+                        <span class="status-dot"></span>Stock Bajo
+                      </span>
+                      <span v-else class="status-pill success">
+                        <span class="status-dot"></span>Activo
+                      </span>
                     </td>
                     <td v-if="authStore.hasPermission('modificar_productos')">
                       <button 
                         type="button" 
                         class="btn-toggle-subtable" 
                         @click.stop="toggleModelExpand(group.key)">
-                        {{ isModelExpanded(group.key) ? 'Ocultar' : 'Ver (' + group.items.length + ')' }}
+                        <span>{{ isModelExpanded(group.key) ? 'Ocultar' : 'Ver (' + group.items.length + ')' }}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="subtable-chevron" :class="{ 'open': isModelExpanded(group.key) }">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                       </button>
                     </td>
                   </tr>
@@ -219,7 +271,8 @@
                           <div>
                             <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                               <span v-if="getProductColor(item)" class="color-attribute-tag">
-                                🎨 {{ getProductColor(item) }}
+                                <span class="color-swatch-dot" :style="{ backgroundColor: getSwatchHex(getProductColor(item)) }"></span>
+                                {{ getProductColor(item) }}
                               </span>
                               <span style="font-size: 0.9rem; color: var(--text-primary);">{{ item.nombre }}</span>
                             </div>
@@ -244,13 +297,27 @@
                         </span>
                       </td>
                       <td>
-                        <span v-if="item.stock <= item.stockMinimo" class="status-indicator low">⚠ Reabastecer</span>
-                        <span v-else class="status-indicator ok">✓ Activo</span>
+                        <span v-if="item.stock <= item.stockMinimo" class="status-pill warning">
+                          <span class="status-dot"></span>Stock Bajo
+                        </span>
+                        <span v-else class="status-pill success">
+                          <span class="status-dot"></span>Activo
+                        </span>
                       </td>
                       <td v-if="authStore.hasPermission('modificar_productos')">
                         <div class="actions-cell">
-                          <button @click="openEditModal(item)" class="btn-action edit" title="Editar Variante">✏️</button>
-                          <button @click="confirmDelete(item.id)" class="btn-action delete" title="Eliminar Variante">🗑️</button>
+                          <button @click="openEditModal(item)" class="btn-action-icon edit" title="Editar Variante">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                          </button>
+                          <button @click="confirmDelete(item.id)" class="btn-action-icon delete" title="Eliminar Variante">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <polyline points="3 6 5 6 21 6"></polyline>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -273,7 +340,10 @@
                         <div>
                           <strong>{{ prod.nombre }}</strong>
                           <div v-if="getProductColor(prod)" style="margin-top: 2px;">
-                            <span class="color-attribute-tag">🎨 {{ getProductColor(prod) }}</span>
+                            <span class="color-attribute-tag">
+                              <span class="color-swatch-dot" :style="{ backgroundColor: getSwatchHex(getProductColor(prod)) }"></span>
+                              {{ getProductColor(prod) }}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -297,13 +367,27 @@
                       </span>
                     </td>
                     <td>
-                      <span v-if="prod.stock <= prod.stockMinimo" class="status-indicator low">⚠ Reabastecer</span>
-                      <span v-else class="status-indicator ok">✓ Activo</span>
+                      <span v-if="prod.stock <= prod.stockMinimo" class="status-pill warning">
+                        <span class="status-dot"></span>Stock Bajo
+                      </span>
+                      <span v-else class="status-pill success">
+                        <span class="status-dot"></span>Activo
+                      </span>
                     </td>
                     <td v-if="authStore.hasPermission('modificar_productos')">
                       <div class="actions-cell">
-                        <button @click="openEditModal(prod)" class="btn-action edit" title="Editar">✏️</button>
-                        <button @click="confirmDelete(prod.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                        <button @click="openEditModal(prod)" class="btn-action-icon edit" title="Editar">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                          </svg>
+                        </button>
+                        <button @click="confirmDelete(prod.id)" class="btn-action-icon delete" title="Eliminar">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                          </svg>
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -322,7 +406,10 @@
                     <div>
                       <strong>{{ prod.nombre }}</strong>
                       <div v-if="getProductColor(prod)" style="margin-top: 2px;">
-                        <span class="color-attribute-tag">🎨 {{ getProductColor(prod) }}</span>
+                        <span class="color-attribute-tag">
+                          <span class="color-swatch-dot" :style="{ backgroundColor: getSwatchHex(getProductColor(prod)) }"></span>
+                          {{ getProductColor(prod) }}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -344,13 +431,27 @@
                   </span>
                 </td>
                 <td>
-                  <span v-if="prod.stock <= prod.stockMinimo" class="status-indicator low">⚠ Reabastecer</span>
-                  <span v-else class="status-indicator ok">✓ Activo</span>
+                  <span v-if="prod.stock <= prod.stockMinimo" class="status-pill warning">
+                    <span class="status-dot"></span>Stock Bajo
+                  </span>
+                  <span v-else class="status-pill success">
+                    <span class="status-dot"></span>Activo
+                  </span>
                 </td>
                 <td v-if="authStore.hasPermission('modificar_productos')">
                   <div class="actions-cell">
-                    <button @click="openEditModal(prod)" class="btn-action edit" title="Editar">✏️</button>
-                    <button @click="confirmDelete(prod.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                    <button @click="openEditModal(prod)" class="btn-action-icon edit" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                    </button>
+                    <button @click="confirmDelete(prod.id)" class="btn-action-icon delete" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -362,7 +463,17 @@
       <!-- Modal para el registro/edicion de productos -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title" style="margin-bottom: 12px; font-size: 1.3rem;">{{ isEdit ? '✏️ Editar Producto' : '⬦ Registrar Producto' }}</h2>
+          <h2 class="modal-title" style="margin-bottom: 16px; font-size: 1.3rem; display: flex; align-items: center; gap: 8px;">
+            <svg v-if="isEdit" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #2563eb;">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #2563eb;">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>{{ isEdit ? 'Editar Producto' : 'Registrar Nuevo Producto' }}</span>
+          </h2>
           <form @submit.prevent="saveProduct" class="compact-form">
             <div style="display: grid; grid-template-columns: 2fr 1.1fr; gap: 24px; margin-bottom: 16px;">
               <!-- COLUMNA IZQUIERDA: Datos Básicos -->
@@ -635,72 +746,231 @@
       </div>
     </main>
 
-    <!-- Modal de Galería de Imágenes Premium (Lightbox) -->
-    <div v-if="showGalleryModal" class="gallery-modal-overlay" @click.self="closeGalleryModal">
-      <div class="gallery-modal-card">
-        <!-- Header del Modal -->
-        <div class="gallery-modal-header">
-          <div class="gallery-header-info">
-            <span class="gallery-icon-badge">🖼️</span>
-            <div>
-              <h3 class="gallery-title">{{ selectedGalleryProduct?.nombre || 'Galería de Producto' }}</h3>
-              <span class="gallery-subtitle" v-if="galleryImages.length > 0">
-                Imagen {{ activeImageIndex + 1 }} de {{ galleryImages.length }}
+    <!-- Modal Studio Lightbox & Inspector de Producto Premium -->
+    <div v-if="showGalleryModal" class="studio-modal-overlay" @click.self="closeGalleryModal">
+      <div class="studio-modal-card" role="dialog" aria-modal="true">
+        <!-- COLUMNA IZQUIERDA: Escenario Studio & Galería Interactiva -->
+        <div class="studio-viewport-column">
+          <!-- Top Floating Bar: Badges y Contador -->
+          <div class="studio-floating-topbar">
+            <span class="studio-image-counter">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              Foto {{ activeImageIndex + 1 }} de {{ galleryImages.length || 1 }}
+            </span>
+            <span v-if="selectedGalleryProduct?.codigoModelo" class="studio-model-chip">
+              Modelo {{ selectedGalleryProduct.codigoModelo }}
+            </span>
+          </div>
+
+          <!-- Escenario Principal con Vitrina Studio -->
+          <div class="studio-stage-frame">
+            <div v-if="galleryImages.length === 0" class="studio-empty-state">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <p>Sin fotografía registrada</p>
+            </div>
+            <template v-else>
+              <!-- Flecha Anterior -->
+              <button 
+                v-if="galleryImages.length > 1" 
+                @click="prevGalleryImage" 
+                class="studio-arrow-btn prev" 
+                title="Foto anterior (←)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+
+              <!-- Tarjeta Vitrina de la Imagen -->
+              <div 
+                class="studio-vitrine-card"
+                @mousemove="handleGalleryMouseMove"
+                @mouseleave="handleGalleryMouseLeave">
+                <img 
+                  :src="galleryImages[activeImageIndex]" 
+                  :alt="selectedGalleryProduct?.nombre"
+                  class="studio-product-img" 
+                  :style="galleryZoomStyle"
+                />
+              </div>
+
+              <!-- Flecha Siguiente -->
+              <button 
+                v-if="galleryImages.length > 1" 
+                @click="nextGalleryImage" 
+                class="studio-arrow-btn next" 
+                title="Siguiente foto (→)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </template>
+          </div>
+
+          <!-- Zoom Hint flotante inferior -->
+          <div class="studio-zoom-hint" v-if="galleryImages.length > 0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <line x1="11" y1="8" x2="11" y2="14"></line>
+              <line x1="8" y1="11" x2="14" y2="11"></line>
+            </svg>
+            Desplaza el cursor para explorar con zoom
+          </div>
+
+          <!-- Tira de Miniaturas (Thumbnails) -->
+          <div v-if="galleryImages.length > 1" class="studio-thumbnails-carousel">
+            <button
+              v-for="(img, idx) in galleryImages"
+              :key="idx"
+              :class="['studio-thumb-item', activeImageIndex === idx ? 'active' : '']"
+              @click="activeImageIndex = idx">
+              <img :src="img" :alt="'Miniatura ' + (idx + 1)" />
+            </button>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: Ficha de Inspección Rápida de Producto -->
+        <div class="studio-details-column">
+          <!-- Header de Ficha -->
+          <div class="studio-details-header">
+            <div class="studio-badge-row">
+              <span v-if="selectedProductCategory" class="studio-category-pill">
+                {{ selectedProductCategory }}
+              </span>
+              <span v-if="selectedGalleryProduct?.codigoModelo" class="studio-model-tag">
+                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+                {{ selectedGalleryProduct.codigoModelo }}
               </span>
             </div>
-          </div>
-          <button @click="closeGalleryModal" class="gallery-close-btn" title="Cerrar (Esc)">✕</button>
-        </div>
-
-        <!-- Visor Principal de Imagen -->
-        <div class="gallery-main-viewport">
-          <div v-if="galleryImages.length === 0" class="gallery-empty-state">
-            <span>📷</span>
-            <p>Este producto no tiene imágenes adicionales.</p>
-          </div>
-          <template v-else>
-            <!-- Botón Anterior -->
-            <button 
-              v-if="galleryImages.length > 1" 
-              @click="prevGalleryImage" 
-              class="gallery-nav-btn prev" 
-              title="Anterior">
-              ‹
+            <button @click="closeGalleryModal" class="studio-close-btn" title="Cerrar visor (Esc)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
             </button>
+          </div>
 
-            <!-- Imagen Principal con Zoom al hacer Hover -->
-            <div 
-              class="gallery-image-wrapper"
-              @mousemove="handleGalleryMouseMove"
-              @mouseleave="handleGalleryMouseLeave">
-              <img 
-                :src="galleryImages[activeImageIndex]" 
-                :alt="selectedGalleryProduct?.nombre"
-                class="gallery-main-image" 
-                :style="galleryZoomStyle"
-              />
+          <!-- Título y SKU -->
+          <h2 class="studio-product-title">{{ selectedGalleryProduct?.nombre || 'Producto' }}</h2>
+
+          <div class="studio-sku-box" @click="copyGallerySku(selectedGalleryProduct?.codigoBarras)" :title="'Copiar ' + (selectedGalleryProduct?.codigoBarras || '')">
+            <div class="studio-sku-info">
+              <span class="studio-sku-label">SKU / CÓDIGO BARRAS</span>
+              <span class="studio-sku-value">{{ selectedGalleryProduct?.codigoBarras || 'N/A' }}</span>
+            </div>
+            <button type="button" class="studio-copy-btn">
+              <template v-if="copiedSku">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span style="color: #10b981;">¡Copiado!</span>
+              </template>
+              <template v-else>
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copiar</span>
+              </template>
+            </button>
+          </div>
+
+          <!-- Bloque de Precio y Stock -->
+          <div class="studio-metrics-card">
+            <div class="studio-price-block">
+              <span class="studio-metric-label">Precio de Venta</span>
+              <div class="studio-price-row">
+                <span class="studio-main-price">
+                  S/. {{ (selectedGalleryProduct?.precioOferta > 0 ? selectedGalleryProduct.precioOferta : selectedGalleryProduct?.precio || 0).toFixed(2) }}
+                </span>
+                <span v-if="selectedGalleryProduct?.precioOferta > 0" class="studio-old-price">
+                  S/. {{ Number(selectedGalleryProduct.precio).toFixed(2) }}
+                </span>
+              </div>
+              <div v-if="selectedGalleryProduct?.precioCosto > 0" class="studio-cost-subtext">
+                Costo: S/. {{ Number(selectedGalleryProduct.precioCosto).toFixed(2) }} 
+                <span class="studio-margin-badge">
+                  +{{ Math.max(0, Math.round(((selectedGalleryProduct.precio - selectedGalleryProduct.precioCosto) / (selectedGalleryProduct.precio || 1)) * 100)) }}% margen
+                </span>
+              </div>
             </div>
 
-            <!-- Botón Siguiente -->
-            <button 
-              v-if="galleryImages.length > 1" 
-              @click="nextGalleryImage" 
-              class="gallery-nav-btn next" 
-              title="Siguiente">
-              ›
-            </button>
-          </template>
-        </div>
+            <div class="studio-stock-block">
+              <span class="studio-metric-label">Disponibilidad en Almacén</span>
+              <div :class="['studio-stock-pill', (selectedGalleryProduct?.stock <= selectedGalleryProduct?.stockMinimo) ? 'low' : 'ok']">
+                <span class="studio-stock-dot"></span>
+                <span class="studio-stock-text">
+                  {{ Number(selectedGalleryProduct?.stock || 0).toFixed(0) }} {{ selectedGalleryProduct?.unidadMedida || 'unidades' }}
+                </span>
+              </div>
+              <span class="studio-stock-min-hint">Mínimo sugerido: {{ selectedGalleryProduct?.stockMinimo || 5 }}</span>
+            </div>
+          </div>
 
-        <!-- Tira de Miniaturas (Thumbnails) -->
-        <div v-if="galleryImages.length > 1" class="gallery-thumbnails-strip">
-          <button
-            v-for="(img, idx) in galleryImages"
-            :key="idx"
-            :class="['gallery-thumb-btn', activeImageIndex === idx ? 'active' : '']"
-            @click="activeImageIndex = idx">
-            <img :src="img" alt="Thumbnail" />
-          </button>
+          <!-- Selector Rápido de Variantes del Mismo Modelo (Si existen) -->
+          <div v-if="galleryModelVariants.length > 1" class="studio-variants-section">
+            <div class="studio-section-subtitle">
+              <span>Variantes de este modelo</span>
+              <span class="studio-variants-count">({{ galleryModelVariants.length }})</span>
+            </div>
+            <div class="studio-variants-grid">
+              <button
+                v-for="v in galleryModelVariants"
+                :key="v.id"
+                type="button"
+                :class="['studio-variant-chip', v.id === selectedGalleryProduct?.id ? 'selected' : '']"
+                @click="selectGalleryVariant(v)">
+                <img :src="v.imagenUrl || (v.imagenes && v.imagenes[0]) || defaultImage" class="studio-variant-thumb" alt="" />
+                <div class="studio-variant-info">
+                  <span class="studio-variant-color">
+                    <span class="color-swatch-dot" :style="{ backgroundColor: getSwatchHex(getProductColor(v)) }"></span>
+                    {{ getProductColor(v) || v.codigoBarras }}
+                  </span>
+                  <span class="studio-variant-stock">{{ v.stock }} un.</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Ficha Técnica / Especificaciones (Atributos) -->
+          <div v-if="formattedGalleryAttributes.length > 0" class="studio-specs-section">
+            <div class="studio-section-subtitle">Especificaciones</div>
+            <div class="studio-specs-grid">
+              <div v-for="(attr, aIdx) in formattedGalleryAttributes" :key="aIdx" class="studio-spec-item">
+                <span class="spec-key">{{ attr.nombre }}</span>
+                <span class="spec-val">{{ attr.valor }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acciones en el pie del inspector -->
+          <div class="studio-actions-footer">
+            <button 
+              v-if="authStore.hasPermission('modificar_productos')"
+              type="button" 
+              class="studio-btn-edit" 
+              @click="editFromGallery">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Editar Producto</span>
+            </button>
+            <button type="button" class="studio-btn-close-secondary" @click="closeGalleryModal">
+              Cerrar visor
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -709,7 +979,7 @@
 
 <script setup>
 import { API_URL } from '../config'
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -723,6 +993,7 @@ const showGalleryModal = ref(false);
 const selectedGalleryProduct = ref(null);
 const galleryImages = ref([]);
 const activeImageIndex = ref(0);
+const copiedSku = ref(false);
 
 const galleryZoomStyle = reactive({
   transform: 'scale(1)',
@@ -754,6 +1025,7 @@ const closeGalleryModal = () => {
   selectedGalleryProduct.value = null;
   galleryImages.value = [];
   activeImageIndex.value = 0;
+  copiedSku.value = false;
 };
 const nextGalleryImage = () => {
   if (galleryImages.value.length > 0) {
@@ -764,6 +1036,74 @@ const prevGalleryImage = () => {
   if (galleryImages.value.length > 0) {
     activeImageIndex.value = (activeImageIndex.value - 1 + galleryImages.value.length) % galleryImages.value.length;
   }
+};
+
+const selectedProductCategory = computed(() => {
+  if (!selectedGalleryProduct.value) return '';
+  if (selectedGalleryProduct.value.categoriaNombre) return selectedGalleryProduct.value.categoriaNombre;
+  const cat = categories.value.find(c => c.id === selectedGalleryProduct.value.categoriaId);
+  return cat ? cat.nombre : '';
+});
+
+const galleryModelVariants = computed(() => {
+  if (!selectedGalleryProduct.value?.codigoModelo) return [];
+  const modelKey = selectedGalleryProduct.value.codigoModelo.trim().toUpperCase();
+  return products.value.filter(p => (p.codigoModelo || '').trim().toUpperCase() === modelKey);
+});
+
+const formattedGalleryAttributes = computed(() => {
+  if (!selectedGalleryProduct.value?.atributos) return [];
+  const attrs = selectedGalleryProduct.value.atributos;
+  if (!Array.isArray(attrs)) return [];
+  return attrs
+    .map(a => ({
+      nombre: a.nombre || a.Nombre || '',
+      valor: a.valor || a.Valor || ''
+    }))
+    .filter(a => a.nombre && a.valor && a.valor !== 'No aplica' && a.valor !== '-');
+});
+
+const copyGallerySku = (sku) => {
+  if (!sku) return;
+  navigator.clipboard.writeText(sku).then(() => {
+    copiedSku.value = true;
+    setTimeout(() => { copiedSku.value = false; }, 2000);
+  }).catch(() => {});
+};
+
+const selectGalleryVariant = (variant) => {
+  selectedGalleryProduct.value = variant;
+  galleryImages.value = variant.imagenes && variant.imagenes.length > 0 ? variant.imagenes : (variant.imagenUrl ? [variant.imagenUrl] : []);
+  activeImageIndex.value = 0;
+};
+
+const editFromGallery = () => {
+  if (!selectedGalleryProduct.value) return;
+  const prod = selectedGalleryProduct.value;
+  closeGalleryModal();
+  openEditModal(prod);
+};
+
+const handleGalleryKeydown = (e) => {
+  if (!showGalleryModal.value) return;
+  if (e.key === 'Escape') closeGalleryModal();
+  if (e.key === 'ArrowRight') nextGalleryImage();
+  if (e.key === 'ArrowLeft') prevGalleryImage();
+};
+
+const getSwatchHex = (colorName) => {
+  if (!colorName) return '#94a3b8';
+  const c = colorName.toLowerCase().trim();
+  if (c.includes('azul') || c.includes('blue') || c.includes('navy')) return '#2563eb';
+  if (c.includes('negro') || c.includes('black')) return '#1e293b';
+  if (c.includes('plata') || c.includes('silver') || c.includes('acero') || c.includes('gris')) return '#94a3b8';
+  if (c.includes('blanco') || c.includes('white')) return '#e2e8f0';
+  if (c.includes('oro') || c.includes('dorado') || c.includes('gold') || c.includes('champagne')) return '#d97706';
+  if (c.includes('rojo') || c.includes('red') || c.includes('granate') || c.includes('vino')) return '#dc2626';
+  if (c.includes('verde') || c.includes('green') || c.includes('esmeralda')) return '#16a34a';
+  if (c.includes('marron') || c.includes('marrón') || c.includes('cuero') || c.includes('cafe') || c.includes('café')) return '#854d0e';
+  if (c.includes('rosa') || c.includes('rose') || c.includes('rosado')) return '#f43f5e';
+  return '#64748b';
 };
 const isEdit = ref(false)
 const currentProductId = ref(null)
@@ -1300,6 +1640,11 @@ onMounted(() => {
   fetchBrands()
   fetchAttributeTypes()
   fetchInventoryStats()
+  window.addEventListener('keydown', handleGalleryKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleGalleryKeydown)
 })
 </script>
 
@@ -1325,7 +1670,7 @@ onMounted(() => {
 }
 
 .content-header {
-  margin-bottom: 30px;
+  margin-bottom: 24px;
   text-align: left;
 }
 
@@ -1334,6 +1679,49 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   gap: 20px;
+  flex-wrap: wrap;
+}
+
+.header-title-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+  flex-shrink: 0;
+}
+
+.btn-primary-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-primary-action:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
 }
 
 .inventory-stats-card {
@@ -1341,7 +1729,7 @@ onMounted(() => {
   background: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 12px 24px;
+  padding: 10px 22px;
   gap: 24px;
   box-shadow: var(--shadow-sm);
 }
@@ -1352,22 +1740,37 @@ onMounted(() => {
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .stat-value {
   font-size: 1.25rem;
-  font-weight: 500;
-  color: var(--primary);
+  font-weight: 600;
+  color: #1e293b;
 }
 
 .stat-divider {
   width: 1px;
   background-color: var(--border-color);
+}
+
+.filter-input-wrap {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon-svg {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .empty-state {
@@ -1383,13 +1786,16 @@ onMounted(() => {
 }
 
 .data-table th, .data-table td {
-  padding: 16px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--border-color);
 }
 
 .data-table th {
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 600;
   color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .stock-badge {
@@ -1409,17 +1815,81 @@ onMounted(() => {
   color: #991b1b;
 }
 
-.status-indicator {
-  font-size: 0.85rem;
-  font-weight: 500;
+/* Status Pills Modernos */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
-.status-indicator.ok {
+.status-pill.success {
+  background: #ecfdf5;
   color: #059669;
+  border: 1px solid #a7f3d0;
 }
 
-.status-indicator.low {
+.status-pill.warning {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.color-swatch-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.btn-action-icon {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #64748b;
+}
+
+.btn-action-icon.edit:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.btn-action-icon.delete:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
   color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.subtable-chevron {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-block;
+}
+
+.subtable-chevron.open {
+  transform: rotate(180deg);
 }
 
 /* Estilos para las ventanas modales y tarjetas de dialogo */
@@ -1725,140 +2195,145 @@ onMounted(() => {
   box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.08);
 }
 
-/* ── Modal Galería de Imágenes Premium (Lightbox) ── */
-.gallery-modal-overlay {
+/* ── Modal Studio Lightbox & Inspector de Producto Premium ── */
+.studio-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(10, 15, 29, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  padding: 20px;
-  animation: galleryFadeIn 0.25s ease-out;
+  padding: 24px;
+  animation: studioFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes galleryFadeIn {
+@keyframes studioFadeIn {
   from { opacity: 0; transform: scale(0.97); }
   to { opacity: 1; transform: scale(1); }
 }
 
-.gallery-modal-card {
+.studio-modal-card {
   width: 100%;
-  max-width: 780px;
+  max-width: 1020px;
+  max-height: 90vh;
   background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
   overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+}
+
+@media (max-width: 860px) {
+  .studio-modal-card {
+    grid-template-columns: 1fr;
+    max-height: 94vh;
+    overflow-y: auto;
+  }
+}
+
+/* Columna Izquierda: Escenario Studio */
+.studio-viewport-column {
+  background: radial-gradient(circle at 50% 40%, #1e293b 0%, #0f172a 75%, #090d16 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-}
-
-.gallery-modal-header {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 18px 24px;
-  background: rgba(30, 41, 59, 0.7);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.gallery-header-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.gallery-icon-badge {
-  font-size: 1.4rem;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 8px;
-  border-radius: 12px;
-}
-
-.gallery-title {
-  color: #f8fafc;
-  font-size: 1.15rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.gallery-subtitle {
-  color: #94a3b8;
-  font-size: 0.82rem;
-  font-weight: 500;
-}
-
-.gallery-close-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: #94a3b8;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.gallery-close-btn:hover {
-  background: #ef4444;
-  color: #ffffff;
-  transform: rotate(90deg);
-}
-
-.gallery-main-viewport {
-  position: relative;
-  width: 100%;
-  height: 440px;
-  background: #020617;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.gallery-image-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 20px;
-}
-
-.gallery-main-image {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-  transition: transform 0.15s ease-out, transform-origin 0.1s ease-out;
+  position: relative;
   user-select: none;
 }
 
-.gallery-nav-btn {
+.studio-floating-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  z-index: 5;
+}
+
+.studio-image-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.studio-model-chip {
+  background: rgba(37, 99, 235, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+/* Vitrina de exhibición del producto */
+.studio-stage-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  padding: 10px 0;
+}
+
+.studio-vitrine-card {
+  width: 100%;
+  max-width: 320px;
+  height: 350px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  cursor: zoom-in;
+  transition: box-shadow 0.25s ease;
+}
+
+.studio-vitrine-card:hover {
+  box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(59, 130, 246, 0.4);
+}
+
+.studio-product-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.15s ease-out, transform-origin 0.1s ease-out;
+}
+
+.studio-arrow-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(30, 41, 59, 0.75);
-  backdrop-filter: blur(6px);
-  color: #ffffff;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  width: 44px;
-  height: 44px;
+  color: #ffffff;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  font-size: 1.8rem;
-  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1867,78 +2342,470 @@ onMounted(() => {
   transition: all 0.2s ease;
 }
 
-.gallery-nav-btn.prev {
-  left: 16px;
-}
+.studio-arrow-btn.prev { left: 4px; }
+.studio-arrow-btn.next { right: 4px; }
 
-.gallery-nav-btn.next {
-  right: 16px;
-}
-
-.gallery-nav-btn:hover {
-  background: #3b82f6;
+.studio-arrow-btn:hover {
+  background: #2563eb;
   border-color: #60a5fa;
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
   transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 0 16px rgba(37, 99, 235, 0.5);
 }
 
-.gallery-thumbnails-strip {
+.studio-zoom-hint {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 10px;
-  padding: 16px 20px;
-  background: #0e1726;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  overflow-x: auto;
+  justify-content: center;
+  gap: 6px;
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 500;
+  margin-top: 6px;
 }
 
-.gallery-thumb-btn {
-  position: relative;
-  width: 64px;
-  height: 64px;
+.studio-thumbnails-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.studio-thumb-item {
+  width: 52px;
+  height: 52px;
   border-radius: 10px;
-  border: 2px solid transparent;
-  padding: 0;
-  background: #1e293b;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  padding: 3px;
   cursor: pointer;
   overflow: hidden;
-  opacity: 0.6;
+  opacity: 0.55;
   transition: all 0.2s ease;
   flex-shrink: 0;
 }
 
-.gallery-thumb-btn img {
+.studio-thumb-item img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
-.gallery-thumb-btn:hover {
+.studio-thumb-item:hover {
   opacity: 0.9;
   transform: translateY(-2px);
 }
 
-.gallery-thumb-btn.active {
+.studio-thumb-item.active {
   opacity: 1;
   border-color: #3b82f6;
   box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
   transform: scale(1.06);
 }
 
-.gallery-empty-state {
+.studio-empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   color: #64748b;
-  font-size: 1rem;
   gap: 12px;
+  min-height: 280px;
 }
 
-.gallery-empty-state span {
-  font-size: 3rem;
-  opacity: 0.5;
+/* Columna Derecha: Ficha de Inspección */
+.studio-details-column {
+  background: #0f172a;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  color: #f8fafc;
+}
+
+.studio-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.studio-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.studio-category-pill {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.studio-model-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 6px;
+}
+
+.studio-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #94a3b8;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.studio-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  transform: rotate(90deg);
+}
+
+.studio-product-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f8fafc;
+  line-height: 1.35;
+  margin: 0 0 12px 0;
+}
+
+/* SKU Copy Box */
+.studio-sku-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.studio-sku-box:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.studio-sku-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.studio-sku-label {
+  font-size: 0.65rem;
+  color: #64748b;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.studio-sku-value {
+  font-family: monospace;
+  font-size: 0.88rem;
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.studio-copy-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+/* Métricas de Precio y Stock */
+.studio-metrics-card {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 14px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+
+.studio-metric-label {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.studio-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.studio-main-price {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.studio-old-price {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-decoration: line-through;
+}
+
+.studio-cost-subtext {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.studio-margin-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.studio-stock-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.studio-stock-pill.ok {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.studio-stock-pill.low {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.studio-stock-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+  animation: studioPulse 2s infinite ease-in-out;
+}
+
+@keyframes studioPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.studio-stock-min-hint {
+  display: block;
+  font-size: 0.68rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Selector de Variantes del Modelo */
+.studio-variants-section {
+  margin-bottom: 18px;
+}
+
+.studio-section-subtitle {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.studio-variants-count {
+  color: #60a5fa;
+}
+
+.studio-variants-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.studio-variant-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 5px 10px 5px 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #e2e8f0;
+}
+
+.studio-variant-chip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.studio-variant-chip.selected {
+  background: rgba(37, 99, 235, 0.2);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.studio-variant-thumb {
+  width: 24px;
+  height: 28px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 1px;
+}
+
+.studio-variant-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.studio-variant-color {
+  font-size: 0.78rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.studio-variant-stock {
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+/* Ficha Técnica / Especificaciones */
+.studio-specs-section {
+  margin-bottom: 20px;
+}
+
+.studio-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.studio-spec-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 7px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.studio-spec-item .spec-key {
+  font-size: 0.65rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.studio-spec-item .spec-val {
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+/* Acciones Footer */
+.studio-actions-footer {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.studio-btn-edit {
+  flex-grow: 1;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  transition: all 0.2s ease;
+}
+
+.studio-btn-edit:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+}
+
+.studio-btn-close-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.studio-btn-close-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
 }
 
 /* ========================================================
