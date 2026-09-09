@@ -350,11 +350,12 @@ export default function PaginaDetalleProducto({
                   {variants.map(variant => {
                     const isSelected = product.id === variant.id;
                     const vImage = variant.imagenUrl || (variant.imagenes && variant.imagenes[0]);
+                    const colorAttr = variant.atributos?.find(a => (a.nombre || a.Nombre)?.toLowerCase() === 'color')?.valor || variant.atributos?.find(a => (a.nombre || a.Nombre)?.toLowerCase() === 'color')?.Valor;
                     return (
                       <div
                         key={variant.id}
                         onClick={() => onSelectProduct && onSelectProduct(variant)}
-                        title={variant.nombre}
+                        title={colorAttr ? `${variant.nombre} - ${colorAttr}` : variant.nombre}
                         style={{
                           width: '44px',
                           height: '44px',

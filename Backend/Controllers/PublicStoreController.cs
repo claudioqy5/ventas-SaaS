@@ -85,7 +85,9 @@ public class PublicStoreController : ControllerBase
             p.KilosPorCostal,
             p.Stock,
             p.ImagenUrl,
-            p.Imagenes
+            p.Imagenes,
+            p.CodigoModelo,
+            p.Atributos
         });
 
         return Ok(publicProducts);

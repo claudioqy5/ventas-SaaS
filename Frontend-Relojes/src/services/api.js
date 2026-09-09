@@ -63,6 +63,8 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
       return {
       id: item.id || item._id,
       nombre: item.nombre,
+      codigoBarras: item.codigoBarras || item.CodigoBarras || '',
+      codigoModelo: item.codigoModelo || item.CodigoModelo || '',
       descripcion: item.descripcion || 'Pieza exclusiva de alta relojería.',
       precio: item.precio || 0,
       precioOferta: item.precioOferta || 0,
@@ -72,6 +74,7 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
       stock: item.stock,
       imagenUrl: (item.imagenes && item.imagenes.length > 0) ? item.imagenes[0] : (item.imagenUrl || '/watches/chronograph_gold.jpg'),
       imagenes: item.imagenes || [],
+      atributos: item.atributos || item.Atributos || [],
       precioOferta: item.precioOferta || 0,
       specs: {
         calibre: 'Calibre Automático Certificado',

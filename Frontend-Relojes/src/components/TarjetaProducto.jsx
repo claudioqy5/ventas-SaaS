@@ -279,6 +279,7 @@ export default function TarjetaProducto({
               {variants.map(variant => {
                 const isSelected = activeProduct.id === variant.id;
                 const vImage = variant.imagenUrl || (variant.imagenes && variant.imagenes[0]);
+                const colorAttr = variant.atributos?.find(a => (a.nombre || a.Nombre)?.toLowerCase() === 'color')?.valor || variant.atributos?.find(a => (a.nombre || a.Nombre)?.toLowerCase() === 'color')?.Valor;
                 return (
                   <div
                     key={variant.id}
@@ -286,7 +287,7 @@ export default function TarjetaProducto({
                       e.stopPropagation();
                       setSelectedVariant(variant);
                     }}
-                    title={variant.nombre}
+                    title={colorAttr ? `${variant.nombre} - ${colorAttr}` : variant.nombre}
                     style={{
                       width: '24px',
                       height: '24px',

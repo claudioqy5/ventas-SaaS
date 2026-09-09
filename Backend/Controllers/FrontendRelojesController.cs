@@ -70,7 +70,9 @@ public class FrontendRelojesController : ControllerBase
             p.ImagenUrl,
             p.Imagenes,
             p.CodigoBarras,
-            p.TipoProducto
+            p.TipoProducto,
+            p.CodigoModelo,
+            p.Atributos
         });
 
         return Ok(catalogo);
