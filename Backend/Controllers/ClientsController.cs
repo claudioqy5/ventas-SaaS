@@ -53,6 +53,18 @@ public class ClientsController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
+        // Sincronizar Nombres, Apellidos y Nombre completo
+        if (string.IsNullOrWhiteSpace(client.Nombre) && (!string.IsNullOrWhiteSpace(client.Nombres) || !string.IsNullOrWhiteSpace(client.Apellidos)))
+        {
+            client.Nombre = $"{client.Nombres} {client.Apellidos}".Trim();
+        }
+        else if ((string.IsNullOrWhiteSpace(client.Nombres) || string.IsNullOrWhiteSpace(client.Apellidos)) && !string.IsNullOrWhiteSpace(client.Nombre))
+        {
+            var parts = client.Nombre.Trim().Split(' ');
+            client.Nombres = parts[0];
+            client.Apellidos = string.Join(" ", parts.Skip(1));
+        }
+
         // Limpio el Id para que MongoDB lo genere automaticamente
         client.Id = string.Empty;
         // Vinculo el cliente a la empresa actual
@@ -74,6 +86,18 @@ public class ClientsController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
+        // Sincronizar Nombres, Apellidos y Nombre completo
+        if (string.IsNullOrWhiteSpace(client.Nombre) && (!string.IsNullOrWhiteSpace(client.Nombres) || !string.IsNullOrWhiteSpace(client.Apellidos)))
+        {
+            client.Nombre = $"{client.Nombres} {client.Apellidos}".Trim();
+        }
+        else if ((string.IsNullOrWhiteSpace(client.Nombres) || string.IsNullOrWhiteSpace(client.Apellidos)) && !string.IsNullOrWhiteSpace(client.Nombre))
+        {
+            var parts = client.Nombre.Trim().Split(' ');
+            client.Nombres = parts[0];
+            client.Apellidos = string.Join(" ", parts.Skip(1));
+        }
+
         // Busco el cliente por su Id y confirmo que pertenece a esta empresa
         var filter = Builders<Client>.Filter.And(
             Builders<Client>.Filter.Eq(c => c.Id, id),
@@ -82,6 +106,8 @@ public class ClientsController : ControllerBase
 
         // Actualizo solo los campos editables del cliente
         var update = Builders<Client>.Update
+            .Set(c => c.Nombres, client.Nombres)
+            .Set(c => c.Apellidos, client.Apellidos)
             .Set(c => c.Nombre, client.Nombre)
             .Set(c => c.Telefono, client.Telefono)
             .Set(c => c.Correo, client.Correo)

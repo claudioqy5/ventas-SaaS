@@ -85,7 +85,7 @@
             <tbody>
               <tr v-for="(client, index) in filteredClients" :key="client.id">
                 <td><strong>{{ index + 1 }}</strong></td>
-                <td><strong>{{ client.nombre }}</strong></td>
+                <td><strong>{{ client.nombre || `${client.nombres || ''} ${client.apellidos || ''}`.trim() }}</strong></td>
                 <td><code>{{ client.numeroDocumento || 'N/A' }}</code></td>
                 <td>{{ client.telefono || 'N/A' }}</td>
                 <td>{{ client.correo || 'N/A' }}</td>
@@ -416,29 +416,35 @@
           <form @submit.prevent="saveClient" class="grid">
             <div class="grid grid-2">
               <div class="field">
-                <label>Nombre Completo</label>
-                <input v-model="form.nombre" type="text" placeholder="Ej. Juan Pérez" required />
+                <label>Nombres</label>
+                <input v-model="form.nombres" type="text" placeholder="Ej. Juan Carlos" required />
               </div>
               <div class="field">
-                <label>Documento de Identidad</label>
-                <input v-model="form.numeroDocumento" type="text" placeholder="DNI, RUC, RUT, etc." />
+                <label>Apellidos</label>
+                <input v-model="form.apellidos" type="text" placeholder="Ej. Pérez Gómez" required />
               </div>
             </div>
 
             <div class="grid grid-2">
               <div class="field">
+                <label>Documento de Identidad</label>
+                <input v-model="form.numeroDocumento" type="text" placeholder="DNI, RUC, RUT, etc." />
+              </div>
+              <div class="field">
                 <label>Teléfono de Contacto</label>
                 <input v-model="form.telefono" type="text" placeholder="987654321" />
               </div>
+            </div>
+
+            <div class="grid grid-2">
               <div class="field">
                 <label>Correo Electrónico</label>
                 <input v-model="form.correo" type="email" placeholder="juan@correo.com" />
               </div>
-            </div>
-
-            <div class="field">
-              <label>Dirección</label>
-              <input v-model="form.direccion" type="text" placeholder="Calle Las Flores 123" />
+              <div class="field">
+                <label>Dirección</label>
+                <input v-model="form.direccion" type="text" placeholder="Calle Las Flores 123" />
+              </div>
             </div>
 
             <div class="modal-actions">
@@ -472,6 +478,8 @@ const filteredClients = computed(() => {
   const q = searchQuery.value.toLowerCase()
   return clients.value.filter(c => 
     (c.nombre && c.nombre.toLowerCase().includes(q)) ||
+    (c.nombres && c.nombres.toLowerCase().includes(q)) ||
+    (c.apellidos && c.apellidos.toLowerCase().includes(q)) ||
     (c.numeroDocumento && c.numeroDocumento.toLowerCase().includes(q)) ||
     (c.telefono && c.telefono.toLowerCase().includes(q)) ||
     (c.correo && c.correo.toLowerCase().includes(q))
@@ -479,6 +487,8 @@ const filteredClients = computed(() => {
 })
 
 const form = reactive({
+  nombres: '',
+  apellidos: '',
   nombre: '',
   numeroDocumento: '',
   telefono: '',
@@ -501,6 +511,8 @@ const fetchClients = async () => {
 const openCreateModal = () => {
   isEdit.value = false
   currentId.value = null
+  form.nombres = ''
+  form.apellidos = ''
   form.nombre = ''
   form.numeroDocumento = ''
   form.telefono = ''
@@ -512,16 +524,19 @@ const openCreateModal = () => {
 const openEditModal = (client) => {
   isEdit.value = true
   currentId.value = client.id
-  form.nombre = client.nombre
-  form.numeroDocumento = client.numeroDocumento
-  form.telefono = client.telefono
-  form.correo = client.correo
-  form.direccion = client.direccion
+  form.nombres = client.nombres || (client.nombre ? client.nombre.trim().split(' ')[0] : '')
+  form.apellidos = client.apellidos || (client.nombre ? client.nombre.trim().split(' ').slice(1).join(' ') : '')
+  form.nombre = client.nombre || `${form.nombres} ${form.apellidos}`.trim()
+  form.numeroDocumento = client.numeroDocumento || ''
+  form.telefono = client.telefono || ''
+  form.correo = client.correo || ''
+  form.direccion = client.direccion || ''
   showModal.value = true
 }
 
 const saveClient = async () => {
   try {
+    form.nombre = `${form.nombres} ${form.apellidos}`.trim()
     const url = isEdit.value 
       ? `${API_URL}/api/clients/${currentId.value}`
       : `${API_URL}/api/clients`

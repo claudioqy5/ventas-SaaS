@@ -123,14 +123,51 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
 
 // ---- Autenticación del Cliente E-Commerce ----
 
-export async function registerCustomer(nombre, correo, clave, telefono = '') {
+export async function registerCustomer(nombresOrNombre, apellidosOrCorreo, correoOrClave, claveOrTelefono, telefono = '') {
+  let nombres = '';
+  let apellidos = '';
+  let correo = '';
+  let clave = '';
+  let tel = '';
+
+  if (typeof nombresOrNombre === 'object' && nombresOrNombre !== null) {
+    nombres = nombresOrNombre.nombres || nombresOrNombre.nombre || '';
+    apellidos = nombresOrNombre.apellidos || '';
+    correo = nombresOrNombre.correo || nombresOrNombre.email || '';
+    clave = nombresOrNombre.clave || nombresOrNombre.password || '';
+    tel = nombresOrNombre.telefono || '';
+  } else if (arguments.length >= 4 && typeof claveOrTelefono === 'string' && claveOrTelefono.length >= 4) {
+    // Firma: registerCustomer(nombres, apellidos, correo, clave, telefono)
+    nombres = nombresOrNombre || '';
+    apellidos = apellidosOrCorreo || '';
+    correo = correoOrClave || '';
+    clave = claveOrTelefono || '';
+    tel = telefono || '';
+  } else {
+    // Firma anterior: registerCustomer(nombreCompleto, correo, clave, telefono)
+    const partes = (nombresOrNombre || '').trim().split(' ');
+    nombres = partes[0] || '';
+    apellidos = partes.slice(1).join(' ') || '';
+    correo = apellidosOrCorreo || '';
+    clave = correoOrClave || '';
+    tel = claveOrTelefono || '';
+  }
+
+  const nombreCompleto = `${nombres} ${apellidos}`.trim();
   const empresaId = DEFAULT_EMPRESA_ID;
-  const apiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '/api/public/store'); // Ajustar base path si es necesario
+  const apiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '/api/public/store');
   
   const res = await fetch(`${apiUrl}/${empresaId}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nombre, correo, clave, telefono })
+    body: JSON.stringify({ 
+      nombres, 
+      apellidos, 
+      nombre: nombreCompleto, 
+      correo, 
+      clave, 
+      telefono: tel 
+    })
   });
 
   if (!res.ok) {

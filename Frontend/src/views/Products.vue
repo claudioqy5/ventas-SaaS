@@ -1034,8 +1034,8 @@
           <!-- Header de Ficha -->
           <div class="studio-details-header">
             <div class="studio-badge-row">
-              <span v-if="selectedProductCategory" class="studio-category-pill">
-                {{ selectedProductCategory }}
+              <span v-for="catName in selectedProductCategories" :key="catName" class="studio-category-pill">
+                {{ catName }}
               </span>
               <span v-if="selectedGalleryProduct?.codigoModelo" class="studio-model-tag">
                 <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1278,11 +1278,22 @@ const prevGalleryImage = () => {
   }
 };
 
-const selectedProductCategory = computed(() => {
-  if (!selectedGalleryProduct.value) return '';
-  if (selectedGalleryProduct.value.categoriaNombre) return selectedGalleryProduct.value.categoriaNombre;
-  const cat = categories.value.find(c => c.id === selectedGalleryProduct.value.categoriaId);
-  return cat ? cat.nombre : '';
+const selectedProductCategories = computed(() => {
+  if (!selectedGalleryProduct.value) return [];
+  const prod = selectedGalleryProduct.value;
+  const ids = (prod.categoriaIds && prod.categoriaIds.length > 0)
+    ? prod.categoriaIds
+    : (prod.categoriaId ? [prod.categoriaId] : []);
+  
+  if (ids.length > 0) {
+    const list = ids
+      .map(id => categories.value.find(c => c.id === id)?.nombre)
+      .filter(Boolean);
+    if (list.length > 0) return list;
+  }
+
+  if (prod.categoriaNombre) return [prod.categoriaNombre];
+  return [];
 });
 
 const galleryModelVariants = computed(() => {
@@ -2644,10 +2655,10 @@ onUnmounted(() => {
   width: 100%;
   max-width: 1020px;
   max-height: 90vh;
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 20px;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   display: grid;
   grid-template-columns: 1.1fr 1fr;
@@ -2661,10 +2672,10 @@ onUnmounted(() => {
   }
 }
 
-/* Columna Izquierda: Escenario Studio */
+/* Columna Izquierda: Escenario Studio Claro */
 .studio-viewport-column {
-  background: radial-gradient(circle at 50% 40%, #1e293b 0%, #0f172a 75%, #090d16 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f8fafc 60%, #f1f5f9 100%);
+  border-right: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -2685,20 +2696,20 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #94a3b8;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
   font-size: 0.78rem;
-  font-weight: 500;
+  font-weight: 600;
   padding: 4px 10px;
   border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
 }
 
 .studio-model-chip {
-  background: rgba(37, 99, 235, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  color: #60a5fa;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #2563eb;
   font-size: 0.76rem;
   font-weight: 600;
   padding: 4px 10px;
@@ -2723,18 +2734,20 @@ onUnmounted(() => {
   background: #ffffff;
   border-radius: 18px;
   padding: 14px;
-  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.02);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   position: relative;
   cursor: zoom-in;
-  transition: box-shadow 0.25s ease;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .studio-vitrine-card:hover {
-  box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(37, 99, 235, 0.25);
+  border-color: #93c5fd;
 }
 
 .studio-product-img {
@@ -2748,11 +2761,9 @@ onUnmounted(() => {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -2761,6 +2772,7 @@ onUnmounted(() => {
   justify-content: center;
   cursor: pointer;
   z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
 }
 
@@ -2769,9 +2781,10 @@ onUnmounted(() => {
 
 .studio-arrow-btn:hover {
   background: #2563eb;
-  border-color: #60a5fa;
+  color: #ffffff;
+  border-color: #2563eb;
   transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 0 16px rgba(37, 99, 235, 0.5);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
 }
 
 .studio-zoom-hint {
@@ -2799,12 +2812,12 @@ onUnmounted(() => {
   width: 52px;
   height: 52px;
   border-radius: 10px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid #e2e8f0;
   background: #ffffff;
   padding: 3px;
   cursor: pointer;
   overflow: hidden;
-  opacity: 0.55;
+  opacity: 0.65;
   transition: all 0.2s ease;
   flex-shrink: 0;
 }
@@ -2816,14 +2829,15 @@ onUnmounted(() => {
 }
 
 .studio-thumb-item:hover {
-  opacity: 0.9;
+  opacity: 1;
+  border-color: #94a3b8;
   transform: translateY(-2px);
 }
 
 .studio-thumb-item.active {
   opacity: 1;
-  border-color: #3b82f6;
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
   transform: scale(1.06);
 }
 
@@ -2832,19 +2846,19 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #64748b;
+  color: #94a3b8;
   gap: 12px;
   min-height: 280px;
 }
 
-/* Columna Derecha: Ficha de Inspección */
+/* Columna Derecha: Ficha de Inspección Clara */
 .studio-details-column {
-  background: #0f172a;
+  background: #ffffff;
   padding: 24px 28px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  color: #f8fafc;
+  color: #0f172a;
 }
 
 .studio-details-header {
@@ -2856,17 +2870,19 @@ onUnmounted(() => {
 
 .studio-badge-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .studio-category-pill {
-  background: rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
+  background: #f1f5f9;
+  color: #334155;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   padding: 3px 9px;
   border-radius: 6px;
+  border: 1px solid #e2e8f0;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
@@ -2875,9 +2891,9 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(37, 99, 235, 0.15);
-  color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
   font-size: 0.75rem;
   font-weight: 600;
   padding: 3px 9px;
@@ -2885,9 +2901,9 @@ onUnmounted(() => {
 }
 
 .studio-close-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: none;
-  color: #94a3b8;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -2899,15 +2915,16 @@ onUnmounted(() => {
 }
 
 .studio-close-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
+  background: #fee2e2;
   color: #ef4444;
+  border-color: #fca5a5;
   transform: rotate(90deg);
 }
 
 .studio-product-title {
   font-size: 1.25rem;
-  font-weight: 600;
-  color: #f8fafc;
+  font-weight: 700;
+  color: #0f172a;
   line-height: 1.35;
   margin: 0 0 12px 0;
 }
@@ -2917,8 +2934,8 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 8px 12px;
   margin-bottom: 18px;
@@ -2927,8 +2944,8 @@ onUnmounted(() => {
 }
 
 .studio-sku-box:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
 
 .studio-sku-info {
@@ -2947,16 +2964,16 @@ onUnmounted(() => {
 .studio-sku-value {
   font-family: monospace;
   font-size: 0.88rem;
-  color: #e2e8f0;
+  color: #1e293b;
   font-weight: 600;
 }
 
 .studio-copy-btn {
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: #2563eb;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -2968,8 +2985,8 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 14px;
-  background: rgba(30, 41, 59, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 14px 16px;
   margin-bottom: 18px;
@@ -2977,7 +2994,7 @@ onUnmounted(() => {
 
 .studio-metric-label {
   font-size: 0.72rem;
-  color: #94a3b8;
+  color: #64748b;
   font-weight: 500;
   display: block;
   margin-bottom: 4px;
@@ -2992,13 +3009,13 @@ onUnmounted(() => {
 .studio-main-price {
   font-size: 1.45rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #0f172a;
   letter-spacing: -0.02em;
 }
 
 .studio-old-price {
   font-size: 0.85rem;
-  color: #64748b;
+  color: #94a3b8;
   text-decoration: line-through;
 }
 
@@ -3012,8 +3029,9 @@ onUnmounted(() => {
 }
 
 .studio-margin-badge {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
   padding: 1px 6px;
   border-radius: 4px;
   font-weight: 600;
@@ -3031,15 +3049,15 @@ onUnmounted(() => {
 }
 
 .studio-stock-pill.ok {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
 }
 
 .studio-stock-pill.low {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
 }
 
 .studio-stock-dot {
@@ -3070,7 +3088,7 @@ onUnmounted(() => {
 
 .studio-section-subtitle {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: #475569;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -3081,7 +3099,7 @@ onUnmounted(() => {
 }
 
 .studio-variants-count {
-  color: #60a5fa;
+  color: #2563eb;
 }
 
 .studio-variants-grid {
@@ -3094,25 +3112,26 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 5px 10px 5px 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #e2e8f0;
+  color: #1e293b;
 }
 
 .studio-variant-chip:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: #f1f5f9;
+  border-color: #cbd5e1;
   transform: translateY(-1px);
 }
 
 .studio-variant-chip.selected {
-  background: rgba(37, 99, 235, 0.2);
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 1px #3b82f6;
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #1d4ed8;
+  box-shadow: 0 0 0 1px #2563eb;
 }
 
 .studio-variant-thumb {
@@ -3122,6 +3141,7 @@ onUnmounted(() => {
   background: #ffffff;
   border-radius: 4px;
   padding: 1px;
+  border: 1px solid #e2e8f0;
 }
 
 .studio-variant-info {
@@ -3137,6 +3157,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 5px;
+  color: #1e293b;
 }
 
 .studio-variant-stock {
@@ -3156,8 +3177,8 @@ onUnmounted(() => {
 }
 
 .studio-spec-item {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 7px 10px;
   display: flex;
@@ -3175,21 +3196,21 @@ onUnmounted(() => {
 
 .studio-spec-item .spec-val {
   font-size: 0.8rem;
-  color: #e2e8f0;
-  font-weight: 500;
+  color: #0f172a;
+  font-weight: 600;
 }
 
 /* Acciones Footer */
 .studio-actions-footer {
   margin-top: auto;
   padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid #e2e8f0;
   display: flex;
   gap: 10px;
   align-items: center;
   position: sticky;
   bottom: -24px;
-  background-color: #0f172a;
+  background-color: #ffffff;
   z-index: 10;
   padding-bottom: 24px;
   margin-left: -28px;
@@ -3200,7 +3221,7 @@ onUnmounted(() => {
 
 .studio-btn-edit {
   flex-grow: 1;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: #2563eb;
   color: #ffffff;
   border: none;
   padding: 10px 18px;
@@ -3212,20 +3233,20 @@ onUnmounted(() => {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
   transition: all 0.2s ease;
 }
 
 .studio-btn-edit:hover {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: #1d4ed8;
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
 }
 
 .studio-btn-close-secondary {
-  background: rgba(255, 255, 255, 0.06);
-  color: #94a3b8;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
   padding: 10px 16px;
   border-radius: 10px;
   font-size: 0.85rem;
@@ -3235,8 +3256,8 @@ onUnmounted(() => {
 }
 
 .studio-btn-close-secondary:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+  background: #e2e8f0;
+  color: #0f172a;
 }
 
 /* ========================================================

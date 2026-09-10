@@ -117,6 +117,19 @@ public class PublicStoreController : ControllerBase
     public async Task<IActionResult> RegisterClient(string empresaId, [FromBody] ClientRegisterRequest request)
     {
         var existing = await _context.Clients.Find(c => c.EmpresaId == empresaId && c.Correo == request.Correo).FirstOrDefaultAsync();
+
+        var nombres = !string.IsNullOrWhiteSpace(request.Nombres)
+            ? request.Nombres.Trim()
+            : (!string.IsNullOrWhiteSpace(request.Nombre) ? request.Nombre.Trim().Split(' ')[0] : string.Empty);
+
+        var apellidos = !string.IsNullOrWhiteSpace(request.Apellidos)
+            ? request.Apellidos.Trim()
+            : (!string.IsNullOrWhiteSpace(request.Nombre) ? string.Join(" ", request.Nombre.Trim().Split(' ').Skip(1)) : string.Empty);
+
+        var nombreCompleto = $"{nombres} {apellidos}".Trim();
+        if (string.IsNullOrWhiteSpace(nombreCompleto))
+            nombreCompleto = request.Nombre ?? string.Empty;
+
         if (existing != null)
         {
             if (existing.EsUsuarioEcommerce)
@@ -125,18 +138,22 @@ public class PublicStoreController : ControllerBase
             // Si ya existía como cliente de mostrador (POS), lo convertimos en cliente ecommerce
             existing.EsUsuarioEcommerce = true;
             existing.ClaveHash = _passwordHasher.Hash(request.Clave);
-            existing.Nombre = request.Nombre;
+            existing.Nombres = !string.IsNullOrWhiteSpace(nombres) ? nombres : existing.Nombres;
+            existing.Apellidos = !string.IsNullOrWhiteSpace(apellidos) ? apellidos : existing.Apellidos;
+            existing.Nombre = !string.IsNullOrWhiteSpace(nombreCompleto) ? nombreCompleto : existing.Nombre;
             existing.Telefono = request.Telefono ?? existing.Telefono;
             
             await _context.Clients.ReplaceOneAsync(c => c.Id == existing.Id, existing);
             var token = _jwtProvider.GenerateClientToken(existing);
-            return Ok(new { token, client = new { existing.Id, existing.Nombre, existing.Correo } });
+            return Ok(new { token, client = new { existing.Id, existing.Nombre, existing.Nombres, existing.Apellidos, existing.Correo, existing.Telefono } });
         }
 
         var newClient = new Client
         {
             EmpresaId = empresaId,
-            Nombre = request.Nombre,
+            Nombres = nombres,
+            Apellidos = apellidos,
+            Nombre = nombreCompleto,
             Correo = request.Correo,
             Telefono = request.Telefono ?? string.Empty,
             ClaveHash = _passwordHasher.Hash(request.Clave),
@@ -146,7 +163,7 @@ public class PublicStoreController : ControllerBase
 
         await _context.Clients.InsertOneAsync(newClient);
         var newToken = _jwtProvider.GenerateClientToken(newClient);
-        return Ok(new { token = newToken, client = new { newClient.Id, newClient.Nombre, newClient.Correo } });
+        return Ok(new { token = newToken, client = new { newClient.Id, newClient.Nombre, newClient.Nombres, newClient.Apellidos, newClient.Correo, newClient.Telefono } });
     }
 
     // POST api/public/store/{empresaId}/auth/login
@@ -159,7 +176,7 @@ public class PublicStoreController : ControllerBase
             return Unauthorized(new { message = "Correo o contraseña incorrectos." });
 
         var token = _jwtProvider.GenerateClientToken(client);
-        return Ok(new { token, client = new { client.Id, client.Nombre, client.Correo, client.Telefono, client.Direccion, client.NumeroDocumento } });
+        return Ok(new { token, client = new { client.Id, client.Nombre, client.Nombres, client.Apellidos, client.Correo, client.Telefono, client.Direccion, client.NumeroDocumento } });
     }
 
     // POST api/public/store/{empresaId}/orders
@@ -257,7 +274,7 @@ public class PublicStoreController : ControllerBase
     }
 }
 
-public record ClientRegisterRequest(string Nombre, string Correo, string Clave, string? Telefono);
+public record ClientRegisterRequest(string? Nombre, string? Nombres, string? Apellidos, string Correo, string Clave, string? Telefono);
 public record ClientLoginRequest(string Correo, string Clave);
 public record StoreOrderRequest(
     decimal Subtotal,

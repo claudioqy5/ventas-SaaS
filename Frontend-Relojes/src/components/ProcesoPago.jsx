@@ -104,14 +104,13 @@ export default function ProcesoPago({
   // Autocompletar con los datos del usuario logueado
   useEffect(() => {
     if (user) {
-      const nombresSplit = (user.nombre || '').split(' ');
-      const nombre = nombresSplit[0] || '';
-      const apellido = nombresSplit.slice(1).join(' ') || '';
+      const primerNombre = user.nombres || (user.nombre || '').trim().split(' ')[0] || '';
+      const apellidos = user.apellidos || (user.nombre || '').trim().split(' ').slice(1).join(' ') || '';
       
       setPersonalData(prev => ({
         ...prev,
-        nombres: prev.nombres || nombre,
-        apellidos: prev.apellidos || apellido,
+        nombres: prev.nombres || primerNombre,
+        apellidos: prev.apellidos || apellidos,
         email: prev.email || user.email || '',
         telefono: prev.telefono || user.telefono || ''
       }));

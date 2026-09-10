@@ -5,8 +5,8 @@ import { loginCustomer, registerCustomer, getCustomerOrders } from '../services/
 export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin, onLogout }) {
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [nombre, setNombre] = useState('');
+  const [nombres, setNombres] = useState('');
+  const [apellidos, setApellidos] = useState('');
   const [telefono, setTelefono] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -49,8 +49,8 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
       return;
     }
     
-    if (isRegister && !nombre) {
-      setError('Por favor ingrese su nombre');
+    if (isRegister && (!nombres.trim() || !apellidos.trim())) {
+      setError('Por favor ingrese sus nombres y apellidos');
       return;
     }
 
@@ -60,14 +60,16 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
     try {
       let data;
       if (isRegister) {
-        data = await registerCustomer(nombre, email, password, telefono);
+        data = await registerCustomer(nombres.trim(), apellidos.trim(), email, password, telefono);
       } else {
         data = await loginCustomer(email, password);
       }
       
       const clientData = {
         id: data.client.id || data.client._id,
-        nombre: data.client.nombre,
+        nombre: data.client.nombre || `${data.client.nombres || nombres} ${data.client.apellidos || apellidos}`.trim(),
+        nombres: data.client.nombres || nombres,
+        apellidos: data.client.apellidos || apellidos,
         email: data.client.correo,
         nivel: 'Cliente VIP',
         ciudad: data.client.direccion || 'No especificada',
@@ -342,30 +344,58 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
             </div>
 
             {isRegister && (
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
-                  Nombre
-                </label>
-                <div style={{ position: 'relative' }}>
-                  <User size={16} color="var(--c-taupe)" style={{ position: 'absolute', left: '16px', top: '14px' }} />
-                  <input
-                    type="text"
-                    placeholder="Ingresa tu nombre completo"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px 12px 42px',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(59, 60, 65, 0.2)',
-                      fontSize: '0.9rem',
-                      outline: 'none',
-                      color: 'var(--c-deep-purple)',
-                      transition: 'border-color 0.2s ease'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = 'var(--c-indigo)'}
-                    onBlur={(e) => e.target.style.borderColor = 'rgba(59, 60, 65, 0.2)'}
-                  />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 600, color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
+                    Nombres *
+                  </label>
+                  <div style={{ position: 'relative' }}>
+                    <User size={16} color="var(--c-taupe)" style={{ position: 'absolute', left: '14px', top: '14px' }} />
+                    <input
+                      type="text"
+                      placeholder="Ej. Juan Carlos"
+                      value={nombres}
+                      onChange={(e) => setNombres(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '12px 14px 12px 38px',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(59, 60, 65, 0.2)',
+                        fontSize: '0.88rem',
+                        outline: 'none',
+                        color: 'var(--c-deep-purple)',
+                        transition: 'border-color 0.2s ease'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = 'var(--c-indigo)'}
+                      onBlur={(e) => e.target.style.borderColor = 'rgba(59, 60, 65, 0.2)'}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 600, color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
+                    Apellidos *
+                  </label>
+                  <div style={{ position: 'relative' }}>
+                    <User size={16} color="var(--c-taupe)" style={{ position: 'absolute', left: '14px', top: '14px' }} />
+                    <input
+                      type="text"
+                      placeholder="Ej. Pérez Gómez"
+                      value={apellidos}
+                      onChange={(e) => setApellidos(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '12px 14px 12px 38px',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(59, 60, 65, 0.2)',
+                        fontSize: '0.88rem',
+                        outline: 'none',
+                        color: 'var(--c-deep-purple)',
+                        transition: 'border-color 0.2s ease'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = 'var(--c-indigo)'}
+                      onBlur={(e) => e.target.style.borderColor = 'rgba(59, 60, 65, 0.2)'}
+                    />
+                  </div>
                 </div>
               </div>
             )}
