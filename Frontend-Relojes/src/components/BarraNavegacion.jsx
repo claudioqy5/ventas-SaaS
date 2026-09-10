@@ -398,7 +398,7 @@ export default function BarraNavegacion({
                     transition: 'all 0.15s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#fff0f7';
+                    e.currentTarget.style.backgroundColor = '#f5f5f7';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = 'transparent';
@@ -410,7 +410,7 @@ export default function BarraNavegacion({
                     justifyContent: 'center',
                     flexShrink: 0
                   }}>
-                    <Truck size={22} color="#ff007f" />
+                    <Truck size={22} color="var(--c-deep-purple)" />
                   </div>
                   <span style={{ fontSize: '0.96rem', fontWeight: 500, color: '#333333', fontFamily: 'inherit' }}>
                     Mis compras
@@ -443,7 +443,7 @@ export default function BarraNavegacion({
                     transition: 'all 0.15s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#fff0f7';
+                    e.currentTarget.style.backgroundColor = '#f5f5f7';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = 'transparent';
@@ -455,7 +455,7 @@ export default function BarraNavegacion({
                     justifyContent: 'center',
                     flexShrink: 0
                   }}>
-                    <User size={22} color="#ff007f" />
+                    <User size={22} color="var(--c-deep-purple)" />
                   </div>
                   <span style={{ fontSize: '0.96rem', fontWeight: 500, color: '#333333', fontFamily: 'inherit' }}>
                     Mi cuenta
@@ -474,7 +474,7 @@ export default function BarraNavegacion({
                     marginTop: '16px',
                     padding: '12px 18px',
                     borderRadius: '12px',
-                    backgroundColor: '#ff007f',
+                    backgroundColor: 'var(--c-obsidian)',
                     color: '#ffffff',
                     border: 'none',
                     fontWeight: 700,
@@ -484,16 +484,16 @@ export default function BarraNavegacion({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 4px 14px rgba(255, 0, 127, 0.35)',
+                    boxShadow: '0 4px 14px rgba(11, 11, 12, 0.15)',
                     transition: 'all 0.2s ease',
                     fontFamily: 'inherit'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#e60072';
+                    e.currentTarget.style.backgroundColor = 'var(--c-deep-purple)';
                     e.currentTarget.style.transform = 'translateY(-1px)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#ff007f';
+                    e.currentTarget.style.backgroundColor = 'var(--c-obsidian)';
                     e.currentTarget.style.transform = 'none';
                   }}
                 >

@@ -3435,5 +3435,15 @@ Se consolidó la estructura del Checkout en 4 etapas y se definió la hoja de ru
 **3. Soporte para el IDE (VS Code):**
 - Se añadió un archivo `jsconfig.json` a la raíz de la carpeta `Frontend-Relojes`. Esto soluciona los problemas de falsos positivos (subrayados rojos) en la resolución de módulos (como `lucide-react` y rutas relativas a `../services/api`) cuando el editor se abre desde la carpeta contenedora (`ventas-saas`).
 
+**4. Corrección de Crash en Modal de Autenticación:**
+- Se corrigió un error de variable no definida (`ReferenceError: password is not defined`) en `ModalAuthCliente.jsx`. Este error provocaba que Next.js arrojara una pantalla de colapso ("This page couldn't load") cada vez que un usuario no autenticado intentaba abrir el modal de login/registro desde el ícono de perfil en el header.
+
+**5. Eliminación Total de Colores Rosados/Fucsias (Paleta de Lujo):**
+- Se realizó una auditoría y limpieza de estilos en `BarraNavegacion.jsx` y `ModalAuthCliente.jsx`:
+  - **Íconos del dropdown de usuario:** Cambiados de `#ff007f` al tono corporativo `var(--c-deep-purple)`.
+  - **Efectos Hover en botones:** Cambiados de rosa claro (`#fff0f7`) a un fondo neutro elegante (`#f5f5f7`).
+  - **Botón "Cerrar sesión":** Se reemplazó el fucsia brillante por `var(--c-obsidian)` con hover en `var(--c-deep-purple)` y sombras sutiles.
+  - **Modal de cuenta y login:** Se sustituyeron los elementos residuales en fucsia por el dorado oficial (`var(--c-gold)`) y negro obsidian, asegurando 100% de coherencia visual con la identidad de marca del e-commerce.
+
 **Estado Actual:**
-El proyecto compila al 100% libre de errores. El checkout y la creación de cuenta manejan los campos *Nombres* y *Apellidos* separados a nivel de interfaz frontal, brindando una experiencia Premium lista para futuras integraciones.
+El sistema compila sin advertencias ni errores. La navegación de rutas entre el catálogo, `/mis-compras`, `/mi-cuenta`, detalle de producto y checkout opera fluidamente sin recargas de página, y la estética visual cumple con los estándares de diseño de lujo requeridos.

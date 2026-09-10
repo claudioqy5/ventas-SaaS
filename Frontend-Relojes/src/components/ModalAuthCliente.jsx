@@ -206,13 +206,13 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
                     fontSize: '0.88rem',
                     fontWeight: activeTab === 'pedidos' ? 700 : 500,
                     backgroundColor: activeTab === 'pedidos' ? '#ffffff' : 'transparent',
-                    color: activeTab === 'pedidos' ? '#ff007f' : 'var(--c-taupe)',
+                    color: activeTab === 'pedidos' ? 'var(--c-gold)' : 'var(--c-taupe)',
                     boxShadow: activeTab === 'pedidos' ? '0 2px 8px rgba(0, 0, 0, 0.08)' : 'none',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  <Truck size={17} color={activeTab === 'pedidos' ? '#ff007f' : 'var(--c-taupe)'} />
+                  <Truck size={17} color={activeTab === 'pedidos' ? 'var(--c-gold)' : 'var(--c-taupe)'} />
                   <span>Mis Compras ({pedidos.length})</span>
                 </button>
 
@@ -231,13 +231,13 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
                     fontSize: '0.88rem',
                     fontWeight: activeTab === 'cuenta' ? 700 : 500,
                     backgroundColor: activeTab === 'cuenta' ? '#ffffff' : 'transparent',
-                    color: activeTab === 'cuenta' ? '#ff007f' : 'var(--c-taupe)',
+                    color: activeTab === 'cuenta' ? 'var(--c-gold)' : 'var(--c-taupe)',
                     boxShadow: activeTab === 'cuenta' ? '0 2px 8px rgba(0, 0, 0, 0.08)' : 'none',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  <User size={17} color={activeTab === 'cuenta' ? '#ff007f' : 'var(--c-taupe)'} />
+                  <User size={17} color={activeTab === 'cuenta' ? 'var(--c-gold)' : 'var(--c-taupe)'} />
                   <span>Mi Cuenta</span>
                 </button>
               </div>
@@ -251,7 +251,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
                     <span style={{ fontSize: '0.8rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--c-taupe)', fontWeight: 600 }}>
                       Tus Órdenes Realizadas
                     </span>
-                    <span style={{ fontSize: '0.76rem', color: '#ff007f', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.76rem', color: 'var(--c-gold)', fontWeight: 600 }}>
                       {pedidos.length} {pedidos.length === 1 ? 'Compra' : 'Compras'}
                     </span>
                   </div>
@@ -355,7 +355,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
                       <h3 className="font-serif" style={{ fontSize: '1.18rem', color: 'var(--c-deep-purple)', fontWeight: 600 }}>
                         {user.nombre}
                       </h3>
-                      <p style={{ fontSize: '0.82rem', color: '#ff007f', fontWeight: 600 }}>
+                      <p style={{ fontSize: '0.82rem', color: 'var(--c-gold)', fontWeight: 600 }}>
                         {user.nivel || 'Cliente VIP Concierge'}
                       </p>
                       <p style={{ fontSize: '0.78rem', color: 'var(--c-taupe)', marginTop: '2px', fontWeight: 400 }}>
@@ -445,9 +445,9 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
                   width: '100%',
                   padding: '12px',
                   borderRadius: '12px',
-                  border: '1px solid rgba(255, 0, 127, 0.25)',
-                  backgroundColor: '#fff5f9',
-                  color: '#ff007f',
+                  border: '1px solid var(--c-obsidian)',
+                  backgroundColor: 'transparent',
+                  color: 'var(--c-obsidian)',
                   fontWeight: 600,
                   fontSize: '0.9rem',
                   cursor: 'pointer',
@@ -458,12 +458,12 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#ff007f';
+                  e.currentTarget.style.backgroundColor = 'var(--c-obsidian)';
                   e.currentTarget.style.color = '#ffffff';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#fff5f9';
-                  e.currentTarget.style.color = '#ff007f';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = 'var(--c-obsidian)';
                 }}
               >
                 <LogOut size={16} />
