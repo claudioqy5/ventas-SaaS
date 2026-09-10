@@ -13,7 +13,9 @@ export default function BarraNavegacion({
   setSearchQuery,
   onTriggerLoader,
   user,
-  onOpenAuth
+  onOpenAuth,
+  selectedCategory,
+  onSelectCategory
 }) {
   const [showSearch, setShowSearch] = useState(false);
   const searchInputRef = useRef(null);
@@ -188,55 +190,76 @@ export default function BarraNavegacion({
           {[
             { label: 'Hombre', href: '/categoria/hombre', tag: 'Hombre' },
             { label: 'Mujer', href: '/categoria/mujer', tag: 'Mujer' },
-            { label: 'Marcas', href: '/categoria/marcas', isHighlight: true },
-            { label: 'Novedades', href: '/categoria/novedades', badge: 'Nuevo' },
-            { label: 'Ofertas', href: '/categoria/ofertas', badge: 'VIP' },
-            { label: 'Accesorios', href: '/categoria/accesorios' }
-          ].map((item, idx) => (
-            <Link
-              key={idx}
-              href={item.href}
-              style={{
-                color: item.isHighlight ? 'var(--c-indigo)' : 'var(--c-deep-purple)',
-                textDecoration: 'none',
-                fontSize: '0.8rem',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                fontFamily: 'var(--font-serif)',
-                fontWeight: 500,
-                transition: 'all 0.2s ease',
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                padding: '4px 0',
-                flexShrink: 0,
-                whiteSpace: 'nowrap'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'var(--c-blush)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = item.isHighlight ? 'var(--c-indigo)' : 'var(--c-deep-purple)';
-              }}
-            >
-              {item.label}
-              {item.badge && (
-                <span style={{
-                  fontSize: '0.58rem',
-                  backgroundColor: item.badge === 'VIP' ? 'var(--c-blush)' : 'var(--c-indigo)',
-                  color: '#ffffff',
-                  padding: '2px 5px',
-                  borderRadius: '4px',
-                  lineHeight: 1,
-                  fontWeight: 800,
-                  letterSpacing: '0.05em'
-                }}>
-                  {item.badge}
-                </span>
-              )}
-            </Link>
-          ))}
+            { label: 'Marcas', href: '/categoria/marcas', isHighlight: true, isBrand: true },
+            { label: 'Novedades', href: '/categoria/novedades', tag: 'Novedades', badge: 'Nuevo' },
+            { label: 'Ofertas', href: '/categoria/ofertas', tag: 'Ofertas', badge: 'VIP' },
+            { label: 'Accesorios', href: '/categoria/accesorios', tag: 'Accesorios' }
+          ].map((item, idx) => {
+            const targetTag = item.tag || item.label;
+            const isCatActive = selectedCategory && (
+              selectedCategory.toLowerCase() === targetTag.toLowerCase()
+            );
+
+            return (
+              <Link
+                key={idx}
+                href={item.href}
+                onClick={(e) => {
+                  if (onSelectCategory) {
+                    e.preventDefault();
+                    onSelectCategory(targetTag);
+                    if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+                  }
+                }}
+                style={{
+                  color: isCatActive 
+                    ? 'var(--c-blush)' 
+                    : item.isHighlight 
+                      ? 'var(--c-indigo)' 
+                      : 'var(--c-deep-purple)',
+                  textDecoration: 'none',
+                  fontSize: '0.8rem',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  fontFamily: 'var(--font-serif)',
+                  fontWeight: isCatActive ? 700 : 500,
+                  transition: 'all 0.2s ease',
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '6px 0',
+                  flexShrink: 0,
+                  whiteSpace: 'nowrap',
+                  borderBottom: isCatActive ? '2px solid var(--c-gold)' : '2px solid transparent'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isCatActive) e.currentTarget.style.color = 'var(--c-blush)';
+                }}
+                onMouseLeave={(e) => {
+                  if (!isCatActive) {
+                    e.currentTarget.style.color = item.isHighlight ? 'var(--c-indigo)' : 'var(--c-deep-purple)';
+                  }
+                }}
+              >
+                {item.label}
+                {item.badge && (
+                  <span style={{
+                    fontSize: '0.58rem',
+                    backgroundColor: item.badge === 'VIP' ? 'var(--c-blush)' : 'var(--c-indigo)',
+                    color: '#ffffff',
+                    padding: '2px 5px',
+                    borderRadius: '4px',
+                    lineHeight: 1,
+                    fontWeight: 800,
+                    letterSpacing: '0.05em'
+                  }}>
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Acciones */}

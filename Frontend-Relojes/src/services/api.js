@@ -55,9 +55,26 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
 
     // Mapear productos del SaaS
     const mapped = data.map(item => {
-      let catName = item.categoria || item.categoriaId || 'Colección Principal';
-      if (FALLBACK_CATEGORIES[item.categoriaId?.toLowerCase()]) {
-        catName = FALLBACK_CATEGORIES[item.categoriaId.toLowerCase()];
+      // Prioridad 1: Nombre de categoría real del backend (Category.Nombre mapeado en FrontendRelojesController)
+      let catName = (item.categoria && typeof item.categoria === 'string' && item.categoria.trim() && item.categoria !== item.categoriaId)
+        ? item.categoria.trim()
+        : null;
+
+      // Prioridad 2: Si el backend solo envió el ID o está vacío, consultar respaldo de IDs
+      if (!catName && item.categoriaId) {
+        catName = FALLBACK_CATEGORIES[item.categoriaId.toLowerCase()] || 'Colección Principal';
+      }
+
+      if (!catName) {
+        catName = 'Colección Principal';
+      }
+
+      let catNames = item.categorias || item.Categorias || [];
+      if (catNames.length === 0 && item.categoriaIds) {
+        catNames = item.categoriaIds.map(id => FALLBACK_CATEGORIES[id.toLowerCase()] || 'Colección Principal');
+      }
+      if (catNames.length === 0) {
+        catNames = [catName];
       }
       
       return {
@@ -69,13 +86,13 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
       precio: item.precio || 0,
       precioOferta: item.precioOferta || 0,
       categoria: catName,
+      categorias: catNames,
       tipoProducto: item.tipoProducto,
       unidadMedida: item.unidadMedida,
       stock: item.stock,
       imagenUrl: (item.imagenes && item.imagenes.length > 0) ? item.imagenes[0] : (item.imagenUrl || '/watches/chronograph_gold.jpg'),
       imagenes: item.imagenes || [],
       atributos: item.atributos || item.Atributos || [],
-      precioOferta: item.precioOferta || 0,
       specs: {
         calibre: 'Calibre Automático Certificado',
         cristal: 'Cristal de Zafiro Antirreflejo',

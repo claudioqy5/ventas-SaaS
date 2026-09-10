@@ -68,7 +68,7 @@ const FooterLink = ({ href = "#", onClick, children }) => (
   </li>
 );
 
-export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavigate }) {
+export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavigate, onSelectCategory }) {
   const marcas = [
     "Rolex", "Cartier", "Patek Philippe", "Audemars Piguet",
     "Omega", "Tag Heuer", "Breitling", "Hublot",
@@ -207,11 +207,11 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(212, 175, 55, 0.35)', marginBottom: '24px' }}></div>
             
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <FooterLink href="/categoria/hombre">Relojes para Hombre</FooterLink>
-              <FooterLink href="/categoria/mujer">Relojes para Mujer</FooterLink>
-              <FooterLink href="/categoria/novedades">Nuevos Ingresos</FooterLink>
-              <FooterLink href="/categoria/marcas">Alta Relojería</FooterLink>
-              <FooterLink href="/categoria/accesorios">Accesorios y Cajas</FooterLink>
+              <FooterLink href="/categoria/hombre" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Hombre'); } }}>Relojes para Hombre</FooterLink>
+              <FooterLink href="/categoria/mujer" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Mujer'); } }}>Relojes para Mujer</FooterLink>
+              <FooterLink href="/categoria/novedades" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Novedades'); } }}>Nuevos Ingresos</FooterLink>
+              <FooterLink href="/categoria/marcas" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Marcas'); } }}>Alta Relojería</FooterLink>
+              <FooterLink href="/categoria/accesorios" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Accesorios'); } }}>Accesorios y Cajas</FooterLink>
               <FooterLink href="/" onClick={handleLinkClick('catalog', '/')}>Nuestra Herencia</FooterLink>
               <FooterLink href="/" onClick={handleLinkClick('catalog', '/')}>Boutiques</FooterLink>
               <FooterLink href="#" onClick={(e) => { e.preventDefault(); if (onOpenWhatsAppConcierge) onOpenWhatsAppConcierge(); }}>Contáctanos</FooterLink>
@@ -243,7 +243,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               rowGap: '14px' 
             }}>
               {marcas.map(marca => (
-                <FooterLink key={marca} href="/categoria/marcas">{marca}</FooterLink>
+                <FooterLink key={marca} href="/categoria/marcas" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Marcas'); } }}>{marca}</FooterLink>
               ))}
             </ul>
           </div>

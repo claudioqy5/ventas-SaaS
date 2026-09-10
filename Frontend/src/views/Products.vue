@@ -594,11 +594,12 @@
                 <input v-model="form.nombre" type="text" placeholder="Ej. Alimento Royal Canin" required />
               </div>
               <div class="field">
-                <label>Categoría</label>
-                <select v-model="form.categoriaId" required>
-                  <option value="" disabled>Seleccione...</option>
+                <label>Categorías</label>
+                <select v-model="form.categoriaIds" multiple required style="height: auto; min-height: 80px;">
+                  <option disabled value="">Seleccione una o más...</option>
                   <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
                 </select>
+                <small style="font-size: 0.7rem; color: #64748b;">Mantenga presionado Ctrl/Cmd para seleccionar varias.</small>
               </div>
               <div class="field">
                 <label>Marca (Opcional)</label>
@@ -1390,6 +1391,7 @@ const form = reactive({
   stockMinimo: 5,
   descripcion: '',
   categoriaId: '',
+  categoriaIds: [],
   marcaId: '',
   imagenUrl: '',
   atributos: [],
@@ -1424,6 +1426,7 @@ const handleCodigoModeloBlur = () => {
   if (existing) {
     form.nombre = existing.nombre;
     form.categoriaId = existing.categoriaId;
+    form.categoriaIds = existing.categoriaIds || (existing.categoriaId ? [existing.categoriaId] : []);
     form.marcaId = existing.marcaId;
     form.precioCosto = existing.precioCosto;
     form.precio = existing.precio;
@@ -1560,6 +1563,7 @@ const openAddModal = () => {
   form.stockMinimo = 5
   form.descripcion = ''
   form.categoriaId = ''
+  form.categoriaIds = []
   form.marcaId = ''
   form.imagenUrl = ''
   form.atributos = initializeAttributes([])
@@ -1584,6 +1588,7 @@ const openEditModal = (product) => {
   form.precio = product.precio
   form.descripcion = product.descripcion
   form.categoriaId = product.categoriaId
+  form.categoriaIds = product.categoriaIds || (product.categoriaId ? [product.categoriaId] : [])
   form.marcaId = product.marcaId || ''
   form.imagenUrl = product.imagenUrl || ''
   form.atributos = initializeAttributes(product.atributos || [])
@@ -1608,8 +1613,8 @@ const openEditModal = (product) => {
 }
 
 const saveProduct = async () => {
-  if (!form.categoriaId) {
-    alert('Por favor seleccione una categoría.')
+  if (!form.categoriaIds || form.categoriaIds.length === 0) {
+    alert('Por favor seleccione al menos una categoría.')
     return
   }
 

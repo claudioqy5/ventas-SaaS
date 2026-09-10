@@ -51,10 +51,27 @@ public class ProductsController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
-        // Dejo el Id vacio para que MongoDB lo asigne automaticamente
         product.Id = string.Empty;
         product.EmpresaId = empresaId;
         product.FechaCreacion = DateTime.UtcNow;
+
+        // Migración/soporte para una sola categoría
+        if (product.CategoriaIds == null || product.CategoriaIds.Count == 0)
+        {
+            if (!string.IsNullOrEmpty(product.CategoriaId))
+            {
+                product.CategoriaIds = new List<string> { product.CategoriaId };
+            }
+            else
+            {
+                product.CategoriaIds = new List<string>();
+            }
+        }
+        else if (product.CategoriaIds.Count > 0)
+        {
+            // Sincronizar CategoriaId primario si CategoriaIds viene lleno
+            product.CategoriaId = product.CategoriaIds[0];
+        }
 
         await _context.Products.InsertOneAsync(product);
 
@@ -103,7 +120,8 @@ public class ProductsController : ControllerBase
             .Set(p => p.CodigoBarras, product.CodigoBarras)
             .Set(p => p.CodigoModelo, product.CodigoModelo) // Agregado para permitir editar el agrupador
             .Set(p => p.Stock, product.Stock)               // Agregado para permitir editar el stock
-            .Set(p => p.CategoriaId, product.CategoriaId)
+            .Set(p => p.CategoriaId, product.CategoriaIds != null && product.CategoriaIds.Count > 0 ? product.CategoriaIds[0] : product.CategoriaId)
+            .Set(p => p.CategoriaIds, product.CategoriaIds ?? new List<string>())
             .Set(p => p.Precio, product.Precio)
             .Set(p => p.PrecioCosto, product.PrecioCosto)
             .Set(p => p.PrecioCostoCostal, product.PrecioCostoCostal)

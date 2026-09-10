@@ -22,6 +22,10 @@ public class Product
     [BsonRepresentation(BsonType.ObjectId)]
     public string CategoriaId { get; set; } = string.Empty;
 
+    // Lista de IDs de categorias a las que pertenece (para soportar multiples categorias por producto)
+    [BsonRepresentation(BsonType.ObjectId)]
+    public List<string> CategoriaIds { get; set; } = new List<string>();
+
     // Marca a la que pertenece el producto
     [BsonRepresentation(BsonType.ObjectId)]
     public string MarcaId { get; set; } = string.Empty;

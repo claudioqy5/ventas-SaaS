@@ -76,6 +76,7 @@ public class PublicStoreController : ControllerBase
             p.Descripcion,
             p.CodigoBarras,
             p.CategoriaId,
+            p.CategoriaIds,
             p.TipoProducto,
             p.UnidadMedida,
             p.EsServicio,

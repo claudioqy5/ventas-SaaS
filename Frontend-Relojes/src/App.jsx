@@ -99,13 +99,6 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   
-  // Filtros avanzados (Barra lateral)
-  const [advancedFilters, setAdvancedFilters] = useState({
-    priceRange: { min: '', max: '' },
-    inStockOnly: false,
-    dynamic: {} // Store selected attributes like { "Color": ["Negro"], "Correa": ["Goma"] }
-  });
-
   // Modales, Notificaciones y Vistas
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeView, setActiveView] = useState(initialView || 'catalog');
@@ -115,6 +108,48 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [addedProduct, setAddedProduct] = useState(null);
+
+  // Filtros avanzados (Barra lateral)
+  const [advancedFilters, setAdvancedFilters] = useState({
+    priceRange: { min: '', max: '' },
+    inStockOnly: false,
+    dynamic: {} // Store selected attributes like { "Color": ["Negro"], "Correa": ["Goma"] }
+  });
+
+  // Sincronizar selectedCategory cuando cambia initialCategory (por navegación en Next.js o recarga)
+  useEffect(() => {
+    if (initialCategory) {
+      setSelectedCategory(initialCategory);
+      setShowFullCatalog(true);
+      setActiveView('catalog');
+      setSelectedProduct(null);
+    }
+  }, [initialCategory]);
+
+  const handleSelectCategory = (catName) => {
+    if (catName.toLowerCase() === 'marcas') {
+      const marcasEl = document.querySelector('.marcas-section');
+      if (marcasEl) {
+        marcasEl.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
+    setSelectedCategory(catName);
+    setShowFullCatalog(true);
+    setActiveView('catalog');
+    setSelectedProduct(null);
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', `/categoria/${catName.toLowerCase()}`);
+    }
+    setTimeout(() => {
+      const catalogoEl = document.getElementById('catalogo');
+      if (catalogoEl) {
+        catalogoEl.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 40);
+  };
 
   const handleSelectProduct = (product) => {
     setSelectedProduct(product);
@@ -172,6 +207,16 @@ export default function App({ initialCategory, initialProductId, initialView = '
             setSelectedProduct(found);
             setActiveView('product');
           }
+        }
+      } else if (path.includes('/categoria/')) {
+        const catSlug = path.split('/categoria/')[1]?.split('/')[0]?.split('?')[0];
+        if (catSlug) {
+          const decoded = decodeURIComponent(catSlug);
+          const catName = decoded.charAt(0).toUpperCase() + decoded.slice(1).toLowerCase();
+          setSelectedCategory(catName);
+          setShowFullCatalog(true);
+          setActiveView('catalog');
+          setSelectedProduct(null);
         }
       } else {
         setActiveView('catalog');
@@ -267,9 +312,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
     products.forEach(p => {
       if (p.atributos && Array.isArray(p.atributos)) {
         p.atributos.forEach(attr => {
-          if (!attr.nombre || !attr.valor) return;
-          const name = attr.nombre.trim();
-          const val = attr.valor.trim();
+          const name = (attr.nombre || attr.Nombre)?.trim();
+          const val = (attr.valor || attr.Valor)?.trim();
+          if (!name || !val) return;
           if (!map[name]) map[name] = new Set();
           map[name].add(val);
         });
@@ -286,29 +331,79 @@ export default function App({ initialCategory, initialProductId, initialView = '
   // Categorías
   const categories = useMemo(() => {
     const list = new Set(['Todos']);
+    
+    // Categorías del backend presentes en los productos
     products.forEach((p) => {
       if (p.categoria) list.add(p.categoria);
+      if (p.categorias && Array.isArray(p.categorias)) {
+        p.categorias.forEach(c => list.add(c));
+      }
     });
+
+    // Si existen productos con precioOferta > 0 o la categoría actual es Ofertas
+    const hasOfertas = products.some(p => Number(p.precioOferta) > 0);
+    if (hasOfertas || (selectedCategory && selectedCategory.toLowerCase() === 'ofertas')) {
+      list.add('Ofertas');
+    }
+
+    // Asegurar que la categoría seleccionada aparezca en los chips (ej: Hombre, Mujer, etc.)
+    if (selectedCategory && selectedCategory !== 'Todos') {
+      list.add(selectedCategory);
+    }
+
     return Array.from(list);
-  }, [products]);
+  }, [products, selectedCategory]);
 
   // Filtrado y ordenación
   const filteredProducts = useMemo(() => {
     return products
       .filter((p) => {
         let matchesCategory = false;
-        if (selectedCategory === 'Todos') {
+        const selLower = (selectedCategory || 'Todos').toLowerCase().trim();
+
+        if (selLower === 'todos') {
           matchesCategory = true;
-        } else if (selectedCategory.toLowerCase() === 'ofertas') {
-          matchesCategory = p.precioOferta > 0;
+        } else if (selLower === 'ofertas') {
+          // El usuario especificó: "(los productos que tienen preciooferta)"
+          // y también puede ser una categoría en el backend (Category.Nombre === "Ofertas")
+          const hasOfferPrice = Number(p.precioOferta) > 0 && (p.precio ? Number(p.precioOferta) < Number(p.precio) : true);
+          const isOfferCategory = (p.categoria && (p.categoria.toLowerCase() === 'ofertas' || p.categoria.toLowerCase() === 'oferta')) || (p.categorias && p.categorias.some(c => c.toLowerCase() === 'ofertas' || c.toLowerCase() === 'oferta'));
+          matchesCategory = hasOfferPrice || isOfferCategory;
+        } else if (selLower === 'novedades') {
+          // Categoría Novedades en backend, o etiqueta de novedad, o nuevo ingreso
+          const isNoveltyCategory = (p.categoria && (p.categoria.toLowerCase().includes('novedad') || p.categoria.toLowerCase().includes('nuevo'))) || (p.categorias && p.categorias.some(c => c.toLowerCase().includes('novedad') || c.toLowerCase().includes('nuevo')));
+          const isNoveltyTag = p.etiqueta && (p.etiqueta.toLowerCase().includes('novedad') || p.etiqueta.toLowerCase().includes('nuevo'));
+          const isEsNuevo = !!p.esNuevo;
+          matchesCategory = isNoveltyCategory || isNoveltyTag || isEsNuevo;
+        } else if (selLower === 'hombre') {
+          // Categoría Hombre en el backend (o atributo de género)
+          const isHombreCat = (p.categoria && p.categoria.toLowerCase().includes('hombre')) || (p.categorias && p.categorias.some(c => c.toLowerCase().includes('hombre')));
+          const isHombreAttr = p.atributos?.some(a => 
+            (a.nombre?.toLowerCase().includes('género') || a.nombre?.toLowerCase().includes('genero')) &&
+            a.valor?.toLowerCase().includes('hombre')
+          );
+          matchesCategory = isHombreCat || isHombreAttr;
+        } else if (selLower === 'mujer') {
+          // Categoría Mujer en el backend (o atributo de género)
+          const isMujerCat = (p.categoria && p.categoria.toLowerCase().includes('mujer')) || (p.categorias && p.categorias.some(c => c.toLowerCase().includes('mujer')));
+          const isMujerAttr = p.atributos?.some(a => 
+            (a.nombre?.toLowerCase().includes('género') || a.nombre?.toLowerCase().includes('genero')) &&
+            a.valor?.toLowerCase().includes('mujer')
+          );
+          matchesCategory = isMujerCat || isMujerAttr;
+        } else if (selLower === 'accesorios') {
+          matchesCategory = (p.categoria && p.categoria.toLowerCase().includes('accesorio')) || (p.categorias && p.categorias.some(c => c.toLowerCase().includes('accesorio')));
+        } else if (selLower === 'marcas') {
+          matchesCategory = true;
         } else {
-          matchesCategory = p.categoria && p.categoria.toLowerCase() === selectedCategory.toLowerCase();
+          matchesCategory = (p.categoria && p.categoria.toLowerCase() === selLower) || (p.categorias && p.categorias.some(c => c.toLowerCase() === selLower));
         }
         const query = searchQuery.toLowerCase();
         const matchesSearch = !query ||
           p.nombre.toLowerCase().includes(query) ||
           (p.descripcion && p.descripcion.toLowerCase().includes(query)) ||
-          (p.categoria && p.categoria.toLowerCase().includes(query));
+          (p.categoria && p.categoria.toLowerCase().includes(query)) ||
+          (p.categorias && p.categorias.some(c => c.toLowerCase().includes(query)));
           
         // Lógica de Filtros Avanzados
         const pPrice = Number(p.precio) || 0;
@@ -320,8 +415,15 @@ export default function App({ initialCategory, initialProductId, initialView = '
         if (advancedFilters.dynamic && Object.keys(advancedFilters.dynamic).length > 0) {
           for (const [attrName, selectedValues] of Object.entries(advancedFilters.dynamic)) {
             if (selectedValues && selectedValues.length > 0) {
-              const pAttr = p.atributos?.find(a => a.nombre.toLowerCase() === attrName.toLowerCase());
-              if (!pAttr || !selectedValues.some(val => pAttr.valor.toLowerCase().includes(val.toLowerCase()))) {
+              const pAttr = p.atributos?.find(a => 
+                (a?.nombre || a?.Nombre)?.toLowerCase().trim() === attrName.toLowerCase().trim()
+              );
+              if (!pAttr) {
+                matchesDynamic = false;
+                break;
+              }
+              const attrVal = (pAttr.valor || pAttr.Valor || '').toLowerCase().trim();
+              if (!selectedValues.some(val => attrVal.includes(val.toLowerCase().trim()))) {
                 matchesDynamic = false;
                 break;
               }
@@ -332,12 +434,14 @@ export default function App({ initialCategory, initialProductId, initialView = '
         return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice && matchesStock && matchesDynamic;
       })
       .sort((a, b) => {
-        if (sortBy === 'price-desc') return b.precio - a.precio;
-        if (sortBy === 'price-asc') return a.precio - b.precio;
+        if (sortBy === 'price-desc') return Number(b.precio) - Number(a.precio);
+        if (sortBy === 'price-asc') return Number(a.precio) - Number(b.precio);
         if (sortBy === 'name') return a.nombre.localeCompare(b.nombre);
+        if (sortBy === 'name-desc') return b.nombre.localeCompare(a.nombre);
+        if (sortBy === 'stock') return (b.stock || 0) - (a.stock || 0);
         return 0;
       });
-  }, [products, selectedCategory, searchQuery, sortBy]);
+  }, [products, selectedCategory, searchQuery, sortBy, advancedFilters]);
 
   const groupedProducts = useMemo(() => {
     const groups = {};
@@ -441,6 +545,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onTriggerLoader={handleTriggerLoader}
         user={currentUser}
         onOpenAuth={() => setIsAuthOpen(true)}
+        selectedCategory={selectedCategory}
+        onSelectCategory={handleSelectCategory}
       />
 
       {/* VISTA PRINCIPAL: Checkout, Producto, Preguntas Frecuentes, Términos o Catálogo General */}
@@ -450,6 +556,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
           onUpdateQuantity={handleUpdateQuantity}
           onRemoveItem={handleRemoveItem}
           onBack={handleBackToCatalog}
+          onClearCart={() => setCart([])}
         />
       ) : selectedProduct ? (
         <PaginaDetalleProducto
@@ -519,7 +626,15 @@ export default function App({ initialCategory, initialProductId, initialView = '
                   marginTop: '4px',
                   fontWeight: 600
                 }}>
-                  {showFullCatalog ? 'Guardatiempos Exclusivos' : 'Los más Vendidos'}
+                  {showFullCatalog ? (
+                    selectedCategory && selectedCategory.toLowerCase() !== 'todos'
+                      ? (selectedCategory.toLowerCase() === 'ofertas'
+                          ? 'Ofertas Exclusivas'
+                          : selectedCategory.toLowerCase() === 'novedades'
+                            ? 'Novedades & Nuevos Ingresos'
+                            : `Colección ${selectedCategory}`)
+                      : 'Guardatiempos Exclusivos'
+                  ) : 'Los más Vendidos'}
                 </h2>
               </div>
 
@@ -660,16 +775,20 @@ export default function App({ initialCategory, initialProductId, initialView = '
                   }}>
                     <AlertCircle size={42} color="var(--c-blush)" style={{ margin: '0 auto 16px' }} />
                     <h3 className="font-serif" style={{ fontSize: '1.2rem', color: 'var(--c-deep-purple)', marginBottom: '8px', fontWeight: 800 }}>
-                      No se encontraron piezas con ese criterio
+                      {selectedCategory && selectedCategory.toLowerCase() !== 'todos'
+                        ? `No se encontraron piezas en la categoría ${selectedCategory}`
+                        : 'No se encontraron piezas con ese criterio'}
                     </h3>
                     <p style={{ color: 'var(--c-taupe)', fontSize: '0.88rem', marginBottom: '20px' }}>
-                      Intenta restablecer los filtros de búsqueda o seleccionar otra categoría.
+                      {selectedCategory && selectedCategory.toLowerCase() !== 'todos'
+                        ? 'Pronto agregaremos nuevas manufacturas a esta colección. Explora nuestro catálogo completo.'
+                        : 'Intenta restablecer los filtros de búsqueda o seleccionar otra categoría.'}
                     </p>
                     <button
-                      onClick={() => { setSelectedCategory('Todos'); setSearchQuery(''); }}
+                      onClick={() => handleSelectCategory('Todos')}
                       className="btn-outline-luxury"
                     >
-                      Restablecer Búsqueda
+                      Ver Todo el Catálogo
                     </button>
                   </div>
                 ) : (
@@ -864,6 +983,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onOpenWhatsAppConcierge={handleOpenWhatsAppConcierge}
         storeName={storeName}
         onNavigate={handleNavigateView}
+        onSelectCategory={handleSelectCategory}
       />
 
       {/* Bolsa de Compras VIP / Drawer */}
