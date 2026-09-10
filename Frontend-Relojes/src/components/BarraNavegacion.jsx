@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ShoppingBag, Search, Settings, ShieldCheck, Clock, Sparkles, Watch, User, X, Menu } from 'lucide-react';
+import { ShoppingBag, Search, Settings, ShieldCheck, Clock, Sparkles, Watch, User, X, Menu, Truck, ChevronDown, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
 
 export default function BarraNavegacion({
@@ -14,17 +14,36 @@ export default function BarraNavegacion({
   onTriggerLoader,
   user,
   onOpenAuth,
+  onLogout,
   selectedCategory,
   onSelectCategory
 }) {
   const [showSearch, setShowSearch] = useState(false);
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
+
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
+
+  // Cerrar menú de usuario al hacer click fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    if (isUserMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isUserMenuOpen]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -264,45 +283,216 @@ export default function BarraNavegacion({
 
         {/* Acciones */}
         <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          {/* Botón de Mi Cuenta VIP (Login) */}
-          <button
-            onClick={onOpenAuth}
-            title={user ? `Cuenta VIP: ${user.nombre}` : "Mi Cuenta VIP / Iniciar Sesión"}
-            style={{
-              height: '42px',
-              padding: user ? '0 16px' : '0',
-              width: user ? 'auto' : '42px',
-              borderRadius: user ? '9999px' : '50%',
-              background: user ? 'var(--c-deep-purple)' : '#ffffff',
-              border: user ? '1px solid var(--c-blush)' : '1px solid var(--border-light)',
-              color: user ? '#ffffff' : 'var(--c-deep-purple)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(11, 11, 12, 0.08)',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--c-blush)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = user ? 'var(--c-blush)' : 'var(--border-light)';
-            }}
-          >
-            <User size={18} color={user ? 'var(--c-blush)' : 'var(--c-deep-purple)'} />
-            {user && (
-              <span style={{
-                fontSize: '0.8rem',
-                fontFamily: 'var(--font-serif)',
-                fontWeight: 700,
-                letterSpacing: '0.04em'
-              }}>
-                {user.nombre.split(' ')[0]} (VIP)
-              </span>
+          {/* Menú de Usuario VIP (Dropdown desplegable estilo popover) */}
+          <div ref={userMenuRef} style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => {
+                if (user) {
+                  setIsUserMenuOpen(prev => !prev);
+                } else {
+                  onOpenAuth('login');
+                }
+              }}
+              title={user ? `Cuenta VIP: ${user.nombre}` : "Mi Cuenta VIP / Iniciar Sesión"}
+              style={{
+                height: '42px',
+                padding: user ? '0 16px 0 14px' : '0',
+                width: user ? 'auto' : '42px',
+                borderRadius: user ? '9999px' : '50%',
+                background: user ? 'var(--c-deep-purple)' : '#ffffff',
+                border: user ? '1px solid var(--c-blush)' : '1px solid var(--border-light)',
+                color: user ? '#ffffff' : 'var(--c-deep-purple)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(11, 11, 12, 0.08)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--c-blush)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = user ? 'var(--c-blush)' : 'var(--border-light)';
+              }}
+            >
+              <User size={18} color={user ? 'var(--c-blush)' : 'var(--c-deep-purple)'} />
+              {user && (
+                <>
+                  <span style={{
+                    fontSize: '0.82rem',
+                    fontFamily: 'var(--font-serif)',
+                    fontWeight: 700,
+                    letterSpacing: '0.04em'
+                  }}>
+                    {user.nombres ? user.nombres.split(' ')[0] : user.nombre.split(' ')[0]}
+                  </span>
+                  {isUserMenuOpen ? (
+                    <ChevronUp size={14} color="var(--c-blush)" />
+                  ) : (
+                    <ChevronDown size={14} color="rgba(255, 255, 255, 0.75)" />
+                  )}
+                </>
+              )}
+            </button>
+
+            {/* Popover flotante exactamente como la captura de referencia */}
+            {isUserMenuOpen && user && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 12px)',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  backgroundColor: '#ffffff',
+                  borderRadius: '18px',
+                  boxShadow: '0 16px 38px -4px rgba(0, 0, 0, 0.16), 0 4px 14px rgba(0, 0, 0, 0.06)',
+                  border: '1px solid rgba(0, 0, 0, 0.07)',
+                  padding: '18px 18px 16px',
+                  minWidth: '240px',
+                  zIndex: 300,
+                  animation: 'fadeIn 0.2s ease-out'
+                }}
+              >
+                {/* Flecha triangular apuntando hacia el nombre */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '-8px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 0,
+                    height: 0,
+                    borderLeft: '8px solid transparent',
+                    borderRight: '8px solid transparent',
+                    borderBottom: '8px solid #ffffff',
+                    filter: 'drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.05))'
+                  }}
+                />
+
+                {/* Opción 1: Mis compras */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsUserMenuOpen(false);
+                    onOpenAuth('pedidos');
+                  }}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '14px',
+                    padding: '11px 14px',
+                    border: 'none',
+                    borderRadius: '12px',
+                    backgroundColor: 'transparent',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#fff0f7';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                >
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <Truck size={22} color="#ff007f" />
+                  </div>
+                  <span style={{ fontSize: '0.96rem', fontWeight: 500, color: '#333333', fontFamily: 'inherit' }}>
+                    Mis compras
+                  </span>
+                </button>
+
+                {/* Opción 2: Mi cuenta */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsUserMenuOpen(false);
+                    onOpenAuth('cuenta');
+                  }}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '14px',
+                    padding: '11px 14px',
+                    marginTop: '4px',
+                    border: 'none',
+                    borderRadius: '12px',
+                    backgroundColor: 'transparent',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#fff0f7';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                >
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <User size={22} color="#ff007f" />
+                  </div>
+                  <span style={{ fontSize: '0.96rem', fontWeight: 500, color: '#333333', fontFamily: 'inherit' }}>
+                    Mi cuenta
+                  </span>
+                </button>
+
+                {/* Opción 3: Cerrar sesión */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsUserMenuOpen(false);
+                    if (onLogout) onLogout();
+                  }}
+                  style={{
+                    width: '100%',
+                    marginTop: '16px',
+                    padding: '12px 18px',
+                    borderRadius: '12px',
+                    backgroundColor: '#ff007f',
+                    color: '#ffffff',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.96rem',
+                    letterSpacing: '0.01em',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 14px rgba(255, 0, 127, 0.35)',
+                    transition: 'all 0.2s ease',
+                    fontFamily: 'inherit'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#e60072';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#ff007f';
+                    e.currentTarget.style.transform = 'none';
+                  }}
+                >
+                  Cerrar sesión
+                </button>
+              </div>
             )}
-          </button>
+          </div>
 
           {/* Buscador Desplegable con Animación Suave */}
           <div

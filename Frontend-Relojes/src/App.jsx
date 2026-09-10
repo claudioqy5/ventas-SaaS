@@ -105,6 +105,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authInitialTab, setAuthInitialTab] = useState('cuenta');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(() => {
     if (typeof window === 'undefined') return null;
@@ -114,6 +115,15 @@ export default function App({ initialCategory, initialProductId, initialView = '
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('lgant_auth_token') || null;
   });
+
+  const handleCustomerLogout = () => {
+    setCurrentUser(null);
+    setAuthToken(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('lgant_user');
+      localStorage.removeItem('lgant_auth_token');
+    }
+  };
   const [addedProduct, setAddedProduct] = useState(null);
 
   // Filtros avanzados (Barra lateral)
@@ -551,7 +561,11 @@ export default function App({ initialCategory, initialProductId, initialView = '
         setSearchQuery={setSearchQuery}
         onTriggerLoader={handleTriggerLoader}
         user={currentUser}
-        onOpenAuth={() => setIsAuthOpen(true)}
+        onOpenAuth={(tab) => {
+          setAuthInitialTab(typeof tab === 'string' ? tab : 'cuenta');
+          setIsAuthOpen(true);
+        }}
+        onLogout={handleCustomerLogout}
         selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}
       />
@@ -1032,6 +1046,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onClose={() => setIsAuthOpen(false)}
         user={currentUser}
         token={authToken}
+        initialTab={authInitialTab}
         onLogin={(userData, token) => {
           setCurrentUser(userData);
           setAuthToken(token);
@@ -1040,14 +1055,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
             localStorage.setItem('lgant_auth_token', token);
           }
         }}
-        onLogout={() => {
-          setCurrentUser(null);
-          setAuthToken(null);
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('lgant_user');
-            localStorage.removeItem('lgant_auth_token');
-          }
-        }}
+        onLogout={handleCustomerLogout}
       />
 
       {/* Botón flotante de WhatsApp global (oculto en el carrito y durante el checkout) */}
