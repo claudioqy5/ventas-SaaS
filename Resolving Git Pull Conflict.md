@@ -3369,4 +3369,51 @@ Todos los cambios están aplicados, probados y verificados en código. El reposi
      - Integración futura con APIs logísticas (Scharff, Olva, DHL).
 
 **¿Dónde nos quedamos?**
-Queda pendiente la implementación técnica de la separación de `Nombres` y `Apellidos` en el Backend de C# (modelos y controladores), así como la decisión final de la pasarela para el **Paso 4 (Método de Pago)** del e-commerce.
+Se consolidó la estructura del Checkout en 4 etapas y se definió la hoja de ruta para la autenticación de clientes y persistencia de ventas.
+
+---
+
+### Resumen de la Nueva Sesión (Soporte Multi-categoría, Autenticación E-commerce y Ventas Integradas al Admin)
+
+**¿Qué avanzamos hoy?**
+
+1. **Soporte de Múltiples Categorías por Producto:**
+   - **Backend (`Product.cs`, `ProductsController.cs`):** Se adaptó el modelo y la API para permitir que un producto pertenezca a múltiples categorías simultáneamente (ejemplo: un reloj asignado a "Hombre", "Novedades" y/o "Unisex").
+   - **Panel Administrativo (`Products.vue`):** Se actualizó el formulario para permitir la asignación y selección múltiple de categorías para cada producto.
+   - **Frontend E-commerce (`PanelFiltros.jsx`, `App.jsx`):** El catálogo ahora filtra dinámicamente sobre la colección de categorías del producto, garantizando que el reloj aparezca tanto al filtrar por "Hombre" como por "Novedades".
+
+2. **Mapa Interactivo de Entregas (`DeliveryMap.jsx`):**
+   - Se integró un componente de mapa interactivo dentro del **Paso 3 (Datos de Entrega)** del checkout en `Frontend-Relojes`, permitiendo al cliente ubicar con precisión el punto de entrega y referencias geográficas.
+
+3. **Módulo de Autenticación de Clientes E-commerce:**
+   - **Modelo y Seguridad en Backend (`Client.cs`, `JwtProvider.cs`, `IJwtProvider.cs`):**
+     - Se añadieron los campos `PasswordHash`, `IsEcommerceUser` y fecha de creación al modelo `Client`.
+     - Se implementó la generación de tokens JWT dedicados para clientes con el rol/claim `ClienteEcommerce`.
+   - **Controlador Público (`PublicStoreController.cs`):**
+     - `POST /api/public/store/auth/register`: Registro de nuevos clientes con encriptación segura de contraseña.
+     - `POST /api/public/store/auth/login`: Autenticación con validación de credenciales y retorno de token JWT.
+     - `GET /api/public/store/my-orders`: Endpoint seguro para consultar el historial de compras del cliente autenticado.
+   - **Frontend E-commerce (`ModalAuthCliente.jsx`, `App.jsx`, `api.js`):**
+     - Se diseñó e implementó el modal flotante con pestañas de "Iniciar Sesión" y "Crear Cuenta".
+     - Persistencia de sesión en el navegador (`localStorage` con `cliente_token` y `cliente_datos`).
+     - Enlace y menú de usuario en la barra de navegación para consultar historial de pedidos o cerrar sesión.
+
+4. **Integración Completa del Flujo de Venta (E-commerce ➔ Backend ➔ Panel Administrativo):**
+   - **Checkout Conectado (`ProcesoPago.jsx`):**
+     - Integración con el endpoint de órdenes (`POST /api/public/store/orders`).
+     - Vinculación fluida: el cliente puede comprar autenticado o registrarse en el mismo proceso.
+     - Pantalla de confirmación con código de pedido, desglose final y botón para volver a la tienda.
+   - **Procesamiento de Venta y Kardex en Backend (`PublicStoreController.cs`):**
+     - Se registra la orden directamente en la tabla de ventas `Sale` con `EstadoPago = "Pagado"`.
+     - Generación de ítems de venta (`SaleItem`) respetando la regla de negocio de solo lectura en `Total = Cantidad * PrecioUnitario`.
+     - Descuento automático de existencias en el inventario y creación del registro de auditoría en `StockMovement` (Kardex).
+     - **Visualización en Panel Admin:** Al guardarse como ventas estándar del sistema, las compras realizadas desde la tienda online aparecen de inmediato en el historial de ventas, dashboards de ingresos y reportes del Panel Administrativo de Vue sin requerir cambios invasivos en el panel.
+
+5. **Versionamiento y Despliegue Local:**
+   - Todos los cambios fueron consolidados y versionados en Git con los commits correspondientes (`2b70d83`, `fbf68ec`, etc.) y el servidor de desarrollo de Vite se mantiene operativo.
+
+**¿Dónde nos quedamos?**
+- El flujo completo de catálogo, filtrado multi-categoría, autenticación de clientes, carrito, checkout y generación de ventas con descuento de inventario está 100% funcional e integrado con el backend y el panel de administración.
+- **Pendientes para futuras fases:**
+  1. Integración con pasarela de pagos real (MercadoPago / Niubiz / Stripe o pasarela de QR Yape/Plin automatizada) para el Paso 4 del Checkout.
+  2. Refactorización a campos independientes `Nombres` y `Apellidos` en la tabla de clientes (prioritario cuando se integre facturación electrónica SUNAT o couriers como Olva/Scharff).
