@@ -3416,4 +3416,24 @@ Se consolidó la estructura del Checkout en 4 etapas y se definió la hoja de ru
 - El flujo completo de catálogo, filtrado multi-categoría, autenticación de clientes, carrito, checkout y generación de ventas con descuento de inventario está 100% funcional e integrado con el backend y el panel de administración.
 - **Pendientes para futuras fases:**
   1. Integración con pasarela de pagos real (MercadoPago / Niubiz / Stripe o pasarela de QR Yape/Plin automatizada) para el Paso 4 del Checkout.
-  2. Refactorización a campos independientes `Nombres` y `Apellidos` en la tabla de clientes (prioritario cuando se integre facturación electrónica SUNAT o couriers como Olva/Scharff).
+  2. Refactorización a campos independientes `Nombres` y `Apellidos` en la tabla de clientes (prioritario cuando se integre facturación electrónica SUNAT o couriers como Olva/Scharff).
+
+---
+
+### Actualización - 10 de Septiembre de 2026
+
+**1. Perfil del Cliente y Navegación:**
+- Se implementó la vista `VistaPanelCliente.jsx` para que los clientes autenticados puedan ver su historial de compras y los detalles de su cuenta de manera elegante y alineada al diseño.
+- Se incorporó en `BarraNavegacion.jsx` un menú desplegable en el perfil del usuario (al iniciar sesión) que redirige a las nuevas rutas (`/mis-compras` y `/mi-cuenta`), gestionadas con `window.history.pushState` y Next.js App Router para una navegación nativa sin recargar la página.
+- Se eliminaron colores predeterminados (como rosas/fucsias) para mantener una paleta coherente con la identidad visual del e-commerce (uso de `--c-gold`, `--c-obsidian`, `--c-indigo`, etc.).
+
+**2. Mejoras en la Interfaz de Productos y Filtros:**
+- **Atributos y Categorías Múltiples:** Se actualizó `ModalProducto.jsx` y `PaginaDetalleProducto.jsx` para mostrar correctamente múltiples categorías asignadas a un producto separadas por puntos (•).
+- **Estética del Botón de Pago:** El botón de Mercado Pago en la vista de detalle de producto se modificó de su clásico azul a un estilo lujoso (fondo blanco, texto oscuro y bordes tenues) para que conviva en perfecta armonía con el diseño global de la tienda.
+- **Interactividad en Filtros:** Se corrigió un problema de deformación visual en `PanelFiltros.jsx` donde los nombres de atributos largos rompían el layout. Ahora toda la fila del atributo es un contenedor flexible, envolviendo texto correctamente y permitiendo seleccionar la opción al hacer clic en cualquier parte de la línea, no solo en la caja del checkbox.
+
+**3. Soporte para el IDE (VS Code):**
+- Se añadió un archivo `jsconfig.json` a la raíz de la carpeta `Frontend-Relojes`. Esto soluciona los problemas de falsos positivos (subrayados rojos) en la resolución de módulos (como `lucide-react` y rutas relativas a `../services/api`) cuando el editor se abre desde la carpeta contenedora (`ventas-saas`).
+
+**Estado Actual:**
+El proyecto compila al 100% libre de errores. El checkout y la creación de cuenta manejan los campos *Nombres* y *Apellidos* separados a nivel de interfaz frontal, brindando una experiencia Premium lista para futuras integraciones.
