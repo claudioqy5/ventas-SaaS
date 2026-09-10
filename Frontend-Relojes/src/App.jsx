@@ -21,6 +21,7 @@ import WebThreads from './components/WebThreads';
 import Beneficios from './components/Beneficios';
 import VistaPreguntasFrecuentes from './components/VistaPreguntasFrecuentes';
 import VistaTerminosCondiciones from './components/VistaTerminosCondiciones';
+import VistaPanelCliente from './components/VistaPanelCliente';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 
 const STORAGE_KEY_CART = 'lgant_vip_cart_v1';
@@ -196,6 +197,10 @@ export default function App({ initialCategory, initialProductId, initialView = '
         window.history.pushState({}, '', '/terminos-y-condiciones');
       } else if (viewName === 'checkout') {
         window.history.pushState({}, '', '/checkout');
+      } else if (viewName === 'mis-compras') {
+        window.history.pushState({}, '', '/mis-compras');
+      } else if (viewName === 'cuenta') {
+        window.history.pushState({}, '', '/mi-cuenta');
       } else {
         window.history.pushState({}, '', '/');
       }
@@ -565,6 +570,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
           setAuthInitialTab(typeof tab === 'string' ? tab : 'cuenta');
           setIsAuthOpen(true);
         }}
+        onNavigateView={handleNavigateView}
         onLogout={handleCustomerLogout}
         selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}
@@ -598,6 +604,15 @@ export default function App({ initialCategory, initialProductId, initialView = '
         />
       ) : activeView === 'terminos' ? (
         <VistaTerminosCondiciones
+          onBack={handleBackToCatalog}
+        />
+      ) : activeView === 'mis-compras' || activeView === 'cuenta' ? (
+        <VistaPanelCliente
+          activeTab={activeView === 'mis-compras' ? 'compras' : 'cuenta'}
+          user={currentUser}
+          token={authToken}
+          onLogout={handleCustomerLogout}
+          onNavigate={handleNavigateView}
           onBack={handleBackToCatalog}
         />
       ) : (

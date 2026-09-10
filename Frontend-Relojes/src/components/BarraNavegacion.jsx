@@ -14,6 +14,7 @@ export default function BarraNavegacion({
   onTriggerLoader,
   user,
   onOpenAuth,
+  onNavigateView,
   onLogout,
   selectedCategory,
   onSelectCategory
@@ -377,7 +378,11 @@ export default function BarraNavegacion({
                   type="button"
                   onClick={() => {
                     setIsUserMenuOpen(false);
-                    onOpenAuth('pedidos');
+                    if (onNavigateView) {
+                      onNavigateView('mis-compras');
+                    } else {
+                      onOpenAuth('pedidos');
+                    }
                   }}
                   style={{
                     width: '100%',
@@ -417,7 +422,11 @@ export default function BarraNavegacion({
                   type="button"
                   onClick={() => {
                     setIsUserMenuOpen(false);
-                    onOpenAuth('cuenta');
+                    if (onNavigateView) {
+                      onNavigateView('cuenta');
+                    } else {
+                      onOpenAuth('cuenta');
+                    }
                   }}
                   style={{
                     width: '100%',

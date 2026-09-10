@@ -6,6 +6,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
   const [isRegister, setIsRegister] = useState(false);
   const [activeTab, setActiveTab] = useState(initialTab || 'cuenta');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [telefono, setTelefono] = useState('');
