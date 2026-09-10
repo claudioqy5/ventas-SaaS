@@ -594,12 +594,7 @@
                 <input v-model="form.nombre" type="text" placeholder="Ej. Alimento Royal Canin" required />
               </div>
               <div class="field" style="position: relative; margin-bottom: 0;" ref="categoryDropdownRef">
-                <label style="display: flex; justify-content: space-between; align-items: center;">
-                  <span>Categorías <span style="color: #ef4444;">*</span></span>
-                  <span v-if="form.categoriaIds && form.categoriaIds.length > 1" style="font-size: 0.7rem; color: #2563eb; font-weight: 600;">
-                    {{ form.categoriaIds.length }} seleccionadas
-                  </span>
-                </label>
+                <label>Categorías <span style="color: #ef4444;">*</span></label>
                 <div 
                   @click="toggleCategoryDropdown"
                   class="multiselect-trigger"
@@ -651,7 +646,7 @@
                     <div v-if="filteredCategories.length === 0" style="padding: 10px; text-align: center; font-size: 0.78rem; color: #94a3b8;">
                       No se encontraron categorías
                     </div>
-                    <label 
+                    <div 
                       v-for="cat in filteredCategories" 
                       :key="cat.id" 
                       class="multiselect-item"
@@ -661,10 +656,11 @@
                       <input 
                         type="checkbox" 
                         :checked="isCategorySelected(cat.id)" 
-                        @click.stop="toggleCategory(cat.id)" 
+                        tabindex="-1"
+                        style="pointer-events: none;"
                       />
-                      <span>{{ cat.nombre }}</span>
-                    </label>
+                      <span style="flex: 1; user-select: none;">{{ cat.nombre }}</span>
+                    </div>
                   </div>
 
                   <div class="multiselect-dropdown-footer">
@@ -3598,6 +3594,7 @@ onUnmounted(() => {
   cursor: pointer;
   margin: 0 !important;
   padding: 0 !important;
+  pointer-events: none;
 }
 
 .multiselect-dropdown-footer {
