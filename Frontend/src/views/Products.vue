@@ -588,20 +588,93 @@
             <div style="display: grid; grid-template-columns: 1.55fr 1.45fr; gap: 20px; margin-bottom: 16px;">
               <!-- COLUMNA IZQUIERDA: Datos Básicos -->
               <div style="display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px;">
-              <div class="field">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; align-items: start;">
+              <div class="field" style="margin-bottom: 0;">
                 <label>Nombre del Producto</label>
                 <input v-model="form.nombre" type="text" placeholder="Ej. Alimento Royal Canin" required />
               </div>
-              <div class="field">
-                <label>Categorías</label>
-                <select v-model="form.categoriaIds" multiple required style="height: auto; min-height: 80px;">
-                  <option disabled value="">Seleccione una o más...</option>
-                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
-                </select>
-                <small style="font-size: 0.7rem; color: #64748b;">Mantenga presionado Ctrl/Cmd para seleccionar varias.</small>
+              <div class="field" style="position: relative; margin-bottom: 0;" ref="categoryDropdownRef">
+                <label style="display: flex; justify-content: space-between; align-items: center;">
+                  <span>Categorías <span style="color: #ef4444;">*</span></span>
+                  <span v-if="form.categoriaIds && form.categoriaIds.length > 1" style="font-size: 0.7rem; color: #2563eb; font-weight: 600;">
+                    {{ form.categoriaIds.length }} seleccionadas
+                  </span>
+                </label>
+                <div 
+                  @click="toggleCategoryDropdown"
+                  class="multiselect-trigger"
+                  :class="{ 'active': showCategoryDropdown }"
+                >
+                  <div class="multiselect-selected-text">
+                    <template v-if="!form.categoriaIds || form.categoriaIds.length === 0">
+                      <span class="placeholder-text">Seleccione...</span>
+                    </template>
+                    <template v-else-if="form.categoriaIds.length === 1">
+                      <span class="selected-single">{{ categories.find(c => c.id === form.categoriaIds[0])?.nombre || '1 categoría' }}</span>
+                    </template>
+                    <template v-else>
+                      <span class="selected-single">{{ categories.find(c => c.id === form.categoriaIds[0])?.nombre }}</span>
+                      <span class="badge-count">+{{ form.categoriaIds.length - 1 }}</span>
+                    </template>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon" :style="{ transform: showCategoryDropdown ? 'rotate(180deg)' : 'rotate(0)' }">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+
+                <!-- Menú desplegable flotante (No empuja los elementos inferiores) -->
+                <div v-if="showCategoryDropdown" class="multiselect-dropdown-panel" @click.stop>
+                  <div class="multiselect-dropdown-header">
+                    <span>Categorías</span>
+                    <button 
+                      v-if="form.categoriaIds && form.categoriaIds.length > 0"
+                      type="button" 
+                      class="btn-clear-categories" 
+                      @click.stop="clearCategories"
+                    >
+                      Limpiar
+                    </button>
+                  </div>
+
+                  <!-- Buscador si hay más de 5 categorías -->
+                  <div v-if="categories.length > 5" style="padding: 6px 8px; border-bottom: 1px solid var(--border-color);">
+                    <input 
+                      v-model="categorySearchText" 
+                      type="text" 
+                      placeholder="Buscar categoría..." 
+                      style="width: 100%; height: 28px !important; padding: 2px 8px !important; font-size: 0.8rem !important; border-radius: 4px !important; border: 1px solid var(--border-color) !important; background-color: var(--bg-app);"
+                      @click.stop
+                    />
+                  </div>
+
+                  <div class="multiselect-dropdown-list">
+                    <div v-if="filteredCategories.length === 0" style="padding: 10px; text-align: center; font-size: 0.78rem; color: #94a3b8;">
+                      No se encontraron categorías
+                    </div>
+                    <label 
+                      v-for="cat in filteredCategories" 
+                      :key="cat.id" 
+                      class="multiselect-item"
+                      :class="{ 'selected': isCategorySelected(cat.id) }"
+                      @click.stop="toggleCategory(cat.id)"
+                    >
+                      <input 
+                        type="checkbox" 
+                        :checked="isCategorySelected(cat.id)" 
+                        @click.stop="toggleCategory(cat.id)" 
+                      />
+                      <span>{{ cat.nombre }}</span>
+                    </label>
+                  </div>
+
+                  <div class="multiselect-dropdown-footer">
+                    <button type="button" class="btn-done-categories" @click.stop="showCategoryDropdown = false">
+                      Listo
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div class="field">
+              <div class="field" style="margin-bottom: 0;">
                 <label>Marca (Opcional)</label>
                 <select v-model="form.marcaId">
                   <option value="">Ninguna</option>
@@ -1102,7 +1175,7 @@
 
 <script setup>
 import { API_URL } from '../config'
-import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -1117,6 +1190,54 @@ const selectedGalleryProduct = ref(null);
 const galleryImages = ref([]);
 const activeImageIndex = ref(0);
 const copiedSku = ref(false);
+
+// Estado y funciones para selector múltiple moderno de categorías
+const showCategoryDropdown = ref(false);
+const categoryDropdownRef = ref(null);
+const categorySearchText = ref('');
+
+const toggleCategoryDropdown = () => {
+  showCategoryDropdown.value = !showCategoryDropdown.value;
+};
+
+const isCategorySelected = (catId) => {
+  return Array.isArray(form.categoriaIds) && form.categoriaIds.includes(catId);
+};
+
+const toggleCategory = (catId) => {
+  if (!Array.isArray(form.categoriaIds)) form.categoriaIds = [];
+  const index = form.categoriaIds.indexOf(catId);
+  if (index > -1) {
+    form.categoriaIds.splice(index, 1);
+  } else {
+    form.categoriaIds.push(catId);
+  }
+  form.categoriaId = form.categoriaIds.length > 0 ? form.categoriaIds[0] : '';
+};
+
+const clearCategories = () => {
+  form.categoriaIds = [];
+  form.categoriaId = '';
+};
+
+const filteredCategories = computed(() => {
+  if (!categorySearchText.value.trim()) return categories.value;
+  const q = categorySearchText.value.toLowerCase();
+  return categories.value.filter(c => c.nombre && c.nombre.toLowerCase().includes(q));
+});
+
+const handleClickOutsideCategoryDropdown = (e) => {
+  if (categoryDropdownRef.value && !categoryDropdownRef.value.contains(e.target)) {
+    showCategoryDropdown.value = false;
+  }
+};
+
+watch(showModal, (newVal) => {
+  if (!newVal) {
+    showCategoryDropdown.value = false;
+    categorySearchText.value = '';
+  }
+});
 
 const galleryZoomStyle = reactive({
   transform: 'scale(1)',
@@ -1564,6 +1685,8 @@ const openAddModal = () => {
   form.descripcion = ''
   form.categoriaId = ''
   form.categoriaIds = []
+  showCategoryDropdown.value = false
+  categorySearchText.value = ''
   form.marcaId = ''
   form.imagenUrl = ''
   form.atributos = initializeAttributes([])
@@ -1588,7 +1711,11 @@ const openEditModal = (product) => {
   form.precio = product.precio
   form.descripcion = product.descripcion
   form.categoriaId = product.categoriaId
-  form.categoriaIds = product.categoriaIds || (product.categoriaId ? [product.categoriaId] : [])
+  form.categoriaIds = (product.categoriaIds && product.categoriaIds.length > 0)
+    ? [...product.categoriaIds]
+    : (product.categoriaId ? [product.categoriaId] : [])
+  showCategoryDropdown.value = false
+  categorySearchText.value = ''
   form.marcaId = product.marcaId || ''
   form.imagenUrl = product.imagenUrl || ''
   form.atributos = initializeAttributes(product.atributos || [])
@@ -1620,6 +1747,7 @@ const saveProduct = async () => {
 
   try {
     const payload = { ...form }
+    payload.categoriaId = form.categoriaIds[0]
 
     // Fix empty marcaId parsing error in backend
     if (!payload.marcaId) {
@@ -1768,10 +1896,12 @@ onMounted(() => {
   fetchAttributeTypes()
   fetchInventoryStats()
   window.addEventListener('keydown', handleGalleryKeydown)
+  window.addEventListener('click', handleClickOutsideCategoryDropdown)
 })
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleGalleryKeydown)
+  window.removeEventListener('click', handleClickOutsideCategoryDropdown)
 })
 </script>
 
@@ -3321,5 +3451,176 @@ onUnmounted(() => {
 
 .standalone-row:hover {
   background-color: #f8fafc;
+}
+
+/* Multi-select Dropdown moderno y compacto para el modal de productos */
+.multiselect-trigger {
+  height: 38px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px !important;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-size: 0.88rem;
+  box-sizing: border-box;
+}
+
+.multiselect-trigger:hover {
+  border-color: #94a3b8;
+}
+
+.multiselect-trigger.active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.multiselect-selected-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 18px);
+}
+
+.placeholder-text {
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.selected-single {
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge-count {
+  background-color: #eff6ff;
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  border: 1px solid #bfdbfe;
+}
+
+.chevron-icon {
+  color: #64748b;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.multiselect-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  min-width: 220px;
+  background-color: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+  box-shadow: 0 12px 28px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  z-index: 1050;
+  overflow: hidden;
+}
+
+.multiselect-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f8fafc;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-clear-categories {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-clear-categories:hover {
+  text-decoration: underline;
+}
+
+.multiselect-dropdown-list {
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.multiselect-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-color);
+  transition: background-color 0.12s ease;
+  margin-bottom: 2px;
+  user-select: none;
+}
+
+.multiselect-item:hover {
+  background-color: #f1f5f9;
+}
+
+.multiselect-item.selected {
+  background-color: #eff6ff;
+  font-weight: 500;
+  color: #1d4ed8;
+}
+
+.multiselect-item input[type="checkbox"] {
+  width: 15px !important;
+  height: 15px !important;
+  accent-color: #2563eb;
+  cursor: pointer;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.multiselect-dropdown-footer {
+  padding: 6px 10px;
+  background-color: #f8fafc;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-done-categories {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-done-categories:hover {
+  background-color: #1d4ed8;
 }
 </style>
