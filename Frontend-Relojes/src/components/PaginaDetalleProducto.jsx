@@ -303,7 +303,6 @@ export default function PaginaDetalleProducto({
 
           {/* Columna Derecha: Detalles del Producto, Precios y Acciones */}
           <div>
-            {/* Marca / Categoría */}
             <div style={{
               fontSize: '0.78rem',
               fontWeight: 600,
@@ -313,7 +312,9 @@ export default function PaginaDetalleProducto({
               fontFamily: 'var(--font-serif)',
               marginBottom: '6px'
             }}>
-              {brandName}
+              {Array.isArray(product.categorias) && product.categorias.length > 0 
+                ? `${brandName} • ${product.categorias.join(' • ')}` 
+                : brandName}
             </div>
 
             {/* Título Principal */}
@@ -503,9 +504,9 @@ export default function PaginaDetalleProducto({
               style={{
                 width: '100%',
                 height: '48px',
-                backgroundColor: '#009ee3',
-                color: '#ffffff',
-                border: 'none',
+                backgroundColor: '#ffffff',
+                color: 'var(--c-obsidian)',
+                border: '1px solid rgba(59, 60, 65, 0.2)',
                 borderRadius: 'var(--radius-sm)',
                 fontSize: '0.84rem',
                 fontFamily: 'var(--font-serif)',
@@ -517,12 +518,18 @@ export default function PaginaDetalleProducto({
                 justifyContent: 'center',
                 gap: '8px',
                 cursor: 'pointer',
-                boxShadow: '0 4px 16px rgba(0, 158, 227, 0.25)',
+                boxShadow: '0 4px 15px rgba(11, 11, 12, 0.05)',
                 transition: 'all 0.2s ease',
                 marginBottom: '28px'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#008ac6'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#009ee3'}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f9f8f6';
+                e.currentTarget.style.borderColor = 'var(--c-indigo)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#ffffff';
+                e.currentTarget.style.borderColor = 'rgba(59, 60, 65, 0.2)';
+              }}
             >
               <CreditCard size={18} />
               PAGAR CON TARJETA (MERCADO PAGO)

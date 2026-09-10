@@ -190,14 +190,14 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
       <SectionHeader title="Disponibilidad" section="disponibilidad" />
       {openSections.disponibilidad !== false && (
         <div style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--c-obsidian)', cursor: 'pointer' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--c-obsidian)', cursor: 'pointer', width: '100%' }}>
             <input
               type="checkbox"
               checked={filters.inStockOnly}
               onChange={(e) => setFilters(prev => ({ ...prev, inStockOnly: e.target.checked }))}
-              style={{ accentColor: 'var(--c-obsidian)', width: '16px', height: '16px', cursor: 'pointer' }}
+              style={{ accentColor: 'var(--c-obsidian)', width: '16px', height: '16px', flexShrink: 0, cursor: 'pointer' }}
             />
-            <span>En stock</span>
+            <span style={{ flex: 1, lineHeight: 1.4, wordBreak: 'break-word' }}>En stock</span>
           </label>
         </div>
       )}
@@ -213,14 +213,14 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
                 {options.map(val => {
                   const isChecked = (filters.dynamic?.[attrName] || []).includes(val);
                   return (
-                    <label key={val} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: isChecked ? 'var(--c-obsidian)' : 'var(--c-taupe)', fontWeight: isChecked ? 600 : 400, textTransform: 'capitalize' }}>
+                    <label key={val} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: isChecked ? 'var(--c-obsidian)' : 'var(--c-taupe)', fontWeight: isChecked ? 600 : 400, textTransform: 'capitalize', width: '100%' }}>
                       <input
                         type="checkbox"
                         checked={isChecked}
                         onChange={() => toggleDynamicAttr(attrName, val)}
-                        style={{ accentColor: 'var(--c-obsidian)', width: '16px', height: '16px', cursor: 'pointer' }}
+                        style={{ accentColor: 'var(--c-obsidian)', width: '16px', height: '16px', flexShrink: 0, marginTop: '2px', cursor: 'pointer' }}
                       />
-                      <span>{val}</span>
+                      <span style={{ flex: 1, lineHeight: 1.4, wordBreak: 'break-word' }}>{val}</span>
                     </label>
                   );
                 })}

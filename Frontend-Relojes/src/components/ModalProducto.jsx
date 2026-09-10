@@ -282,7 +282,9 @@ export default function ModalProducto({
                   fontFamily: 'var(--font-serif)',
                   fontWeight: 700
                 }}>
-                  {product.categoria || 'Guardatiempo de Alta Gama'}
+                  {Array.isArray(product.categorias) && product.categorias.length > 0 
+                    ? product.categorias.join(' • ') 
+                    : (product.categoria || 'Guardatiempo de Alta Gama')}
                 </span>
                 <span style={{
                   fontSize: '0.7rem',
@@ -440,9 +442,9 @@ export default function ModalProducto({
                 onClick={handleMercadoPagoCheckout}
                 style={{
                   width: '100%',
-                  backgroundColor: '#009ee3', // Azul Mercado Pago oficial
-                  color: '#ffffff',
-                  border: 'none',
+                  backgroundColor: '#ffffff',
+                  color: 'var(--c-obsidian)',
+                  border: '1px solid rgba(59, 60, 65, 0.2)',
                   borderRadius: '8px',
                   padding: '13px',
                   fontSize: '0.82rem',
@@ -454,11 +456,17 @@ export default function ModalProducto({
                   justifyContent: 'center',
                   gap: '8px',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 15px rgba(0, 158, 227, 0.25)',
+                  boxShadow: '0 4px 15px rgba(11, 11, 12, 0.05)',
                   transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#008ac6'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#009ee3'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f9f8f6';
+                  e.currentTarget.style.borderColor = 'var(--c-indigo)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#ffffff';
+                  e.currentTarget.style.borderColor = 'rgba(59, 60, 65, 0.2)';
+                }}
               >
                 <CreditCard size={18} />
                 Pagar con Tarjeta (Mercado Pago)
