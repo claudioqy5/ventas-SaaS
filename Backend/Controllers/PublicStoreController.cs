@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SaaS.API.Data;
 using SaaS.API.Models;
+using SaaS.API.Services;
 
 namespace SaaS.API.Controllers;
 
@@ -17,17 +18,21 @@ namespace SaaS.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/public/store")]
-[AllowAnonymous]
 public class PublicStoreController : ControllerBase
 {
     private readonly MongoDbContext _context;
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtProvider _jwtProvider;
 
-    public PublicStoreController(MongoDbContext context)
+    public PublicStoreController(MongoDbContext context, IPasswordHasher passwordHasher, IJwtProvider jwtProvider)
     {
         _context = context;
+        _passwordHasher = passwordHasher;
+        _jwtProvider = jwtProvider;
     }
 
     // GET api/public/store/{empresaId}
+    [AllowAnonymous]
     [HttpGet("{empresaId}")]
     public async Task<IActionResult> GetStoreInfo(string empresaId)
     {
@@ -48,6 +53,7 @@ public class PublicStoreController : ControllerBase
     }
 
     // GET api/public/store/{empresaId}/products
+    [AllowAnonymous]
     [HttpGet("{empresaId}/products")]
     public async Task<IActionResult> GetStoreProducts(string empresaId, [FromQuery] string? categoriaId = null)
     {
@@ -63,12 +69,11 @@ public class PublicStoreController : ControllerBase
 
         if (!string.IsNullOrEmpty(categoriaId))
         {
-            filter = filterBuilder.And(filter, filterBuilder.Eq(p => p.CategoriaId, categoriaId));
+            filter = filterBuilder.And(filter, filterBuilder.Eq(p => p.CategoriaId, categoriaId)); // Simplificado para compatibilidad si hay query string simple
         }
 
         var products = await _context.Products.Find(filter).ToListAsync();
 
-        // Proyección pública segura: nunca expone PrecioCosto, PrecioCostoCostal ni datos internos
         var publicProducts = products.Select(p => new
         {
             p.Id,
@@ -95,6 +100,7 @@ public class PublicStoreController : ControllerBase
     }
 
     // GET api/public/store/{empresaId}/categories
+    [AllowAnonymous]
     [HttpGet("{empresaId}/categories")]
     public async Task<IActionResult> GetStoreCategories(string empresaId)
     {
@@ -104,4 +110,160 @@ public class PublicStoreController : ControllerBase
         var categories = await _context.Categories.Find(c => c.EmpresaId == empresaId).ToListAsync();
         return Ok(categories);
     }
+
+    // POST api/public/store/{empresaId}/auth/register
+    [AllowAnonymous]
+    [HttpPost("{empresaId}/auth/register")]
+    public async Task<IActionResult> RegisterClient(string empresaId, [FromBody] ClientRegisterRequest request)
+    {
+        var existing = await _context.Clients.Find(c => c.EmpresaId == empresaId && c.Correo == request.Correo).FirstOrDefaultAsync();
+        if (existing != null)
+        {
+            if (existing.EsUsuarioEcommerce)
+                return BadRequest(new { message = "El correo ya está registrado en la tienda." });
+            
+            // Si ya existía como cliente de mostrador (POS), lo convertimos en cliente ecommerce
+            existing.EsUsuarioEcommerce = true;
+            existing.ClaveHash = _passwordHasher.Hash(request.Clave);
+            existing.Nombre = request.Nombre;
+            existing.Telefono = request.Telefono ?? existing.Telefono;
+            
+            await _context.Clients.ReplaceOneAsync(c => c.Id == existing.Id, existing);
+            var token = _jwtProvider.GenerateClientToken(existing);
+            return Ok(new { token, client = new { existing.Id, existing.Nombre, existing.Correo } });
+        }
+
+        var newClient = new Client
+        {
+            EmpresaId = empresaId,
+            Nombre = request.Nombre,
+            Correo = request.Correo,
+            Telefono = request.Telefono ?? string.Empty,
+            ClaveHash = _passwordHasher.Hash(request.Clave),
+            EsUsuarioEcommerce = true,
+            FechaCreacion = DateTime.UtcNow
+        };
+
+        await _context.Clients.InsertOneAsync(newClient);
+        var newToken = _jwtProvider.GenerateClientToken(newClient);
+        return Ok(new { token = newToken, client = new { newClient.Id, newClient.Nombre, newClient.Correo } });
+    }
+
+    // POST api/public/store/{empresaId}/auth/login
+    [AllowAnonymous]
+    [HttpPost("{empresaId}/auth/login")]
+    public async Task<IActionResult> LoginClient(string empresaId, [FromBody] ClientLoginRequest request)
+    {
+        var client = await _context.Clients.Find(c => c.EmpresaId == empresaId && c.Correo == request.Correo && c.EsUsuarioEcommerce).FirstOrDefaultAsync();
+        if (client == null || string.IsNullOrEmpty(client.ClaveHash) || !_passwordHasher.Verify(request.Clave, client.ClaveHash))
+            return Unauthorized(new { message = "Correo o contraseña incorrectos." });
+
+        var token = _jwtProvider.GenerateClientToken(client);
+        return Ok(new { token, client = new { client.Id, client.Nombre, client.Correo, client.Telefono, client.Direccion, client.NumeroDocumento } });
+    }
+
+    // POST api/public/store/{empresaId}/orders
+    [Authorize]
+    [HttpPost("{empresaId}/orders")]
+    public async Task<IActionResult> SubmitOrder(string empresaId, [FromBody] StoreOrderRequest request)
+    {
+        var clientId = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+        if (string.IsNullOrEmpty(clientId)) return Unauthorized();
+
+        var client = await _context.Clients.Find(c => c.Id == clientId && c.EmpresaId == empresaId).FirstOrDefaultAsync();
+        if (client == null) return Unauthorized();
+
+        // Validar y crear la venta (Sale)
+        var newSale = new Sale
+        {
+            EmpresaId = empresaId,
+            ClienteId = client.Id,
+            NombreCliente = client.Nombre,
+            Subtotal = request.Subtotal,
+            Impuesto = request.Impuesto,
+            Total = request.Total,
+            MetodoPago = request.MetodoPago, // E.g., "Online - " + request.PaymentMethod
+            EstadoPago = "Pagado", // Asumimos que coordinará por WhatsApp, pero para ecommerce "Pagado" o "Pendiente" según tu preferencia. Le pondremos "Por Confirmar" o "Pagado". Como "EstadoPago" se espera "Pagado" o "Fiado" en el admin, usaremos "Pagado" para no afectar el POS.
+            CreadoPor = client.Id,
+            CreadoPorNombre = "Tienda Virtual",
+            FechaCreacion = DateTime.UtcNow,
+            Detalles = new List<SaleItem>()
+        };
+
+        foreach (var item in request.Items)
+        {
+            var product = await _context.Products.Find(p => p.Id == item.ProductoId).FirstOrDefaultAsync();
+            if (product != null && product.Stock >= item.Cantidad)
+            {
+                var saleItem = new SaleItem
+                {
+                    ProductoId = product.Id,
+                    NombreProducto = product.Nombre,
+                    Cantidad = item.Cantidad,
+                    PrecioUnitario = item.PrecioUnitario,
+                    UnidadMedida = product.UnidadMedida,
+                    CantidadPresentacion = 1,
+                    PrecioPresentacion = item.PrecioUnitario,
+                    Presentacion = "Unidad"
+                };
+                newSale.Detalles.Add(saleItem);
+
+                // Registrar el movimiento de stock
+                var previousStock = product.Stock;
+                var newStock = previousStock - item.Cantidad;
+
+                var movement = new StockMovement
+                {
+                    EmpresaId = empresaId,
+                    ProductoId = product.Id,
+                    NombreProducto = product.Nombre,
+                    Tipo = "Venta Ecommerce",
+                    Cantidad = item.Cantidad,
+                    StockAnterior = previousStock,
+                    StockNuevo = newStock,
+                    Motivo = $"Venta online registrada",
+                    CreadoPor = client.Id,
+                    CreadoPorNombre = "Tienda Virtual - " + client.Nombre,
+                    FechaCreacion = DateTime.UtcNow
+                };
+                await _context.StockMovements.InsertOneAsync(movement);
+
+                // Descontar el stock
+                product.Stock = newStock;
+                await _context.Products.ReplaceOneAsync(p => p.Id == product.Id, product);
+            }
+            else
+            {
+                // Manejar error de stock insuficiente
+                return BadRequest(new { message = $"Stock insuficiente para el producto {item.NombreProducto}." });
+            }
+        }
+
+        await _context.Sales.InsertOneAsync(newSale);
+        return Ok(new { message = "Pedido registrado con éxito", orderId = newSale.Id });
+    }
+
+    // GET api/public/store/{empresaId}/orders/me
+    [Authorize]
+    [HttpGet("{empresaId}/orders/me")]
+    public async Task<IActionResult> GetMyOrders(string empresaId)
+    {
+        var clientId = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+        if (string.IsNullOrEmpty(clientId)) return Unauthorized();
+
+        var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId && s.ClienteId == clientId).SortByDescending(s => s.FechaCreacion).ToListAsync();
+        
+        return Ok(sales);
+    }
 }
+
+public record ClientRegisterRequest(string Nombre, string Correo, string Clave, string? Telefono);
+public record ClientLoginRequest(string Correo, string Clave);
+public record StoreOrderRequest(
+    decimal Subtotal,
+    decimal Impuesto,
+    decimal Total,
+    string MetodoPago,
+    List<StoreOrderItem> Items
+);
+public record StoreOrderItem(string ProductoId, string NombreProducto, decimal Cantidad, decimal PrecioUnitario);

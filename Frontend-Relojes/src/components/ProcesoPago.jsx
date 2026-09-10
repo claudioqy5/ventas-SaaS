@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShoppingBag, User, Truck, CreditCard, ChevronLeft, Trash2, MapPin,
   Building2, PackageCheck, Copy, Check, ShieldCheck, Lock,
-  CheckCircle2, Smartphone, AlertCircle
+  CheckCircle2, Smartphone, AlertCircle, LogIn
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { submitOrder } from '../services/api';
 
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
 
@@ -80,12 +81,17 @@ export default function ProcesoPago({
   onUpdateQuantity, 
   onRemoveItem, 
   onBack,
-  onClearCart
+  onClearCart,
+  user,
+  token,
+  onRequireAuth
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  // PASO 2: Datos Personales (Guest Checkout)
+  // PASO 2: Datos Personales
   const [personalData, setPersonalData] = useState({
     nombres: '',
     apellidos: '',
@@ -94,6 +100,23 @@ export default function ProcesoPago({
     numDoc: '',
     telefono: ''
   });
+
+  // Autocompletar con los datos del usuario logueado
+  useEffect(() => {
+    if (user) {
+      const nombresSplit = (user.nombre || '').split(' ');
+      const nombre = nombresSplit[0] || '';
+      const apellido = nombresSplit.slice(1).join(' ') || '';
+      
+      setPersonalData(prev => ({
+        ...prev,
+        nombres: prev.nombres || nombre,
+        apellidos: prev.apellidos || apellido,
+        email: prev.email || user.email || '',
+        telefono: prev.telefono || user.telefono || ''
+      }));
+    }
+  }, [user]);
 
   // PASO 3: Datos de Entrega
   const [recipientType, setRecipientType] = useState('yo');
@@ -125,8 +148,6 @@ export default function ProcesoPago({
 
   // Estado de Orden Exitosa
   const [orderSuccess, setOrderSuccess] = useState(null);
-  const [accountCreated, setAccountCreated] = useState(false);
-  const [accountPassword, setAccountPassword] = useState('');
 
   const subtotal = items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
   const discount = 0;
@@ -216,6 +237,10 @@ export default function ProcesoPago({
     if (currentStep === 1) {
       if (items.length > 0) setCurrentStep(2);
     } else if (currentStep === 2) {
+      if (!token) {
+        onRequireAuth();
+        return;
+      }
       if (validateStep2()) setCurrentStep(3);
     } else if (currentStep === 3) {
       if (validateStep3()) setCurrentStep(4);
@@ -224,7 +249,7 @@ export default function ProcesoPago({
     }
   };
 
-  const handleFinalizarCompra = () => {
+  const handleFinalizarCompra = async () => {
     if (!validateStep2()) {
       setCurrentStep(2);
       return;
@@ -237,42 +262,70 @@ export default function ProcesoPago({
       return;
     }
 
-    const orderId = `LGT-${Date.now().toString().slice(-6)}`;
-    const newOrder = {
-      orderId,
-      date: new Date().toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-      items: [...items],
-      subtotal,
-      discount,
-      total,
-      personalData,
-      deliveryAddress,
-      recipientType,
-      recipientData,
-      additionalNotes,
-      paymentMethod,
-      paymentDetails,
-      tipoComprobante,
-      facturaData
-    };
+    if (!token) {
+      onRequireAuth();
+      return;
+    }
 
-    // Confetti de celebración elegante sin emojis
+    setIsSubmitting(true);
+    setSubmitError('');
+
     try {
-      if (typeof window !== 'undefined') {
-        import('canvas-confetti').then((confettiModule) => {
-          const confetti = confettiModule.default || confettiModule;
-          confetti({
-            particleCount: 110,
-            spread: 75,
-            origin: { y: 0.6 },
-            colors: ['#D4AF37', '#1A1B1F', '#F5E6C8', '#0B0B0C']
-          });
-        }).catch(() => {});
-      }
-    } catch {}
+      const orderData = {
+        subtotal: subtotal,
+        impuesto: 0, // Ajustar si es necesario
+        total: total,
+        metodoPago: `Online - ${paymentMethod}`,
+        items: items.map(item => ({
+          productoId: item.id || item._id,
+          nombreProducto: item.nombre,
+          cantidad: item.quantity,
+          precioUnitario: item.precio
+        }))
+      };
 
-    setOrderSuccess(newOrder);
-    if (onClearCart) onClearCart();
+      const res = await submitOrder(token, orderData);
+
+      const newOrder = {
+        orderId: res.orderId,
+        date: new Date().toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        items: [...items],
+        subtotal,
+        discount,
+        total,
+        personalData,
+        deliveryAddress,
+        recipientType,
+        recipientData,
+        additionalNotes,
+        paymentMethod,
+        paymentDetails,
+        tipoComprobante,
+        facturaData
+      };
+
+      // Confetti de celebración elegante sin emojis
+      try {
+        if (typeof window !== 'undefined') {
+          import('canvas-confetti').then((confettiModule) => {
+            const confetti = confettiModule.default || confettiModule;
+            confetti({
+              particleCount: 110,
+              spread: 75,
+              origin: { y: 0.6 },
+              colors: ['#D4AF37', '#1A1B1F', '#F5E6C8', '#0B0B0C']
+            });
+          }).catch(() => {});
+        }
+      } catch {}
+
+      setOrderSuccess(newOrder);
+      if (onClearCart) onClearCart();
+    } catch (err) {
+      setSubmitError(err.message || 'Error al procesar el pedido. Por favor intenta de nuevo.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleWhatsAppCoordination = () => {
@@ -1284,19 +1337,25 @@ Deseo coordinar el despacho y verificación de mi compra.`;
               <span>S/ {total.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</span>
             </div>
             
+            {submitError && (
+              <div style={{ padding: '12px', marginBottom: '16px', background: 'rgba(255, 59, 48, 0.1)', color: '#ff3b30', borderRadius: '6px', fontSize: '0.85rem', fontWeight: 500, textAlign: 'center' }}>
+                ⚠️ {submitError}
+              </div>
+            )}
+            
             <button 
-              disabled={items.length === 0}
+              disabled={items.length === 0 || isSubmitting}
               onClick={handleNextStep}
               style={{ 
                 width: '100%', padding: '16px', 
-                background: items.length === 0 ? '#e2e8f0' : 'var(--c-blush)', 
-                color: items.length === 0 ? '#94a3b8' : 'var(--c-obsidian)', 
+                background: items.length === 0 || isSubmitting ? '#e2e8f0' : 'var(--c-blush)', 
+                color: items.length === 0 || isSubmitting ? '#94a3b8' : 'var(--c-obsidian)', 
                 border: 'none', borderRadius: '6px', fontWeight: 600, fontSize: '0.95rem', 
-                letterSpacing: '0.05em', cursor: items.length === 0 ? 'not-allowed' : 'pointer', 
+                letterSpacing: '0.05em', cursor: items.length === 0 || isSubmitting ? 'not-allowed' : 'pointer', 
                 transition: 'all 0.3s' 
               }}
             >
-              {currentStep < 4 ? 'CONTINUAR' : 'FINALIZAR COMPRA'}
+              {isSubmitting ? 'PROCESANDO...' : currentStep < 4 ? 'CONTINUAR' : 'FINALIZAR COMPRA'}
             </button>
           </div>
         </div>

@@ -60,4 +60,34 @@ public class JwtProvider : IJwtProvider
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    // Genera el token JWT para los clientes del e-commerce
+    public string GenerateClientToken(Client client)
+    {
+        var secretKey = _configuration.GetValue<string>("JwtSettings:Secret") ?? "SuperSecretSaaSKeyOfLengthGreaterThan32Characters!";
+        var issuer = _configuration.GetValue<string>("JwtSettings:Issuer") ?? "SaaSProvider";
+        var audience = _configuration.GetValue<string>("JwtSettings:Audience") ?? "SaaSClients";
+        var expiryMinutes = _configuration.GetValue<int>("JwtSettings:ExpiryMinutes", 480);
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Sub, client.Id),
+            new(JwtRegisteredClaimNames.Name, client.Nombre),
+            new(JwtRegisteredClaimNames.Email, client.Correo),
+            new(ClaimTypes.Role, "ClienteEcommerce"), // Rol especial para diferenciarlo de los admins
+            new("EmpresaId", client.EmpresaId ?? string.Empty)
+        };
+
+        var token = new JwtSecurityToken(
+            issuer: issuer,
+            audience: audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
+            signingCredentials: credentials);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
 }

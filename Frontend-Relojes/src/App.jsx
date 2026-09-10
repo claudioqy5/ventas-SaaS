@@ -106,7 +106,14 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    try { return JSON.parse(localStorage.getItem('lgant_user')) || null; } catch { return null; }
+  });
+  const [authToken, setAuthToken] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('lgant_auth_token') || null;
+  });
   const [addedProduct, setAddedProduct] = useState(null);
 
   // Filtros avanzados (Barra lateral)
@@ -557,6 +564,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
           onRemoveItem={handleRemoveItem}
           onBack={handleBackToCatalog}
           onClearCart={() => setCart([])}
+          user={currentUser}
+          token={authToken}
+          onRequireAuth={() => setIsAuthOpen(true)}
         />
       ) : selectedProduct ? (
         <PaginaDetalleProducto
@@ -1021,8 +1031,23 @@ export default function App({ initialCategory, initialProductId, initialView = '
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
         user={currentUser}
-        onLogin={(userData) => setCurrentUser(userData)}
-        onLogout={() => setCurrentUser(null)}
+        token={authToken}
+        onLogin={(userData, token) => {
+          setCurrentUser(userData);
+          setAuthToken(token);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('lgant_user', JSON.stringify(userData));
+            localStorage.setItem('lgant_auth_token', token);
+          }
+        }}
+        onLogout={() => {
+          setCurrentUser(null);
+          setAuthToken(null);
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('lgant_user');
+            localStorage.removeItem('lgant_auth_token');
+          }
+        }}
       />
 
       {/* Botón flotante de WhatsApp global (oculto en el carrito y durante el checkout) */}

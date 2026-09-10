@@ -22,5 +22,10 @@ public class Client
     public string Correo { get; set; } = string.Empty;
     public string NumeroDocumento { get; set; } = string.Empty; // Numero de identificacion tributaria (DNI, RUC, etc.)
     public string Direccion { get; set; } = string.Empty;
+    
+    // Autenticación de e-commerce
+    public string? ClaveHash { get; set; }
+    public bool EsUsuarioEcommerce { get; set; } = false;
+    
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 }

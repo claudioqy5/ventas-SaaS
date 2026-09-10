@@ -1,53 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Lock, Mail, ShieldCheck, Clock, Award, LogOut, CheckCircle2, ChevronRight, Sparkles, Key } from 'lucide-react';
+import { loginCustomer, registerCustomer, getCustomerOrders } from '../services/api';
 
-export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLogout }) {
+export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin, onLogout }) {
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nombre, setNombre] = useState('');
+  const [telefono, setTelefono] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  
+  // Para historial de pedidos
+  const [pedidos, setPedidos] = useState([]);
+  const [cargandoPedidos, setCargandoPedidos] = useState(false);
+
+  useEffect(() => {
+    if (isOpen && user && token) {
+      cargarPedidos();
+    }
+  }, [isOpen, user, token]);
+
+  const cargarPedidos = async () => {
+    setCargandoPedidos(true);
+    try {
+      const data = await getCustomerOrders(token);
+      setPedidos(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCargandoPedidos(false);
+    }
+  };
 
   if (!isOpen) return null;
 
-  // Cargar credenciales demo con 1 clic
-  const handleFillDemoCredentials = () => {
-    setEmail('cliente@lgant.pe');
-    setPassword('123456');
-    setNombre('Aurelio de la Torre');
-    setError('');
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     
-    // Auto-login con credenciales demo si está vacío (facilidad de prueba sin banner)
-    if (!email && !password) {
-      handleFillDemoCredentials();
-      const demoData = {
-        nombre: 'Aurelio de la Torre',
-        email: 'cliente@lgant.pe',
-        nivel: 'Cliente VIP Concierge',
-        ciudad: 'San Isidro, Lima - Perú',
-        pedidos: [
-          { codigo: 'LG-2026-8891', producto: 'Vetruvius Chronograph Tourbillon', fecha: '02 Sep 2026', estado: 'En Tránsito a San Isidro', monto: 'S/ 14,850.00' }
-        ],
-        garantias: [
-          { serie: 'VT-9080-PERU-004', modelo: 'Vetruvius Tourbillon', validoHasta: 'Sep 2031' }
-        ]
-      };
-      onLogin(demoData);
-      setShowSuccessToast(true);
-      setTimeout(() => {
-        setShowSuccessToast(false);
-        onClose();
-      }, 1200);
-      return;
-    }
-
     if (!email || !password) {
-      setError('Por favor complete todos los campos');
+      setError('Por favor complete todos los campos requeridos');
       return;
     }
 
@@ -55,36 +48,46 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
       setError('La contraseña debe tener al menos 4 caracteres');
       return;
     }
+    
+    if (isRegister && !nombre) {
+      setError('Por favor ingrese su nombre');
+      return;
+    }
 
-    const clientData = {
-      nombre: nombre || 'Aurelio de la Torre',
-      email: email,
-      nivel: 'Cliente VIP Concierge',
-      ciudad: 'San Isidro, Lima - Perú',
-      pedidos: [
-        {
-          codigo: 'TP-2026-8891',
-          producto: 'Vetruvius Chronograph Tourbillon',
-          fecha: '02 Sep 2026',
-          estado: 'En Tránsito a San Isidro',
-          monto: 'S/ 14,850.00'
-        }
-      ],
-      garantias: [
-        {
-          serie: 'VT-9080-PERU-004',
-          modelo: 'Vetruvius Tourbillon',
-          validoHasta: 'Sep 2031'
-        }
-      ]
-    };
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      let data;
+      if (isRegister) {
+        data = await registerCustomer(nombre, email, password, telefono);
+      } else {
+        data = await loginCustomer(email, password);
+      }
+      
+      const clientData = {
+        id: data.client.id || data.client._id,
+        nombre: data.client.nombre,
+        email: data.client.correo,
+        nivel: 'Cliente VIP',
+        ciudad: data.client.direccion || 'No especificada',
+        telefono: data.client.telefono || ''
+      };
 
-    onLogin(clientData);
-    setShowSuccessToast(true);
-    setTimeout(() => {
-      setShowSuccessToast(false);
-      onClose();
-    }, 1200);
+      onLogin(clientData, data.token);
+      
+      setShowSuccessToast(true);
+      setTimeout(() => {
+        setShowSuccessToast(false);
+        // Si estábamos en register, lo devolvemos a login (aunque ya está logueado y verá su perfil)
+        onClose();
+      }, 1200);
+      
+    } catch (err) {
+      setError(err.message || 'Ocurrió un error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -212,39 +215,47 @@ export default function ModalAuthCliente({ isOpen, onClose, user, onLogin, onLog
               <div style={{ marginBottom: '24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                   <span style={{ fontSize: '0.78rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--c-taupe)', fontWeight: 500 }}>
-                    Última Adquisición
+                    Tus Pedidos
                   </span>
-                  <span style={{ fontSize: '0.74rem', color: 'var(--c-indigo)', fontWeight: 500 }}>1 Pedido Activo</span>
+                  <span style={{ fontSize: '0.74rem', color: 'var(--c-indigo)', fontWeight: 500 }}>{pedidos.length} Pedido(s)</span>
                 </div>
 
-                {user.pedidos && user.pedidos.map((ped, idx) => (
-                  <div key={idx} style={{
-                    padding: '14px 18px',
-                    borderRadius: '12px',
-                    border: '1px solid rgba(59, 60, 65, 0.15)',
-                    backgroundColor: '#ffffff',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
-                    <div>
-                      <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
-                        {ped.producto}
+                {cargandoPedidos ? (
+                  <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--c-taupe)', padding: '10px' }}>Cargando tus pedidos...</div>
+                ) : pedidos.length === 0 ? (
+                  <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--c-taupe)', padding: '10px' }}>Aún no has realizado ninguna compra online.</div>
+                ) : (
+                  pedidos.map((ped, idx) => (
+                    <div key={ped.id || idx} style={{
+                      padding: '14px 18px',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(59, 60, 65, 0.15)',
+                      backgroundColor: '#ffffff',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '8px'
+                    }}>
+                      <div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
+                          {ped.detalles && ped.detalles.length > 0 ? ped.detalles[0].nombreProducto : 'Compra en tienda'}
+                          {ped.detalles && ped.detalles.length > 1 && ` (+${ped.detalles.length - 1} más)`}
+                        </div>
+                        <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)' }}>
+                          {ped.id?.slice(-6).toUpperCase()} • {new Date(ped.fechaCreacion).toLocaleDateString('es-PE')}
+                        </div>
                       </div>
-                      <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)' }}>
-                        {ped.codigo} • {ped.fecha}
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: '0.72rem', backgroundColor: 'rgba(212, 175, 55, 0.15)', color: 'var(--c-deep-purple)', padding: '3px 8px', borderRadius: '6px', fontWeight: 500 }}>
+                          {ped.estadoPago}
+                        </div>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--c-indigo)', marginTop: '4px' }}>
+                          S/ {ped.total?.toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                        </div>
                       </div>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '0.72rem', backgroundColor: 'rgba(212, 175, 55, 0.15)', color: 'var(--c-deep-purple)', padding: '3px 8px', borderRadius: '6px', fontWeight: 500 }}>
-                        {ped.estado}
-                      </div>
-                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--c-indigo)', marginTop: '4px' }}>
-                        {ped.monto}
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
 
               {/* Garantía */}

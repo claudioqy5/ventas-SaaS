@@ -8,4 +8,7 @@ public interface IJwtProvider
 {
     // Genera un token JWT firmado con los datos del usuario (Id, rol, permisos, empresa)
     string GenerateToken(User user);
+
+    // Genera un token JWT firmado para los clientes del e-commerce
+    string GenerateClientToken(Client client);
 }

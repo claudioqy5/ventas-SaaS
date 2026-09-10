@@ -120,3 +120,77 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     };
   }
 }
+
+// ---- Autenticación del Cliente E-Commerce ----
+
+export async function registerCustomer(nombre, correo, clave, telefono = '') {
+  const empresaId = DEFAULT_EMPRESA_ID;
+  const apiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '/api/public/store'); // Ajustar base path si es necesario
+  
+  const res = await fetch(`${apiUrl}/${empresaId}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre, correo, clave, telefono })
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Error al registrar la cuenta');
+  }
+  return res.json();
+}
+
+export async function loginCustomer(correo, clave) {
+  const empresaId = DEFAULT_EMPRESA_ID;
+  const apiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '/api/public/store');
+  
+  const res = await fetch(`${apiUrl}/${empresaId}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ correo, clave })
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Correo o contraseña incorrectos');
+  }
+  return res.json();
+}
+
+// ---- Gestión de Pedidos ----
+
+export async function submitOrder(token, orderData) {
+  const empresaId = DEFAULT_EMPRESA_ID;
+  const apiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '/api/public/store');
+
+  const res = await fetch(`${apiUrl}/${empresaId}/orders`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(orderData)
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Error al procesar el pedido');
+  }
+  return res.json();
+}
+
+export async function getCustomerOrders(token) {
+  const empresaId = DEFAULT_EMPRESA_ID;
+  const apiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '/api/public/store');
+
+  const res = await fetch(`${apiUrl}/${empresaId}/orders/me`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!res.ok) {
+    throw new Error('Error al obtener el historial de compras');
+  }
+  return res.json();
+}
