@@ -146,7 +146,7 @@ public class SalesController : ControllerBase
     [HttpGet("online-orders")]
     public async Task<IActionResult> GetOnlineOrders([FromQuery] string? estado = null)
     {
-        if (!_userContext.HasPermission("historial_ventas") && !_userContext.HasPermission("ventas"))
+        if (!_userContext.HasPermission("pedidos_web"))
             return Forbid();
 
         var empresaId = _userContext.EmpresaId;
@@ -175,7 +175,7 @@ public class SalesController : ControllerBase
     [HttpPut("{id}/order-status")]
     public async Task<IActionResult> UpdateOrderStatus(string id, [FromBody] UpdateOrderStatusRequest request)
     {
-        if (!_userContext.HasPermission("historial_ventas") && !_userContext.HasPermission("ventas"))
+        if (!_userContext.HasPermission("pedidos_web"))
             return Forbid();
 
         var empresaId = _userContext.EmpresaId;

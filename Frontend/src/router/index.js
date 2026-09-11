@@ -47,7 +47,7 @@ const routes = [
     path: '/online-orders', 
     component: OnlineOrders, 
     name: 'OnlineOrders',
-    meta: { requiresAuth: true, permission: 'historial_ventas' } 
+    meta: { requiresAuth: true, permission: 'pedidos_web' } 
   },
   { 
     path: '/products', 

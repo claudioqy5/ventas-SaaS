@@ -278,6 +278,10 @@
                   <span>≡ Historial de Ventas</span>
                 </label>
                 <label class="checkbox-card">
+                  <input type="checkbox" value="pedidos_web" v-model="form.permisos" />
+                  <span>🌐 Pedidos Web</span>
+                </label>
+                <label class="checkbox-card">
                   <input type="checkbox" value="reminders" v-model="form.permisos" />
                   <span>◦ Recordatorios</span>
                 </label>
@@ -451,6 +455,7 @@ const formatPermissionName = (perm) => {
     'movimientos': '⟳ Movimientos',
     'modificar_productos': '✏️ Editar Prod.',
     'historial_ventas': '≡ Historial Ventas',
+    'pedidos_web': '🌐 Pedidos Web',
     'cuentas_cobrar': '▫ Cuentas por Cobrar',
     'formas_pago': '▪ Formas de Pago',
     'colaboradores': '⚇ Colaboradores'
@@ -472,7 +477,7 @@ const saveUser = async () => {
       correo: form.correo,
       clave: form.clave || null,
       rol: form.rol,
-      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders', 'cuentas_cobrar', 'formas_pago', 'colaboradores'] : form.permisos,
+      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders', 'cuentas_cobrar', 'formas_pago', 'colaboradores', 'pedidos_web'] : form.permisos,
       activo: form.activo,
       nombreTienda: form.nombreTienda || null
     }
