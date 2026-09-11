@@ -161,6 +161,8 @@ export default function ProcesoPago({
 
   // Estado de Orden Exitosa
   const [orderSuccess, setOrderSuccess] = useState(null);
+  const [accountCreated, setAccountCreated] = useState(false);
+  const [accountPassword, setAccountPassword] = useState('');
 
   const subtotal = items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
   const discount = 0;

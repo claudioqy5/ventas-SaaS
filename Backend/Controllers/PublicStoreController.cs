@@ -247,7 +247,7 @@ public class PublicStoreController : ControllerBase
         foreach (var item in request.Items)
         {
             var product = await _context.Products.Find(p => p.Id == item.ProductoId).FirstOrDefaultAsync();
-            if (product != null && product.Stock >= item.Cantidad)
+            if (product != null)
             {
                 var saleItem = new SaleItem
                 {
@@ -261,35 +261,11 @@ public class PublicStoreController : ControllerBase
                     Presentacion = "Unidad"
                 };
                 newSale.Detalles.Add(saleItem);
-
-                // Registrar el movimiento de stock
-                var previousStock = product.Stock;
-                var newStock = previousStock - item.Cantidad;
-
-                var movement = new StockMovement
-                {
-                    EmpresaId = empresaId,
-                    ProductoId = product.Id,
-                    NombreProducto = product.Nombre,
-                    Tipo = "Venta Ecommerce",
-                    Cantidad = item.Cantidad,
-                    StockAnterior = previousStock,
-                    StockNuevo = newStock,
-                    Motivo = $"Venta online registrada",
-                    CreadoPor = client.Id,
-                    CreadoPorNombre = "Tienda Virtual - " + client.Nombre,
-                    FechaCreacion = DateTime.UtcNow
-                };
-                await _context.StockMovements.InsertOneAsync(movement);
-
-                // Descontar el stock
-                product.Stock = newStock;
-                await _context.Products.ReplaceOneAsync(p => p.Id == product.Id, product);
             }
             else
             {
-                // Manejar error de stock insuficiente
-                return BadRequest(new { message = $"Stock insuficiente para el producto {item.NombreProducto}." });
+                // Manejar error de producto inexistente
+                return BadRequest(new { message = $"El producto {item.NombreProducto} no existe." });
             }
         }
 

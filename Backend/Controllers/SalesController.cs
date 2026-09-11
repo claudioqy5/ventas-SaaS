@@ -215,8 +215,44 @@ public class SalesController : ControllerBase
             update = update.Set(s => s.NumeroSeguimiento, request.NumeroSeguimiento);
         }
 
-        // Al cancelar: restaurar el stock de cada producto
-        if (request.NuevoEstado == "CANCELADO")
+        // Descontar stock al confirmar pedido (transición de PENDIENTE_PAGO a EN_PREPARACION o ENVIADO/ENTREGADO)
+        if (sale.EstadoOrden == "PENDIENTE_PAGO" && request.NuevoEstado != "PENDIENTE_PAGO" && request.NuevoEstado != "CANCELADO")
+        {
+            foreach (var item in sale.Detalles)
+            {
+                var productFilter = Builders<Product>.Filter.And(
+                    Builders<Product>.Filter.Eq(p => p.Id, item.ProductoId),
+                    Builders<Product>.Filter.Eq(p => p.EmpresaId, empresaId)
+                );
+                var product = await _context.Products.Find(productFilter).FirstOrDefaultAsync();
+                if (product != null)
+                {
+                    var previousStock = product.Stock;
+                    var newStock = previousStock - item.Cantidad;
+                    await _context.Products.UpdateOneAsync(productFilter,
+                        Builders<Product>.Update.Set(p => p.Stock, newStock));
+
+                    var movement = new StockMovement
+                    {
+                        EmpresaId = empresaId,
+                        ProductoId = product.Id,
+                        NombreProducto = product.Nombre,
+                        Tipo = "Confirmación Pedido Web",
+                        Cantidad = item.Cantidad,
+                        StockAnterior = previousStock,
+                        StockNuevo = newStock,
+                        Motivo = $"Pedido online confirmado (ID: {sale.Id})",
+                        CreadoPor = _userContext.UserId ?? string.Empty,
+                        CreadoPorNombre = nameClaim,
+                        FechaCreacion = DateTime.UtcNow
+                    };
+                    await _context.StockMovements.InsertOneAsync(movement);
+                }
+            }
+        }
+
+        // Al cancelar: restaurar el stock de cada producto SOLO SI ya había sido descontado
+        if (request.NuevoEstado == "CANCELADO" && sale.EstadoOrden != "PENDIENTE_PAGO")
         {
             foreach (var item in sale.Detalles)
             {
