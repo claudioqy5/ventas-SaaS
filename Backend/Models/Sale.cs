@@ -5,8 +5,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace SaaS.API.Models;
 
-// Modelo que representa una venta registrada desde el POS.
+// Modelo que representa una venta registrada desde el POS o la tienda virtual.
 // Al guardarse, descuenta el stock de cada producto incluido en el detalle.
+// En modo SaaS, cada venta pertenece exclusivamente a su EmpresaId.
 [BsonIgnoreExtraElements]
 public class Sale
 {
@@ -37,16 +38,47 @@ public class Sale
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Total { get; set; }
 
-    public string MetodoPago { get; set; } = "Efectivo"; // Opciones de pago: Efectivo, Tarjeta, Transferencia, etc.
+    public string MetodoPago { get; set; } = "Efectivo"; // Efectivo, Tarjeta, Yape, Transferencia, etc.
 
     // Estado de pago para soportar ventas "Fiadas" (a crédito)
     public string EstadoPago { get; set; } = "Pagado"; // "Pagado" o "Fiado"
-    
+
     // Indicador permanente si la venta inicio como fiado, util para el historico
     public bool FueFiado { get; set; } = false;
 
     // Fecha en la que la deuda (fiado) fue cancelada
     public DateTime? FechaPago { get; set; }
+
+    // =============================================
+    // DATOS DE ENTREGA (E-Commerce / Delivery)
+    // Estos campos son exclusivos de ventas online y se aíslan por EmpresaId en el SaaS.
+    // =============================================
+
+    // Dirección de despacho del pedido
+    public string? DireccionEntrega { get; set; }
+    public string? DepartamentoEntrega { get; set; }
+    public string? ProvinciaEntrega { get; set; }
+    public string? DistritoEntrega { get; set; }
+    public string? ReferenciaEntrega { get; set; }
+
+    // Receptor del pedido (puede ser el comprador o un tercero)
+    public bool EsEntregaATercero { get; set; } = false;
+    public string? NombreReceptor { get; set; }
+    public string? DniReceptor { get; set; }
+
+    // Notas adicionales para el courier / repartidor
+    public string? NotasEntrega { get; set; }
+
+    // =============================================
+    // DATOS DE FACTURACIÓN / COMPROBANTE
+    // =============================================
+    public string TipoComprobante { get; set; } = "Boleta"; // "Boleta" o "Factura"
+    public string? RucFactura { get; set; }
+    public string? RazonSocialFactura { get; set; }
+    public string? DireccionFiscalFactura { get; set; }
+
+    // Código de operación del pago (Yape, Plin, transferencia bancaria, etc.)
+    public string? CodigoOperacionPago { get; set; }
 
     [BsonRepresentation(BsonType.ObjectId)]
     public string CreadoPor { get; set; } = string.Empty; // ID del usuario responsable
@@ -58,6 +90,7 @@ public class Sale
     public DateTime? FechaReversion { get; set; }
     public string? RevertidaPorNombre { get; set; }
 }
+
 
 // Representa cada linea de producto dentro de una venta
 [BsonIgnoreExtraElements]

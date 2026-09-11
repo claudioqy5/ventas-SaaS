@@ -200,6 +200,8 @@ export async function submitOrder(token, orderData) {
   const empresaId = DEFAULT_EMPRESA_ID;
   const apiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '/api/public/store');
 
+  // orderData debe incluir todos los campos: items, subtotal, total, metodoPago,
+  // datos de entrega (direcicionEntrega, etc.), receptor, comprobante y codigoOperacionPago.
   const res = await fetch(`${apiUrl}/${empresaId}/orders`, {
     method: 'POST',
     headers: {

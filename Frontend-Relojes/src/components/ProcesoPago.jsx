@@ -101,18 +101,31 @@ export default function ProcesoPago({
     telefono: ''
   });
 
-  // Autocompletar con los datos del usuario logueado
+  // Autocompletar con los datos del usuario logueado (datos personales y dirección de entrega previa)
   useEffect(() => {
     if (user) {
       const primerNombre = user.nombres || (user.nombre || '').trim().split(' ')[0] || '';
       const apellidos = user.apellidos || (user.nombre || '').trim().split(' ').slice(1).join(' ') || '';
-      
+
+      // Autocompletar datos personales
       setPersonalData(prev => ({
         ...prev,
         nombres: prev.nombres || primerNombre,
         apellidos: prev.apellidos || apellidos,
-        email: prev.email || user.email || '',
-        telefono: prev.telefono || user.telefono || ''
+        email: prev.email || user.email || user.correo || '',
+        telefono: prev.telefono || user.telefono || '',
+        tipoDoc: prev.tipoDoc !== 'DNI' ? prev.tipoDoc : (user.tipoDocumento || 'DNI'),
+        numDoc: prev.numDoc || user.numeroDocumento || ''
+      }));
+
+      // Autocompletar dirección de entrega (de la última compra guardada en el perfil)
+      setDeliveryAddress(prev => ({
+        ...prev,
+        departamento: prev.departamento || user.departamento || '',
+        provincia: prev.provincia || user.provincia || '',
+        distrito: prev.distrito || user.distrito || '',
+        direccion: prev.direccion || user.direccion || '',
+        referencia: prev.referencia || user.referencia || ''
       }));
     }
   }, [user]);
@@ -272,15 +285,47 @@ export default function ProcesoPago({
     try {
       const orderData = {
         subtotal: subtotal,
-        impuesto: 0, // Ajustar si es necesario
+        impuesto: 0,
         total: total,
         metodoPago: `Online - ${paymentMethod}`,
+
+        // Datos de identidad del comprador (para actualizar perfil en backend)
+        tipoDocumento: personalData.tipoDoc,
+        numeroDocumento: personalData.numDoc,
+
+        // Productos del carrito
         items: items.map(item => ({
           productoId: item.id || item._id,
           nombreProducto: item.nombre,
           cantidad: item.quantity,
           precioUnitario: item.precio
-        }))
+        })),
+
+        // Datos de entrega
+        direccionEntrega: deliveryAddress.direccion,
+        departamentoEntrega: deliveryAddress.departamento,
+        provinciaEntrega: deliveryAddress.provincia,
+        distritoEntrega: deliveryAddress.distrito,
+        referenciaEntrega: deliveryAddress.referencia,
+
+        // Datos del receptor
+        esEntregaATercero: recipientType === 'otro',
+        nombreReceptor: recipientType === 'otro' ? `${recipientData.nombres} ${recipientData.apellidos}`.trim() : null,
+        dniReceptor: recipientType === 'otro' ? recipientData.dni : null,
+        notasEntrega: additionalNotes || null,
+
+        // Datos de comprobante y facturación
+        tipoComprobante: tipoComprobante === 'factura' ? 'Factura' : 'Boleta',
+        rucFactura: tipoComprobante === 'factura' ? facturaData.ruc : null,
+        razonSocialFactura: tipoComprobante === 'factura' ? facturaData.razonSocial : null,
+        direccionFiscalFactura: tipoComprobante === 'factura' ? facturaData.direccionFiscal : null,
+
+        // Código de operación de pago
+        codigoOperacionPago: paymentMethod === 'yape'
+          ? paymentDetails.codigoOperacionYape
+          : paymentMethod === 'transferencia'
+            ? paymentDetails.codigoOperacionTransferencia
+            : null
       };
 
       const res = await submitOrder(token, orderData);

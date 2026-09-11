@@ -176,7 +176,21 @@ public class PublicStoreController : ControllerBase
             return Unauthorized(new { message = "Correo o contraseña incorrectos." });
 
         var token = _jwtProvider.GenerateClientToken(client);
-        return Ok(new { token, client = new { client.Id, client.Nombre, client.Nombres, client.Apellidos, client.Correo, client.Telefono, client.Direccion, client.NumeroDocumento } });
+        return Ok(new { token, client = new {
+            client.Id,
+            client.Nombre,
+            client.Nombres,
+            client.Apellidos,
+            client.Correo,
+            client.Telefono,
+            client.TipoDocumento,
+            client.NumeroDocumento,
+            client.Direccion,
+            client.Departamento,
+            client.Provincia,
+            client.Distrito,
+            client.Referencia
+        } });
     }
 
     // POST api/public/store/{empresaId}/orders
@@ -190,7 +204,8 @@ public class PublicStoreController : ControllerBase
         var client = await _context.Clients.Find(c => c.Id == clientId && c.EmpresaId == empresaId).FirstOrDefaultAsync();
         if (client == null) return Unauthorized();
 
-        // Validar y crear la venta (Sale)
+        // Validar y crear la venta (Sale) con todos los datos de entrega y facturación.
+        // Los datos son aislados por EmpresaId para garantizar la separación multi-tenant del SaaS.
         var newSale = new Sale
         {
             EmpresaId = empresaId,
@@ -199,12 +214,32 @@ public class PublicStoreController : ControllerBase
             Subtotal = request.Subtotal,
             Impuesto = request.Impuesto,
             Total = request.Total,
-            MetodoPago = request.MetodoPago, // E.g., "Online - " + request.PaymentMethod
-            EstadoPago = "Pagado", // Asumimos que coordinará por WhatsApp, pero para ecommerce "Pagado" o "Pendiente" según tu preferencia. Le pondremos "Por Confirmar" o "Pagado". Como "EstadoPago" se espera "Pagado" o "Fiado" en el admin, usaremos "Pagado" para no afectar el POS.
+            MetodoPago = request.MetodoPago,
+            EstadoPago = "Pagado",
             CreadoPor = client.Id,
             CreadoPorNombre = "Tienda Virtual",
             FechaCreacion = DateTime.UtcNow,
-            Detalles = new List<SaleItem>()
+            Detalles = new List<SaleItem>(),
+
+            // Datos de entrega
+            DireccionEntrega = request.DireccionEntrega,
+            DepartamentoEntrega = request.DepartamentoEntrega,
+            ProvinciaEntrega = request.ProvinciaEntrega,
+            DistritoEntrega = request.DistritoEntrega,
+            ReferenciaEntrega = request.ReferenciaEntrega,
+
+            // Datos del receptor
+            EsEntregaATercero = request.EsEntregaATercero ?? false,
+            NombreReceptor = request.NombreReceptor,
+            DniReceptor = request.DniReceptor,
+            NotasEntrega = request.NotasEntrega,
+
+            // Datos de comprobante y pago
+            TipoComprobante = request.TipoComprobante ?? "Boleta",
+            RucFactura = request.RucFactura,
+            RazonSocialFactura = request.RazonSocialFactura,
+            DireccionFiscalFactura = request.DireccionFiscalFactura,
+            CodigoOperacionPago = request.CodigoOperacionPago
         };
 
         foreach (var item in request.Items)
@@ -257,6 +292,24 @@ public class PublicStoreController : ControllerBase
         }
 
         await _context.Sales.InsertOneAsync(newSale);
+
+        // Actualizar el perfil del cliente con la dirección de entrega de esta compra.
+        // Esto permite que el checkout autocomplete los campos en la próxima compra.
+        // Solo se actualiza si el cliente pertenece a esta empresa (multi-tenant seguro).
+        var updateDef = Builders<Client>.Update
+            .Set(c => c.Direccion, request.DireccionEntrega ?? client.Direccion)
+            .Set(c => c.Departamento, request.DepartamentoEntrega ?? client.Departamento)
+            .Set(c => c.Provincia, request.ProvinciaEntrega ?? client.Provincia)
+            .Set(c => c.Distrito, request.DistritoEntrega ?? client.Distrito)
+            .Set(c => c.Referencia, request.ReferenciaEntrega ?? client.Referencia)
+            .Set(c => c.TipoDocumento, request.TipoDocumento ?? client.TipoDocumento)
+            .Set(c => c.NumeroDocumento, request.NumeroDocumento ?? client.NumeroDocumento);
+
+        await _context.Clients.UpdateOneAsync(
+            c => c.Id == client.Id && c.EmpresaId == empresaId,
+            updateDef
+        );
+
         return Ok(new { message = "Pedido registrado con éxito", orderId = newSale.Id });
     }
 
@@ -276,11 +329,39 @@ public class PublicStoreController : ControllerBase
 
 public record ClientRegisterRequest(string? Nombre, string? Nombres, string? Apellidos, string Correo, string Clave, string? Telefono);
 public record ClientLoginRequest(string Correo, string Clave);
+
+/// <summary>
+/// Solicitud de orden desde la tienda virtual. Incluye todos los datos de entrega,
+/// receptor, comprobante y código de pago necesarios para el despacho del pedido.
+/// Aislada por EmpresaId para garantizar la separación de datos en el SaaS.
+/// </summary>
 public record StoreOrderRequest(
     decimal Subtotal,
     decimal Impuesto,
     decimal Total,
     string MetodoPago,
-    List<StoreOrderItem> Items
+    List<StoreOrderItem> Items,
+    // Datos personales del comprador (para actualizar perfil)
+    string? TipoDocumento,
+    string? NumeroDocumento,
+    // Datos de entrega
+    string? DireccionEntrega,
+    string? DepartamentoEntrega,
+    string? ProvinciaEntrega,
+    string? DistritoEntrega,
+    string? ReferenciaEntrega,
+    // Datos del receptor (si es un tercero)
+    bool? EsEntregaATercero,
+    string? NombreReceptor,
+    string? DniReceptor,
+    string? NotasEntrega,
+    // Datos de comprobante
+    string? TipoComprobante,
+    string? RucFactura,
+    string? RazonSocialFactura,
+    string? DireccionFiscalFactura,
+    // Código de operación de pago (Yape, Plin, Transferencia)
+    string? CodigoOperacionPago
 );
+
 public record StoreOrderItem(string ProductoId, string NombreProducto, decimal Cantidad, decimal PrecioUnitario);
