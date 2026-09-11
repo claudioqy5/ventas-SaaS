@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -198,7 +199,7 @@ public class PublicStoreController : ControllerBase
     [HttpPost("{empresaId}/orders")]
     public async Task<IActionResult> SubmitOrder(string empresaId, [FromBody] StoreOrderRequest request)
     {
-        var clientId = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+        var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
         if (string.IsNullOrEmpty(clientId)) return Unauthorized();
 
         var client = await _context.Clients.Find(c => c.Id == clientId && c.EmpresaId == empresaId).FirstOrDefaultAsync();
@@ -318,7 +319,7 @@ public class PublicStoreController : ControllerBase
     [HttpGet("{empresaId}/orders/me")]
     public async Task<IActionResult> GetMyOrders(string empresaId)
     {
-        var clientId = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+        var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
         if (string.IsNullOrEmpty(clientId)) return Unauthorized();
 
         var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId && s.ClienteId == clientId).SortByDescending(s => s.FechaCreacion).ToListAsync();
@@ -331,7 +332,7 @@ public class PublicStoreController : ControllerBase
     [HttpPut("{empresaId}/profile")]
     public async Task<IActionResult> UpdateProfile(string empresaId, [FromBody] UpdateProfileRequest request)
     {
-        var clientId = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+        var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
         if (string.IsNullOrEmpty(clientId)) return Unauthorized();
 
         var client = await _context.Clients.Find(c => c.Id == clientId && c.EmpresaId == empresaId).FirstOrDefaultAsync();
