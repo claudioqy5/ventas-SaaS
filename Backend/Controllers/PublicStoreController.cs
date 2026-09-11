@@ -325,10 +325,36 @@ public class PublicStoreController : ControllerBase
         
         return Ok(sales);
     }
+
+    // PUT api/public/store/{empresaId}/profile
+    [Authorize]
+    [HttpPut("{empresaId}/profile")]
+    public async Task<IActionResult> UpdateProfile(string empresaId, [FromBody] UpdateProfileRequest request)
+    {
+        var clientId = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+        if (string.IsNullOrEmpty(clientId)) return Unauthorized();
+
+        var client = await _context.Clients.Find(c => c.Id == clientId && c.EmpresaId == empresaId).FirstOrDefaultAsync();
+        if (client == null) return Unauthorized();
+
+        var updateDef = Builders<Client>.Update
+            .Set(c => c.Nombres, request.Nombres ?? client.Nombres)
+            .Set(c => c.Apellidos, request.Apellidos ?? client.Apellidos)
+            .Set(c => c.Nombre, $"{request.Nombres ?? client.Nombres} {request.Apellidos ?? client.Apellidos}".Trim())
+            .Set(c => c.Telefono, request.Telefono ?? client.Telefono);
+
+        await _context.Clients.UpdateOneAsync(
+            c => c.Id == clientId && c.EmpresaId == empresaId,
+            updateDef
+        );
+
+        return Ok(new { message = "Perfil actualizado con éxito" });
+    }
 }
 
 public record ClientRegisterRequest(string? Nombre, string? Nombres, string? Apellidos, string Correo, string Clave, string? Telefono);
 public record ClientLoginRequest(string Correo, string Clave);
+public record UpdateProfileRequest(string? Nombres, string? Apellidos, string? Telefono);
 
 /// <summary>
 /// Solicitud de orden desde la tienda virtual. Incluye todos los datos de entrega,

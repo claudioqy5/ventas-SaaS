@@ -233,3 +233,23 @@ export async function getCustomerOrders(token) {
   }
   return res.json();
 }
+
+export async function updateCustomerProfile(token, profileData) {
+  const empresaId = DEFAULT_EMPRESA_ID;
+  const apiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '/api/public/store');
+
+  const res = await fetch(`${apiUrl}/${empresaId}/profile`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(profileData)
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Error al actualizar el perfil');
+  }
+  return res.json();
+}

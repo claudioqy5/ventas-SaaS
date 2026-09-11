@@ -16,9 +16,12 @@ import {
   Sparkles,
   MapPin,
   Phone,
-  Mail
+  Mail,
+  Edit2,
+  Save,
+  X
 } from 'lucide-react';
-import { getCustomerOrders } from '../services/api';
+import { getCustomerOrders, updateCustomerProfile } from '../services/api';
 
 export default function VistaPanelCliente({
   activeTab = 'compras', // 'compras' | 'cuenta'
@@ -32,6 +35,14 @@ export default function VistaPanelCliente({
 }) {
   const [pedidos, setPedidos] = useState([]);
   const [cargandoPedidos, setCargandoPedidos] = useState(false);
+
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [profileFormData, setProfileFormData] = useState({
+    nombres: '',
+    apellidos: '',
+    telefono: ''
+  });
 
   useEffect(() => {
     if (token && user) {
@@ -48,6 +59,43 @@ export default function VistaPanelCliente({
       console.error("Error al cargar pedidos del cliente:", err);
     } finally {
       setCargandoPedidos(false);
+    }
+  };
+
+  const handleEditClick = () => {
+    setProfileFormData({
+      nombres: user.nombres || user.nombre.split(' ')[0] || '',
+      apellidos: user.apellidos || (user.nombre.split(' ').slice(1).join(' ') || ''),
+      telefono: user.telefono || ''
+    });
+    setIsEditingProfile(true);
+  };
+
+  const handleSaveProfile = async () => {
+    if (!profileFormData.nombres.trim() || !profileFormData.apellidos.trim()) {
+      alert('Nombres y apellidos son obligatorios');
+      return;
+    }
+    setSavingProfile(true);
+    try {
+      await updateCustomerProfile(token, profileFormData);
+      
+      if (user) {
+        user.nombres = profileFormData.nombres;
+        user.apellidos = profileFormData.apellidos;
+        user.nombre = `${profileFormData.nombres} ${profileFormData.apellidos}`.trim();
+        user.telefono = profileFormData.telefono;
+        
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('lgant_user', JSON.stringify(user));
+        }
+      }
+      
+      setIsEditingProfile(false);
+    } catch (err) {
+      alert(err.message || 'Error al actualizar perfil');
+    } finally {
+      setSavingProfile(false);
     }
   };
 
@@ -203,7 +251,7 @@ export default function VistaPanelCliente({
 
               <button
                 type="button"
-                onClick={() => onNavigate && onNavigate('mi-cuenta')}
+                onClick={() => onNavigate && onNavigate('cuenta')}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -595,11 +643,53 @@ export default function VistaPanelCliente({
               padding: '28px',
               boxShadow: '0 4px 16px rgba(0, 0, 0, 0.03)'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
-                <User size={20} color="var(--c-gold)" />
-                <h3 className="font-serif" style={{ fontSize: '1.15rem', color: 'var(--c-deep-purple)', margin: 0, fontWeight: 600 }}>
-                  Información Personal
-                </h3>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <User size={20} color="var(--c-gold)" />
+                  <h3 className="font-serif" style={{ fontSize: '1.15rem', color: 'var(--c-deep-purple)', margin: 0, fontWeight: 600 }}>
+                    Información Personal
+                  </h3>
+                </div>
+                {!isEditingProfile ? (
+                  <button
+                    onClick={handleEditClick}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '6px',
+                      background: 'none', border: 'none', cursor: 'pointer',
+                      color: 'var(--c-indigo)', fontSize: '0.85rem', fontWeight: 600
+                    }}
+                  >
+                    <Edit2 size={14} /> Editar
+                  </button>
+                ) : (
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => setIsEditingProfile(false)}
+                      disabled={savingProfile}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '4px',
+                        background: 'none', border: '1px solid rgba(59,60,65,0.2)', 
+                        borderRadius: '6px', padding: '4px 8px',
+                        cursor: 'pointer', color: 'var(--c-taupe)', fontSize: '0.8rem'
+                      }}
+                    >
+                      <X size={14} /> Cancelar
+                    </button>
+                    <button
+                      onClick={handleSaveProfile}
+                      disabled={savingProfile}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '4px',
+                        background: 'var(--c-deep-purple)', border: 'none', 
+                        borderRadius: '6px', padding: '4px 10px',
+                        cursor: 'pointer', color: '#fff', fontSize: '0.8rem',
+                        fontWeight: 600
+                      }}
+                    >
+                      <Save size={14} /> {savingProfile ? 'Guardando...' : 'Guardar'}
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -607,26 +697,53 @@ export default function VistaPanelCliente({
                   <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 600, display: 'block', marginBottom: '2px' }}>
                     Nombres del Titular
                   </span>
-                  <span style={{ fontSize: '0.94rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
-                    {user.nombres || user.nombre.split(' ')[0]}
-                  </span>
+                  {!isEditingProfile ? (
+                    <span style={{ fontSize: '0.94rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
+                      {user.nombres || user.nombre.split(' ')[0]}
+                    </span>
+                  ) : (
+                    <input
+                      type="text"
+                      value={profileFormData.nombres}
+                      onChange={e => setProfileFormData(p => ({ ...p, nombres: e.target.value }))}
+                      style={{
+                        width: '100%', padding: '6px 0', border: 'none', borderBottom: '1px solid var(--c-gold)',
+                        background: 'transparent', outline: 'none', fontSize: '0.94rem',
+                        color: 'var(--c-deep-purple)', fontWeight: 600
+                      }}
+                    />
+                  )}
                 </div>
 
                 <div style={{ padding: '12px 16px', borderRadius: '12px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
                   <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 600, display: 'block', marginBottom: '2px' }}>
                     Apellidos
                   </span>
-                  <span style={{ fontSize: '0.94rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
-                    {user.apellidos || (user.nombre.split(' ').slice(1).join(' ') || '-')}
-                  </span>
+                  {!isEditingProfile ? (
+                    <span style={{ fontSize: '0.94rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
+                      {user.apellidos || (user.nombre.split(' ').slice(1).join(' ') || '-')}
+                    </span>
+                  ) : (
+                    <input
+                      type="text"
+                      value={profileFormData.apellidos}
+                      onChange={e => setProfileFormData(p => ({ ...p, apellidos: e.target.value }))}
+                      style={{
+                        width: '100%', padding: '6px 0', border: 'none', borderBottom: '1px solid var(--c-gold)',
+                        background: 'transparent', outline: 'none', fontSize: '0.94rem',
+                        color: 'var(--c-deep-purple)', fontWeight: 600
+                      }}
+                    />
+                  )}
                 </div>
 
                 <div style={{ padding: '12px 16px', borderRadius: '12px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
                   <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 600, display: 'block', marginBottom: '2px' }}>
                     Correo Electrónico
                   </span>
-                  <span style={{ fontSize: '0.94rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
+                  <span style={{ fontSize: '0.94rem', fontWeight: 600, color: 'var(--c-taupe)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     {user.email}
+                    {isEditingProfile && <span style={{ fontSize: '0.65rem', padding: '2px 6px', background: 'rgba(59,60,65,0.1)', borderRadius: '4px' }}>No editable</span>}
                   </span>
                 </div>
 
@@ -634,9 +751,22 @@ export default function VistaPanelCliente({
                   <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 600, display: 'block', marginBottom: '2px' }}>
                     Teléfono Registrado
                   </span>
-                  <span style={{ fontSize: '0.94rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
-                    {user.telefono || 'No especificado'}
-                  </span>
+                  {!isEditingProfile ? (
+                    <span style={{ fontSize: '0.94rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
+                      {user.telefono || 'No especificado'}
+                    </span>
+                  ) : (
+                    <input
+                      type="tel"
+                      value={profileFormData.telefono}
+                      onChange={e => setProfileFormData(p => ({ ...p, telefono: e.target.value }))}
+                      style={{
+                        width: '100%', padding: '6px 0', border: 'none', borderBottom: '1px solid var(--c-gold)',
+                        background: 'transparent', outline: 'none', fontSize: '0.94rem',
+                        color: 'var(--c-deep-purple)', fontWeight: 600
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             </div>
