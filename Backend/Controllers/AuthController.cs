@@ -280,8 +280,8 @@ public class AuthController : ControllerBase
         if (role == "EmpresaOwner" && existing.EmpresaId != empresaId)
             return Forbid();
 
-        // REGLA: si el usuario a editar es un EmpresaOwner, solo se permite actualizar su contraseña
-        if (existing.Rol == "EmpresaOwner")
+        // REGLA: si el usuario a editar es un EmpresaOwner y no es Superadmin, solo se permite actualizar su contraseña
+        if (existing.Rol == "EmpresaOwner" && role != "Superadmin")
         {
             if (string.IsNullOrEmpty(request.Clave))
                 return BadRequest(new { message = "Para actualizar un administrador, debes proporcionar la nueva contraseña." });

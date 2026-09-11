@@ -178,11 +178,11 @@
             <div class="grid grid-2">
               <div class="field">
                 <label>Nombre Completo</label>
-                <input v-model="form.nombre" type="text" placeholder="Ej. Carlos Mendoza" required :disabled="isEdit && form.rol === 'EmpresaOwner'" />
+                <input v-model="form.nombre" type="text" placeholder="Ej. Carlos Mendoza" required :disabled="!authStore.isSuperadmin && isEdit && form.rol === 'EmpresaOwner'" />
               </div>
               <div class="field">
                 <label>Correo Electrónico</label>
-                <input v-model="form.correo" type="email" placeholder="carlos@mitienda.com" required :disabled="isEdit && form.rol === 'EmpresaOwner'" />
+                <input v-model="form.correo" type="email" placeholder="carlos@mitienda.com" required :disabled="!authStore.isSuperadmin && isEdit && form.rol === 'EmpresaOwner'" />
               </div>
             </div>
 
@@ -225,16 +225,16 @@
             <div class="grid grid-2" v-if="isEdit">
               <div class="field checkbox-wrapper">
                 <label class="checkbox-label">
-                  <input type="checkbox" v-model="form.activo" :disabled="isEdit && form.rol === 'EmpresaOwner'" />
+                  <input type="checkbox" v-model="form.activo" :disabled="!authStore.isSuperadmin && isEdit && form.rol === 'EmpresaOwner'" />
                   <span>Cuenta Activa / Permitir ingreso</span>
                 </label>
               </div>
             </div>
 
             <!-- Selector de permisos dinamicos segun el rol de empleado -->
-            <div v-if="form.rol === 'Employee'" class="permissions-selector">
-              <h3>🔒 Asignar Permisos del Trabajador</h3>
-              <p class="text-subtitle">Selecciona los módulos a los que este empleado tendrá acceso:</p>
+            <div class="permissions-selector">
+              <h3>🔒 Asignar Permisos</h3>
+              <p class="text-subtitle">Selecciona los módulos a los que este usuario tendrá acceso:</p>
               
               <div class="checkbox-grid">
                 <label class="checkbox-card">
@@ -421,7 +421,7 @@ const openCreateModal = () => {
   form.correo = ''
   form.clave = ''
   form.rol = authStore.isSuperadmin ? 'EmpresaOwner' : 'Employee'
-  form.permisos = ['ventas', 'productos']
+  form.permisos = authStore.isSuperadmin ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders', 'cuentas_cobrar', 'formas_pago', 'colaboradores', 'pedidos_web'] : ['ventas', 'productos']
   form.activo = true
   form.nombreTienda = ''
   form.empresaId = ''
@@ -477,7 +477,7 @@ const saveUser = async () => {
       correo: form.correo,
       clave: form.clave || null,
       rol: form.rol,
-      permisos: form.rol === 'EmpresaOwner' ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders', 'cuentas_cobrar', 'formas_pago', 'colaboradores', 'pedidos_web'] : form.permisos,
+      permisos: form.permisos,
       activo: form.activo,
       nombreTienda: form.nombreTienda || null
     }
