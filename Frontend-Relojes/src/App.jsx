@@ -42,6 +42,14 @@ export default function App({ initialCategory, initialProductId, initialView = '
 
       const storedUrl = localStorage.getItem(STORAGE_KEY_API_URL) || localStorage.getItem('aurelia_saas_api_url');
       if (storedUrl) setApiUrl(storedUrl);
+
+      // Recuperar auth de localStorage después de montar para evitar Hydration Error #418
+      try { 
+        const user = JSON.parse(localStorage.getItem('lgant_user'));
+        if (user) setCurrentUser(user);
+      } catch {}
+      const token = localStorage.getItem('lgant_auth_token');
+      if (token) setAuthToken(token);
     }
   }, []);
 
@@ -108,14 +116,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authInitialTab, setAuthInitialTab] = useState('cuenta');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState(() => {
-    if (typeof window === 'undefined') return null;
-    try { return JSON.parse(localStorage.getItem('lgant_user')) || null; } catch { return null; }
-  });
-  const [authToken, setAuthToken] = useState(() => {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem('lgant_auth_token') || null;
-  });
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authToken, setAuthToken] = useState(null);
 
   const handleCustomerLogout = () => {
     setCurrentUser(null);
