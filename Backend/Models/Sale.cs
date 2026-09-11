@@ -89,6 +89,19 @@ public class Sale
     public bool Revertida { get; set; } = false;
     public DateTime? FechaReversion { get; set; }
     public string? RevertidaPorNombre { get; set; }
+
+    // =============================================
+    // ESTADO DE ORDEN ONLINE (E-Commerce)
+    // null = venta del POS (no aplica ciclo de vida)
+    // "PENDIENTE_PAGO" = reservado, no suma en contabilidad
+    // "EN_PREPARACION" = pago confirmado, suma en contabilidad
+    // "ENVIADO" = entregado al courier
+    // "ENTREGADO" = recibido por el cliente
+    // "CANCELADO" = cancelado, stock restaurado
+    // =============================================
+    public string? EstadoOrden { get; set; } = null;
+    public DateTime? FechaConfirmacionPago { get; set; }
+    public string? NumeroSeguimiento { get; set; }
 }
 
 

@@ -362,9 +362,42 @@ export default function VistaPanelCliente({
                                 </span>
                               </div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                <span style={{ fontSize: '0.78rem', fontWeight: 700, padding: '6px 14px', borderRadius: '9999px', backgroundColor: isPaid ? 'rgba(52, 199, 89, 0.12)' : 'rgba(212, 175, 55, 0.12)', color: isPaid ? '#1f7a35' : 'var(--c-deep-purple)', letterSpacing: '0.04em' }}>
-                                  {ped.estadoPago || 'REGISTRADO'}
-                                </span>
+                                {ped.estadoOrden === 'CANCELADO' ? (
+                                  <span style={{ fontSize: '0.78rem', fontWeight: 700, padding: '6px 14px', borderRadius: '9999px', backgroundColor: '#fee2e2', color: '#b91c1c', letterSpacing: '0.04em' }}>
+                                    ORDEN CANCELADA
+                                  </span>
+                                ) : (
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'PENDIENTE_PAGO' || ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? 1 : 0.4 }}>
+                                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#d97706' }}></div>
+                                      </div>
+                                      <span style={{ fontSize: '0.65rem', color: '#d97706', marginTop: '4px', fontWeight: 600 }}>Pendiente</span>
+                                    </div>
+                                    <div style={{ width: '20px', height: '2px', backgroundColor: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#3b82f6' : '#e5e7eb' }}></div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? 1 : 0.4 }}>
+                                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#dbeafe' : '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#2563eb' }}></div> : null}
+                                      </div>
+                                      <span style={{ fontSize: '0.65rem', color: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#2563eb' : 'var(--c-taupe)', marginTop: '4px', fontWeight: 600 }}>Preparación</span>
+                                    </div>
+                                    <div style={{ width: '20px', height: '2px', backgroundColor: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#8b5cf6' : '#e5e7eb' }}></div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? 1 : 0.4 }}>
+                                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#ede9fe' : '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#7c3aed' }}></div> : null}
+                                      </div>
+                                      <span style={{ fontSize: '0.65rem', color: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#7c3aed' : 'var(--c-taupe)', marginTop: '4px', fontWeight: 600 }}>Enviado</span>
+                                    </div>
+                                    <div style={{ width: '20px', height: '2px', backgroundColor: ped.estadoOrden === 'ENTREGADO' ? '#22c55e' : '#e5e7eb' }}></div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'ENTREGADO' ? 1 : 0.4 }}>
+                                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: ped.estadoOrden === 'ENTREGADO' ? '#dcfce7' : '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {ped.estadoOrden === 'ENTREGADO' ? <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#16a34a' }}></div> : null}
+                                      </div>
+                                      <span style={{ fontSize: '0.65rem', color: ped.estadoOrden === 'ENTREGADO' ? '#16a34a' : 'var(--c-taupe)', marginTop: '4px', fontWeight: 600 }}>Entregado</span>
+                                    </div>
+                                  </div>
+                                )}
+                                
                                 <button
                                   type="button"
                                   onClick={() => handleWhatsAppOrderInquiry(ped)}
@@ -373,10 +406,18 @@ export default function VistaPanelCliente({
                                   onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ffffff'}
                                 >
                                   <ExternalLink size={14} />
-                                  Rastreo Concierge
+                                  Soporte VIP
                                 </button>
                               </div>
                             </div>
+                            
+                            {/* Alerta de seguimiento si hay número */}
+                            {ped.numeroSeguimiento && ped.estadoOrden === 'ENVIADO' && (
+                              <div style={{ backgroundColor: '#f0fdfa', borderBottom: '1px solid rgba(59,60,65,0.08)', padding: '12px 28px', display: 'flex', alignItems: 'center', gap: '10px', color: '#0f766e', fontSize: '0.85rem' }}>
+                                <Truck size={16} />
+                                <span>Tu pedido está en camino. Código de seguimiento: <strong>{ped.numeroSeguimiento}</strong></span>
+                              </div>
+                            )}
                             
                             {/* Detalles del pedido */}
                             <div style={{ padding: '24px 28px' }}>

@@ -5,6 +5,7 @@ import Dashboard from '../views/Dashboard.vue'
 import BusinessHistory from '../views/BusinessHistory.vue'
 import POS from '../views/POS.vue'
 import SalesHistory from '../views/SalesHistory.vue'
+import OnlineOrders from '../views/OnlineOrders.vue'
 import Products from '../views/Products.vue'
 import Categories from '../views/Categories.vue'
 import Clients from '../views/Clients.vue'
@@ -40,6 +41,12 @@ const routes = [
     path: '/sales-history', 
     component: SalesHistory, 
     name: 'SalesHistory',
+    meta: { requiresAuth: true, permission: 'historial_ventas' } 
+  },
+  { 
+    path: '/online-orders', 
+    component: OnlineOrders, 
+    name: 'OnlineOrders',
     meta: { requiresAuth: true, permission: 'historial_ventas' } 
   },
   { 

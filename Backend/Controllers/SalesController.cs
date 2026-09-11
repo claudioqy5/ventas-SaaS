@@ -38,8 +38,15 @@ public class SalesController : ControllerBase
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
 
-        // Ordeno las ventas de la mas reciente a la mas antigua, excluyendo los fiados no pagados
-        var sales = await _context.Sales.Find(s => s.EmpresaId == empresaId && s.EstadoPago != "Fiado")
+        // Ordeno las ventas de la mas reciente a la mas antigua.
+        // Se excluyen los fiados no pagados y los pedidos online en estado PENDIENTE_PAGO o CANCELADO.
+        // Los pedidos online confirmados (EN_PREPARACION, ENVIADO, ENTREGADO) SI aparecen aqui.
+        var sales = await _context.Sales.Find(s =>
+            s.EmpresaId == empresaId &&
+            s.EstadoPago != "Fiado" &&
+            s.EstadoOrden != "PENDIENTE_PAGO" &&
+            s.EstadoOrden != "CANCELADO"
+        )
             .SortByDescending(s => s.FechaCreacion)
             .ToListAsync();
 
@@ -135,6 +142,120 @@ public class SalesController : ControllerBase
         return CreatedAtAction(nameof(GetAll), new { id = sale.Id }, sale);
     }
 
+    // GET api/sales/online-orders — lista los pedidos online de la empresa (para el panel admin)
+    [HttpGet("online-orders")]
+    public async Task<IActionResult> GetOnlineOrders([FromQuery] string? estado = null)
+    {
+        if (!_userContext.HasPermission("historial_ventas") && !_userContext.HasPermission("ventas"))
+            return Forbid();
+
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        // Solo pedidos donde EstadoOrden NO es null (son pedidos web)
+        var filter = Builders<Sale>.Filter.And(
+            Builders<Sale>.Filter.Eq(s => s.EmpresaId, empresaId),
+            Builders<Sale>.Filter.Ne(s => s.EstadoOrden, (string?)null)
+        );
+
+        if (!string.IsNullOrEmpty(estado))
+        {
+            filter = Builders<Sale>.Filter.And(filter,
+                Builders<Sale>.Filter.Eq(s => s.EstadoOrden, estado));
+        }
+
+        var orders = await _context.Sales.Find(filter)
+            .SortByDescending(s => s.FechaCreacion)
+            .ToListAsync();
+
+        return Ok(orders);
+    }
+
+    // PUT api/sales/{id}/order-status — actualiza el estado de ciclo de vida de un pedido online
+    [HttpPut("{id}/order-status")]
+    public async Task<IActionResult> UpdateOrderStatus(string id, [FromBody] UpdateOrderStatusRequest request)
+    {
+        if (!_userContext.HasPermission("historial_ventas") && !_userContext.HasPermission("ventas"))
+            return Forbid();
+
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        var sale = await _context.Sales.Find(s => s.Id == id && s.EmpresaId == empresaId).FirstOrDefaultAsync();
+        if (sale == null) return NotFound(new { message = "Pedido no encontrado." });
+
+        if (string.IsNullOrEmpty(sale.EstadoOrden))
+            return BadRequest(new { message = "Este registro no es un pedido online." });
+
+        if (sale.EstadoOrden == "CANCELADO" || sale.EstadoOrden == "ENTREGADO")
+            return BadRequest(new { message = $"No se puede cambiar el estado de un pedido {sale.EstadoOrden}." });
+
+        var estadosValidos = new[] { "PENDIENTE_PAGO", "EN_PREPARACION", "ENVIADO", "ENTREGADO", "CANCELADO" };
+        if (!estadosValidos.Contains(request.NuevoEstado))
+            return BadRequest(new { message = "Estado no válido." });
+
+        var nameClaim = User.FindFirst("name")?.Value
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value
+            ?? "Administrador";
+
+        var update = Builders<Sale>.Update
+            .Set(s => s.EstadoOrden, request.NuevoEstado);
+
+        // Al confirmar pago: el pedido entra en la contabilidad
+        if (request.NuevoEstado == "EN_PREPARACION")
+        {
+            update = update
+                .Set(s => s.EstadoPago, "Pagado")
+                .Set(s => s.FechaConfirmacionPago, DateTime.UtcNow);
+        }
+
+        // Al enviar: guardar número de seguimiento si se proporcionó
+        if (request.NuevoEstado == "ENVIADO" && !string.IsNullOrEmpty(request.NumeroSeguimiento))
+        {
+            update = update.Set(s => s.NumeroSeguimiento, request.NumeroSeguimiento);
+        }
+
+        // Al cancelar: restaurar el stock de cada producto
+        if (request.NuevoEstado == "CANCELADO")
+        {
+            foreach (var item in sale.Detalles)
+            {
+                var productFilter = Builders<Product>.Filter.And(
+                    Builders<Product>.Filter.Eq(p => p.Id, item.ProductoId),
+                    Builders<Product>.Filter.Eq(p => p.EmpresaId, empresaId)
+                );
+                var product = await _context.Products.Find(productFilter).FirstOrDefaultAsync();
+                if (product != null)
+                {
+                    var previousStock = product.Stock;
+                    var newStock = previousStock + item.Cantidad;
+                    await _context.Products.UpdateOneAsync(productFilter,
+                        Builders<Product>.Update.Set(p => p.Stock, newStock));
+
+                    var movement = new StockMovement
+                    {
+                        EmpresaId = empresaId,
+                        ProductoId = product.Id,
+                        NombreProducto = product.Nombre,
+                        Tipo = "Cancelación Pedido Web",
+                        Cantidad = item.Cantidad,
+                        StockAnterior = previousStock,
+                        StockNuevo = newStock,
+                        Motivo = $"Pedido online cancelado (ID: {sale.Id})",
+                        CreadoPor = _userContext.UserId ?? string.Empty,
+                        CreadoPorNombre = nameClaim,
+                        FechaCreacion = DateTime.UtcNow
+                    };
+                    await _context.StockMovements.InsertOneAsync(movement);
+                }
+            }
+        }
+
+        await _context.Sales.UpdateOneAsync(s => s.Id == id && s.EmpresaId == empresaId, update);
+
+        var updatedSale = await _context.Sales.Find(s => s.Id == id).FirstOrDefaultAsync();
+        return Ok(new { message = $"Estado actualizado a {request.NuevoEstado}.", pedido = updatedSale });
+    }
     // POST api/sales/{id}/revert — revierte una venta, devuelve el stock y guarda el movimiento
     [HttpPost("{id}/revert")]
     public async Task<IActionResult> Revert(string id)
@@ -207,4 +328,11 @@ public class SalesController : ControllerBase
 
         return Ok(new { message = "Venta revertida exitosamente y stock restaurado.", sale });
     }
+}
+
+// DTO para actualizar el estado de un pedido online
+public class UpdateOrderStatusRequest
+{
+    public string NuevoEstado { get; set; } = string.Empty;
+    public string? NumeroSeguimiento { get; set; }
 }
