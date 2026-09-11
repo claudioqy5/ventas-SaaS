@@ -99,7 +99,7 @@ public class AuthController : ControllerBase
             Correo = request.CorreoPropietario,
             ClaveHash = _passwordHasher.Hash(request.ClavePropietario),
             Rol = "EmpresaOwner",
-            Permisos = new List<string> { "dashboard", "historial_negocio", "ventas", "productos", "categorias", "modificar_productos", "clientes", "proveedores", "compras", "movimientos", "config", "reminders", "cuentas_cobrar", "formas_pago", "colaboradores" }
+            Permisos = new List<string> { "dashboard", "historial_negocio", "ventas", "productos", "categorias", "modificar_productos", "clientes", "proveedores", "compras", "movimientos", "config", "reminders", "cuentas_cobrar", "formas_pago", "colaboradores", "pedidos_web" }
         };
         await _context.Users.InsertOneAsync(owner);
 

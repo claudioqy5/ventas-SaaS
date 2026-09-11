@@ -40,14 +40,19 @@ public class UserContext : IUserContext
     // Verifica si el usuario tiene acceso a un modulo especifico del sistema
     public bool HasPermission(string permission)
     {
-        if (Role == "EmpresaOwner")
-            return true; // Los propietarios del negocio tienen acceso total dentro de su empresa
-
         if (Role == "Superadmin" && (permission == "usuarios" || permission == "empresas"))
             return true; // El Superadmin gestiona unicamente las empresas y cuentas globales
 
+        if (Role == "EmpresaOwner")
+        {
+            var permissions = User?.FindAll("permissions").Select(c => c.Value) ?? Enumerable.Empty<string>();
+            if (permissions.Any())
+                return permissions.Contains(permission);
+            return true; // Acceso total por compatibilidad si no tiene permisos explicitos
+        }
+
         // Para los empleados, reviso si el permiso solicitado esta en su lista de permisos del token
-        var permissions = User?.FindAll("permissions").Select(c => c.Value) ?? Enumerable.Empty<string>();
-        return permissions.Contains(permission);
+        var perms = User?.FindAll("permissions").Select(c => c.Value) ?? Enumerable.Empty<string>();
+        return perms.Contains(permission);
     }
 }

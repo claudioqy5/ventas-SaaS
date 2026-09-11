@@ -72,7 +72,13 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     hasPermission(permission) {
-      if (this.isEmpresaOwner) return true
+      if (this.isSuperadmin) return false
+      if (this.isEmpresaOwner) {
+        if (Array.isArray(this.permissions) && this.permissions.length > 0) {
+          return this.permissions.includes(permission)
+        }
+        return true
+      }
       return this.permissions.includes(permission)
     },
     logout() {
