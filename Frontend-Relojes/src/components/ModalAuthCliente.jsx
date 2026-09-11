@@ -31,12 +31,15 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
   }, [isOpen, user, token]);
 
   const cargarPedidos = async () => {
+    if (!token) return; // Sin token, no intentar
     setCargandoPedidos(true);
     try {
       const data = await getCustomerOrders(token);
       setPedidos(data);
     } catch (err) {
-      console.error(err);
+      // Error silencioso — puede ser Mixed Content (HTTP vs HTTPS) o token expirado
+      // No mostramos error al usuario, simplemente queda vacío
+      console.warn('No se pudo cargar el historial de compras:', err.message);
     } finally {
       setCargandoPedidos(false);
     }
@@ -79,9 +82,20 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
         nombres: data.client.nombres || nombres,
         apellidos: data.client.apellidos || apellidos,
         email: data.client.correo,
+        correo: data.client.correo,
         nivel: 'Cliente VIP',
-        ciudad: data.client.direccion || 'No especificada',
-        telefono: data.client.telefono || ''
+        telefono: data.client.telefono || '',
+        // Documento de identidad
+        tipoDocumento: data.client.tipoDocumento || 'DNI',
+        numeroDocumento: data.client.numeroDocumento || '',
+        numDoc: data.client.numeroDocumento || '', // alias para compatibilidad con ProcesoPago
+        // Dirección de entrega (última usada, precargada desde el perfil)
+        direccion: data.client.direccion || '',
+        departamento: data.client.departamento || '',
+        provincia: data.client.provincia || '',
+        distrito: data.client.distrito || '',
+        referencia: data.client.referencia || '',
+        ciudad: data.client.distrito || data.client.direccion || 'No especificada',
       };
 
       onLogin(clientData, data.token);

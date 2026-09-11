@@ -107,18 +107,19 @@ export default function ProcesoPago({
       const primerNombre = user.nombres || (user.nombre || '').trim().split(' ')[0] || '';
       const apellidos = user.apellidos || (user.nombre || '').trim().split(' ').slice(1).join(' ') || '';
 
-      // Autocompletar datos personales
+      // Autocompletar datos personales — siempre desde el perfil si el usuario está logueado
       setPersonalData(prev => ({
         ...prev,
-        nombres: prev.nombres || primerNombre,
-        apellidos: prev.apellidos || apellidos,
-        email: prev.email || user.email || user.correo || '',
-        telefono: prev.telefono || user.telefono || '',
-        tipoDoc: prev.tipoDoc !== 'DNI' ? prev.tipoDoc : (user.tipoDocumento || 'DNI'),
-        numDoc: prev.numDoc || user.numeroDocumento || ''
+        nombres: primerNombre || prev.nombres,
+        apellidos: apellidos || prev.apellidos,
+        email: user.email || user.correo || prev.email,
+        telefono: user.telefono || prev.telefono,
+        tipoDoc: user.tipoDocumento || prev.tipoDoc,
+        numDoc: user.numeroDocumento || user.numDoc || prev.numDoc
       }));
 
       // Autocompletar dirección de entrega (de la última compra guardada en el perfil)
+      // Solo si el campo aún no fue editado manualmente
       setDeliveryAddress(prev => ({
         ...prev,
         departamento: prev.departamento || user.departamento || '',
