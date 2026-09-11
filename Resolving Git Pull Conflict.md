@@ -3446,4 +3446,24 @@ Se consolidó la estructura del Checkout en 4 etapas y se definió la hoja de ru
   - **Modal de cuenta y login:** Se sustituyeron los elementos residuales en fucsia por el dorado oficial (`var(--c-gold)`) y negro obsidian, asegurando 100% de coherencia visual con la identidad de marca del e-commerce.
 
 **Estado Actual:**
-El sistema compila sin advertencias ni errores. La navegación de rutas entre el catálogo, `/mis-compras`, `/mi-cuenta`, detalle de producto y checkout opera fluidamente sin recargas de página, y la estética visual cumple con los estándares de diseño de lujo requeridos.
+El sistema compila sin advertencias ni errores. La navegación de rutas entre el catálogo, `/mis-compras`, `/mi-cuenta`, detalle de producto y checkout opera fluidamente sin recargas de página, y la estética visual cumple con los estándares de diseño de lujo requeridos.
+
+---
+
+### Actualización - 11 de Septiembre de 2026
+
+**1. Módulo de Pedidos Web (Panel de Administrador):**
+- Se creó una sección completamente nueva llamada **"Pedidos Web"** dedicada exclusivamente a la gestión de las compras provenientes de la tienda online.
+- Los pedidos online ahora tienen un **ciclo de vida definido**: *Pendiente de Pago, En Preparación, Enviado, Entregado y Cancelado*.
+- **Contabilidad Inteligente**: Cuando un pedido web ingresa (Pendiente de Pago), **no distorsiona las métricas** (no suma al Dashboard ni al Historial de Ventas). El dinero solo se registra oficialmente en las finanzas cuando el administrador cambia el estado a *En Preparación* confirmando la recepción del pago.
+- Si un pedido se cancela, el sistema **restaura automáticamente el stock** al inventario y genera un registro de movimiento correspondiente.
+
+**2. Trazabilidad para el Cliente (Tienda Web):**
+- Se diseñó e integró un **Stepper Interactivo (Línea de tiempo)** en el perfil web del cliente (`VistaPanelCliente.jsx`).
+- Ahora los clientes pueden ver el progreso visual y elegante de su compra desde su panel (*Pendiente ➔ Preparación ➔ Enviado ➔ Entregado*).
+- Se destacó el **Número de Seguimiento** (Tracking) en caso de que el pedido haya sido despachado, mejorando la experiencia post-venta.
+
+**3. Sistema de Permisos Avanzado y Seguridad:**
+- Se desacopló la gestión de pedidos web del módulo de ventas creando un nuevo permiso oficial llamado **`🌐 Pedidos Web`** (`pedidos_web`).
+- Esto permite que el dueño del negocio asigne permisos exclusivamente de despachos y atención al cliente a ciertos empleados sin exponer las ganancias totales ni las ventas físicas.
+- **Edición de Administradores de Negocio (SaaS):** Se modificó el Backend (`AuthController.cs`) y Frontend (`Users.vue`) para permitir que el **Súper Administrador** pueda editar completamente los perfiles de los dueños de negocios (`EmpresaOwner`). Ahora se puede modificar su nombre, correo, desactivar su acceso, y asignarle o retirarle módulos/funcionalidades específicas libremente.
