@@ -26,10 +26,12 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         top: 0,
         right: 0,
         bottom: 0,
-        width: '50%',
+        width: '44%',
         overflow: 'hidden',
         zIndex: 1,
-        boxShadow: '-40px 0 100px rgba(0,0,0,0.45)' // Sombra muy pronunciada hacia la izquierda
+        boxShadow: '-30px 0 80px rgba(0,0,0,0.3)',
+        maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 8%, black 25%, black 100%)',
+        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 8%, black 25%, black 100%)'
       }}>
         {['/watches/chronograph_gold.jpg', '/watches/moonphase_blue.jpg', '/watches/skeleton_titanium.jpg'].map((img, idx) => (
           <div
@@ -78,14 +80,14 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
 
       <div className="hero-content-wrapper" style={{
         width: '100%',
-        padding: '50px 5%', /* Padding fluido para que se apegue más a la izquierda en pantallas anchas */
+        padding: '50px 0 50px clamp(20px, 3.8vw, 55px)', /* Anclado a la izquierda */
         display: 'flex',
         alignItems: 'center',
         position: 'relative',
         zIndex: 2
       }}>
         {/* Columna Izquierda: Mensaje en fondo luminoso */}
-        <div className="hero-content" style={{ width: '50%', maxWidth: '560px', paddingRight: '2%', position: 'relative' }}>
+        <div className="hero-content" style={{ width: '60%', maxWidth: '780px', paddingRight: '0', position: 'relative' }}>
           {/* Badge de Alta Horlogerie */}
           <div style={{
             display: 'inline-flex',
@@ -112,7 +114,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
           <CrucigramaHero />
 
           {/* Botón de Acción */}
-          <div className="hero-buttons" style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginBottom: '40px' }}>
+          <div className="hero-buttons" style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginTop: '14px', marginBottom: '40px' }}>
             <button
               onClick={onExplore}
               className="btn-indigo blush-shimmer"

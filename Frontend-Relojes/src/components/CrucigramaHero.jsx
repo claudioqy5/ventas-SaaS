@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
   Matriz Tipográfica Minimalista (Estilo Editorial Suizo / Eindhoven Design)
   7 Filas x 8 Columnas
   Frase: "ELEGANTE EN CADA SEGUNDO"
-  Sin cajas, sin bordes, sin tarjetas. Pura tipografía gigante y minimalista.
+  Sin cajas, sin bordes, sin tarjetas. Pura tipografía gigante, minimalista y de alta gama.
 
   Fila 0:                         [C] (col 4)               [S] (col 7)
   Fila 1: [E] [L] [E] [G]         [A] (col 4) [N] [T]       [E] (col 7)   -> "ELEGANTE"
@@ -27,51 +27,49 @@ const GRID_LAYOUT = [
   // Fila 1: ELEGANTE
   [
     { char: 'E', word: 'elegante', stage: 1, delay: 0 },
-    { char: 'L', word: 'elegante', stage: 1, delay: 60 },
-    { char: 'E', word: 'elegante', stage: 1, delay: 120, isIntersection: true, intersectWord: 'en' },
-    { char: 'G', word: 'elegante', stage: 1, delay: 180 },
-    { char: 'A', word: 'elegante', stage: 1, delay: 240, isIntersection: true, intersectWord: 'cada' },
-    { char: 'N', word: 'elegante', stage: 1, delay: 300 },
-    { char: 'T', word: 'elegante', stage: 1, delay: 360 },
-    { char: 'E', word: 'elegante', stage: 1, delay: 420, isIntersection: true, intersectWord: 'segundo' }
+    { char: 'L', word: 'elegante', stage: 1, delay: 50 },
+    { char: 'E', word: 'elegante', stage: 1, delay: 100, isIntersection: true, intersectWord: 'en' },
+    { char: 'G', word: 'elegante', stage: 1, delay: 150 },
+    { char: 'A', word: 'elegante', stage: 1, delay: 200, isIntersection: true, intersectWord: 'cada' },
+    { char: 'N', word: 'elegante', stage: 1, delay: 250 },
+    { char: 'T', word: 'elegante', stage: 1, delay: 300 },
+    { char: 'E', word: 'elegante', stage: 1, delay: 350, isIntersection: true, intersectWord: 'segundo' }
   ],
   // Fila 2
   [
     null, null,
-    { char: 'N', word: 'en', stage: 2, delay: 80 },
+    { char: 'N', word: 'en', stage: 2, delay: 70 },
     null,
-    { char: 'D', word: 'cada', stage: 3, delay: 80 },
+    { char: 'D', word: 'cada', stage: 3, delay: 70 },
     null, null,
-    { char: 'G', word: 'segundo', stage: 4, delay: 80 }
+    { char: 'G', word: 'segundo', stage: 4, delay: 70 }
   ],
   // Fila 3
   [
     null, null, null, null,
-    { char: 'A', word: 'cada', stage: 3, delay: 160 },
+    { char: 'A', word: 'cada', stage: 3, delay: 140 },
     null, null,
-    { char: 'U', word: 'segundo', stage: 4, delay: 160 }
+    { char: 'U', word: 'segundo', stage: 4, delay: 140 }
   ],
   // Fila 4
   [
     null, null, null, null, null, null, null,
-    { char: 'N', word: 'segundo', stage: 4, delay: 240 }
+    { char: 'N', word: 'segundo', stage: 4, delay: 210 }
   ],
   // Fila 5
   [
     null, null, null, null, null, null, null,
-    { char: 'D', word: 'segundo', stage: 4, delay: 320 }
+    { char: 'D', word: 'segundo', stage: 4, delay: 280 }
   ],
   // Fila 6
   [
     null, null, null, null, null, null, null,
-    { char: 'O', word: 'segundo', stage: 4, delay: 400 }
+    { char: 'O', word: 'segundo', stage: 4, delay: 350 }
   ]
 ];
 
 export default function CrucigramaHero() {
-  // Etapa de animación secuencial (0 a 4)
   const [currentStage, setCurrentStage] = useState(0);
-  // Palabra resaltada por hover interactivo
   const [hoveredWord, setHoveredWord] = useState(null);
   const timersRef = useRef([]);
 
@@ -81,17 +79,17 @@ export default function CrucigramaHero() {
 
     setCurrentStage(0);
 
-    // 1. ELEGANTE (a los 200ms)
-    timersRef.current.push(setTimeout(() => setCurrentStage(1), 200));
+    // 1. ELEGANTE
+    timersRef.current.push(setTimeout(() => setCurrentStage(1), 180));
 
-    // 2. EN (a los 1300ms)
-    timersRef.current.push(setTimeout(() => setCurrentStage(2), 1300));
+    // 2. EN
+    timersRef.current.push(setTimeout(() => setCurrentStage(2), 1200));
 
-    // 3. CADA (a los 2300ms)
-    timersRef.current.push(setTimeout(() => setCurrentStage(3), 2300));
+    // 3. CADA
+    timersRef.current.push(setTimeout(() => setCurrentStage(3), 2100));
 
-    // 4. SEGUNDO (a los 3300ms)
-    timersRef.current.push(setTimeout(() => setCurrentStage(4), 3300));
+    // 4. SEGUNDO
+    timersRef.current.push(setTimeout(() => setCurrentStage(4), 3000));
   };
 
   useEffect(() => {
@@ -110,7 +108,6 @@ export default function CrucigramaHero() {
     return false;
   };
 
-  // Resaltado al pasar el mouse por encima
   const isLetterHovered = (cell) => {
     if (!cell) return false;
     if (!hoveredWord) return false;
@@ -119,9 +116,10 @@ export default function CrucigramaHero() {
 
   return (
     <div style={{
-      marginBottom: '28px',
+      marginBottom: '16px',
       userSelect: 'none',
-      position: 'relative'
+      position: 'relative',
+      width: '100%'
     }}>
       {/* Título semántico SEO accesible */}
       <h2 style={{
@@ -138,18 +136,19 @@ export default function CrucigramaHero() {
         Elegante en cada segundo
       </h2>
 
-      {/* COMPOSICIÓN TIPOGRÁFICA GIGANTE (SIN BORDES, SIN CAJAS, ESTILO EINDHOVEN) */}
+      {/* COMPOSICIÓN TIPOGRÁFICA GIGANTE, MINIMALISTA Y MONUMENTAL */}
       <div 
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(8, clamp(34px, 4.4vw, 52px))',
-          gridTemplateRows: 'repeat(7, clamp(38px, 4.8vw, 56px))',
+          gridTemplateColumns: 'repeat(8, clamp(42px, 5.2vw, 68px))',
+          gridTemplateRows: 'repeat(7, clamp(46px, 5.6vw, 74px))',
           gap: 0,
           margin: '0 0 16px 0',
           padding: 0,
           background: 'transparent',
           border: 'none',
-          lineHeight: 1
+          lineHeight: 0.88,
+          justifyContent: 'flex-start'
         }}
       >
         {GRID_LAYOUT.map((row, rIdx) => (
@@ -176,15 +175,15 @@ export default function CrucigramaHero() {
                     justifyContent: 'center',
                     fontFamily: '"Montserrat", "Plus Jakarta Sans", -apple-system, sans-serif',
                     fontWeight: 900,
-                    fontSize: 'clamp(2.5rem, 4.5vw, 4.2rem)',
-                    lineHeight: 0.9,
-                    letterSpacing: '-0.04em',
-                    color: hovered ? 'var(--c-gold)' : '#0b0b0c',
-                    opacity: !visible ? 0 : shouldDim ? 0.25 : 1,
+                    fontSize: 'clamp(3.1rem, 5.4vw, 5.2rem)',
+                    lineHeight: 0.88,
+                    letterSpacing: '-0.045em',
+                    color: hovered ? 'var(--c-gold)' : '#09090b',
+                    opacity: !visible ? 0 : shouldDim ? 0.2 : 1,
                     transform: !visible 
-                      ? 'translateY(14px) scale(0.92)' 
-                      : (hovered ? 'scale(1.08)' : 'translateY(0) scale(1)'),
-                    transition: 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s',
+                      ? 'translateY(18px) scale(0.92)' 
+                      : (hovered ? 'scale(1.06)' : 'translateY(0) scale(1)'),
+                    transition: 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s',
                     cursor: 'default',
                     pointerEvents: visible ? 'auto' : 'none'
                   }}
@@ -197,27 +196,41 @@ export default function CrucigramaHero() {
         ))}
       </div>
 
-      {/* Subtítulo editorial minimalista estilo Eindhoven */}
+      {/* Subtítulo editorial estilo revista de alta gama */}
       <div 
         onClick={runAnimation}
         title="Clic para reiniciar animación"
         style={{
-          fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
-          fontSize: 'clamp(0.95rem, 1.2vw, 1.15rem)',
-          fontWeight: 400,
-          color: '#55575e',
-          letterSpacing: '-0.01em',
           display: 'flex',
           alignItems: 'center',
-          gap: '8px',
+          gap: '14px',
+          marginTop: '6px',
           cursor: 'pointer',
-          opacity: currentStage >= 4 ? 1 : 0.6,
-          transition: 'opacity 0.5s ease'
+          opacity: currentStage >= 4 ? 1 : 0.65,
+          transition: 'opacity 0.5s ease',
+          flexWrap: 'wrap'
         }}
       >
-        <span>Elegante en cada segundo</span>
-        <span style={{ fontSize: '0.75rem', color: '#999', opacity: 0.7 }}>•</span>
-        <span style={{ fontSize: '0.85rem', color: 'var(--c-gold)', fontWeight: 600, letterSpacing: '0.04em' }}>L'GANT</span>
+        <span style={{
+          fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
+          fontSize: 'clamp(1rem, 1.25vw, 1.22rem)',
+          fontWeight: 500,
+          color: '#3d3f44',
+          letterSpacing: '-0.02em'
+        }}>
+          Elegante en cada segundo.
+        </span>
+        <span style={{ width: '36px', height: '1px', background: 'rgba(59, 60, 65, 0.25)' }} />
+        <span style={{
+          fontFamily: '"Cinzel", serif',
+          fontSize: '0.72rem',
+          fontWeight: 600,
+          letterSpacing: '0.22em',
+          color: 'var(--c-gold)',
+          textTransform: 'uppercase'
+        }}>
+          Haute Horlogerie
+        </span>
       </div>
     </div>
   );

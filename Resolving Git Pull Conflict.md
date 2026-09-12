@@ -3529,4 +3529,8 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 - **Aparición Secuencial Palabra por Palabra:**
   - Se revelan progresivamente en orden de lectura: *ELEGANTE* ➔ *EN* ➔ *CADA* ➔ *SEGUNDO*.
   - Al pasar el cursor por encima de cualquier letra, la palabra completa se resalta en tono dorado mientras las demás se atenúan con elegancia.
+- **Escala Monumental y Reequilibrio de Posición (Hacia la Izquierda):**
+  - Se aumentó drásticamente el tamaño de las letras a `clamp(3.1rem, 5.4vw, 5.2rem)` y celdas de hasta `68px x 74px`.
+  - Se amplió el ancho del contenedor de texto al `60%` (`maxWidth: 780px`) y se ancló a la izquierda con padding fluido, separando la columna derecha (`SEGUNDO`) del borde del reloj.
+  - Se aplicó una máscara difuminada suave (`maskImage`) en la galería de relojes para que el titanio del reloj emerja orgánicamente sin colisionar con la tipografía.
 - **Compilación Validada:** `npm run build` en Next.js 16 completado con código 0 y 0 errores.
