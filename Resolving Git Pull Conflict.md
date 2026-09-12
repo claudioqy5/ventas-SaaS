@@ -3481,17 +3481,24 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 ### Actualización - 12 de Septiembre de 2026
 
 **1. Integración del Código QR Oficial de Yape (Paso 4 - Pasarela de Pago):**
-- **Activo Oficial Integrado:** Se importó el flyer oficial de Yape proporcionado por el cliente a `Frontend-Relojes/public/qr-yape.png`.
+- **Activo Oficial Integrado:** Se importó e integró el flyer oficial de Yape a `Frontend-Relojes/public/qr-yape.png`.
 - **Diseño de Pasarela de Pagos (`ProcesoPago.jsx`):**
-  - Se sustituyó el marcador de posición SVG por la tarjeta oficial de Yape, con estética premium de fondo púrpura institucional (`#742284`), bordes dorados tenues y sombras suaves.
-  - **Titular Oficial:** Vinculado a **Grupo Sercal S.a.c.**
-  - **Número por Defecto:** Configurado en `999 999 999` (con botón de un clic para copiar al portapapeles y alerta de éxito).
-  - **Instrucciones claras:** Escaneo de QR o transferencia por número, ingreso del número de operación / referencia del voucher, y coordinación directa post-pago vía WhatsApp.
+  - Se sustituyó el marcador de posición SVG genérico (`LuxuryQRCode`) por la tarjeta oficial con la imagen del QR de Yape, optimizando el peso del código.
+  - Presentación visual estilizada con el color institucional púrpura de Yape (`#742284`), bordes dorados tenues (`rgba(212, 175, 55, 0.35)`), insignia de verificación y sombras suaves.
+  - **Titular Oficial Verificado:** Vinculado a **Grupo Sercal S.a.c.**
+  - **Número por Defecto:** Configurado como **`999 999 999`** con botón interactivo de un clic para copiar al portapapeles (copia `999999999` y muestra check verde de confirmación).
+  - **Flujo de Pago Transparente:** Monto dinámico en vivo en Soles (`S/.`), campo para ingresar el *Número de Operación o Referencia* del voucher y coordinación directa post-pago vía WhatsApp con el pedido generado.
 
-**2. Experiencia de Login de Lujo (Erradicación del modal tosco y franja negra):**
-- **Cierre Instantáneo de Modal:** Al iniciar sesión o registrarse, el modal de autenticación (`ModalAuthCliente.jsx`) se cierra inmediatamente sin retrasos ni destellos forzados de la ficha del cliente.
-- **Eliminación de la Barra Negra:** Se retiró permanentemente el banner superior tosco (`backgroundColor: 'var(--c-indigo)'` con texto fijo) que tapaba la ventana.
+**2. Refactorización de la Experiencia de Autenticación de Clientes (Login VIP):**
+- **Diagnóstico y Corrección de UX:** Se identificó que al iniciar sesión, el modal `ModalAuthCliente.jsx` sufría una transición tosca donde se forzaba la visualización de la ficha de cliente VIP comprimida dentro del mismo modal, coronada por una franja negra fija (`backgroundColor: 'var(--c-indigo)'`) que tapaba la pantalla y estorbaba la navegación del comprador.
+- **Cierre Instantáneo de Modal:** Al validar exitosamente las credenciales en `ModalAuthCliente.jsx`, el modal se cierra de forma inmediata (`onClose()`) y sin demoras artificiales, devolviendo al usuario al flujo de compra o navegación sin fricciones.
+- **Eliminación Total de la Barra Negra:** Se retiró permanentemente el banner superior tosco que obstaculizaba la vista.
 - **Nuevo Componente `ToastBienvenidaCliente.jsx`:**
-  - Notificación flotante de alta gama en la esquina superior derecha (`top: 85px, right: 30px`), con estética boutique: tarjeta blanca de bordes redondeados, borde dorado, sombra suave y monograma VIP circular con la inicial del cliente y punto verde de verificación activa.
-  - Saludo cálido y personalizado: *"¡Bienvenido, [Nombre]! Sesión VIP iniciada correctamente"*.
-  - Auto-cierre suave a los 4.5 segundos sin interrumpir la navegación de compras del cliente.
+  - Componente flotante de alta gama posicionado estratégicamente en la esquina superior derecha (`top: 85px, right: 30px`), alineado con la estética de alta relojería de L'GANT.
+  - **Monograma VIP de Lujo:** Avatar circular obsidiana con tipografía serif dorada que exhibe la inicial del cliente, acompañado de un punto verde de verificación activa en tiempo real.
+  - **Acentos Dorados y Glassmorphism:** Fondo blanco limpio con línea superior de acento dorado en gradiente (`#d4af37`), bordes sutiles y sombra difusa.
+  - **Saludo Personalizado:** *"¡Bienvenido, [Nombre]! - Sesión VIP iniciada correctamente"*.
+  - **Desvanecimiento Suave:** Temporizador automático de cierre a los 4.5 segundos o descarte manual mediante botón `✕`.
+- **Integración Global (`App.jsx`):**
+  - Control de estado reactivo mediante `welcomeUser`, disparándose de inmediato tras la respuesta exitosa del servidor.
+  - Desacoplamiento de vistas: El acceso a la gestión de datos personales y seguimiento de pedidos queda 100% canalizado a través del menú de usuario en la barra de navegación hacia la vista completa dedicada `VistaPanelCliente.jsx` (`/mis-compras` y `/mi-cuenta`).
