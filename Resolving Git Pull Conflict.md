@@ -3474,4 +3474,24 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 
 **5. Corrección Integral de Fallos (Checkout e Inventario):**
 - **Solución al "Pantallazo Negro" (Frontend-Relojes):** Se diagnosticó y corrigió un fallo crítico en el checkout (`ProcesoPago.jsx`). Al finalizar exitosamente una orden, el sistema intentaba renderizar variables de estado no declaradas (`accountCreated`, `accountPassword`) para la sección de creación de cuenta post-compra, lo cual colapsaba la vista de React generando una pantalla negra de error. Se inicializaron correctamente, restaurando la pantalla de celebración (confeti y resumen de la orden). El vaciado automático del carrito ahora funciona a la perfección ya que el renderizado culmina con éxito.
-- **Deducción Correcta de Inventario (Backend):** Se corrigió una vulnerabilidad lógica en el ciclo de vida del pedido online. Anteriormente el stock se descontaba prematuramente al momento de crear la orden en estado **Pendiente de Pago** (`PublicStoreController.cs`). Se eliminó esta lógica y se reubicó en `SalesController.cs`: ahora el sistema **solo descuenta el stock** cuando el administrador manipula el pedido y lo transiciona a un estado confirmado (ej. `En Preparación`). De igual forma, si un pedido se cancela, el stock solo se repone si el pedido provenía de un estado previamente confirmado.
+- **Deducción Correcta de Inventario (Backend):** Se corrigió una vulnerabilidad lógica en el ciclo de vida del pedido online. Anteriormente el stock se descontaba prematuramente al momento de crear la orden en estado **Pendiente de Pago** (`PublicStoreController.cs`). Se eliminó esta lógica y se reubicó en `SalesController.cs`: ahora el sistema **solo descuenta el stock** cuando el administrador manipula el pedido y lo transiciona a un estado confirmado (ej. `En Preparación`). De igual forma, si un pedido se cancela, el stock solo se repone si el pedido provenía de un estado previamente confirmado.
+
+---
+
+### Actualización - 12 de Septiembre de 2026
+
+**1. Integración del Código QR Oficial de Yape (Paso 4 - Pasarela de Pago):**
+- **Activo Oficial Integrado:** Se importó el flyer oficial de Yape proporcionado por el cliente a `Frontend-Relojes/public/qr-yape.png`.
+- **Diseño de Pasarela de Pagos (`ProcesoPago.jsx`):**
+  - Se sustituyó el marcador de posición SVG por la tarjeta oficial de Yape, con estética premium de fondo púrpura institucional (`#742284`), bordes dorados tenues y sombras suaves.
+  - **Titular Oficial:** Vinculado a **Grupo Sercal S.a.c.**
+  - **Número por Defecto:** Configurado en `999 999 999` (con botón de un clic para copiar al portapapeles y alerta de éxito).
+  - **Instrucciones claras:** Escaneo de QR o transferencia por número, ingreso del número de operación / referencia del voucher, y coordinación directa post-pago vía WhatsApp.
+
+**2. Experiencia de Login de Lujo (Erradicación del modal tosco y franja negra):**
+- **Cierre Instantáneo de Modal:** Al iniciar sesión o registrarse, el modal de autenticación (`ModalAuthCliente.jsx`) se cierra inmediatamente sin retrasos ni destellos forzados de la ficha del cliente.
+- **Eliminación de la Barra Negra:** Se retiró permanentemente el banner superior tosco (`backgroundColor: 'var(--c-indigo)'` con texto fijo) que tapaba la ventana.
+- **Nuevo Componente `ToastBienvenidaCliente.jsx`:**
+  - Notificación flotante de alta gama en la esquina superior derecha (`top: 85px, right: 30px`), con estética boutique: tarjeta blanca de bordes redondeados, borde dorado, sombra suave y monograma VIP circular con la inicial del cliente y punto verde de verificación activa.
+  - Saludo cálido y personalizado: *"¡Bienvenido, [Nombre]! Sesión VIP iniciada correctamente"*.
+  - Auto-cierre suave a los 4.5 segundos sin interrumpir la navegación de compras del cliente.

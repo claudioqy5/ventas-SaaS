@@ -17,6 +17,7 @@ import BotonWhatsApp from './components/BotonWhatsApp';
 import PanelFiltros from './components/PanelFiltros';
 import MarcasDestacadas from './components/MarcasDestacadas';
 import ToastNotificacion from './components/ToastNotificacion';
+import ToastBienvenidaCliente from './components/ToastBienvenidaCliente';
 import WebThreads from './components/WebThreads';
 import Beneficios from './components/Beneficios';
 import VistaPreguntasFrecuentes from './components/VistaPreguntasFrecuentes';
@@ -118,6 +119,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [authToken, setAuthToken] = useState(null);
+  const [welcomeUser, setWelcomeUser] = useState(null);
 
   const handleCustomerLogout = () => {
     setCurrentUser(null);
@@ -1071,8 +1073,15 @@ export default function App({ initialCategory, initialProductId, initialView = '
             localStorage.setItem('lgant_user', JSON.stringify(userData));
             localStorage.setItem('lgant_auth_token', token);
           }
+          setWelcomeUser(userData);
         }}
         onLogout={handleCustomerLogout}
+      />
+
+      {/* Notificación Toast de Bienvenida VIP */}
+      <ToastBienvenidaCliente
+        user={welcomeUser}
+        onClose={() => setWelcomeUser(null)}
       />
 
       {/* Botón flotante de WhatsApp global (oculto en el carrito y durante el checkout) */}

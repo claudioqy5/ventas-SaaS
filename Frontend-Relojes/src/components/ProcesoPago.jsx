@@ -18,63 +18,7 @@ function WhatsAppIcon({ size = 18, color = 'currentColor' }) {
   );
 }
 
-// Ilustración vectorial SVG de Código QR para Yape / Plin
-function LuxuryQRCode({ size = 150 }) {
-  return (
-    <div style={{
-      width: size,
-      height: size,
-      background: '#ffffff',
-      padding: '10px',
-      borderRadius: '12px',
-      border: '2px solid var(--c-blush)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      boxShadow: '0 6px 18px rgba(0,0,0,0.06)'
-    }}>
-      <svg viewBox="0 0 100 100" width="100%" height="100%" fill="var(--c-obsidian)">
-        <rect x="6" y="6" width="26" height="26" rx="4" fill="none" stroke="var(--c-obsidian)" strokeWidth="4" />
-        <rect x="12" y="12" width="14" height="14" rx="2" fill="var(--c-blush)" />
-        
-        <rect x="68" y="6" width="26" height="26" rx="4" fill="none" stroke="var(--c-obsidian)" strokeWidth="4" />
-        <rect x="74" y="12" width="14" height="14" rx="2" fill="var(--c-blush)" />
-        
-        <rect x="6" y="68" width="26" height="26" rx="4" fill="none" stroke="var(--c-obsidian)" strokeWidth="4" />
-        <rect x="12" y="74" width="14" height="14" rx="2" fill="var(--c-blush)" />
-        
-        <rect x="38" y="9" width="6" height="6" rx="1" />
-        <rect x="48" y="9" width="6" height="6" rx="1" />
-        <rect x="58" y="9" width="6" height="6" rx="1" />
-        <rect x="38" y="19" width="12" height="6" rx="1" />
-        <rect x="54" y="19" width="8" height="6" rx="1" />
-        <rect x="9" y="38" width="6" height="6" rx="1" />
-        <rect x="19" y="38" width="12" height="6" rx="1" />
-        <rect x="9" y="48" width="12" height="6" rx="1" />
-        <rect x="9" y="58" width="6" height="6" rx="1" />
-        
-        <circle cx="50" cy="50" r="13" fill="var(--c-obsidian)" />
-        <circle cx="50" cy="50" r="11" fill="none" stroke="var(--c-blush)" strokeWidth="1.5" />
-        <text x="50" y="54" textAnchor="middle" fill="var(--c-blush)" fontSize="10" fontWeight="bold" fontFamily="serif">L</text>
-        
-        <rect x="71" y="38" width="8" height="6" rx="1" />
-        <rect x="83" y="38" width="8" height="6" rx="1" />
-        <rect x="67" y="48" width="6" height="6" rx="1" />
-        <rect x="77" y="48" width="14" height="6" rx="1" />
-        <rect x="71" y="58" width="10" height="6" rx="1" />
-        <rect x="85" y="58" width="6" height="6" rx="1" />
-        <rect x="38" y="71" width="8" height="6" rx="1" />
-        <rect x="50" y="71" width="12" height="6" rx="1" />
-        <rect x="38" y="81" width="12" height="6" rx="1" />
-        <rect x="54" y="81" width="8" height="6" rx="1" />
-        <rect x="67" y="68" width="6" height="6" rx="1" />
-        <rect x="77" y="76" width="14" height="6" rx="1" />
-        <rect x="69" y="86" width="10" height="6" rx="1" />
-        <rect x="83" y="86" width="8" height="6" rx="1" />
-      </svg>
-    </div>
-  );
-}
+
 
 export default function ProcesoPago({ 
   items = [], 
@@ -946,24 +890,58 @@ Deseo coordinar el despacho y verificación de mi compra.`;
                   {paymentMethod === 'yape' && (
                     <div>
                       <div style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '20px' }}>
-                        <LuxuryQRCode size={140} />
+                        {/* Tarjeta de Código QR Oficial de Yape */}
+                        <div style={{
+                          background: '#742284',
+                          borderRadius: '14px',
+                          padding: '8px',
+                          boxShadow: '0 8px 20px rgba(116, 34, 132, 0.2)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          border: '1.5px solid rgba(212, 175, 55, 0.35)',
+                          maxWidth: '170px',
+                          width: '100%',
+                          flexShrink: 0
+                        }}>
+                          <img 
+                            src="/qr-yape.png" 
+                            alt="Código QR Yape - Grupo Sercal S.A.C."
+                            style={{
+                              width: '100%',
+                              height: 'auto',
+                              borderRadius: '8px',
+                              display: 'block'
+                            }}
+                          />
+                        </div>
+
                         <div style={{ flex: 1, minWidth: '220px' }}>
-                          <span style={{ display: 'inline-block', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: 'rgba(212, 175, 55, 0.2)', color: 'var(--c-obsidian)', padding: '3px 10px', borderRadius: '12px', fontWeight: 600, marginBottom: '8px' }}>
-                            Billetera Oficial L'GANT
-                          </span>
-                          <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--c-obsidian)', marginBottom: '4px' }}>
-                            962 956 919
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                            <span style={{ display: 'inline-block', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: '#742284', color: '#ffffff', padding: '3px 10px', borderRadius: '12px', fontWeight: 600 }}>
+                              Yape Oficial
+                            </span>
+                            <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <ShieldCheck size={14} /> Verificado
+                            </span>
                           </div>
-                          <div style={{ fontSize: '0.85rem', color: 'var(--c-taupe)', marginBottom: '12px' }}>
-                            Titular: L'GANT PERÚ S.A.C.
+                          
+                          <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--c-obsidian)', marginBottom: '3px', letterSpacing: '0.04em' }}>
+                            999 999 999
+                          </div>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--c-obsidian)', marginBottom: '4px' }}>
+                            Titular: Grupo Sercal S.a.c.
+                          </div>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--c-taupe)', marginBottom: '12px' }}>
+                            Escanea el código QR desde tu app de Yape o transfiere directamente al número celular.
                           </div>
                           <button 
                             type="button"
-                            onClick={() => handleCopy('962956919', 'yape_num')}
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '7px 14px', background: '#ffffff', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.8rem', color: 'var(--c-obsidian)', cursor: 'pointer', fontWeight: 500 }}
+                            onClick={() => handleCopy('999999999', 'yape_num')}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '7px 14px', background: '#ffffff', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.8rem', color: 'var(--c-obsidian)', cursor: 'pointer', fontWeight: 500, boxShadow: '0 2px 6px rgba(0,0,0,0.04)' }}
                           >
                             {copiedText === 'yape_num' ? <Check size={14} color="#16a34a" /> : <Copy size={14} />}
-                            {copiedText === 'yape_num' ? 'Copiado al portapapeles' : 'Copiar número celular'}
+                            {copiedText === 'yape_num' ? '¡Número copiado!' : 'Copiar número celular'}
                           </button>
                         </div>
                       </div>

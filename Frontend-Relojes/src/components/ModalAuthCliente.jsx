@@ -12,7 +12,6 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
   const [telefono, setTelefono] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   useEffect(() => {
     if (initialTab) {
@@ -99,13 +98,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
       };
 
       onLogin(clientData, data.token);
-      
-      setShowSuccessToast(true);
-      setTimeout(() => {
-        setShowSuccessToast(false);
-        // Si estábamos en register, lo devolvemos a login (aunque ya está logueado y verá su perfil)
-        onClose();
-      }, 1200);
+      onClose();
       
     } catch (err) {
       setError(err.message || 'Ocurrió un error');
@@ -164,28 +157,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
           ✕
         </button>
 
-        {/* Notificación de Éxito */}
-        {showSuccessToast && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            backgroundColor: 'var(--c-indigo)',
-            color: '#ffffff',
-            padding: '12px 24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '10px',
-            fontSize: '0.88rem',
-            fontWeight: 500,
-            zIndex: 20
-          }}>
-            <CheckCircle2 size={18} color="var(--c-blush)" />
-            Sesión iniciada correctamente. ¡Bienvenido!
-          </div>
-        )}
+
 
         {/* Contenido si el Usuario YA está autenticado */}
         {user ? (
