@@ -3501,4 +3501,37 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
   - **Desvanecimiento Suave:** Temporizador automático de cierre a los 4.5 segundos o descarte manual mediante botón `✕`.
 - **Integración Global (`App.jsx`):**
   - Control de estado reactivo mediante `welcomeUser`, disparándose de inmediato tras la respuesta exitosa del servidor.
-  - Desacoplamiento de vistas: El acceso a la gestión de datos personales y seguimiento de pedidos queda 100% canalizado a través del menú de usuario en la barra de navegación hacia la vista completa dedicada `VistaPanelCliente.jsx` (`/mis-compras` y `/mi-cuenta`).
+  - Desacoplamiento de vistas: El acceso a la gestión de datos personales y seguimiento de pedidos queda 100% canalizado a través del menú de usuario en la barra de navegación hacia la vista completa dedicada `VistaPanelCliente.jsx` (`/mis-compras` y `/mi-cuenta`).
+
+**3. Nueva Vista Completa y URL Dedicada para Pedido Confirmado (`/pedido-confirmado`):**
+- **Eliminación Total de Modales / Cards Flotantes:** Se retiró por completo la ventana emergente flotante con fondo oscuro en el checkout que bloqueaba la pantalla del usuario.
+- **Ruta Oficial en Next.js App Router (`src/app/pedido-confirmado/page.jsx`):** Ahora al culminar una compra, el navegador actualiza la URL a `/pedido-confirmado` de manera nativa y fluida como las demás secciones (`/mis-compras`, `/mi-cuenta`, etc.).
+- **Nuevo Componente `VistaPedidoConfirmado.jsx`:**
+  - **Experiencia de Alta Relojería a Pantalla Completa:** Vista amplia integrada con la barra de navegación superior y pie de página de L'gant.
+  - **Hero Banner de Celebración:** Sello de garantía dorado con `CheckCircle2` y `Award`, saludo personalizado *"¡Gracias por tu compra, [Nombre]!"*, y código de pedido con botón interactivo de 1-clic para copiar al portapapeles.
+  - **Desglose Exhaustivo de Productos Adquiridos:** Tabla de relojes con miniaturas, marca/modelo, color, cantidad, precio unitario y total, acompañada del desglose financiero (subtotal, envío asegurado gratis y total abonado).
+  - **Bloques Detallados de Entrega y Pago:** Destinatario, DNI, dirección exacta, distrito/provincia/departamento, comprobante fiscal (Boleta o Factura con RUC), método de pago (Yape/Plin/Tarjeta/Transferencia) y referencia de voucher.
+  - **Acciones y Trazabilidad:** Botón destacado de WhatsApp con mensaje automático enriquecido, acceso directo a "Ver Mis Compras" para tracking y "Volver a la Tienda".
+  - **Garantías y Compromiso L'gant:** Bloque de valor con 100% Autenticidad Garantizada, Custodia y Empaque Blindado, y Atención Concierge.
+  - **Persistencia de Sesión:** Soporta recargas (F5) recuperando la orden desde `sessionStorage` sin perder la información.
+- **Compilación Validada:** Verificada con Next.js 16 (`npm run build`) generando la ruta estática `○ /pedido-confirmado` con 0 errores y 0 fallos de linting.
+
+**4. Rediseño del Hero con Crucigrama Tipográfico Interactivo ("ELEGANTE EN CADA SEGUNDO"):**
+- **Eliminación de Elementos Solicitados:**
+  - Se retiró el titular tradicional `VALOR EN CADA SEGUNDO`.
+  - Se eliminó el párrafo de descripción (*"Obras maestras de precisión. Curaduría exclusiva..."*).
+  - Se quitó el botón secundario *"Asesor Privado VIP"*, manteniendo únicamente el botón de acción principal *"Explorar Guardatiempos"*.
+- **Nuevo Componente `CrucigramaHero.jsx`:**
+  - **Estructura idéntica al diagrama del usuario (7 filas x 8 columnas):**
+    - Palabra 1 (Horizontal, fila 1): `E - L - E - G - A - N - T - E`
+    - Palabra 2 (Vertical, col 2): `E` (compartida) ➔ `N` (abajo) formando `"EN"`
+    - Palabra 3 (Vertical, col 4): `C` (arriba) ➔ `A` (compartida) ➔ `D` ➔ `A` (abajo) formando `"CADA"`
+    - Palabra 4 (Vertical, col 7): `S` (arriba) ➔ `E` (compartida) ➔ `G` ➔ `U` ➔ `N` ➔ `D` ➔ `O` (abajo) formando `"SEGUNDO"`
+  - **Animación Secuencial Palabra por Palabra:**
+    - Las palabras se van revelando en orden exacto (*ELEGANTE ➔ EN ➔ CADA ➔ SEGUNDO*) con transiciones suaves, permitiendo que el visitante comprenda y lea la frase a la perfección.
+    - Celdas con estética de mosaico de alta relojería en fondo blanco marfil, bordes tenues y acentos dorados en los puntos de intersección.
+  - **Interactividad:**
+    - Barra inferior con píldoras de cada palabra (*ELEGANTE, EN, CADA, SEGUNDO*) para interactuar al pasar el cursor (hover) o clic, iluminando la palabra correspondiente en el tablero.
+    - Botón de repetición (`RotateCcw`) para reiniciar la secuencia en cualquier momento.
+    - Frase de cierre editorial: *“Elegante en cada segundo”*.
+- **Validación:** Compilación probada con Next.js 16 (`npm run build`), pasando con código 0 y 0 errores de linting.

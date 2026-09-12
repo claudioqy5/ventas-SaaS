@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
+import CrucigramaHero from './CrucigramaHero';
 
 export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -107,67 +108,17 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             L'gant: Boutique de Alta Relojería y Relojes de Lujo en Perú
           </h1>
 
-          {/* Título Poético Visual (Ahora es H2 para mantener la jerarquía) */}
-          <h2 style={{
-            fontFamily: '"Cormorant Garamond", "Cinzel", serif',
-            fontSize: 'clamp(2.8rem, 4.8vw, 4.4rem)',
-            lineHeight: 1.05,
-            color: 'var(--c-obsidian)',
-            marginBottom: '24px',
-            letterSpacing: '0.03em',
-          }}>
-            <span style={{
-              display: 'block',
-              fontWeight: 300,
-              letterSpacing: '0.09em',
-              textTransform: 'uppercase',
-              color: 'var(--c-obsidian)'
+          {/* Crucigrama Tipográfico: ELEGANTE EN CADA SEGUNDO */}
+          <CrucigramaHero />
 
-            }}>
-              VALOR EN CADA
-            </span>
-            <span 
-              className="luxury-title-accent"
-              style={{
-                fontWeight: 600,                
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                marginTop: '4px',
-                fontSize: '1.05em'
-              }}
-            >
-              SEGUNDO
-            </span>
-          </h2>
-
-          {/* Subtítulo en Steel Slate cálido */}
-          <p style={{
-            fontFamily: '"Plus Jakarta Sans", sans-serif',
-            fontSize: '1.25rem',
-            lineHeight: 1.6,
-            color: 'var(--c-steel)',
-            marginBottom: '40px',
-            maxWidth: '520px',
-            fontWeight: 300,
-            letterSpacing: '0.01em'
-          }}>
-            Obras maestras de precisión. Curaduría exclusiva de las mejores marcas internacionales de lujo en Perú.
-          </p>
-
-          {/* Botones de Acción */}
-          <div className="hero-buttons" style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginBottom: '50px' }}>
+          {/* Botón de Acción */}
+          <div className="hero-buttons" style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginBottom: '40px' }}>
             <button
               onClick={onExplore}
               className="btn-indigo blush-shimmer"
             >
               Explorar Guardatiempos
               <ArrowRight size={17} />
-            </button>
-            <button
-              onClick={onOpenWhatsAppConcierge}
-              className="btn-outline-luxury"
-            >
-              Asesor Privado VIP
             </button>
           </div>
 

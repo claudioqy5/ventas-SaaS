@@ -2,21 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShoppingBag, User, Truck, CreditCard, ChevronLeft, Trash2, MapPin,
   Building2, PackageCheck, Copy, Check, ShieldCheck, Lock,
-  CheckCircle2, Smartphone, AlertCircle, LogIn
+  Smartphone, AlertCircle
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { submitOrder } from '../services/api';
 
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
 
-// Ícono SVG oficial de WhatsApp sin dependencias externas
-function WhatsAppIcon({ size = 18, color = 'currentColor' }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51h-.57c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-    </svg>
-  );
-}
+
 
 
 
@@ -28,7 +21,8 @@ export default function ProcesoPago({
   onClearCart,
   user,
   token,
-  onRequireAuth
+  onRequireAuth,
+  onOrderSuccess
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formErrors, setFormErrors] = useState({});
@@ -103,10 +97,7 @@ export default function ProcesoPago({
   const [termsAccepted, setTermsAccepted] = useState(true);
   const [copiedText, setCopiedText] = useState('');
 
-  // Estado de Orden Exitosa
-  const [orderSuccess, setOrderSuccess] = useState(null);
-  const [accountCreated, setAccountCreated] = useState(false);
-  const [accountPassword, setAccountPassword] = useState('');
+
 
   const subtotal = items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
   const discount = 0;
@@ -310,34 +301,13 @@ export default function ProcesoPago({
         }
       } catch {}
 
-      setOrderSuccess(newOrder);
       if (onClearCart) onClearCart();
+      if (onOrderSuccess) onOrderSuccess(newOrder);
     } catch (err) {
       setSubmitError(err.message || 'Error al procesar el pedido. Por favor intenta de nuevo.');
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleWhatsAppCoordination = () => {
-    if (!orderSuccess) return;
-    const phone = '51962956919';
-    const methodNames = {
-      yape: 'Billetera Móvil (Yape/Plin)',
-      tarjeta: 'Tarjeta de Crédito/Débito',
-      transferencia: 'Transferencia Bancaria',
-      contraentrega: 'Pago Contra Entrega'
-    };
-
-    const message = `Hola L'gant, acabo de registrar mi pedido *#${orderSuccess.orderId}* en la tienda online.
-- *Cliente:* ${orderSuccess.personalData.nombres} ${orderSuccess.personalData.apellidos}
-- *Total:* S/ ${orderSuccess.total.toLocaleString('es-PE', { minimumFractionDigits: 2 })}
-- *Método de Pago:* ${methodNames[orderSuccess.paymentMethod] || orderSuccess.paymentMethod}
-- *Entrega en:* ${orderSuccess.deliveryAddress.direccion}, ${orderSuccess.deliveryAddress.distrito}
-Deseo coordinar el despacho y verificación de mi compra.`;
-
-    const encoded = encodeURIComponent(message);
-    window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encoded}`, '_blank');
   };
 
   return (
@@ -1387,186 +1357,7 @@ Deseo coordinar el despacho y verificación de mi compra.`;
 
       </div>
 
-      {/* MODAL / PANTALLA DE COMPRA EXITOSA */}
-      {orderSuccess && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(11, 11, 12, 0.88)',
-          backdropFilter: 'blur(8px)',
-          zIndex: 10000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px',
-          overflowY: 'auto'
-        }}>
-          <div style={{
-            maxWidth: '640px',
-            width: '100%',
-            background: 'var(--bg-surface)',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--c-blush)',
-            boxShadow: '0 25px 60px rgba(0,0,0,0.4)',
-            padding: '36px 30px',
-            textAlign: 'center',
-            margin: 'auto',
-            maxHeight: '90vh',
-            overflowY: 'auto'
-          }}>
-            
-            <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: 'rgba(212, 175, 55, 0.15)', border: '2px solid var(--c-blush)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-              <CheckCircle2 size={36} color="var(--c-blush)" />
-            </div>
 
-            <span style={{ fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--c-blush)', fontWeight: 700 }}>
-              ORDEN CONFIRMADA CON ÉXITO
-            </span>
-
-            <h2 style={{ fontSize: '1.4rem', color: 'var(--c-obsidian)', fontWeight: 700, margin: '8px 0 6px', fontFamily: 'var(--font-main)' }}>
-              ¡Gracias por tu compra, {orderSuccess.personalData.nombres}!
-            </h2>
-
-            <div style={{ display: 'inline-block', background: '#fcfbf8', border: '1px solid var(--border-light)', borderRadius: '20px', padding: '6px 16px', fontSize: '0.85rem', color: 'var(--c-obsidian)', fontWeight: 600, marginBottom: '24px' }}>
-              Código de Pedido: <span style={{ color: 'var(--c-blush)', fontWeight: 700 }}>#{orderSuccess.orderId}</span>
-            </div>
-
-            {/* Resumen del Pedido */}
-            <div style={{ background: '#fcfbf8', borderRadius: '8px', border: '1px solid var(--border-light)', padding: '18px', textAlign: 'left', marginBottom: '20px', fontSize: '0.85rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ color: 'var(--c-taupe)' }}>Fecha:</span>
-                <span style={{ fontWeight: 500, color: 'var(--c-obsidian)' }}>{orderSuccess.date}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ color: 'var(--c-taupe)' }}>Destinatario:</span>
-                <span style={{ fontWeight: 500, color: 'var(--c-obsidian)' }}>
-                  {orderSuccess.recipientType === 'yo' 
-                    ? `${orderSuccess.personalData.nombres} ${orderSuccess.personalData.apellidos}` 
-                    : `${orderSuccess.recipientData.nombres} ${orderSuccess.recipientData.apellidos} (DNI: ${orderSuccess.recipientData.dni})`}
-                </span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ color: 'var(--c-taupe)' }}>Dirección:</span>
-                <span style={{ fontWeight: 500, color: 'var(--c-obsidian)', textAlign: 'right', maxWidth: '60%' }}>
-                  {orderSuccess.deliveryAddress.direccion}, {orderSuccess.deliveryAddress.distrito}
-                </span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ color: 'var(--c-taupe)' }}>Método de Pago:</span>
-                <span style={{ fontWeight: 600, color: 'var(--c-obsidian)', textTransform: 'capitalize' }}>
-                  {orderSuccess.paymentMethod === 'yape' && 'Billetera Móvil (Yape/Plin)'}
-                  {orderSuccess.paymentMethod === 'tarjeta' && 'Tarjeta de Crédito / Débito'}
-                  {orderSuccess.paymentMethod === 'transferencia' && `Transferencia ${orderSuccess.paymentDetails.bancoTransferencia}`}
-                  {orderSuccess.paymentMethod === 'contraentrega' && 'Pago Contra Entrega'}
-                </span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border-light)', paddingTop: '10px', marginTop: '6px', fontSize: '1rem', fontWeight: 700, color: 'var(--c-obsidian)' }}>
-                <span>Total Abonado:</span>
-                <span style={{ color: 'var(--c-blush)' }}>S/ {orderSuccess.total.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</span>
-              </div>
-            </div>
-
-            {/* Mensaje de Próximos Pasos según Método de Pago */}
-            <div style={{ background: 'rgba(212, 175, 55, 0.08)', border: '1px solid rgba(212, 175, 55, 0.3)', borderRadius: '8px', padding: '14px', textAlign: 'left', marginBottom: '25px', fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, marginBottom: '4px' }}>
-                <ShieldCheck size={16} color="var(--c-blush)" /> Siguiente paso para tu entrega:
-              </div>
-              {orderSuccess.paymentMethod === 'yape' || orderSuccess.paymentMethod === 'transferencia' ? (
-                <span>Envíanos la captura o constancia de tu operación por WhatsApp para registrar tu pago de inmediato y proceder al empaque de alta seguridad.</span>
-              ) : orderSuccess.paymentMethod === 'contraentrega' ? (
-                <span>Nos pondremos en contacto contigo por WhatsApp para confirmar la fecha y franja horaria de entrega en tu domicilio.</span>
-              ) : (
-                <span>Tu pago ha sido validado correctamente. Recibirás en tu correo electrónico la confirmación con el código de seguimiento de tu encomienda.</span>
-              )}
-            </div>
-
-            {/* Botones de Acción */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '25px' }}>
-              <button
-                onClick={handleWhatsAppCoordination}
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  background: '#25D366',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  fontWeight: 700,
-                  fontSize: '0.9rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(37, 211, 102, 0.3)',
-                  transition: 'all 0.2s'
-                }}
-              >
-                <WhatsAppIcon size={20} color="#ffffff" />
-                Coordinar Despacho por WhatsApp
-              </button>
-              
-              <button
-                onClick={onBack}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  background: 'transparent',
-                  border: '1px solid var(--border-light)',
-                  borderRadius: '6px',
-                  color: 'var(--c-obsidian)',
-                  fontWeight: 600,
-                  fontSize: '0.85rem',
-                  cursor: 'pointer'
-                }}
-              >
-                Volver al catálogo
-              </button>
-            </div>
-
-            {/* Opcional Modelo B: Invitación Post-Compra para Crear Cuenta */}
-            <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '20px', textAlign: 'left' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--c-obsidian)', marginBottom: '4px' }}>
-                ¿Deseas guardar tus datos para tu próxima compra?
-              </div>
-              <p style={{ fontSize: '0.75rem', color: 'var(--c-taupe)', marginBottom: '12px' }}>
-                Crea una contraseña y podrás rastrear tus pedidos y comprar en 1 clic en el futuro.
-              </p>
-              
-              {accountCreated ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#16a34a', fontWeight: 600 }}>
-                  <Check size={16} /> ¡Cuenta creada exitosamente para {orderSuccess.personalData.email}!
-                </div>
-              ) : (
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <input 
-                    type="password" 
-                    value={accountPassword}
-                    onChange={e => setAccountPassword(e.target.value)}
-                    placeholder="Crea una contraseña segura"
-                    style={{ flex: 1, padding: '10px 12px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.85rem', outline: 'none' }}
-                  />
-                  <button 
-                    type="button"
-                    onClick={() => {
-                      if (accountPassword.trim().length >= 6) {
-                        setAccountCreated(true);
-                      }
-                    }}
-                    style={{ padding: '10px 18px', background: 'var(--c-obsidian)', color: 'var(--text-light)', border: 'none', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}
-                  >
-                    Guardar Cuenta
-                  </button>
-                </div>
-              )}
-            </div>
-
-          </div>
-        </div>
-      )}
 
     </div>
   );

@@ -23,6 +23,7 @@ import Beneficios from './components/Beneficios';
 import VistaPreguntasFrecuentes from './components/VistaPreguntasFrecuentes';
 import VistaTerminosCondiciones from './components/VistaTerminosCondiciones';
 import VistaPanelCliente from './components/VistaPanelCliente';
+import VistaPedidoConfirmado from './components/VistaPedidoConfirmado';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 
 const STORAGE_KEY_CART = 'lgant_vip_cart_v1';
@@ -120,6 +121,25 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [currentUser, setCurrentUser] = useState(null);
   const [authToken, setAuthToken] = useState(null);
   const [welcomeUser, setWelcomeUser] = useState(null);
+  const [confirmedOrder, setConfirmedOrder] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const saved = sessionStorage.getItem('lgant_confirmed_order');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const handleOrderSuccess = (order) => {
+    setConfirmedOrder(order);
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('lgant_confirmed_order', JSON.stringify(order));
+      } catch {}
+    }
+    handleNavigateView('pedido-confirmado');
+  };
 
   const handleCustomerLogout = () => {
     setCurrentUser(null);
@@ -201,6 +221,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
         window.history.pushState({}, '', '/terminos-y-condiciones');
       } else if (viewName === 'checkout') {
         window.history.pushState({}, '', '/checkout');
+      } else if (viewName === 'pedido-confirmado') {
+        window.history.pushState({}, '', '/pedido-confirmado');
       } else if (viewName === 'mis-compras') {
         window.history.pushState({}, '', '/mis-compras');
       } else if (viewName === 'cuenta') {
@@ -224,6 +246,15 @@ export default function App({ initialCategory, initialProductId, initialView = '
         setSelectedProduct(null);
       } else if (path.includes('/checkout')) {
         setActiveView('checkout');
+        setSelectedProduct(null);
+      } else if (path.includes('/pedido-confirmado')) {
+        setActiveView('pedido-confirmado');
+        setSelectedProduct(null);
+      } else if (path.includes('/mis-compras')) {
+        setActiveView('mis-compras');
+        setSelectedProduct(null);
+      } else if (path.includes('/mi-cuenta')) {
+        setActiveView('cuenta');
         setSelectedProduct(null);
       } else if (path.includes('/producto/')) {
         const id = path.split('/producto/')[1];
@@ -580,7 +611,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onSelectCategory={handleSelectCategory}
       />
 
-      {/* VISTA PRINCIPAL: Checkout, Producto, Preguntas Frecuentes, Términos o Catálogo General */}
+      {/* VISTA PRINCIPAL: Checkout, Pedido Confirmado, Producto, Preguntas Frecuentes, Términos o Catálogo General */}
       {activeView === 'checkout' ? (
         <ProcesoPago
           items={cart}
@@ -591,6 +622,15 @@ export default function App({ initialCategory, initialProductId, initialView = '
           user={currentUser}
           token={authToken}
           onRequireAuth={() => setIsAuthOpen(true)}
+          onOrderSuccess={handleOrderSuccess}
+        />
+      ) : activeView === 'pedido-confirmado' ? (
+        <VistaPedidoConfirmado
+          order={confirmedOrder}
+          onBackToCatalog={handleBackToCatalog}
+          onNavigate={handleNavigateView}
+          user={currentUser}
+          whatsappNumber={WHATSAPP_CONCIERGE}
         />
       ) : selectedProduct ? (
         <PaginaDetalleProducto
@@ -1084,8 +1124,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onClose={() => setWelcomeUser(null)}
       />
 
-      {/* Botón flotante de WhatsApp global (oculto en el carrito y durante el checkout) */}
-      <BotonWhatsApp phoneNumber={WHATSAPP_CONCIERGE} isVisible={!isCartOpen && activeView !== 'checkout'} />
+      {/* Botón flotante de WhatsApp global (oculto en el carrito, durante el checkout y en pedido confirmado) */}
+      <BotonWhatsApp phoneNumber={WHATSAPP_CONCIERGE} isVisible={!isCartOpen && activeView !== 'checkout' && activeView !== 'pedido-confirmado'} />
 
       {/* Notificación Toast al agregar al carrito */}
       <ToastNotificacion
