@@ -3516,22 +3516,17 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
   - **Persistencia de Sesión:** Soporta recargas (F5) recuperando la orden desde `sessionStorage` sin perder la información.
 - **Compilación Validada:** Verificada con Next.js 16 (`npm run build`) generando la ruta estática `○ /pedido-confirmado` con 0 errores y 0 fallos de linting.
 
-**4. Rediseño del Hero con Crucigrama Tipográfico Interactivo ("ELEGANTE EN CADA SEGUNDO"):**
-- **Eliminación de Elementos Solicitados:**
-  - Se retiró el titular tradicional `VALOR EN CADA SEGUNDO`.
-  - Se eliminó el párrafo de descripción (*"Obras maestras de precisión. Curaduría exclusiva..."*).
-  - Se quitó el botón secundario *"Asesor Privado VIP"*, manteniendo únicamente el botón de acción principal *"Explorar Guardatiempos"*.
-- **Nuevo Componente `CrucigramaHero.jsx`:**
-  - **Estructura idéntica al diagrama del usuario (7 filas x 8 columnas):**
-    - Palabra 1 (Horizontal, fila 1): `E - L - E - G - A - N - T - E`
-    - Palabra 2 (Vertical, col 2): `E` (compartida) ➔ `N` (abajo) formando `"EN"`
-    - Palabra 3 (Vertical, col 4): `C` (arriba) ➔ `A` (compartida) ➔ `D` ➔ `A` (abajo) formando `"CADA"`
-    - Palabra 4 (Vertical, col 7): `S` (arriba) ➔ `E` (compartida) ➔ `G` ➔ `U` ➔ `N` ➔ `D` ➔ `O` (abajo) formando `"SEGUNDO"`
-  - **Animación Secuencial Palabra por Palabra:**
-    - Las palabras se van revelando en orden exacto (*ELEGANTE ➔ EN ➔ CADA ➔ SEGUNDO*) con transiciones suaves, permitiendo que el visitante comprenda y lea la frase a la perfección.
-    - Celdas con estética de mosaico de alta relojería en fondo blanco marfil, bordes tenues y acentos dorados en los puntos de intersección.
-  - **Interactividad:**
-    - Barra inferior con píldoras de cada palabra (*ELEGANTE, EN, CADA, SEGUNDO*) para interactuar al pasar el cursor (hover) o clic, iluminando la palabra correspondiente en el tablero.
-    - Botón de repetición (`RotateCcw`) para reiniciar la secuencia en cualquier momento.
-    - Frase de cierre editorial: *“Elegante en cada segundo”*.
-- **Validación:** Compilación probada con Next.js 16 (`npm run build`), pasando con código 0 y 0 errores de linting.
+**4. Rediseño del Hero: Tipografía Gigante y Minimalista (Inspiración Editorial Eindhoven / "ELEGANTE EN CADA SEGUNDO"):**
+- **Eliminación Total de Cajas, Bordes y Botones de Juego:** Se erradicaron por completo los bordes de celda, fondos de azulejo, botones de píldora y elementos de crucigrama tipo juego.
+- **Estilo Editorial Suizo de Letras Gigantes:**
+  - Letras masivas en peso ultra-bold 900 (`Montserrat` / `Plus Jakarta Sans`) en negro puro `#0b0b0c`, directamente sobre el lienzo blanco sin marcos ni cajas.
+  - Tracking cerrado (`-0.04em`) y proporciones arquitectónicas de alto impacto visual inspiradas en el diseño de Eindhoven Design District.
+- **Estructura Exacta del Diagrama del Cliente (7 filas x 8 columnas):**
+  - Horizontal: `E - L - E - G - A - N - T - E`
+  - Vertical 1 (en la 2da 'E'): `E` ➔ `N` formando `"EN"`
+  - Vertical 2 (en la 'A'): `C` ➔ `A` ➔ `D` ➔ `A` formando `"CADA"`
+  - Vertical 3 (en la última 'E'): `S` ➔ `E` ➔ `G` ➔ `U` ➔ `N` ➔ `D` ➔ `O` formando `"SEGUNDO"`
+- **Aparición Secuencial Palabra por Palabra:**
+  - Se revelan progresivamente en orden de lectura: *ELEGANTE* ➔ *EN* ➔ *CADA* ➔ *SEGUNDO*.
+  - Al pasar el cursor por encima de cualquier letra, la palabra completa se resalta en tono dorado mientras las demás se atenúan con elegancia.
+- **Compilación Validada:** `npm run build` en Next.js 16 completado con código 0 y 0 errores.
