@@ -26,7 +26,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         top: 0,
         right: 0,
         bottom: 0,
-        width: '44%',
+        width: '46%',
         overflow: 'hidden',
         zIndex: 1,
         boxShadow: '-30px 0 80px rgba(0,0,0,0.3)',
@@ -80,14 +80,14 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
 
       <div className="hero-content-wrapper" style={{
         width: '100%',
-        padding: '50px 0 50px clamp(20px, 3.8vw, 55px)', /* Anclado a la izquierda */
+        padding: '50px clamp(28px, 4vw, 65px)',
         display: 'flex',
         alignItems: 'center',
         position: 'relative',
         zIndex: 2
       }}>
         {/* Columna Izquierda: Mensaje en fondo luminoso */}
-        <div className="hero-content" style={{ width: '60%', maxWidth: '780px', paddingRight: '0', position: 'relative' }}>
+        <div className="hero-content" style={{ width: '54%', maxWidth: '820px', paddingRight: 'clamp(10px, 2vw, 25px)', position: 'relative' }}>
           {/* Badge de Alta Horlogerie */}
           <div style={{
             display: 'inline-flex',

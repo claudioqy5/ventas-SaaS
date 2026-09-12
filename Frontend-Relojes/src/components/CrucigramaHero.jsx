@@ -140,15 +140,17 @@ export default function CrucigramaHero() {
       <div 
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(8, clamp(42px, 5.2vw, 68px))',
-          gridTemplateRows: 'repeat(7, clamp(46px, 5.6vw, 74px))',
+          gridTemplateColumns: 'repeat(8, 1fr)',
+          gridTemplateRows: 'repeat(7, clamp(48px, 6.2vw, 84px))',
           gap: 0,
-          margin: '0 0 16px 0',
+          width: '100%',
+          maxWidth: '800px',
+          margin: '0 0 18px 0',
           padding: 0,
           background: 'transparent',
           border: 'none',
           lineHeight: 0.88,
-          justifyContent: 'flex-start'
+          justifyContent: 'stretch'
         }}
       >
         {GRID_LAYOUT.map((row, rIdx) => (
@@ -175,9 +177,9 @@ export default function CrucigramaHero() {
                     justifyContent: 'center',
                     fontFamily: '"Montserrat", "Plus Jakarta Sans", -apple-system, sans-serif',
                     fontWeight: 900,
-                    fontSize: 'clamp(3.1rem, 5.4vw, 5.2rem)',
+                    fontSize: 'clamp(2.4rem, 5.6vw, 5.8rem)',
                     lineHeight: 0.88,
-                    letterSpacing: '-0.045em',
+                    letterSpacing: '-0.04em',
                     color: hovered ? 'var(--c-gold)' : '#09090b',
                     opacity: !visible ? 0 : shouldDim ? 0.2 : 1,
                     transform: !visible 
