@@ -20,18 +20,16 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
       alignItems: 'center'
       /* overflow: hidden quitado para permitir que la tarjeta sobresalga hacia abajo */
     }}>
-      {/* Columna Derecha: Galería de Relojes (Crossfade) Full Bleed */}
+      {/* Columna Derecha: Galería de Relojes (Crossfade) Full Bleed al 50% exacto */}
       <div className="hero-images" style={{
         position: 'absolute',
         top: 0,
         right: 0,
         bottom: 0,
-        width: '46%',
+        width: '50%',
         overflow: 'hidden',
         zIndex: 1,
-        boxShadow: '-30px 0 80px rgba(0,0,0,0.3)',
-        maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 8%, black 25%, black 100%)',
-        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 8%, black 25%, black 100%)'
+        boxShadow: '-30px 0 80px rgba(0,0,0,0.35)'
       }}>
         {['/watches/chronograph_gold.jpg', '/watches/moonphase_blue.jpg', '/watches/skeleton_titanium.jpg'].map((img, idx) => (
           <div
@@ -51,18 +49,6 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             }}
           />
         ))}
-        
-        {/* Un sutil difuminado blanco interior por si la foto es muy oscura, para doble suavidad */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '80px',
-          height: '100%',
-          background: 'linear-gradient(to right, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%)',
-          zIndex: 2,
-          pointerEvents: 'none'
-        }} />
       </div>
 
       {/* Halos ambientales dorados suaves */}
@@ -86,8 +72,8 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         position: 'relative',
         zIndex: 2
       }}>
-        {/* Columna Izquierda: Mensaje en fondo luminoso */}
-        <div className="hero-content" style={{ width: '54%', maxWidth: '820px', paddingRight: 'clamp(10px, 2vw, 25px)', position: 'relative' }}>
+        {/* Columna Izquierda: Mensaje en fondo luminoso que fluye hacia el reloj */}
+        <div className="hero-content" style={{ width: '58%', maxWidth: '850px', position: 'relative' }}>
           {/* Badge de Alta Horlogerie */}
           <div style={{
             display: 'inline-flex',

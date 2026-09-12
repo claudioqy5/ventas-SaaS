@@ -71,7 +71,9 @@ const GRID_LAYOUT = [
 export default function CrucigramaHero() {
   const [currentStage, setCurrentStage] = useState(0);
   const [hoveredWord, setHoveredWord] = useState(null);
+  const [splitOffset, setSplitOffset] = useState('100%');
   const timersRef = useRef([]);
+  const containerRef = useRef(null);
 
   const runAnimation = () => {
     timersRef.current.forEach(clearTimeout);
@@ -97,6 +99,34 @@ export default function CrucigramaHero() {
     return () => timersRef.current.forEach(clearTimeout);
   }, []);
 
+  // Cálculo dinámico del corte exacto donde inicia la imagen del reloj (al 50% de la pantalla)
+  useEffect(() => {
+    const updateOffset = () => {
+      if (typeof window === 'undefined') return;
+      if (window.innerWidth <= 991) {
+        setSplitOffset('100%');
+        return;
+      }
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const boundary = window.innerWidth * 0.50; // La imagen del reloj ocupa el 50% derecho
+        const offset = Math.max(0, boundary - rect.left);
+        setSplitOffset(`${offset}px`);
+      }
+    };
+
+    updateOffset();
+    window.addEventListener('resize', updateOffset);
+    const t1 = setTimeout(updateOffset, 50);
+    const t2 = setTimeout(updateOffset, 300);
+
+    return () => {
+      window.removeEventListener('resize', updateOffset);
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, []);
+
   const isLetterVisible = (cell) => {
     if (!cell) return false;
     if (cell.stage <= currentStage) return true;
@@ -114,29 +144,15 @@ export default function CrucigramaHero() {
     return cell.word === hoveredWord || (cell.isIntersection && cell.intersectWord === hoveredWord);
   };
 
-  return (
-    <div style={{
-      marginBottom: '16px',
-      userSelect: 'none',
-      position: 'relative',
-      width: '100%'
-    }}>
-      {/* Título semántico SEO accesible */}
-      <h2 style={{
-        position: 'absolute',
-        width: '1px',
-        height: '1px',
-        padding: 0,
-        margin: '-1px',
-        overflow: 'hidden',
-        clip: 'rect(0, 0, 0, 0)',
-        whiteSpace: 'nowrap',
-        borderWidth: 0
-      }}>
-        Elegante en cada segundo
-      </h2>
+  const renderGrid = (theme) => {
+    const isDark = theme === 'dark'; // Dark = sobre la imagen oscura (letras blancas con contraste)
+    const textColor = isDark ? '#ffffff' : '#09090b';
+    const hoverColor = isDark ? '#fbf4dc' : 'var(--c-gold)';
+    const textShadow = isDark 
+      ? '0 2px 24px rgba(0,0,0,0.85), 0 0 3px rgba(0,0,0,0.95)' 
+      : 'none';
 
-      {/* COMPOSICIÓN TIPOGRÁFICA GIGANTE, MINIMALISTA Y MONUMENTAL */}
+    return (
       <div 
         style={{
           display: 'grid',
@@ -144,8 +160,8 @@ export default function CrucigramaHero() {
           gridTemplateRows: 'repeat(7, clamp(48px, 6.2vw, 84px))',
           gap: 0,
           width: '100%',
-          maxWidth: '800px',
-          margin: '0 0 18px 0',
+          maxWidth: '820px',
+          margin: 0,
           padding: 0,
           background: 'transparent',
           border: 'none',
@@ -180,7 +196,8 @@ export default function CrucigramaHero() {
                     fontSize: 'clamp(2.4rem, 5.6vw, 5.8rem)',
                     lineHeight: 0.88,
                     letterSpacing: '-0.04em',
-                    color: hovered ? 'var(--c-gold)' : '#09090b',
+                    color: hovered ? hoverColor : textColor,
+                    textShadow: textShadow,
                     opacity: !visible ? 0 : shouldDim ? 0.2 : 1,
                     transform: !visible 
                       ? 'translateY(18px) scale(0.92)' 
@@ -196,6 +213,62 @@ export default function CrucigramaHero() {
             })}
           </React.Fragment>
         ))}
+      </div>
+    );
+  };
+
+  return (
+    <div 
+      ref={containerRef}
+      style={{
+        marginBottom: '18px',
+        userSelect: 'none',
+        position: 'relative',
+        width: '100%',
+        maxWidth: '820px'
+      }}
+    >
+      {/* Título semántico SEO accesible */}
+      <h2 style={{
+        position: 'absolute',
+        width: '1px',
+        height: '1px',
+        padding: 0,
+        margin: '-1px',
+        overflow: 'hidden',
+        clip: 'rect(0, 0, 0, 0)',
+        whiteSpace: 'nowrap',
+        borderWidth: 0
+      }}>
+        Elegante en cada segundo
+      </h2>
+
+      {/* COMPOSICIÓN TIPOGRÁFICA GIGANTE CON EFECTO SPLIT-COLOR (DOS TONOS) */}
+      <div style={{ position: 'relative', width: '100%', maxWidth: '820px', margin: '0 0 18px 0' }}>
+        {/* CAPA 1: Letras Negras (Fondo Claro a la Izquierda) */}
+        <div style={{
+          width: '100%',
+          clipPath: splitOffset === '100%' ? 'none' : `inset(0 calc(100% - ${splitOffset}) 0 0)`,
+          WebkitClipPath: splitOffset === '100%' ? 'none' : `inset(0 calc(100% - ${splitOffset}) 0 0)`
+        }}>
+          {renderGrid('light')}
+        </div>
+
+        {/* CAPA 2: Letras Blancas (Sobre el Reloj a partir del 50% de la pantalla) */}
+        {splitOffset !== '100%' && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            clipPath: `inset(0 0 0 ${splitOffset})`,
+            WebkitClipPath: `inset(0 0 0 ${splitOffset})`
+          }}>
+            {renderGrid('dark')}
+          </div>
+        )}
       </div>
 
       {/* Subtítulo editorial estilo revista de alta gama */}
