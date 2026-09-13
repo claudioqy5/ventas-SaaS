@@ -131,40 +131,80 @@
     <!-- Panel del Carrito de Compra — columna fija a la derecha, altura completa desde arriba -->
     <!-- Panel del Carrito de Compra — columna fija a la derecha, altura completa desde arriba -->
     <aside class="cart-panel">
-      <div class="cart-header" style="display: flex; flex-direction: column; gap: 10px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2 class="cart-title" style="margin: 0;">❖ Carrito de Compra</h2>
-          <span class="sale-code-badge" :title="`Serie y correlativo oficial: ${proximoCorrelativo}`" style="font-weight: 700; letter-spacing: 0.04em;">
-            {{ loadingCorrelativo ? '...' : (proximoCorrelativo || codigoVenta) }}
-          </span>
+      <!-- Encabezado Moderno del Carrito -->
+      <div class="cart-header">
+        <div class="cart-top-bar">
+          <div class="cart-title-wrap">
+            <svg class="cart-title-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <h2 class="cart-title">Carrito de Venta</h2>
+            <span v-if="cart.length > 0" class="cart-count-chip">{{ cart.length }}</span>
+          </div>
+          <button v-if="cart.length > 0" type="button" @click="clearCart" class="cart-clear-btn" title="Vaciar carrito">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            <span>Vaciar</span>
+          </button>
         </div>
 
-        <!-- Selector de Tipo de Comprobante: Boleta, Factura, Nota de Venta -->
-        <div class="voucher-type-selector" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; background: #f1f5f9; padding: 3px; border-radius: 8px;">
+        <!-- Selector Segmentado de Tipo de Comprobante -->
+        <div class="voucher-segmented-control">
           <button
             type="button"
             @click="setTipoComprobante('Boleta')"
-            style="border: none; padding: 6px 4px; border-radius: 6px; font-size: 0.76rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px;"
-            :style="tipoComprobante === 'Boleta' ? { background: '#ffffff', color: '#2563eb', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { background: 'transparent', color: '#64748b' }"
+            :class="['voucher-tab', { active: tipoComprobante === 'Boleta', 'tab-boleta': tipoComprobante === 'Boleta' }]"
           >
-            🧾 Boleta
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <span>Boleta</span>
           </button>
           <button
             type="button"
             @click="setTipoComprobante('Factura')"
-            style="border: none; padding: 6px 4px; border-radius: 6px; font-size: 0.76rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px;"
-            :style="tipoComprobante === 'Factura' ? { background: '#ffffff', color: '#7c3aed', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { background: 'transparent', color: '#64748b' }"
+            :class="['voucher-tab', { active: tipoComprobante === 'Factura', 'tab-factura': tipoComprobante === 'Factura' }]"
           >
-            📑 Factura
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <line x1="9" y1="22" x2="9" y2="22.01"></line>
+              <line x1="15" y1="22" x2="15" y2="22.01"></line>
+              <line x1="9" y1="6" x2="9" y2="6.01"></line>
+              <line x1="15" y1="6" x2="15" y2="6.01"></line>
+              <line x1="9" y1="11" x2="15" y2="11"></line>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+            <span>Factura</span>
           </button>
           <button
             type="button"
             @click="setTipoComprobante('Nota de Venta')"
-            style="border: none; padding: 6px 4px; border-radius: 6px; font-size: 0.76rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px;"
-            :style="tipoComprobante === 'Nota de Venta' ? { background: '#ffffff', color: '#059669', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { background: 'transparent', color: '#64748b' }"
+            :class="['voucher-tab', { active: tipoComprobante === 'Nota de Venta', 'tab-notavta': tipoComprobante === 'Nota de Venta' }]"
           >
-            📝 Nota Vta
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <span>Nota Venta</span>
           </button>
+        </div>
+
+        <!-- Barra de Serie y Correlativo Oficial -->
+        <div class="voucher-info-bar" :class="`type-${tipoComprobante.toLowerCase().replace(/\s+/g, '-')}`">
+          <div class="voucher-info-meta">
+            <span class="correlativo-dot"></span>
+            <span class="correlativo-label">Serie <strong>{{ serieActual }}</strong></span>
+          </div>
+          <span class="correlativo-code" :title="`Serie y correlativo oficial ${serieActual}`">
+            {{ loadingCorrelativo ? 'Consultando...' : (proximoCorrelativo || codigoVenta) }}
+          </span>
         </div>
       </div>
 
@@ -277,100 +317,152 @@
         </div>
       </div>
 
-      <div class="cart-summary">
-        <div class="summary-row">
-          <span>Op. Gravada (Subtotal)</span>
-          <span>S/. {{ cartSubtotal.toFixed(2) }}</span>
-        </div>
-        <div class="summary-row">
-          <span>IGV (18%)</span>
-          <span>S/. {{ cartTax.toFixed(2) }}</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total a Pagar</span>
-          <span>S/. {{ cartTotal.toFixed(2) }}</span>
-        </div>
-
-        <!-- Alerta SUNAT para Boleta >= S/ 700 -->
-        <div v-if="tipoComprobante === 'Boleta' && cartTotal >= 700 && !selectedClientHasDoc" style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; padding: 8px 10px; margin-top: 8px; font-size: 0.76rem; color: #92400e; display: flex; align-items: center; gap: 6px;">
-          <span style="font-size: 1rem;">⚠️</span>
-          <span><strong>Norma SUNAT:</strong> Ventas en Boleta ≥ S/. 700 requieren DNI o RUC del cliente.</span>
-        </div>
-
-        <!-- Campos Fiscales para Factura Electrónica -->
-        <div v-if="tipoComprobante === 'Factura'" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 0.76rem; font-weight: 700; color: #6d28d9; display: flex; align-items: center; gap: 4px;">
-              🏛️ Datos Fiscales (Factura)
-            </span>
-            <span style="font-size: 0.7rem; font-weight: 600; color: #7c3aed; background: #ede9fe; padding: 2px 6px; border-radius: 4px;">Serie {{ serieActual }}</span>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr; gap: 6px;">
-            <div>
-              <label style="font-size: 0.72rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">RUC del Cliente (11 dígitos) *</label>
-              <input
-                type="text"
-                v-model="facturaRuc"
-                maxlength="11"
-                placeholder="Ej: 20601234567"
-                style="width: 100%; padding: 6px 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 0.82rem; font-weight: 600; background: #ffffff; color: var(--text-main); outline: none;"
-              />
+      <!-- Sección Inferior de Checkout y Totales -->
+      <div class="cart-checkout-section">
+        <!-- 1. Configuración de Cliente / Datos Fiscales -->
+        <div class="cart-client-fiscal-box" :class="{ 'is-factura': tipoComprobante === 'Factura' }">
+          
+          <!-- Caso FACTURA: Card compacto para RUC y Razón Social -->
+          <div v-if="tipoComprobante === 'Factura'" class="factura-fiscal-wrapper">
+            <div class="fiscal-card-header">
+              <div class="fiscal-title">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+                  <line x1="9" y1="22" x2="9" y2="22.01"/>
+                  <line x1="15" y1="22" x2="15" y2="22.01"/>
+                </svg>
+                <span>Datos Fiscales (Empresa)</span>
+              </div>
+              <span class="fiscal-badge-pill">RUC Obligatorio</span>
             </div>
 
-            <div>
-              <label style="font-size: 0.72rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">Razón Social *</label>
-              <input
-                type="text"
-                v-model="facturaRazonSocial"
-                placeholder="Ej: COMERCIAL L'GANT S.A.C."
-                style="width: 100%; padding: 6px 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 0.82rem; background: #ffffff; color: var(--text-main); outline: none;"
-              />
+            <!-- Selector opcional de empresa ya registrada -->
+            <div class="fiscal-quick-select" v-if="clients.length > 0">
+              <select v-model="selectedClientId" class="fiscal-select">
+                <option value="">🏢 Seleccionar empresa registrada (Opcional)</option>
+                <option v-for="cli in clients" :key="cli.id" :value="cli.id">
+                  🏢 {{ cli.nombre }} {{ cli.numeroDocumento ? `(${cli.numeroDocumento})` : '' }}
+                </option>
+              </select>
             </div>
 
-            <div>
-              <label style="font-size: 0.72rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">Dirección Fiscal (Opcional)</label>
+            <!-- Inputs en cuadrícula compacta de 2 columnas -->
+            <div class="fiscal-grid">
+              <div class="fiscal-col">
+                <label class="fiscal-label">RUC (11 dígitos) *</label>
+                <div class="fiscal-input-wrapper">
+                  <input
+                    type="text"
+                    v-model="facturaRuc"
+                    maxlength="11"
+                    placeholder="Ej: 20601234567"
+                    class="fiscal-input font-mono"
+                    @input="facturaRuc = facturaRuc.replace(/[^0-9]/g, '')"
+                  />
+                  <span v-if="facturaRuc.length === 11" class="ruc-status-check" title="11 dígitos ingresados">✓</span>
+                </div>
+              </div>
+
+              <div class="fiscal-col">
+                <label class="fiscal-label">Razón Social *</label>
+                <input
+                  type="text"
+                  v-model="facturaRazonSocial"
+                  placeholder="Ej: COMERCIAL L'GANT S.A.C."
+                  class="fiscal-input"
+                />
+              </div>
+            </div>
+
+            <!-- Dirección fiscal opcional -->
+            <div class="fiscal-full-row">
               <input
                 type="text"
                 v-model="facturaDireccion"
-                placeholder="Ej: Av. Las Begonias 441, San Isidro"
-                style="width: 100%; padding: 6px 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 0.82rem; background: #ffffff; color: var(--text-main); outline: none;"
+                placeholder="Dirección Fiscal (Opcional)"
+                class="fiscal-input fiscal-input-subtle"
               />
             </div>
           </div>
-        </div>
 
-        <!-- Sección de Pago y Cliente en 2 Columnas -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-          <!-- Método de pago -->
-          <div class="payment-method" v-if="!isFiado" style="display: flex; flex-direction: column; gap: 4px;">
-            <label style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted);">Método de Pago</label>
-            <select v-model="paymentMethod" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff; height: 38px;">
-              <option value="" disabled>Seleccione...</option>
-              <option v-for="pm in activePaymentMethods" :key="pm.id" :value="pm.nombre">▪ {{ pm.nombre }}</option>
-            </select>
-          </div>
-
-          <!-- Cliente (Opcional) -->
-          <div class="client-selection" :style="{ 'grid-column': isFiado ? 'span 2' : 'span 1', 'display': 'flex', 'flex-direction': 'column', 'gap': '4px' }">
-            <label style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted);">Cliente (Opcional)</label>
-            <select v-model="selectedClientId" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff; height: 38px;">
-              <option value="">👤 Cliente General</option>
+          <!-- Caso BOLETA o NOTA DE VENTA: Selector de Cliente estándar -->
+          <div v-else class="standard-client-wrapper">
+            <div class="client-header-line">
+              <label class="client-label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Cliente</span>
+              </label>
+              <span class="client-badge-hint" v-if="tipoComprobante === 'Boleta'">Venta Mostrador</span>
+            </div>
+            <select v-model="selectedClientId" class="client-select">
+              <option value="">👤 Cliente General (Sin documento)</option>
               <option v-for="cli in clients" :key="cli.id" :value="cli.id">
                 👤 {{ cli.nombre }} {{ cli.numeroDocumento ? `(${cli.tipoDocumento || 'DOC'}: ${cli.numeroDocumento})` : '' }}
               </option>
             </select>
-          </div>
 
-          <!-- Checkbox de Fiado -->
-          <div class="fiado-toggle" style="grid-column: span 2; display: flex; align-items: center; gap: 8px; background: #fff8eb; padding: 8px 12px; border: 1px solid #ffe8cc; border-radius: var(--radius-sm); height: 38px; margin-top: 2px;">
-            <input type="checkbox" v-model="isFiado" id="fiadoCheck" style="width: 16px; height: 16px; cursor: pointer; accent-color: #f59e0b;" />
-            <label for="fiadoCheck" style="font-weight: 500; font-size: 0.8rem; color: #b45309; cursor: pointer; user-select: none;">▫ Vender como Fiado (Crédito)</label>
+            <!-- Alerta SUNAT para Boleta >= S/ 700 -->
+            <div v-if="tipoComprobante === 'Boleta' && cartTotal >= 700 && !selectedClientHasDoc" class="sunat-alert-card">
+              <span class="sunat-alert-icon">⚠️</span>
+              <span><strong>Norma SUNAT:</strong> Boletas ≥ S/ 700 requieren identificar al cliente (DNI/RUC).</span>
+            </div>
           </div>
         </div>
 
-        <button @click="checkout" class="btn btn-success w-full checkout-btn" :disabled="cart.length === 0 || loading" style="padding: 12px; font-weight: 500;">
-          {{ loading ? 'Procesando Venta...' : `✧ Emitir ${tipoComprobante}` }}
+        <!-- 2. Método de Pago & Venta al Fiado -->
+        <div class="payment-method-row">
+          <div class="payment-col" v-if="!isFiado">
+            <label class="payment-col-label">Método de Pago</label>
+            <select v-model="paymentMethod" class="payment-select">
+              <option value="" disabled>Seleccione método...</option>
+              <option v-for="pm in activePaymentMethods" :key="pm.id" :value="pm.nombre">▪ {{ pm.nombre }}</option>
+            </select>
+          </div>
+
+          <div class="fiado-col" :class="{ 'full-col': isFiado }">
+            <label class="fiado-toggle-pill" :class="{ active: isFiado }">
+              <input type="checkbox" v-model="isFiado" id="fiadoCheck" class="fiado-check-input" />
+              <span class="fiado-label-text">
+                <span class="fiado-icon">{{ isFiado ? '✓' : '▫' }}</span>
+                Venta al Fiado (Crédito)
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 3. Totales y Desglose Financiero -->
+        <div class="cart-totals-box">
+          <div class="totals-row">
+            <span class="totals-title">Op. Gravada (Subtotal)</span>
+            <span class="totals-num">S/. {{ cartSubtotal.toFixed(2) }}</span>
+          </div>
+          <div class="totals-row">
+            <span class="totals-title">IGV (18%)</span>
+            <span class="totals-num">S/. {{ cartTax.toFixed(2) }}</span>
+          </div>
+          <div class="totals-row total-highlight">
+            <span class="grand-total-label">Total a Pagar</span>
+            <span class="grand-total-num">S/. {{ cartTotal.toFixed(2) }}</span>
+          </div>
+        </div>
+
+        <!-- 4. Botón de Acción Principal (Emitir Comprobante) -->
+        <button
+          @click="checkout"
+          class="btn-checkout-action"
+          :class="`btn-${tipoComprobante.toLowerCase().replace(/\s+/g, '-')}`"
+          :disabled="cart.length === 0 || loading"
+        >
+          <span v-if="loading" class="action-spinner"></span>
+          <span v-else class="action-content">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Emitir {{ tipoComprobante }} • S/. {{ cartTotal.toFixed(2) }}</span>
+          </span>
         </button>
       </div>
     </aside>
@@ -545,6 +637,13 @@ const setTipoComprobante = (tipo) => {
   fetchProximoCorrelativo()
 }
 
+const clearCart = () => {
+  if (cart.value.length === 0) return
+  if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
+    cart.value = []
+  }
+}
+
 watch(selectedClientId, (newId) => {
   if (!newId) return
   const client = clients.value.find(c => c.id === newId)
@@ -554,6 +653,16 @@ watch(selectedClientId, (newId) => {
     facturaRuc.value = client.numeroDocumento
     facturaRazonSocial.value = client.nombre
     facturaDireccion.value = client.direccion || ''
+  }
+})
+
+watch(facturaRuc, (newRuc) => {
+  if (newRuc && newRuc.length === 11) {
+    const existing = clients.value.find(c => c.numeroDocumento === newRuc)
+    if (existing) {
+      if (!facturaRazonSocial.value) facturaRazonSocial.value = existing.nombre
+      if (!facturaDireccion.value) facturaDireccion.value = existing.direccion || ''
+    }
   }
 })
 
@@ -1230,60 +1339,568 @@ onUnmounted(() => {
 
 /* Cart Panel styling — columna lateral de altura completa */
 .cart-panel {
-  width: 28vw;          /* ~480px en 1700px — escala con pantalla */
-  min-width: 320px;
-  max-width: 520px;
+  width: 29vw;          /* ~480px en 1700px — escala con pantalla */
+  min-width: 330px;
+  max-width: 500px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   background: #ffffff;
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid #e2e8f0;
   overflow: hidden;
   height: 100vh;
   text-align: left;
-  padding: 2.5vh 1.5vw;
+  padding: 20px 16px;
+  box-sizing: border-box;
 }
 
+/* ── Encabezado Moderno del Carrito ── */
+.cart-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.cart-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-title-icon {
+  color: #2563eb;
+}
+
+.cart-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.cart-count-chip {
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid #bfdbfe;
+}
+
+.cart-clear-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.cart-clear-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ── Selector Segmentado de Comprobante ── */
+.voucher-segmented-control {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 9px;
+  border: 1px solid #e2e8f0;
+}
+
+.voucher-tab {
+  border: none;
+  background: transparent;
+  padding: 7px 4px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.voucher-tab:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.6);
+  color: #334155;
+}
+
+.voucher-tab.active.tab-boleta {
+  background: #ffffff;
+  color: #2563eb;
+  box-shadow: 0 2px 5px rgba(37, 99, 235, 0.15);
+  border: 1px solid #dbeafe;
+}
+
+.voucher-tab.active.tab-factura {
+  background: #ffffff;
+  color: #7c3aed;
+  box-shadow: 0 2px 5px rgba(124, 58, 237, 0.15);
+  border: 1px solid #ede9fe;
+}
+
+.voucher-tab.active.tab-notavta {
+  background: #ffffff;
+  color: #059669;
+  box-shadow: 0 2px 5px rgba(5, 150, 105, 0.15);
+  border: 1px solid #d1fae5;
+}
+
+/* ── Barra Informativa de Serie y Correlativo ── */
+.voucher-info-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.voucher-info-bar.type-boleta {
+  background: #f0f7ff;
+  border-color: #dbeafe;
+  color: #1e40af;
+}
+
+.voucher-info-bar.type-factura {
+  background: #faf5ff;
+  border-color: #ede9fe;
+  color: #6b21a8;
+}
+
+.voucher-info-bar.type-nota-de-venta {
+  background: #f0fdf4;
+  border-color: #dcfce7;
+  color: #166534;
+}
+
+.voucher-info-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.correlativo-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: inline-block;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+}
+
+.correlativo-label {
+  font-weight: 500;
+  font-size: 0.74rem;
+}
+
+.correlativo-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+/* ── Lista de Items en Carrito ── */
 .cart-items {
   flex-grow: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 10px;
   padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
 
-.cart-summary {
+/* ── Checkout y Datos Fiscales ── */
+.cart-checkout-section {
   flex-shrink: 0;
-  border-top: 1px dashed var(--border-color);
-  padding-top: 15px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 9px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 10px;
 }
 
-.cart-header {
+.cart-client-fiscal-box {
+  border-radius: 9px;
+  transition: all 0.2s;
+}
+
+.cart-client-fiscal-box.is-factura {
+  background: #faf5ff;
+  border: 1px solid #ede9fe;
+  padding: 9px;
+}
+
+.factura-fiscal-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.fiscal-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
-.cart-title {
+.fiscal-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6d28d9;
+}
+
+.fiscal-badge-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #7c3aed;
+  background: #ede9fe;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.fiscal-quick-select select {
+  width: 100%;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd6fe;
+  font-size: 0.76rem;
+  background: #ffffff;
+  color: #4b5563;
+  height: 30px;
+  outline: none;
+}
+
+.fiscal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 7px;
+}
+
+.fiscal-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fiscal-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.fiscal-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.fiscal-input {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.8rem;
+  background: #ffffff;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.fiscal-input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15);
+}
+
+.fiscal-input.font-mono {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-weight: 600;
+}
+
+.ruc-status-check {
+  position: absolute;
+  right: 8px;
+  color: #16a34a;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.fiscal-full-row {
+  width: 100%;
+}
+
+.fiscal-input-subtle {
+  font-size: 0.75rem;
+  padding: 5px 8px;
+  background: #fdfcff;
+}
+
+.standard-client-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.client-header-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.client-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.client-badge-hint {
+  font-size: 0.68rem;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.client-select {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 7px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  font-size: 0.8rem;
+  color: #1e293b;
+  height: 36px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.sunat-alert-card {
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  border-radius: 7px;
+  padding: 6px 8px;
+  margin-top: 4px;
+  font-size: 0.73rem;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Método de Pago y Fiado ── */
+.payment-method-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.payment-col-label {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #475569;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.payment-select {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 7px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  font-size: 0.8rem;
+  color: #1e293b;
+  height: 36px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.fiado-col {
+  width: 100%;
+}
+
+.fiado-col.full-col {
+  grid-column: span 2;
+}
+
+.fiado-toggle-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: 7px;
+  height: 36px;
+  padding: 0 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.fiado-toggle-pill.active {
+  background: #fef08a;
+  border-color: #eab308;
+}
+
+.fiado-check-input {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: #d97706;
+}
+
+.fiado-label-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #92400e;
+}
+
+/* ── Totales y Desglose ── */
+.cart-totals-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.totals-title {
+  font-weight: 500;
+}
+
+.totals-num {
+  font-weight: 600;
+  color: #334155;
+}
+
+.totals-row.total-highlight {
+  border-top: 1px dashed #cbd5e1;
+  margin-top: 3px;
+  padding-top: 5px;
+}
+
+.grand-total-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.grand-total-num {
   font-size: 1.25rem;
-  font-weight: 500;
-  margin: 0;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
 }
 
-.sale-code-badge {
-  background-color: #eff6ff;
-  color: #1e40af;
-  padding: 4px 10px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  border-radius: var(--radius-sm);
-  border: 1px solid #bfdbfe;
+/* ── Botón Emitir Comprobante ── */
+.btn-checkout-action {
+  width: 100%;
+  padding: 12px;
+  border-radius: 9px;
+  border: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.action-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-checkout-action.btn-boleta {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.btn-checkout-action.btn-boleta:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+.btn-checkout-action.btn-factura {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+}
+
+.btn-checkout-action.btn-factura:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.35);
+}
+
+.btn-checkout-action.btn-nota-de-venta {
+  background: linear-gradient(135deg, #059669, #047857);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+}
+
+.btn-checkout-action.btn-nota-de-venta:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);
+}
+
+.btn-checkout-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .empty-cart {

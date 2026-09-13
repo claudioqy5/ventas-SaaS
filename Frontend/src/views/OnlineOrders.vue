@@ -57,43 +57,70 @@
         </div>
       </header>
 
-      <!-- Tarjetas de resumen -->
+      <!-- Tarjetas de resumen interactivas para filtrado rápido -->
       <div class="summary-cards">
-        <div class="summary-card pending">
+        <div
+          class="summary-card pending"
+          :class="{ active: filterEstado === 'PENDIENTE_PAGO' }"
+          @click="selectStatusCard('PENDIENTE_PAGO')"
+          title="Clic para filtrar por Pendientes de Pago"
+        >
           <div class="summary-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
           </div>
-          <div>
+          <div class="summary-info">
             <div class="summary-label">Pendiente de Pago</div>
             <div class="summary-count">{{ countByStatus('PENDIENTE_PAGO') }}</div>
           </div>
+          <span v-if="filterEstado === 'PENDIENTE_PAGO'" class="card-active-indicator">Activo</span>
         </div>
-        <div class="summary-card preparing">
+
+        <div
+          class="summary-card preparing"
+          :class="{ active: filterEstado === 'EN_PREPARACION' }"
+          @click="selectStatusCard('EN_PREPARACION')"
+          title="Clic para filtrar por En Preparación"
+        >
           <div class="summary-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
           </div>
-          <div>
+          <div class="summary-info">
             <div class="summary-label">En Preparación</div>
             <div class="summary-count">{{ countByStatus('EN_PREPARACION') }}</div>
           </div>
+          <span v-if="filterEstado === 'EN_PREPARACION'" class="card-active-indicator">Activo</span>
         </div>
-        <div class="summary-card shipped">
+
+        <div
+          class="summary-card shipped"
+          :class="{ active: filterEstado === 'ENVIADO' }"
+          @click="selectStatusCard('ENVIADO')"
+          title="Clic para filtrar por Enviados"
+        >
           <div class="summary-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
           </div>
-          <div>
+          <div class="summary-info">
             <div class="summary-label">Enviados</div>
             <div class="summary-count">{{ countByStatus('ENVIADO') }}</div>
           </div>
+          <span v-if="filterEstado === 'ENVIADO'" class="card-active-indicator">Activo</span>
         </div>
-        <div class="summary-card delivered">
+
+        <div
+          class="summary-card delivered"
+          :class="{ active: filterEstado === 'ENTREGADO' }"
+          @click="selectStatusCard('ENTREGADO')"
+          title="Clic para filtrar por Entregados"
+        >
           <div class="summary-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
-          <div>
+          <div class="summary-info">
             <div class="summary-label">Entregados</div>
             <div class="summary-count">{{ countByStatus('ENTREGADO') }}</div>
           </div>
+          <span v-if="filterEstado === 'ENTREGADO'" class="card-active-indicator">Activo</span>
         </div>
       </div>
 
@@ -164,20 +191,22 @@
                   Seguimiento: {{ order.numeroSeguimiento }}
                 </span>
               </td>
-              <td style="text-align: center; display: flex; flex-direction: column; gap: 6px; align-items: center; padding: 12px 8px;">
-                <button @click="openDetail(order)" class="btn btn-primary btn-sm" style="width: 130px;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  Ver Detalles
-                </button>
-                <button
-                  v-if="order.estadoOrden !== 'CANCELADO' && order.estadoOrden !== 'ENTREGADO'"
-                  @click="openStatusModal(order)"
-                  class="btn btn-sm"
-                  style="width: 130px; background: #f0fdf4; color: #15803d; border: 1px solid #86efac;"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                  Actualizar Estado
-                </button>
+              <td class="actions-cell">
+                <div class="actions-group">
+                  <button @click="openDetail(order)" class="btn-action btn-action-detail" title="Ver Detalles del Pedido">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <span>Detalles</span>
+                  </button>
+                  <button
+                    v-if="order.estadoOrden !== 'CANCELADO' && order.estadoOrden !== 'ENTREGADO'"
+                    @click="openStatusModal(order)"
+                    class="btn-action btn-action-status"
+                    title="Actualizar Estado del Pedido"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    <span>Estado</span>
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -345,9 +374,17 @@ const authStore = useAuthStore()
 const orders = ref([])
 const loading = ref(false)
 const searchQuery = ref('')
-const filterEstado = ref('')
+const filterEstado = ref('PENDIENTE_PAGO')
 const selectedOrder = ref(null)
 const updatingStatus = ref(false)
+
+const selectStatusCard = (status) => {
+  if (filterEstado.value === status) {
+    filterEstado.value = '' // Permite ver todos los pedidos si vuelve a hacer clic
+  } else {
+    filterEstado.value = status
+  }
+}
 
 const statusModal = ref({
   visible: false,
@@ -489,13 +526,58 @@ onMounted(() => fetchOrders())
 .summary-card {
   background: #fff;
   border-radius: 12px;
-  padding: 20px;
+  padding: 18px 20px;
   display: flex;
   align-items: center;
   gap: 16px;
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  user-select: none;
 }
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+.summary-card.pending.active {
+  border-color: #f59e0b;
+  background: #fffdf5;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.18);
+}
+.summary-card.preparing.active {
+  border-color: #3b82f6;
+  background: #f0f7ff;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.18);
+}
+.summary-card.shipped.active {
+  border-color: #8b5cf6;
+  background: #f5f3ff;
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.18);
+}
+.summary-card.delivered.active {
+  border-color: #10b981;
+  background: #f0fdf4;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.18);
+}
+
+.card-active-indicator {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.summary-card.pending .card-active-indicator { background: #fef3c7; color: #b45309; }
+.summary-card.preparing .card-active-indicator { background: #dbeafe; color: #1d4ed8; }
+.summary-card.shipped .card-active-indicator { background: #ede9fe; color: #6d28d9; }
+.summary-card.delivered .card-active-indicator { background: #dcfce7; color: #15803d; }
+
 .summary-icon {
   width: 48px;
   height: 48px;
@@ -511,6 +593,58 @@ onMounted(() => fetchOrders())
 .summary-card.delivered .summary-icon { background: #dcfce7; color: #16a34a; }
 .summary-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
 .summary-count { font-size: 1.8rem; font-weight: 700; color: var(--text-main); line-height: 1.1; }
+
+/* ── Acciones de la tabla ── */
+.actions-cell {
+  text-align: center;
+  white-space: nowrap;
+  padding: 10px 14px;
+}
+.actions-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  outline: none;
+}
+.btn-action-detail {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+.btn-action-detail:hover {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+.btn-action-status {
+  background: #f0fdf4;
+  color: #15803d;
+  border-color: #86efac;
+}
+.btn-action-status:hover {
+  background: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(22, 163, 74, 0.25);
+}
 
 .badge-count {
   margin-left: auto;

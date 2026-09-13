@@ -5,7 +5,7 @@ import {
   Smartphone, AlertCircle
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { submitOrder } from '../services/api';
+import { submitOrder, createMercadoPagoPreference } from '../services/api';
 
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
 
@@ -266,7 +266,22 @@ export default function ProcesoPago({
             : null
       };
 
+      // 1. Crear la orden en el backend (siempre primero)
       const res = await submitOrder(token, orderData);
+
+      // 2. Si es Mercado Pago: crear la preferencia y redirigir al checkout de MP
+      if (paymentMethod === 'mercadopago') {
+        const mpRes = await createMercadoPagoPreference(token, {
+          orderId: res.orderId,
+          items: items
+        });
+        // En modo prueba usamos sandboxInitPoint; en producción usar initPoint
+        const checkoutUrl = mpRes.sandboxInitPoint || mpRes.initPoint;
+        if (checkoutUrl && typeof window !== 'undefined') {
+          window.location.href = checkoutUrl;
+        }
+        return; // No seguir — MP maneja el resultado vía back_urls y webhook
+      }
 
       const newOrder = {
         orderId: res.orderId,
@@ -851,6 +866,37 @@ export default function ProcesoPago({
                     </div>
                   </div>
 
+                  {/* Opción 5: Mercado Pago */}
+                  <div 
+                    onClick={() => setPaymentMethod('mercadopago')}
+                    style={{
+                      padding: '16px 12px',
+                      borderRadius: '8px',
+                      border: paymentMethod === 'mercadopago' ? '2px solid #009ee3' : '1px solid var(--border-light)',
+                      background: paymentMethod === 'mercadopago' ? '#f0f9ff' : '#fcfbf8',
+                      boxShadow: paymentMethod === 'mercadopago' ? '0 4px 14px rgba(0, 158, 227, 0.2)' : 'none',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      textAlign: 'center',
+                      gap: '8px',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: paymentMethod === 'mercadopago' ? 'rgba(0, 158, 227, 0.15)' : '#f0ede8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {/* Logo MP simplificado */}
+                      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="11" cy="11" r="11" fill={paymentMethod === 'mercadopago' ? '#009ee3' : '#b0bec5'}/>
+                        <text x="5" y="15" fontSize="11" fontWeight="bold" fill="white" fontFamily="Arial">MP</text>
+                      </svg>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>Mercado Pago</div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--c-taupe)' }}>Tarjeta / Billetera</div>
+                    </div>
+                  </div>
+
                 </div>
 
                 {/* CONTENIDO DEL MÉTODO SELECCIONADO */}
@@ -1183,6 +1229,45 @@ export default function ProcesoPago({
                           />
                           Tarjeta con POS físico
                         </label>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Vista 5: Mercado Pago */}
+                  {paymentMethod === 'mercadopago' && (
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', marginBottom: '20px' }}>
+                        <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: 'linear-gradient(135deg, #009ee3, #00bcff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(0,158,227,0.3)' }}>
+                          <span style={{ color: '#fff', fontWeight: 800, fontSize: '0.9rem', letterSpacing: '-0.5px' }}>MP</span>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--c-obsidian)', marginBottom: '4px' }}>
+                            Pago seguro con Mercado Pago
+                          </div>
+                          <p style={{ fontSize: '0.8rem', color: 'var(--c-taupe)', lineHeight: 1.5, margin: 0 }}>
+                            Al confirmar, serás redirigido al checkout seguro de Mercado Pago donde podrás pagar con tarjeta de crédito, débito, billetera digital MP, o en efectivo.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Métodos aceptados */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginBottom: '20px' }}>
+                        {[
+                          { label: 'Visa / Mastercard', color: '#1a1f71' },
+                          { label: 'American Express', color: '#016fd0' },
+                          { label: 'Billetera MP', color: '#009ee3' },
+                          { label: 'Cuotas sin interés', color: '#00a650' }
+                        ].map(m => (
+                          <div key={m.label} style={{ background: '#ffffff', border: '1px solid var(--border-light)', borderRadius: '6px', padding: '8px 10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: m.color, flexShrink: 0 }} />
+                            <span style={{ fontSize: '0.75rem', color: 'var(--c-obsidian)', fontWeight: 500 }}>{m.label}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.78rem', color: 'var(--c-taupe)', background: '#f0f9ff', border: '1px solid #bde0f7', padding: '12px 14px', borderRadius: '8px' }}>
+                        <ShieldCheck size={18} color="#009ee3" style={{ flexShrink: 0 }} />
+                        <span>Tu pago está protegido por Mercado Pago. Una vez confirmado, tu pedido pasará automáticamente a <strong>En preparación</strong>.</span>
                       </div>
                     </div>
                   )}

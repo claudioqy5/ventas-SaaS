@@ -253,3 +253,43 @@ export async function updateCustomerProfile(token, profileData) {
   }
   return res.json();
 }
+
+// ---- Mercado Pago ----
+
+/**
+ * Crea una preferencia de Checkout Pro en Mercado Pago.
+ * Devuelve { preferenceId, initPoint, sandboxInitPoint }
+ * El frontend redirige al usuario a sandboxInitPoint (pruebas) o initPoint (producción).
+ */
+export async function createMercadoPagoPreference(token, { orderId, items }) {
+  const empresaId = DEFAULT_EMPRESA_ID;
+  const baseApiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '');
+
+  const serverBaseUrl = baseApiUrl; // URL base del backend (sin /api/...)
+  const backUrl = typeof window !== 'undefined' ? window.location.origin : '';
+
+  const res = await fetch(`${baseApiUrl}/api/mercadopago/${empresaId}/preference`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      orderId,
+      items: items.map(item => ({
+        nombreProducto: item.nombre || item.nombreProducto,
+        cantidad: item.quantity || item.cantidad,
+        precioUnitario: item.precio || item.precioUnitario
+      })),
+      backUrl,
+      serverBaseUrl
+    })
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Error al iniciar el pago con Mercado Pago');
+  }
+  return res.json();
+}
+
