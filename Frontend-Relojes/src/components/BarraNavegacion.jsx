@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ShoppingBag, Search, Settings, ShieldCheck, Clock, Sparkles, Watch, User, X, Menu, Truck, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { ShoppingBag, Search, Settings, ShieldCheck, Clock, Sparkles, Watch, User, X, Menu, Truck, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { matchProductSmart } from '../utils/searchEngine';
 
 export default function BarraNavegacion({
   cartCount,
@@ -17,7 +18,10 @@ export default function BarraNavegacion({
   onNavigateView,
   onLogout,
   selectedCategory,
-  onSelectCategory
+  onSelectCategory,
+  onSearchSubmit,
+  products = [],
+  onSelectProduct
 }) {
   const [showSearch, setShowSearch] = useState(false);
   const searchInputRef = useRef(null);
@@ -30,6 +34,18 @@ export default function BarraNavegacion({
   const [isMounted, setIsMounted] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
+
+  // Sugerencias de autocompletado inteligente en tiempo real
+  const suggestions = useMemo(() => {
+    if (!searchQuery || searchQuery.trim().length < 2 || !products || products.length === 0) {
+      return [];
+    }
+    return products
+      .map(p => ({ product: p, ...matchProductSmart(p, searchQuery) }))
+      .filter(res => res.matches)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+  }, [searchQuery, products]);
 
   // Cerrar menú de usuario al hacer click fuera
   useEffect(() => {
@@ -503,132 +519,287 @@ export default function BarraNavegacion({
             )}
           </div>
 
-          {/* Buscador Desplegable con Animación Suave */}
-          <div
-            className="navbar-search"
-            ref={searchContainerRef}
-            style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              height: '42px',
-              width: showSearch ? '270px' : '42px',
-              borderRadius: '9999px',
-              backgroundColor: '#ffffff',
-              border: `1px solid ${showSearch ? 'var(--c-indigo)' : 'var(--border-light)'}`,
-              boxShadow: showSearch
-                ? '0 4px 18px rgba(11, 11, 12, 0.12)'
-                : '0 2px 8px rgba(11, 11, 12, 0.06)',
-              transition: 'width 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease',
-              overflow: 'hidden',
-              padding: showSearch ? '0 10px 0 13px' : '0',
-              justifyContent: showSearch ? 'flex-start' : 'center',
-              cursor: showSearch ? 'default' : 'pointer'
-            }}
-            onClick={() => {
-              if (!showSearch) setShowSearch(true);
-            }}
-            title={!showSearch ? "Buscar en el catálogo" : undefined}
-            onMouseEnter={(e) => {
-              if (!showSearch) e.currentTarget.style.borderColor = 'var(--c-blush)';
-            }}
-            onMouseLeave={(e) => {
-              if (!showSearch) e.currentTarget.style.borderColor = 'var(--border-light)';
-            }}
-          >
-            {/* Ícono de búsqueda */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowSearch(prev => !prev);
-              }}
-              aria-label={showSearch ? "Cerrar búsqueda" : "Abrir buscador"}
+          {/* Contenedor relativo para el Buscador y su Dropdown de Sugerencias */}
+          <div ref={searchContainerRef} style={{ position: 'relative' }}>
+            <div
+              className="navbar-search"
               style={{
-                background: 'none',
-                border: 'none',
-                padding: 0,
+                position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                color: showSearch ? 'var(--c-indigo)' : 'var(--c-deep-purple)',
-                cursor: 'pointer',
-                flexShrink: 0,
-                width: showSearch ? '24px' : '42px',
                 height: '42px',
-                transition: 'color 0.2s ease, width 0.3s ease'
+                width: showSearch ? '290px' : '42px',
+                borderRadius: '9999px',
+                backgroundColor: '#ffffff',
+                border: `1px solid ${showSearch ? 'var(--c-indigo)' : 'var(--border-light)'}`,
+                boxShadow: showSearch
+                  ? '0 4px 18px rgba(11, 11, 12, 0.12)'
+                  : '0 2px 8px rgba(11, 11, 12, 0.06)',
+                transition: 'width 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease',
+                overflow: 'hidden',
+                padding: showSearch ? '0 10px 0 13px' : '0',
+                justifyContent: showSearch ? 'flex-start' : 'center',
+                cursor: showSearch ? 'default' : 'pointer'
+              }}
+              onClick={() => {
+                if (!showSearch) setShowSearch(true);
+              }}
+              title={!showSearch ? "Buscar en el catálogo" : undefined}
+              onMouseEnter={(e) => {
+                if (!showSearch) e.currentTarget.style.borderColor = 'var(--c-blush)';
+              }}
+              onMouseLeave={(e) => {
+                if (!showSearch) e.currentTarget.style.borderColor = 'var(--border-light)';
               }}
             >
-              <Search size={18} />
-            </button>
-
-            {/* Input de texto con aparición y deslizamiento suave */}
-            <input
-              ref={searchInputRef}
-              type="text"
-              placeholder="Buscar reloj, calibre..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  setShowSearch(false);
-                }
-              }}
-              style={{
-                flex: 1,
-                minWidth: 0,
-                background: 'transparent',
-                border: 'none',
-                outline: 'none',
-                color: 'var(--c-deep-purple)',
-                fontSize: '0.85rem',
-                fontWeight: 500,
-                marginLeft: showSearch ? '8px' : '0',
-                opacity: showSearch ? 1 : 0,
-                transform: showSearch ? 'translateX(0)' : 'translateX(-12px)',
-                transition: 'opacity 0.28s ease 0.08s, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.08s',
-                pointerEvents: showSearch ? 'auto' : 'none'
-              }}
-            />
-
-            {/* Botón de limpiar / cerrar */}
-            {showSearch && (
+              {/* Ícono de búsqueda */}
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (searchQuery) {
-                    setSearchQuery('');
-                    searchInputRef.current?.focus();
+                  if (!showSearch) {
+                    setShowSearch(true);
+                  } else if (searchQuery && searchQuery.trim()) {
+                    if (onSearchSubmit) onSearchSubmit(searchQuery);
+                    setShowSearch(false);
                   } else {
                     setShowSearch(false);
                   }
                 }}
-                title={searchQuery ? "Borrar texto" : "Cerrar buscador"}
-                aria-label="Cerrar"
+                aria-label={showSearch ? "Buscar" : "Abrir buscador"}
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: 'var(--c-taupe)',
-                  cursor: 'pointer',
+                  padding: 0,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  padding: 0,
+                  color: showSearch ? 'var(--c-indigo)' : 'var(--c-deep-purple)',
+                  cursor: 'pointer',
                   flexShrink: 0,
-                  marginLeft: '4px',
-                  opacity: showSearch ? 1 : 0,
-                  transform: showSearch ? 'scale(1)' : 'scale(0.7)',
-                  transition: 'opacity 0.2s ease 0.1s, transform 0.2s ease 0.1s, color 0.15s ease'
+                  width: showSearch ? '24px' : '42px',
+                  height: '42px',
+                  transition: 'color 0.2s ease, width 0.3s ease'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--c-deep-purple)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--c-taupe)'}
               >
-                <X size={15} />
+                <Search size={18} />
               </button>
+
+              {/* Input de texto con tecla Enter para enviar búsqueda */}
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Buscar reloj, calibre, marca..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (onSearchSubmit && searchQuery.trim()) {
+                      onSearchSubmit(searchQuery);
+                      setShowSearch(false);
+                    }
+                  } else if (e.key === 'Escape') {
+                    setShowSearch(false);
+                  }
+                }}
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  color: 'var(--c-deep-purple)',
+                  fontSize: '0.85rem',
+                  fontWeight: 500,
+                  marginLeft: showSearch ? '8px' : '0',
+                  opacity: showSearch ? 1 : 0,
+                  transform: showSearch ? 'translateX(0)' : 'translateX(-12px)',
+                  transition: 'opacity 0.28s ease 0.08s, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.08s',
+                  pointerEvents: showSearch ? 'auto' : 'none'
+                }}
+              />
+
+              {/* Botón de limpiar / cerrar */}
+              {showSearch && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (searchQuery) {
+                      setSearchQuery('');
+                      searchInputRef.current?.focus();
+                    } else {
+                      setShowSearch(false);
+                    }
+                  }}
+                  title={searchQuery ? "Borrar texto" : "Cerrar buscador"}
+                  aria-label="Cerrar"
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--c-taupe)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    padding: 0,
+                    flexShrink: 0,
+                    marginLeft: '4px',
+                    opacity: showSearch ? 1 : 0,
+                    transform: showSearch ? 'scale(1)' : 'scale(0.7)',
+                    transition: 'opacity 0.2s ease 0.1s, transform 0.2s ease 0.1s, color 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--c-deep-purple)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'var(--c-taupe)'}
+                >
+                  <X size={15} />
+                </button>
+              )}
+            </div>
+
+            {/* Dropdown Flotante de Sugerencias Inteligentes en Tiempo Real */}
+            {showSearch && searchQuery && searchQuery.trim().length >= 2 && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 10px)',
+                  right: 0,
+                  width: '340px',
+                  maxWidth: 'calc(100vw - 32px)',
+                  backgroundColor: '#ffffff',
+                  borderRadius: '16px',
+                  boxShadow: '0 20px 45px rgba(11, 11, 12, 0.18), 0 4px 16px rgba(11, 11, 12, 0.08)',
+                  border: '1px solid rgba(59, 60, 65, 0.16)',
+                  padding: '12px 0 0',
+                  zIndex: 350,
+                  overflow: 'hidden'
+                }}
+              >
+                <div style={{
+                  padding: '0 16px 8px',
+                  fontSize: '0.68rem',
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                  color: 'var(--c-gold)',
+                  fontFamily: 'var(--font-serif)',
+                  fontWeight: 700,
+                  borderBottom: '1px solid rgba(59, 60, 65, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                  <span>Sugerencias ({suggestions.length})</span>
+                  <span style={{ fontSize: '0.64rem', color: 'var(--c-steel)', textTransform: 'none', letterSpacing: 'normal' }}>
+                    Enter para ver todo
+                  </span>
+                </div>
+
+                {suggestions.length > 0 ? (
+                  <div style={{ maxHeight: '260px', overflowY: 'auto' }}>
+                    {suggestions.map(({ product: p }) => (
+                      <div
+                        key={p.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowSearch(false);
+                          if (onSelectProduct) {
+                            onSelectProduct(p);
+                          } else if (onSearchSubmit) {
+                            onSearchSubmit(p.nombre);
+                          }
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          padding: '10px 16px',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.15s ease'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.08)'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        <img
+                          src={p.imagen || p.image || '/watches/chronograph_gold.jpg'}
+                          alt={p.nombre}
+                          style={{
+                            width: '42px',
+                            height: '42px',
+                            borderRadius: '8px',
+                            objectFit: 'cover',
+                            border: '1px solid rgba(59, 60, 65, 0.12)',
+                            flexShrink: 0
+                          }}
+                        />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{
+                            fontSize: '0.82rem',
+                            fontWeight: 600,
+                            color: 'var(--c-obsidian)',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}>
+                            {p.nombre}
+                          </div>
+                          <div style={{ fontSize: '0.70rem', color: 'var(--c-steel)', marginTop: '2px' }}>
+                            {p.marca || p.categoria || 'Alta Relojería'}
+                          </div>
+                        </div>
+                        <div style={{
+                          fontSize: '0.82rem',
+                          fontWeight: 700,
+                          color: 'var(--c-gold)',
+                          fontFamily: 'var(--font-serif)',
+                          whiteSpace: 'nowrap'
+                        }}>
+                          S/ {Number(p.precio).toFixed(2)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ padding: '20px 16px', textAlign: 'center', color: 'var(--c-steel)', fontSize: '0.82rem' }}>
+                    Sin coincidencias directas.<br />
+                    <span style={{ fontSize: '0.74rem', opacity: 0.8 }}>Presiona <strong>Enter</strong> para buscar en todo el catálogo.</span>
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowSearch(false);
+                    if (onSearchSubmit) onSearchSubmit(searchQuery);
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '11px 16px',
+                    border: 'none',
+                    borderTop: '1px solid rgba(59, 60, 65, 0.1)',
+                    backgroundColor: 'rgba(11, 11, 12, 0.04)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    color: 'var(--c-obsidian)',
+                    transition: 'background-color 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.15)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(11, 11, 12, 0.04)'}
+                >
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginRight: '8px' }}>
+                    Ver todos los resultados para "{searchQuery}"
+                  </span>
+                  <ArrowRight size={14} color="var(--c-gold)" style={{ flexShrink: 0 }} />
+                </button>
+              </div>
             )}
           </div>
 

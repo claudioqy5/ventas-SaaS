@@ -3567,4 +3567,25 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 - **Secuencia de Animación Orgánica:**
   - `ELEGANTE` (Fila 0) ➔ `EN` (Col 7) ➔ `CADA` (Col 7) ➔ `SEGUNDO` (Fila 5).
 - **Integración con Split-Color:** La columna 7 y columna 8 que penetran en el 50% derecho continúan beneficiándose del efecto bicolor automático (negro sobre blanco, blanco luminoso sobre el reloj oscuro).
-- **Compilación Validada:** `npm run build` completado exitosamente (código 0). Guardado y sincronizado en `origin/master`.
+- **Compilación Validada:** `npm run build` completado exitosamente (código 0). Guardado y sincronizado en `origin/master`.
+
+**7. Motor de Búsqueda Inteligente Multi-Término y Enrutamiento Dedicado (`/buscar?q=...`):**
+- **Motor de Búsqueda Inteligente Agnóstico al Orden (`src/utils/searchEngine.js`):**
+  - **Independencia del Orden de Palabras:** Si un producto se titula `"Reloj Rosado"`, la búsqueda de `"rosado reloj"` o cualquier combinación de palabras lo encuentra de inmediato mediante tokenización (`split(/\s+/)`) y evaluación conjuntiva (`tokens.every(...)`).
+  - **Normalización Diacrítica y Fonética:** Uso de `normalizeText` con descomposición canónica (`normalize('NFD')`) para eliminar tildes y diacríticos (ejemplo: `"cronógrafo"` coincide con `"cronografo"`, `"automático"` con `"automatico"`).
+  - **Tolerancia Morfológica Singular/Plural:** `getWordVariants` mapea automáticamente variantes en español (`"relojes"` ➔ `"reloj"`, `"correas"` ➔ `"correa"`).
+  - **Indexación Profunda Multicampo:** El corpus de búsqueda de cada producto comprende: nombre del modelo, descripción detallada, marca, categoría principal, categorías secundarias, código SKU / modelo y atributos dinámicos (color, material, correa, calibre, resistencia al agua).
+  - **Ranking de Relevancia Ponderado (`score`):** Los productos con coincidencias exactas o en el título/marca reciben una puntuación superior, priorizándolos en la presentación sobre coincidencias en atributos secundarios.
+  - **Tolerancia a Errores Tipográficos (Fuzzy Search Levenshtein):** Capacidad de recuperación ante pequeños fallos tipográficos en palabras de más de 4 caracteres.
+- **Ruta de Servidor Dedicada en Next.js App Router (`src/app/buscar/page.jsx`):**
+  - Creación de la ruta independiente `ƒ /buscar?q=...` con metadatos dinámicos SEO y OpenGraph (`title: Búsqueda: ... | L'gant Haute Horlogerie`).
+  - Permite acceso directo, enlaces compartibles y recarga de página (`F5`), renderizando el catálogo con el término pre-filtrado.
+  - Sincronización bidireccional con el historial del navegador (`window.history.pushState` y evento `popstate`) para navegar con los botones "Atrás" y "Adelante" sin recargas innecesarias.
+- **Barra de Navegación y Dropdown Predictivo Flotante (`BarraNavegacion.jsx`):**
+  - **Dropdown de Autocompletado de Lujo:** Mientras el usuario escribe, se despliega una ventana flotante con las mejores 5 coincidencias inmediatas mostrando miniatura del reloj, marca, nombre y precio formateado en soles.
+  - **Acción Rápida:** Clic en un resultado abre directamente la vista de detalle del producto (`/producto/[id]`), o presionar `Enter` / clic en la lupa / botón *"Ver todos los resultados"* navega a `/buscar?q=...`.
+- **Integración en Catálogo General (`App.jsx`):**
+  - El encabezado del catálogo conmuta a la insignia `<svg> BÚSQUEDA INTELIGENTE`, título `Resultados para: "{searchQuery}"` y contador de coincidencias exactas.
+  - Ocultamiento automático del Hero durante la búsqueda para enfocar al cliente de inmediato en los productos encontrados.
+  - Estado vacío enriquecido en caso de no hallar piezas, con sugerencias de términos y botón de restauración a la colección completa.
+- **Validación y Compilación:** `npm run build` en Next.js 16 ejecutado con código 0 y 0 errores; ruta `ƒ /buscar` verificada y compilada. Guardado y sincronizado en `origin/master`.

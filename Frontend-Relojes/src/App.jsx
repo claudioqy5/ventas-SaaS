@@ -25,6 +25,7 @@ import VistaTerminosCondiciones from './components/VistaTerminosCondiciones';
 import VistaPanelCliente from './components/VistaPanelCliente';
 import VistaPedidoConfirmado from './components/VistaPedidoConfirmado';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
+import { matchProductSmart } from './utils/searchEngine';
 
 const STORAGE_KEY_CART = 'lgant_vip_cart_v1';
 const STORAGE_KEY_EMPRESA = 'lgant_saas_empresa_id';
@@ -32,7 +33,7 @@ const STORAGE_KEY_API_URL = 'lgant_saas_api_url';
 const WHATSAPP_CONCIERGE = '51962956919';
 
 
-export default function App({ initialCategory, initialProductId, initialView = 'catalog' }) {
+export default function App({ initialCategory, initialProductId, initialView = 'catalog', initialSearchQuery = '' }) {
   const [empresaId, setEmpresaId] = useState(process.env.NEXT_PUBLIC_EMPRESA_ID || '6a9a503000746b35867cddaf');
   const [apiUrl, setApiUrl] = useState(process.env.NEXT_PUBLIC_API_URL || 'https://ventassaas-api.helifyferdigital.cloud/api/relojes-store');
 
@@ -106,13 +107,13 @@ export default function App({ initialCategory, initialProductId, initialView = '
 
   // Filtros y búsqueda
   const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'Todos');
-  const [showFullCatalog, setShowFullCatalog] = useState(!!initialCategory);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [showFullCatalog, setShowFullCatalog] = useState(!!initialCategory || !!initialSearchQuery);
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery || '');
   const [sortBy, setSortBy] = useState('featured');
   
   // Modales, Notificaciones y Vistas
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [activeView, setActiveView] = useState(initialView || 'catalog');
+  const [activeView, setActiveView] = useState(initialView || (initialSearchQuery ? 'search' : 'catalog'));
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -168,6 +169,18 @@ export default function App({ initialCategory, initialProductId, initialView = '
     }
   }, [initialCategory]);
 
+  // Sincronizar searchQuery cuando cambia initialSearchQuery (por navegación a /buscar?q=...)
+  useEffect(() => {
+    if (initialSearchQuery !== undefined) {
+      setSearchQuery(initialSearchQuery);
+      if (initialSearchQuery) {
+        setActiveView('search');
+        setShowFullCatalog(true);
+        setSelectedProduct(null);
+      }
+    }
+  }, [initialSearchQuery]);
+
   const handleSelectCategory = (catName) => {
     if (catName.toLowerCase() === 'marcas') {
       const marcasEl = document.querySelector('.marcas-section');
@@ -205,8 +218,26 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const handleBackToCatalog = () => {
     setSelectedProduct(null);
     setActiveView('catalog');
+    setSearchQuery('');
+    setShowFullCatalog(false);
     if (typeof window !== 'undefined') {
       window.history.pushState({}, '', '/');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSearchSubmit = (queryToSearch) => {
+    const q = (queryToSearch !== undefined ? queryToSearch : searchQuery).trim();
+    if (!q) {
+      handleBackToCatalog();
+      return;
+    }
+    setSearchQuery(q);
+    setActiveView('search');
+    setShowFullCatalog(true);
+    setSelectedProduct(null);
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', `/buscar?q=${encodeURIComponent(q)}`);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -227,6 +258,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
         window.history.pushState({}, '', '/mis-compras');
       } else if (viewName === 'cuenta') {
         window.history.pushState({}, '', '/mi-cuenta');
+      } else if (viewName === 'search') {
+        const url = searchQuery ? `/buscar?q=${encodeURIComponent(searchQuery)}` : '/buscar';
+        window.history.pushState({}, '', url);
       } else {
         window.history.pushState({}, '', '/');
       }
@@ -255,6 +289,13 @@ export default function App({ initialCategory, initialProductId, initialView = '
         setSelectedProduct(null);
       } else if (path.includes('/mi-cuenta')) {
         setActiveView('cuenta');
+        setSelectedProduct(null);
+      } else if (path.includes('/buscar')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const q = urlParams.get('q') || '';
+        setSearchQuery(q);
+        setActiveView('search');
+        setShowFullCatalog(true);
         setSelectedProduct(null);
       } else if (path.includes('/producto/')) {
         const id = path.split('/producto/')[1];
@@ -455,12 +496,21 @@ export default function App({ initialCategory, initialProductId, initialView = '
         } else {
           matchesCategory = (p.categoria && p.categoria.toLowerCase() === selLower) || (p.categorias && p.categorias.some(c => c.toLowerCase() === selLower));
         }
-        const query = searchQuery.toLowerCase();
-        const matchesSearch = !query ||
-          p.nombre.toLowerCase().includes(query) ||
-          (p.descripcion && p.descripcion.toLowerCase().includes(query)) ||
-          (p.categoria && p.categoria.toLowerCase().includes(query)) ||
-          (p.categorias && p.categorias.some(c => c.toLowerCase().includes(query)));
+
+        // Si la vista activa es de búsqueda global, no restringir por categoría por defecto a menos que se haya filtrado una categoría explícita distinta a Todos
+        if (activeView === 'search' && selLower === 'todos') {
+          matchesCategory = true;
+        }
+
+        // Búsqueda inteligente (desorden de palabras, singulares/plurales, atributos y fuzzy tolerance)
+        let matchesSearch = true;
+        let searchScore = 0;
+        if (searchQuery && searchQuery.trim()) {
+          const searchResult = matchProductSmart(p, searchQuery);
+          matchesSearch = searchResult.matches;
+          searchScore = searchResult.score;
+        }
+        p._searchScore = searchScore;
           
         // Lógica de Filtros Avanzados
         const pPrice = Number(p.precio) || 0;
@@ -491,6 +541,11 @@ export default function App({ initialCategory, initialProductId, initialView = '
         return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice && matchesStock && matchesDynamic;
       })
       .sort((a, b) => {
+        // En búsqueda activa con orden por defecto 'featured', priorizar mayor score de relevancia
+        if (searchQuery && searchQuery.trim() && sortBy === 'featured') {
+          const scoreDiff = (b._searchScore || 0) - (a._searchScore || 0);
+          if (scoreDiff !== 0) return scoreDiff;
+        }
         if (sortBy === 'price-desc') return Number(b.precio) - Number(a.precio);
         if (sortBy === 'price-asc') return Number(a.precio) - Number(b.precio);
         if (sortBy === 'name') return a.nombre.localeCompare(b.nombre);
@@ -498,7 +553,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
         if (sortBy === 'stock') return (b.stock || 0) - (a.stock || 0);
         return 0;
       });
-  }, [products, selectedCategory, searchQuery, sortBy, advancedFilters]);
+  }, [products, selectedCategory, searchQuery, sortBy, advancedFilters, activeView]);
 
   const groupedProducts = useMemo(() => {
     const groups = {};
@@ -599,6 +654,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
         storeName={storeName}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        onSearchSubmit={handleSearchSubmit}
+        products={products}
+        onSelectProduct={handleSelectProduct}
         onTriggerLoader={handleTriggerLoader}
         user={currentUser}
         onOpenAuth={(tab) => {
@@ -661,8 +719,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
         />
       ) : (
         <>
-          {/* Hero Section: Solo se muestra en la página principal, no en páginas de categoría ni catálogo expandido */}
-          {!initialCategory && !showFullCatalog && (
+          {/* Hero Section: Solo se muestra en la página principal, no en páginas de categoría, catálogo expandido o búsqueda */}
+          {!initialCategory && !showFullCatalog && activeView !== 'search' && (
             <>
               <Inicio
                 onExplore={scrollToCatalog}
@@ -700,7 +758,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                   fontWeight: 500
                 }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px', display: 'inline', position: 'relative', top: '-1px' }}><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"/></svg>
-                  {showFullCatalog ? 'CATÁLOGO PRIVADO' : 'SELECCIÓN EXCLUSIVA'}
+                  {activeView === 'search' ? 'BÚSQUEDA INTELIGENTE' : (showFullCatalog ? 'CATÁLOGO PRIVADO' : 'SELECCIÓN EXCLUSIVA')}
                 </span>
                 <h2 className="font-serif" style={{
                   fontSize: 'clamp(1.8rem, 3vw, 2.4rem)',
@@ -709,7 +767,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
                   marginTop: '4px',
                   fontWeight: 600
                 }}>
-                  {showFullCatalog ? (
+                  {activeView === 'search' ? (
+                    searchQuery ? `Resultados para: "${searchQuery}"` : 'Explorador de Guardatiempos'
+                  ) : showFullCatalog ? (
                     selectedCategory && selectedCategory.toLowerCase() !== 'todos'
                       ? (selectedCategory.toLowerCase() === 'ofertas'
                           ? 'Ofertas Exclusivas'
@@ -719,6 +779,16 @@ export default function App({ initialCategory, initialProductId, initialView = '
                       : 'Guardatiempos Exclusivos'
                   ) : 'Los más Vendidos'}
                 </h2>
+                {activeView === 'search' && searchQuery && (
+                  <p style={{
+                    fontSize: '0.85rem',
+                    color: 'var(--c-taupe)',
+                    marginTop: '4px',
+                    letterSpacing: '0.02em'
+                  }}>
+                    {filteredProducts.length} {filteredProducts.length === 1 ? 'guardatiempo coincide con los términos ingresados' : 'guardatiempos coinciden con los términos ingresados'}
+                  </p>
+                )}
               </div>
 
               {/* Controles de Ordenamiento y Filtros en Móvil */}
@@ -858,17 +928,24 @@ export default function App({ initialCategory, initialProductId, initialView = '
                   }}>
                     <AlertCircle size={42} color="var(--c-blush)" style={{ margin: '0 auto 16px' }} />
                     <h3 className="font-serif" style={{ fontSize: '1.2rem', color: 'var(--c-deep-purple)', marginBottom: '8px', fontWeight: 800 }}>
-                      {selectedCategory && selectedCategory.toLowerCase() !== 'todos'
-                        ? `No se encontraron piezas en la categoría ${selectedCategory}`
-                        : 'No se encontraron piezas con ese criterio'}
+                      {activeView === 'search'
+                        ? `No encontramos coincidencias para "${searchQuery}"`
+                        : selectedCategory && selectedCategory.toLowerCase() !== 'todos'
+                          ? `No se encontraron piezas en la categoría ${selectedCategory}`
+                          : 'No se encontraron piezas con ese criterio'}
                     </h3>
-                    <p style={{ color: 'var(--c-taupe)', fontSize: '0.88rem', marginBottom: '20px' }}>
-                      {selectedCategory && selectedCategory.toLowerCase() !== 'todos'
-                        ? 'Pronto agregaremos nuevas manufacturas a esta colección. Explora nuestro catálogo completo.'
-                        : 'Intenta restablecer los filtros de búsqueda o seleccionar otra categoría.'}
+                    <p style={{ color: 'var(--c-taupe)', fontSize: '0.88rem', marginBottom: '20px', maxWidth: '540px', margin: '0 auto 20px', lineHeight: 1.6 }}>
+                      {activeView === 'search'
+                        ? 'Verifica que las palabras estén bien escritas o prueba con términos alternativos (ej: marca, color, modelo, calibre o estilo).'
+                        : selectedCategory && selectedCategory.toLowerCase() !== 'todos'
+                          ? 'Pronto agregaremos nuevas manufacturas a esta colección. Explora nuestro catálogo completo.'
+                          : 'Intenta restablecer los filtros de búsqueda o seleccionar otra categoría.'}
                     </p>
                     <button
-                      onClick={() => handleSelectCategory('Todos')}
+                      onClick={() => {
+                        setSearchQuery('');
+                        handleSelectCategory('Todos');
+                      }}
                       className="btn-outline-luxury"
                     >
                       Ver Todo el Catálogo
