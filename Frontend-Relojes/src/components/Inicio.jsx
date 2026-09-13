@@ -73,7 +73,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         zIndex: 2
       }}>
         {/* Columna Izquierda: Mensaje en fondo luminoso que fluye hacia el reloj */}
-        <div className="hero-content" style={{ width: '58%', maxWidth: '850px', position: 'relative' }}>
+        <div className="hero-content" style={{ width: '58%', maxWidth: '880px', position: 'relative' }}>
           {/* Badge de Alta Horlogerie */}
           <div style={{
             display: 'inline-flex',
