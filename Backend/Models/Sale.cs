@@ -70,12 +70,44 @@ public class Sale
     public string? NotasEntrega { get; set; }
 
     // =============================================
-    // DATOS DE FACTURACIÓN / COMPROBANTE
+    // DATOS DE FACTURACIÓN / COMPROBANTE ELECTRÓNICO (SUNAT)
     // =============================================
-    public string TipoComprobante { get; set; } = "Boleta"; // "Boleta" o "Factura"
+    public string TipoComprobante { get; set; } = "Boleta"; // "Boleta", "Factura", "Nota de Venta"
+    public string CodigoTipoComprobanteSunat { get; set; } = "03"; // 01 = Factura, 03 = Boleta, 00 = Nota de Venta
+    public string Serie { get; set; } = "B001"; // B001, F001, NV01
+    public int NumeroCorrelativo { get; set; } = 1;
+    public string NumeroComprobante { get; set; } = string.Empty; // Ej: B001-00000001, F001-00000001, NV01-00000001
+
+    // Datos del cliente/receptor para el comprobante
+    public string? ClienteTipoDocumento { get; set; } // "1" = DNI, "6" = RUC, "-" = Sin Documento
+    public string? ClienteNumeroDocumento { get; set; }
+    public string? ClienteRazonSocial { get; set; }
+    public string? ClienteDireccion { get; set; }
+    public string? ClienteEmail { get; set; }
+
+    // Campos retrocompatibles
     public string? RucFactura { get; set; }
     public string? RazonSocialFactura { get; set; }
     public string? DireccionFiscalFactura { get; set; }
+
+    // Desglose tributario oficial (Perú: IGV 18%)
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal PorcentajeIgv { get; set; } = 18m;
+
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal OperacionGravada { get; set; } // Base imponible
+
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal MontoIgv { get; set; } // Monto del IGV (18%)
+
+    // Integración API Facturación Electrónica (Nubefact, SUNAT OSE/PSE)
+    public string SunatEstado { get; set; } = "No Enviado"; // "No Enviado", "Aceptado", "Rechazado", "No Aplica"
+    public string? SunatHash { get; set; }
+    public string? SunatCodigoRespuesta { get; set; }
+    public string? SunatMensajeRespuesta { get; set; }
+    public string? SunatPdfUrl { get; set; }
+    public string? SunatXmlUrl { get; set; }
+    public string? SunatCdrUrl { get; set; }
 
     // Código de operación del pago (Yape, Plin, transferencia bancaria, etc.)
     public string? CodigoOperacionPago { get; set; }

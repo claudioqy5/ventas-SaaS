@@ -53,6 +53,37 @@ public class SalesController : ControllerBase
         return Ok(sales);
     }
 
+    // GET api/sales/next-correlative?tipoComprobante=Boleta&serie=B001
+    [HttpGet("next-correlative")]
+    public async Task<IActionResult> GetNextCorrelative([FromQuery] string tipoComprobante = "Boleta", [FromQuery] string? serie = null)
+    {
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        string serieFinal = !string.IsNullOrWhiteSpace(serie) ? serie : (tipoComprobante switch
+        {
+            "Factura" => "F001",
+            "Nota de Venta" => "NV01",
+            _ => "B001"
+        });
+
+        var existingSeries = await _context.VoucherSeries.Find(s =>
+            s.EmpresaId == empresaId &&
+            s.TipoComprobante == tipoComprobante &&
+            s.Serie == serieFinal
+        ).FirstOrDefaultAsync();
+
+        int siguienteNumero = (existingSeries?.UltimoNumero ?? 0) + 1;
+
+        return Ok(new
+        {
+            tipoComprobante,
+            serie = serieFinal,
+            siguienteNumero,
+            numeroComprobante = $"{serieFinal}-{siguienteNumero:D8}"
+        });
+    }
+
     // POST api/sales — registra una venta nueva, descuenta el stock y guarda el movimiento de inventario
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Sale sale)
@@ -63,6 +94,63 @@ public class SalesController : ControllerBase
 
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        // Normalizar tipo de comprobante
+        sale.TipoComprobante = string.IsNullOrWhiteSpace(sale.TipoComprobante) ? "Boleta" : sale.TipoComprobante.Trim();
+
+        // Validaciones fiscales según tipo de comprobante
+        switch (sale.TipoComprobante)
+        {
+            case "Factura":
+                sale.CodigoTipoComprobanteSunat = "01";
+                sale.Serie = string.IsNullOrWhiteSpace(sale.Serie) ? "F001" : sale.Serie.Trim().ToUpper();
+                sale.ClienteTipoDocumento = "6"; // 6 = RUC
+                
+                // Unificar RUC y Razón Social desde campos específicos o generales
+                if (string.IsNullOrWhiteSpace(sale.ClienteNumeroDocumento))
+                    sale.ClienteNumeroDocumento = sale.RucFactura;
+                if (string.IsNullOrWhiteSpace(sale.ClienteRazonSocial))
+                    sale.ClienteRazonSocial = sale.RazonSocialFactura;
+                if (string.IsNullOrWhiteSpace(sale.ClienteDireccion))
+                    sale.ClienteDireccion = sale.DireccionFiscalFactura;
+
+                if (string.IsNullOrWhiteSpace(sale.ClienteNumeroDocumento) || sale.ClienteNumeroDocumento.Trim().Length != 11)
+                {
+                    return BadRequest(new { message = "Para emitir una Factura Electrónica se requiere un RUC válido de 11 dígitos." });
+                }
+
+                if (string.IsNullOrWhiteSpace(sale.ClienteRazonSocial))
+                {
+                    return BadRequest(new { message = "Para emitir una Factura Electrónica se requiere la Razón Social del cliente o empresa." });
+                }
+
+                sale.NombreCliente = sale.ClienteRazonSocial.Trim();
+                sale.RucFactura = sale.ClienteNumeroDocumento.Trim();
+                sale.RazonSocialFactura = sale.ClienteRazonSocial.Trim();
+                sale.DireccionFiscalFactura = sale.ClienteDireccion?.Trim();
+                break;
+
+            case "Nota de Venta":
+                sale.CodigoTipoComprobanteSunat = "00";
+                sale.Serie = string.IsNullOrWhiteSpace(sale.Serie) ? "NV01" : sale.Serie.Trim().ToUpper();
+                sale.ClienteTipoDocumento = "-";
+                break;
+
+            case "Boleta":
+            default:
+                sale.TipoComprobante = "Boleta";
+                sale.CodigoTipoComprobanteSunat = "03";
+                sale.Serie = string.IsNullOrWhiteSpace(sale.Serie) ? "B001" : sale.Serie.Trim().ToUpper();
+                if (!string.IsNullOrWhiteSpace(sale.ClienteNumeroDocumento))
+                {
+                    sale.ClienteTipoDocumento = sale.ClienteNumeroDocumento.Trim().Length == 8 ? "1" : "6";
+                }
+                else
+                {
+                    sale.ClienteTipoDocumento = "-";
+                }
+                break;
+        }
 
         // Preparo los datos de la venta antes de procesarla
         sale.Id = string.Empty;
@@ -116,7 +204,7 @@ public class SalesController : ControllerBase
                 Cantidad = item.Cantidad,
                 StockAnterior = previousStock,
                 StockNuevo = newStock,
-                Motivo = $"Venta registrada",
+                Motivo = $"Venta registrada ({sale.TipoComprobante})",
                 CreadoPor = _userContext.UserId ?? string.Empty,
                 CreadoPorNombre = nameClaim,
                 FechaCreacion = DateTime.UtcNow
@@ -127,10 +215,42 @@ public class SalesController : ControllerBase
             computedTotal += item.Total;
         }
 
-        // Calculo el total, subtotal e impuesto desde el servidor (no confiamos en el valor del frontend)
+        // Generar correlativo atómico garantizado sin duplicados ni condiciones de carrera
+        var seriesFilter = Builders<VoucherSeries>.Filter.And(
+            Builders<VoucherSeries>.Filter.Eq(s => s.EmpresaId, empresaId),
+            Builders<VoucherSeries>.Filter.Eq(s => s.TipoComprobante, sale.TipoComprobante),
+            Builders<VoucherSeries>.Filter.Eq(s => s.Serie, sale.Serie)
+        );
+
+        var seriesUpdate = Builders<VoucherSeries>.Update
+            .Inc(s => s.UltimoNumero, 1)
+            .Set(s => s.FechaActualizacion, DateTime.UtcNow)
+            .SetOnInsert(s => s.EmpresaId, empresaId)
+            .SetOnInsert(s => s.TipoComprobante, sale.TipoComprobante)
+            .SetOnInsert(s => s.CodigoSunat, sale.CodigoTipoComprobanteSunat)
+            .SetOnInsert(s => s.Serie, sale.Serie)
+            .SetOnInsert(s => s.Activa, true);
+
+        var seriesOptions = new FindOneAndUpdateOptions<VoucherSeries>
+        {
+            IsUpsert = true,
+            ReturnDocument = ReturnDocument.After
+        };
+
+        var updatedSeries = await _context.VoucherSeries.FindOneAndUpdateAsync(seriesFilter, seriesUpdate, seriesOptions);
+        sale.NumeroCorrelativo = updatedSeries.UltimoNumero;
+        sale.NumeroComprobante = $"{sale.Serie}-{sale.NumeroCorrelativo:D8}";
+
+        // Calculo el total, subtotal e impuesto desde el servidor con estándar de IGV 18% (Perú)
         sale.Total = computedTotal;
-        sale.Subtotal = computedTotal / 1.19m; // Calculo considerando el porcentaje de impuesto estandar
-        sale.Impuesto = computedTotal - sale.Subtotal;
+        sale.Subtotal = Math.Round(computedTotal / 1.18m, 2);
+        sale.Impuesto = Math.Round(computedTotal - sale.Subtotal, 2);
+        sale.OperacionGravada = sale.Subtotal;
+        sale.MontoIgv = sale.Impuesto;
+        sale.PorcentajeIgv = 18m;
+
+        // Estado inicial para integración con Facturación Electrónica (SUNAT)
+        sale.SunatEstado = sale.TipoComprobante == "Nota de Venta" ? "No Aplica" : "No Enviado";
 
         if (sale.EstadoPago == "Fiado")
         {
@@ -169,6 +289,25 @@ public class SalesController : ControllerBase
             .ToListAsync();
 
         return Ok(orders);
+    }
+
+    // GET api/sales/online-orders/pending-count — cuenta los pedidos web con estado PENDIENTE_PAGO
+    [HttpGet("online-orders/pending-count")]
+    public async Task<IActionResult> GetPendingOnlineOrdersCount()
+    {
+        if (!_userContext.HasPermission("pedidos_web"))
+            return Forbid();
+
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        var filter = Builders<Sale>.Filter.And(
+            Builders<Sale>.Filter.Eq(s => s.EmpresaId, empresaId),
+            Builders<Sale>.Filter.Eq(s => s.EstadoOrden, "PENDIENTE_PAGO")
+        );
+
+        var count = await _context.Sales.CountDocumentsAsync(filter);
+        return Ok(new { count });
     }
 
     // PUT api/sales/{id}/order-status — actualiza el estado de ciclo de vida de un pedido online

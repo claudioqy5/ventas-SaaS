@@ -17,7 +17,11 @@
         <div class="nav-section-title">Ventas</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18 M16 10a4 4 0 0 1-8 0"/></svg> <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg> <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('pedidos_web')" to="/online-orders" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><circle cx="12" cy="12" r="10"/><path d="M2 12h20 M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span class="sidebar-text">Pedidos Web</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('pedidos_web')" to="/online-orders" class="nav-item" active-class="active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><circle cx="12" cy="12" r="10"/><path d="M2 12h20 M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span class="sidebar-text">Pedidos Web</span>
+          <span v-if="authStore.pendingOrdersCount > 0" class="badge-count">{{ authStore.pendingOrdersCount }}</span>
+        </router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v2 M3 5v14a2 2 0 0 0 2 2h16v-5 M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg> <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4 M2 13v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4 M2 9h20 M2 13h20"/></svg> <span class="sidebar-text">Formas de Pago</span></router-link>
 
@@ -125,10 +129,43 @@
     </main>
 
     <!-- Panel del Carrito de Compra — columna fija a la derecha, altura completa desde arriba -->
+    <!-- Panel del Carrito de Compra — columna fija a la derecha, altura completa desde arriba -->
     <aside class="cart-panel">
-      <div class="cart-header">
-        <h2 class="cart-title">❖ Carrito de Compra</h2>
-        <span class="sale-code-badge">{{ codigoVenta }}</span>
+      <div class="cart-header" style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 class="cart-title" style="margin: 0;">❖ Carrito de Compra</h2>
+          <span class="sale-code-badge" :title="`Serie y correlativo oficial: ${proximoCorrelativo}`" style="font-weight: 700; letter-spacing: 0.04em;">
+            {{ loadingCorrelativo ? '...' : (proximoCorrelativo || codigoVenta) }}
+          </span>
+        </div>
+
+        <!-- Selector de Tipo de Comprobante: Boleta, Factura, Nota de Venta -->
+        <div class="voucher-type-selector" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; background: #f1f5f9; padding: 3px; border-radius: 8px;">
+          <button
+            type="button"
+            @click="setTipoComprobante('Boleta')"
+            style="border: none; padding: 6px 4px; border-radius: 6px; font-size: 0.76rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px;"
+            :style="tipoComprobante === 'Boleta' ? { background: '#ffffff', color: '#2563eb', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { background: 'transparent', color: '#64748b' }"
+          >
+            🧾 Boleta
+          </button>
+          <button
+            type="button"
+            @click="setTipoComprobante('Factura')"
+            style="border: none; padding: 6px 4px; border-radius: 6px; font-size: 0.76rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px;"
+            :style="tipoComprobante === 'Factura' ? { background: '#ffffff', color: '#7c3aed', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { background: 'transparent', color: '#64748b' }"
+          >
+            📑 Factura
+          </button>
+          <button
+            type="button"
+            @click="setTipoComprobante('Nota de Venta')"
+            style="border: none; padding: 6px 4px; border-radius: 6px; font-size: 0.76rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px;"
+            :style="tipoComprobante === 'Nota de Venta' ? { background: '#ffffff', color: '#059669', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { background: 'transparent', color: '#64748b' }"
+          >
+            📝 Nota Vta
+          </button>
+        </div>
       </div>
 
       <div v-if="cart.length === 0" class="empty-cart">
@@ -242,16 +279,65 @@
 
       <div class="cart-summary">
         <div class="summary-row">
-          <span>Subtotal</span>
+          <span>Op. Gravada (Subtotal)</span>
           <span>S/. {{ cartSubtotal.toFixed(2) }}</span>
         </div>
         <div class="summary-row">
-          <span>Impuestos (19%)</span>
+          <span>IGV (18%)</span>
           <span>S/. {{ cartTax.toFixed(2) }}</span>
         </div>
         <div class="summary-row total">
           <span>Total a Pagar</span>
           <span>S/. {{ cartTotal.toFixed(2) }}</span>
+        </div>
+
+        <!-- Alerta SUNAT para Boleta >= S/ 700 -->
+        <div v-if="tipoComprobante === 'Boleta' && cartTotal >= 700 && !selectedClientHasDoc" style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; padding: 8px 10px; margin-top: 8px; font-size: 0.76rem; color: #92400e; display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 1rem;">⚠️</span>
+          <span><strong>Norma SUNAT:</strong> Ventas en Boleta ≥ S/. 700 requieren DNI o RUC del cliente.</span>
+        </div>
+
+        <!-- Campos Fiscales para Factura Electrónica -->
+        <div v-if="tipoComprobante === 'Factura'" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.76rem; font-weight: 700; color: #6d28d9; display: flex; align-items: center; gap: 4px;">
+              🏛️ Datos Fiscales (Factura)
+            </span>
+            <span style="font-size: 0.7rem; font-weight: 600; color: #7c3aed; background: #ede9fe; padding: 2px 6px; border-radius: 4px;">Serie {{ serieActual }}</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr; gap: 6px;">
+            <div>
+              <label style="font-size: 0.72rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">RUC del Cliente (11 dígitos) *</label>
+              <input
+                type="text"
+                v-model="facturaRuc"
+                maxlength="11"
+                placeholder="Ej: 20601234567"
+                style="width: 100%; padding: 6px 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 0.82rem; font-weight: 600; background: #ffffff; color: var(--text-main); outline: none;"
+              />
+            </div>
+
+            <div>
+              <label style="font-size: 0.72rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">Razón Social *</label>
+              <input
+                type="text"
+                v-model="facturaRazonSocial"
+                placeholder="Ej: COMERCIAL L'GANT S.A.C."
+                style="width: 100%; padding: 6px 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 0.82rem; background: #ffffff; color: var(--text-main); outline: none;"
+              />
+            </div>
+
+            <div>
+              <label style="font-size: 0.72rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">Dirección Fiscal (Opcional)</label>
+              <input
+                type="text"
+                v-model="facturaDireccion"
+                placeholder="Ej: Av. Las Begonias 441, San Isidro"
+                style="width: 100%; padding: 6px 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 0.82rem; background: #ffffff; color: var(--text-main); outline: none;"
+              />
+            </div>
+          </div>
         </div>
 
         <!-- Sección de Pago y Cliente en 2 Columnas -->
@@ -270,7 +356,9 @@
             <label style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted);">Cliente (Opcional)</label>
             <select v-model="selectedClientId" style="width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #ffffff; height: 38px;">
               <option value="">👤 Cliente General</option>
-              <option v-for="cli in clients" :key="cli.id" :value="cli.id">👤 {{ cli.nombre }}</option>
+              <option v-for="cli in clients" :key="cli.id" :value="cli.id">
+                👤 {{ cli.nombre }} {{ cli.numeroDocumento ? `(${cli.tipoDocumento || 'DOC'}: ${cli.numeroDocumento})` : '' }}
+              </option>
             </select>
           </div>
 
@@ -282,18 +370,27 @@
         </div>
 
         <button @click="checkout" class="btn btn-success w-full checkout-btn" :disabled="cart.length === 0 || loading" style="padding: 12px; font-weight: 500;">
-          {{ loading ? 'Procesando Venta...' : '✧ Confirmar Venta' }}
+          {{ loading ? 'Procesando Venta...' : `✧ Emitir ${tipoComprobante}` }}
         </button>
       </div>
     </aside>
   </div>
 
-  <!-- Modal de venta exitosa con opción de WhatsApp -->
+  <!-- Modal de venta exitosa con opción de WhatsApp y Comprobante Térmico -->
   <div v-if="showSuccessModal" class="modal-overlay" style="z-index: 2000;">
     <div class="modal-card card success-modal">
       <div class="success-icon">🎉</div>
       <h2 class="modal-title" style="text-align:center;">¡Venta Exitosa!</h2>
-      <p class="success-code">Código: <strong>{{ lastSaleCode }}</strong></p>
+      <div class="success-code" style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 12px;">
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">{{ lastSaleVoucherType }}</span>
+        <strong style="font-size: 1.3rem; color: var(--text-main); letter-spacing: 0.05em;">{{ lastSaleCode }}</strong>
+        <span v-if="lastSaleVoucherType !== 'Nota de Venta'" style="font-size: 0.72rem; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
+          🏛️ Estructura lista para SUNAT
+        </span>
+        <span v-else style="font-size: 0.72rem; background: #ecfdf5; color: #059669; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
+          📝 Control Interno
+        </span>
+      </div>
 
       <div class="success-summary">
         <div v-for="item in lastSaleCart" :key="item.productoId" class="success-item">
@@ -309,17 +406,26 @@
         </div>
       </div>
 
-      <div class="success-actions">
-        <a
-          v-if="lastClientPhone"
-          :href="whatsappUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-whatsapp"
-        >
-          📱 Enviar Comprobante por WhatsApp
-        </a>
-        <button @click="showSuccessModal = false" class="btn btn-secondary">Cerrar</button>
+      <div class="success-actions" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%;">
+          <button @click="printTicket" class="btn btn-primary" style="background: #2563eb; border: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            🖨️ Imprimir Ticket
+          </button>
+          <a
+            v-if="lastClientPhone"
+            :href="whatsappUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-whatsapp"
+            style="display: flex; align-items: center; justify-content: center; gap: 6px;"
+          >
+            📱 WhatsApp
+          </a>
+          <button v-else disabled class="btn btn-secondary" style="opacity: 0.6; font-size: 0.8rem;" title="El cliente no tiene teléfono registrado">
+            📱 Sin WhatsApp
+          </button>
+        </div>
+        <button @click="showSuccessModal = false" class="btn btn-secondary w-full" style="margin-top: 4px;">Cerrar</button>
       </div>
     </div>
   </div>
@@ -351,6 +457,29 @@ const selectedClientId = ref('')
 const clients = ref([])
 const codigoVenta = ref('')
 
+// ── Comprobantes y Correlativos (Facturación Electrónica SUNAT) ──
+const tipoComprobante = ref('Boleta') // 'Boleta', 'Factura', 'Nota de Venta'
+const serieActual = computed(() => {
+  if (tipoComprobante.value === 'Factura') return 'F001'
+  if (tipoComprobante.value === 'Nota de Venta') return 'NV01'
+  return 'B001'
+})
+const proximoCorrelativo = ref('')
+const loadingCorrelativo = ref(false)
+
+// Campos para Factura Electrónica
+const facturaRuc = ref('')
+const facturaRazonSocial = ref('')
+const facturaDireccion = ref('')
+
+// Cliente seleccionado y validación de documento para SUNAT
+const selectedClient = computed(() => clients.value.find(c => c.id === selectedClientId.value))
+const selectedClientHasDoc = computed(() => {
+  if (!selectedClient.value) return false
+  const doc = selectedClient.value.numeroDocumento
+  return Boolean(doc && doc.trim().length >= 8)
+})
+
 const isSidebarHovered = ref(false)
 const currentPage = ref(1)
 
@@ -365,6 +494,9 @@ let barcodeTimer = null
 // ── Sale success modal ──
 const showSuccessModal = ref(false)
 const lastSaleCode = ref('')
+const lastSaleVoucherType = ref('Boleta')
+const lastSaleClientName = ref('')
+const lastSaleClientDoc = ref('')
 const lastSaleCart = ref([])
 const lastSaleTotal = ref(0)
 const lastClientPhone = ref('')
@@ -390,10 +522,40 @@ const paginatedProducts = computed(() => {
   return filteredProducts.value.slice(start, start + itemsPerPage.value)
 })
 
-const generarCodigoVenta = () => {
-  const num = Math.floor(10000 + Math.random() * 90000)
-  codigoVenta.value = `VTA-${num}`
+const fetchProximoCorrelativo = async () => {
+  try {
+    loadingCorrelativo.value = true
+    const res = await fetch(`${API_URL}/api/sales/next-correlative?tipoComprobante=${encodeURIComponent(tipoComprobante.value)}&serie=${encodeURIComponent(serieActual.value)}`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (res.ok) {
+      const data = await res.json()
+      proximoCorrelativo.value = data.numeroComprobante
+      codigoVenta.value = data.numeroComprobante
+    }
+  } catch (e) {
+    console.warn('Error al obtener próximo correlativo:', e)
+  } finally {
+    loadingCorrelativo.value = false
+  }
 }
+
+const setTipoComprobante = (tipo) => {
+  tipoComprobante.value = tipo
+  fetchProximoCorrelativo()
+}
+
+watch(selectedClientId, (newId) => {
+  if (!newId) return
+  const client = clients.value.find(c => c.id === newId)
+  if (!client) return
+
+  if (client.tipoDocumento === 'RUC' || (client.numeroDocumento && client.numeroDocumento.length === 11)) {
+    facturaRuc.value = client.numeroDocumento
+    facturaRazonSocial.value = client.nombre
+    facturaDireccion.value = client.direccion || ''
+  }
+})
 
 const fetchProducts = async () => {
   try {
@@ -683,9 +845,9 @@ const removeFromCart = (productoId) => {
   cart.value = cart.value.filter(item => item.productoId !== productoId)
 }
 
-const cartSubtotal = computed(() => cart.value.reduce((sum, item) => sum + (item.precioUnitario * item.cantidad), 0) / 1.19)
-const cartTax = computed(() => cartTotal.value - cartSubtotal.value)
 const cartTotal = computed(() => cart.value.reduce((sum, item) => sum + (item.precioUnitario * item.cantidad), 0))
+const cartSubtotal = computed(() => Number((cartTotal.value / 1.18).toFixed(2)))
+const cartTax = computed(() => Number((cartTotal.value - cartSubtotal.value).toFixed(2)))
 
 const whatsappUrl = computed(() => {
   if (!lastClientPhone.value) return '#'
@@ -694,17 +856,130 @@ const whatsappUrl = computed(() => {
     const qtyText = i.presentacion === 'Costal' ? `${i.cantidad} costal(es)` : `${i.cantidad} ${i.unidadMedida}`
     return `  • ${i.nombreProducto} x${qtyText} = S/. ${(i.precioUnitario * i.cantidad).toFixed(2)}`
   }).join('%0A')
-  const msg = `¡Hola! Gracias por tu compra en *${store}* ❖%0A%0AComprobante: *${lastSaleCode.value}*%0A%0A${items}%0A%0A*Total: S/. ${lastSaleTotal.value.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
+  const msg = `¡Hola! Gracias por tu compra en *${store}* ❖%0A%0AComprobante: *${lastSaleVoucherType.value} ${lastSaleCode.value}*%0A%0A${items}%0A%0A*Total: S/. ${lastSaleTotal.value.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
   const phone = lastClientPhone.value.replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${msg}`
 })
+
+const printTicket = () => {
+  const printWindow = window.open('', '_blank', 'width=450,height=600')
+  const store = authStore.user?.nombreEmpresa || 'VentasSaaS'
+  const fecha = new Date().toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'medium' })
+  const subtotal = (lastSaleTotal.value / 1.18).toFixed(2)
+  const igv = (lastSaleTotal.value - Number(subtotal)).toFixed(2)
+
+  const voucherTitle = lastSaleVoucherType.value === 'Factura' 
+    ? 'FACTURA ELECTRÓNICA' 
+    : (lastSaleVoucherType.value === 'Boleta' ? 'BOLETA DE VENTA ELECTRÓNICA' : 'NOTA DE VENTA')
+
+  const docLabel = lastSaleVoucherType.value === 'Factura' ? 'RUC' : 'DNI/Doc'
+
+  const html = `
+    <html>
+      <head>
+        <title>${voucherTitle}_${lastSaleCode.value}</title>
+        <style>
+          @page { margin: 0; }
+          body { font-family: 'Courier New', Courier, monospace; padding: 15px; color: #000; font-size: 12px; width: 280px; margin: auto; }
+          .text-center { text-align: center; }
+          .text-right { text-align: right; }
+          .bold { font-weight: bold; }
+          .divider { border-top: 1px dashed #000; margin: 8px 0; }
+          table { width: 100%; border-collapse: collapse; font-size: 11px; }
+          th, td { padding: 3px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="text-center">
+          <h2 style="margin: 0; font-size: 16px;">${store}</h2>
+          <p style="margin: 2px 0; font-size: 11px;">R.U.C. 20609876543</p>
+          <div class="divider"></div>
+          <p class="bold" style="margin: 4px 0; font-size: 13px;">${voucherTitle}</p>
+          <p class="bold" style="margin: 2px 0; font-size: 13px;">${lastSaleCode.value}</p>
+        </div>
+        <div class="divider"></div>
+        <p style="margin: 2px 0;"><strong>Fecha:</strong> ${fecha}</p>
+        <p style="margin: 2px 0;"><strong>Cliente:</strong> ${lastSaleClientName.value || 'Cliente General'}</p>
+        ${lastSaleClientDoc.value ? `<p style="margin: 2px 0;"><strong>${docLabel}:</strong> ${lastSaleClientDoc.value}</p>` : ''}
+        <p style="margin: 2px 0;"><strong>Vendedor:</strong> ${authStore.user?.nombre || 'Caja'}</p>
+        <div class="divider"></div>
+        <table>
+          <thead>
+            <tr>
+              <th align="left">Cant.</th>
+              <th align="left">Descripción</th>
+              <th align="right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${lastSaleCart.value.map(i => `
+              <tr>
+                <td valign="top">${i.cantidad}</td>
+                <td valign="top">${i.nombreProducto}</td>
+                <td align="right" valign="top">S/. ${(i.precioUnitario * i.cantidad).toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="divider"></div>
+        <table>
+          <tr>
+            <td>Op. Gravada:</td>
+            <td align="right">S/. ${subtotal}</td>
+          </tr>
+          <tr>
+            <td>I.G.V. (18%):</td>
+            <td align="right">S/. ${igv}</td>
+          </tr>
+          <tr class="bold">
+            <td style="font-size: 13px;">TOTAL A PAGAR:</td>
+            <td align="right" style="font-size: 13px;">S/. ${lastSaleTotal.value.toFixed(2)}</td>
+          </tr>
+        </table>
+        <div class="divider"></div>
+        <div class="text-center" style="margin-top: 10px; font-size: 10px;">
+          ${lastSaleVoucherType.value !== 'Nota de Venta' ? '<p>Representación impresa del Comprobante Electrónico</p>' : '<p>Comprobante de Control Interno</p>'}
+          <p>¡Gracias por su preferencia!</p>
+        </div>
+        <script>
+          window.onload = function() { window.print(); }
+        <\/script>
+      </body>
+    </html>
+  `
+  printWindow.document.write(html)
+  printWindow.document.close()
+}
 
 const checkout = async () => {
   loading.value = true
   try {
     const client = clients.value.find(c => c.id === selectedClientId.value)
     const clienteId = client ? client.id : null
-    const nombreCliente = client ? client.nombre : 'Cliente General'
+    let nombreCliente = client ? client.nombre : 'Cliente General'
+
+    // Validaciones tributarias previas
+    if (tipoComprobante.value === 'Factura') {
+      const ruc = facturaRuc.value.trim()
+      const razon = facturaRazonSocial.value.trim()
+      if (!ruc || ruc.length !== 11 || !/^\d+$/.test(ruc)) {
+        alert('Para emitir una Factura Electrónica es obligatorio ingresar un RUC válido de 11 dígitos numéricos.')
+        loading.value = false
+        return
+      }
+      if (!razon) {
+        alert('Para emitir una Factura Electrónica es obligatoria la Razón Social del cliente o empresa.')
+        loading.value = false
+        return
+      }
+      nombreCliente = razon
+    } else if (tipoComprobante.value === 'Boleta') {
+      if (cartTotal.value >= 700 && !selectedClientHasDoc.value) {
+        alert('Por normativa SUNAT, para ventas en Boleta de Venta iguales o mayores a S/. 700.00 es obligatorio identificar al cliente con su DNI o RUC.')
+        loading.value = false
+        return
+      }
+    }
 
     // Adaptamos el mapeo de los productos al formato requerido por el backend
     const detallesVenta = cart.value.map(item => {
@@ -735,19 +1010,30 @@ const checkout = async () => {
       }
     })
 
+    const payload = {
+      detalles: detallesVenta,
+      metodoPago: isFiado.value ? "Fiado" : paymentMethod.value,
+      estadoPago: isFiado.value ? "Fiado" : "Pagado",
+      clienteId: clienteId,
+      nombreCliente: nombreCliente,
+      tipoComprobante: tipoComprobante.value,
+      serie: serieActual.value,
+      clienteTipoDocumento: tipoComprobante.value === 'Factura' ? '6' : (client?.tipoDocumento === 'RUC' ? '6' : (client?.numeroDocumento ? '1' : '-')),
+      clienteNumeroDocumento: tipoComprobante.value === 'Factura' ? facturaRuc.value.trim() : (client?.numeroDocumento || ''),
+      clienteRazonSocial: tipoComprobante.value === 'Factura' ? facturaRazonSocial.value.trim() : (client?.nombre || ''),
+      clienteDireccion: tipoComprobante.value === 'Factura' ? facturaDireccion.value.trim() : (client?.direccion || ''),
+      rucFactura: tipoComprobante.value === 'Factura' ? facturaRuc.value.trim() : null,
+      razonSocialFactura: tipoComprobante.value === 'Factura' ? facturaRazonSocial.value.trim() : null,
+      direccionFiscalFactura: tipoComprobante.value === 'Factura' ? facturaDireccion.value.trim() : null
+    }
+
     const res = await fetch(`${API_URL}/api/sales`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authStore.token}`
       },
-      body: JSON.stringify({
-        detalles: detallesVenta,
-        metodoPago: isFiado.value ? "Fiado" : paymentMethod.value,
-        estadoPago: isFiado.value ? "Fiado" : "Pagado",
-        clienteId: clienteId,
-        nombreCliente: nombreCliente
-      })
+      body: JSON.stringify(payload)
     })
 
     if (!res.ok) {
@@ -755,8 +1041,13 @@ const checkout = async () => {
       throw new Error(err.message || 'Error al procesar la venta.')
     }
 
-    // Mostrar modal de éxito en vez de un alert
-    lastSaleCode.value = codigoVenta.value
+    const createdSale = await res.json()
+
+    // Mostrar modal de éxito
+    lastSaleCode.value = createdSale.numeroComprobante || proximoCorrelativo.value
+    lastSaleVoucherType.value = tipoComprobante.value
+    lastSaleClientName.value = createdSale.nombreCliente || nombreCliente
+    lastSaleClientDoc.value = createdSale.clienteNumeroDocumento || ''
     lastSaleCart.value = [...cart.value]
     lastSaleTotal.value = cartTotal.value
     lastClientPhone.value = client?.telefono || ''
@@ -765,8 +1056,11 @@ const checkout = async () => {
     cart.value = []
     crossSellSuggestions.value = []
     selectedClientId.value = ''
+    facturaRuc.value = ''
+    facturaRazonSocial.value = ''
+    facturaDireccion.value = ''
     isFiado.value = false
-    generarCodigoVenta()
+    fetchProximoCorrelativo()
     fetchProducts()
     fetchSalesHistory()
   } catch (err) {
@@ -795,7 +1089,7 @@ const handleLogout = () => {
 
 onMounted(() => {
   fetchProducts()
-  generarCodigoVenta()
+  fetchProximoCorrelativo()
   fetchCategories()
   fetchClients()
   fetchPaymentMethods()

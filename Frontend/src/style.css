@@ -357,6 +357,34 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
   overflow: hidden;
   user-select: none;
   min-height: 40px;
+  position: relative;
+}
+
+.badge-count {
+  margin-left: auto;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 12px;
+  min-width: 20px;
+  text-align: center;
+  line-height: 1.2;
+  flex-shrink: 0;
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(239, 68, 68, 0.4);
+}
+
+.sidebar:not(:hover) .badge-count {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  padding: 1px 4px;
+  font-size: 0.62rem;
+  min-width: 15px;
+  height: 15px;
+  line-height: 13px;
 }
 
 .sidebar:not(:hover) .nav-item {

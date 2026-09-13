@@ -17,7 +17,11 @@
         <div class="nav-section-title">Ventas</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18 M16 10a4 4 0 0 1-8 0"/></svg> <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg> <span class="sidebar-text">Historial Ventas</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('pedidos_web')" to="/online-orders" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><circle cx="12" cy="12" r="10"/><path d="M2 12h20 M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span class="sidebar-text">Pedidos Web</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('pedidos_web')" to="/online-orders" class="nav-item" active-class="active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><circle cx="12" cy="12" r="10"/><path d="M2 12h20 M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span class="sidebar-text">Pedidos Web</span>
+          <span v-if="authStore.pendingOrdersCount > 0" class="badge-count">{{ authStore.pendingOrdersCount }}</span>
+        </router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v2 M3 5v14a2 2 0 0 0 2 2h16v-5 M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg> <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4 M2 13v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4 M2 9h20 M2 13h20"/></svg> <span class="sidebar-text">Formas de Pago</span></router-link>
 
@@ -74,6 +78,7 @@
           <thead>
             <tr>
               <th style="width: 50px;">N°</th>
+              <th>Comprobante</th>
               <th>Fecha y Hora</th>
               <th>Cliente</th>
               <th>Cajero / Responsable</th>
@@ -85,6 +90,12 @@
           <tbody>
             <tr v-for="(sale, index) in filteredSales" :key="sale.id">
               <td><strong>{{ index + 1 }}</strong></td>
+              <td>
+                <span class="badge" style="font-weight: 700; font-size: 0.78rem; background: #f8fafc; color: #334155; padding: 4px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 4px;">
+                  <span style="font-size: 0.82rem;">{{ sale.tipoComprobante === 'Factura' ? '📑' : (sale.tipoComprobante === 'Nota de Venta' ? '📝' : '🧾') }}</span>
+                  {{ sale.numeroComprobante || (sale.tipoComprobante || 'VTA') }}
+                </span>
+              </td>
               <td>
                 <span class="date-badge">{{ formatDateTime(sale.fechaCreacion) }}</span>
               </td>
@@ -132,6 +143,12 @@
 
           <div class="sale-meta-grid">
             <div class="meta-item">
+              <span class="meta-label">Comprobante:</span>
+              <span class="meta-val" style="font-weight: 700; color: #1e293b;">
+                {{ selectedSale.tipoComprobante || 'Boleta' }} {{ selectedSale.numeroComprobante ? `(${selectedSale.numeroComprobante})` : '' }}
+              </span>
+            </div>
+            <div class="meta-item">
               <span class="meta-label">Fecha y Hora:</span>
               <span class="meta-val">{{ formatDateTime(selectedSale.fechaCreacion) }}</span>
             </div>
@@ -146,6 +163,10 @@
             <div class="meta-item">
               <span class="meta-label">Método de Pago:</span>
               <span class="meta-val">{{ selectedSale.metodoPago }}</span>
+            </div>
+            <div v-if="selectedSale.clienteNumeroDocumento || selectedSale.rucFactura" class="meta-item">
+              <span class="meta-label">{{ selectedSale.tipoComprobante === 'Factura' ? 'RUC:' : 'Doc:' }}</span>
+              <span class="meta-val">{{ selectedSale.clienteNumeroDocumento || selectedSale.rucFactura }}</span>
             </div>
           </div>
 
@@ -174,12 +195,12 @@
 
           <div class="modal-summary">
             <div class="summary-row">
-              <span>Subtotal:</span>
-              <span>S/. {{ selectedSale.subtotal.toFixed(2) }}</span>
+              <span>Op. Gravada:</span>
+              <span>S/. {{ (selectedSale.operacionGravada || selectedSale.subtotal || 0).toFixed(2) }}</span>
             </div>
             <div class="summary-row">
-              <span>Impuestos (19%):</span>
-              <span>S/. {{ selectedSale.impuesto.toFixed(2) }}</span>
+              <span>IGV (18%):</span>
+              <span>S/. {{ (selectedSale.montoIgv || selectedSale.impuesto || 0).toFixed(2) }}</span>
             </div>
             <div class="summary-row total-row">
               <span>Total:</span>
@@ -288,77 +309,84 @@ const confirmRevertSale = async (sale) => {
 }
 
 const printSaleTicket = (sale) => {
-  const printWindow = window.open('', '_blank', 'width=600,height=600')
+  const printWindow = window.open('', '_blank', 'width=450,height=600')
+  const voucherTitle = sale.tipoComprobante === 'Factura' 
+    ? 'FACTURA ELECTRÓNICA' 
+    : (sale.tipoComprobante === 'Nota de Venta' ? 'NOTA DE VENTA' : 'BOLETA DE VENTA ELECTRÓNICA')
+  const docLabel = sale.tipoComprobante === 'Factura' ? 'RUC' : 'DNI/Doc'
+  const docValue = sale.clienteNumeroDocumento || sale.rucFactura || ''
+
   const html = `
     <html>
       <head>
-        <title>Boleta_${sale.id}</title>
+        <title>${voucherTitle}_${sale.numeroComprobante || sale.id}</title>
         <style>
-          body { font-family: 'Courier New', Courier, monospace; padding: 20px; color: #000; font-size: 14px; }
+          @page { margin: 0; }
+          body { font-family: 'Courier New', Courier, monospace; padding: 15px; color: #000; font-size: 12px; width: 280px; margin: auto; }
           .text-center { text-align: center; }
           .text-right { text-align: right; }
-          .header { margin-bottom: 20px; }
-          .divider { border-top: 1px dashed #000; margin: 10px 0; }
-          table { width: 100%; border-collapse: collapse; }
-          th, td { padding: 4px 0; }
-          .total-row { font-weight: 500; }
+          .bold { font-weight: bold; }
+          .divider { border-top: 1px dashed #000; margin: 8px 0; }
+          table { width: 100%; border-collapse: collapse; font-size: 11px; }
+          th, td { padding: 3px 0; }
         </style>
       </head>
       <body>
-        <div class="text-center header">
-          <h2>◈ ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
-          <p>Punto de Venta - Boleta de Compra</p>
+        <div class="text-center">
+          <h2 style="margin: 0; font-size: 16px;">◈ ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
+          <p style="margin: 2px 0; font-size: 11px;">R.U.C. 20609876543</p>
+          <div class="divider"></div>
+          <p class="bold" style="margin: 4px 0; font-size: 13px;">${voucherTitle}</p>
+          <p class="bold" style="margin: 2px 0; font-size: 13px;">${sale.numeroComprobante || `ID: ${sale.id}`}</p>
         </div>
         <div class="divider"></div>
-        <p><strong>ID Venta:</strong> ${sale.id}</p>
-        <p><strong>Fecha:</strong> ${formatDateTime(sale.fechaCreacion)}</p>
-        <p><strong>Cliente:</strong> ${sale.nombreCliente || 'Cliente General'}</p>
-        <p><strong>Vendedor:</strong> ${formatCreatorName(sale.creadoPorNombre)}</p>
-        <p><strong>Método de Pago:</strong> ${sale.metodoPago}</p>
+        <p style="margin: 2px 0;"><strong>Fecha:</strong> ${formatDateTime(sale.fechaCreacion)}</p>
+        <p style="margin: 2px 0;"><strong>Cliente:</strong> ${sale.nombreCliente || 'Cliente General'}</p>
+        ${docValue ? `<p style="margin: 2px 0;"><strong>${docLabel}:</strong> ${docValue}</p>` : ''}
+        <p style="margin: 2px 0;"><strong>Vendedor:</strong> ${formatCreatorName(sale.creadoPorNombre)}</p>
+        <p style="margin: 2px 0;"><strong>Método de Pago:</strong> ${sale.metodoPago}</p>
         <div class="divider"></div>
         <table>
           <thead>
             <tr>
-              <th align="left">Prod</th>
-              <th align="center">Cant</th>
-              <th align="right">P.U</th>
+              <th align="left">Cant.</th>
+              <th align="left">Descripción</th>
               <th align="right">Total</th>
             </tr>
           </thead>
           <tbody>
             ${sale.detalles.map(item => `
               <tr>
-                <td>${item.nombreProducto}</td>
-                <td align="center">${item.cantidad}</td>
-                <td align="right">S/. ${item.precioUnitario.toFixed(2)}</td>
-                <td align="right">S/. ${(item.cantidad * item.precioUnitario).toFixed(2)}</td>
+                <td valign="top">${item.cantidad}</td>
+                <td valign="top">${item.nombreProducto}</td>
+                <td align="right" valign="top">S/. ${(item.cantidad * item.precioUnitario).toFixed(2)}</td>
               </tr>
             `).join('')}
           </tbody>
         </table>
         <div class="divider"></div>
-        <table style="width: 200px; margin-left: auto;">
+        <table>
           <tr>
-            <td>Subtotal:</td>
-            <td align="right">S/. ${(sale.subtotal || 0).toFixed(2)}</td>
+            <td>Op. Gravada:</td>
+            <td align="right">S/. ${(sale.operacionGravada || sale.subtotal || 0).toFixed(2)}</td>
           </tr>
           <tr>
-            <td>IGV (19%):</td>
-            <td align="right">S/. ${(sale.impuesto || 0).toFixed(2)}</td>
+            <td>IGV (18%):</td>
+            <td align="right">S/. ${(sale.montoIgv || sale.impuesto || 0).toFixed(2)}</td>
           </tr>
-          <tr class="total-row">
-            <td>TOTAL:</td>
-            <td align="right">S/. ${(sale.total || 0).toFixed(2)}</td>
+          <tr class="bold">
+            <td style="font-size: 13px;">TOTAL:</td>
+            <td align="right" style="font-size: 13px;">S/. ${(sale.total || 0).toFixed(2)}</td>
           </tr>
         </table>
         <div class="divider"></div>
-        <div class="text-center" style="margin-top: 30px;">
+        <div class="text-center" style="margin-top: 10px; font-size: 10px;">
+          ${sale.tipoComprobante !== 'Nota de Venta' ? '<p>Representación impresa del Comprobante Electrónico</p>' : '<p>Comprobante de Control Interno</p>'}
           <p>¡Gracias por su preferencia!</p>
         </div>
         <${'script'}>
           window.onload = function() {
             window.print();
-            setTimeout(function() { window.close(); }, 500);
           }
         </${'script'}>
       </body>

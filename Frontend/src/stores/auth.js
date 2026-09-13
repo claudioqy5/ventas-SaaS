@@ -5,6 +5,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') || null,
     user: JSON.parse(localStorage.getItem('user')) || null,
+    pendingOrdersCount: 0,
   }),
   getters: {
     isAuthenticated: (state) => !!state.token,
@@ -81,9 +82,24 @@ export const useAuthStore = defineStore('auth', {
       }
       return this.permissions.includes(permission)
     },
+    async fetchPendingOrdersCount() {
+      if (!this.token || !this.hasPermission('pedidos_web')) return
+      try {
+        const res = await fetch(`${API_URL}/api/sales/online-orders/pending-count`, {
+          headers: { 'Authorization': `Bearer ${this.token}` }
+        })
+        if (res.ok) {
+          const data = await res.json()
+          this.pendingOrdersCount = data.count || 0
+        }
+      } catch (e) {
+        // Silencioso en caso de desconexión momentánea
+      }
+    },
     logout() {
       this.token = null
       this.user = null
+      this.pendingOrdersCount = 0
       localStorage.removeItem('token')
       localStorage.removeItem('user')
     }
