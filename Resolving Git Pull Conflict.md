@@ -3533,4 +3533,20 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
   - Se aumentó drásticamente el tamaño de las letras a `clamp(3.1rem, 5.4vw, 5.2rem)` y celdas de hasta `68px x 74px`.
   - Se amplió el ancho del contenedor de texto al `60%` (`maxWidth: 780px`) y se ancló a la izquierda con padding fluido, separando la columna derecha (`SEGUNDO`) del borde del reloj.
   - Se aplicó una máscara difuminada suave (`maskImage`) en la galería de relojes para que el titanio del reloj emerja orgánicamente sin colisionar con la tipografía.
-- **Compilación Validada:** `npm run build` en Next.js 16 completado con código 0 y 0 errores.
+- **Compilación Validada:** `npm run build` en Next.js 16 completado con código 0 y 0 errores.
+
+**5. Expansión Monumental del Crucigrama y Efecto Bicolor (*Split-Color* sobre Imagen):**
+- **Ocupación Total de la Mitad Izquierda:**
+  - Se configuró la cuadrícula a `repeat(8, 1fr)` con ancho al 100% (`maxWidth: 820px`), distribuyendo las 8 columnas uniformemente para que la palabra horizontal `ELEGANTE` ocupe generosamente todo el espacio disponible en su mitad izquierda.
+  - Se calibraron los tamaños tipográficos a `clamp(2.4rem, 5.6vw, 5.8rem)` y alturas de fila hasta `84px`.
+- **Restablecimiento de la Galería al 50% Exacto:**
+  - En `Inicio.jsx`, la galería de relojes regresó a su proporción original de mitad de pantalla (`width: 50%`, anclada a la derecha).
+  - Se retiró la máscara difuminada lechosa para recuperar el contraste fotográfico nítido y lujoso de los relojes.
+- **Efecto de Tipografía Bicolor (*Split-Color* de Alta Gama):**
+  - Implementación de un sistema de renderizado de doble capa con recorte vectorial matemático (`clipPath` con `inset` dinámico calculado al 50% del viewport).
+  - **Zona Blanca (Izquierda):** Letras en negro obsidiana puro (`#09090b`).
+  - **Zona de Imagen (Derecha):** En cuanto las letras cruzan la mitad de la pantalla y quedan encima del reloj oscuro, cambian a **blanco puro resplandeciente (`#ffffff`)** con sutil sombra de contraste (`text-shadow`), evitando que el fondo del reloj las opaque.
+  - **Línea Divisoria Bicolor:** Las letras que quedan sobre la frontera exacta se dividen limpiamente en dos colores (mitad izquierda negra, mitad derecha blanca), siguiendo fielmente la referencia gráfica provista por el cliente.
+  - **Hover Dinámico:** Resaltado coordinado en oro (`var(--c-gold)`) en el lado claro y oro champán luminoso (`#fbf4dc`) en el lado oscuro.
+  - **Compatibilidad Móvil:** En resoluciones móviles (`<= 991px`), el sistema conmuta automáticamente para mostrar la tipografía completa en negro obsidiana sobre el fondo claro.
+- **Compilación y Despliegue:** Verificado con `npm run build` (0 errores) y confirmado en Git (`origin/master`).
