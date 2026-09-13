@@ -3549,4 +3549,22 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
   - **Línea Divisoria Bicolor:** Las letras que quedan sobre la frontera exacta se dividen limpiamente en dos colores (mitad izquierda negra, mitad derecha blanca), siguiendo fielmente la referencia gráfica provista por el cliente.
   - **Hover Dinámico:** Resaltado coordinado en oro (`var(--c-gold)`) en el lado claro y oro champán luminoso (`#fbf4dc`) en el lado oscuro.
   - **Compatibilidad Móvil:** En resoluciones móviles (`<= 991px`), el sistema conmuta automáticamente para mostrar la tipografía completa en negro obsidiana sobre el fondo claro.
-- **Compilación y Despliegue:** Verificado con `npm run build` (0 errores) y confirmado en Git (`origin/master`).
+- **Compilación y Despliegue:** Verificado con `npm run build` (0 errores) y confirmado en Git (`origin/master`).
+
+**6. Reconfiguración Arquitectónica a Matriz 7x9 y Letras Rotadas a 90° (Diseño Editorial Exacto):**
+- **Estructura de Cuadrícula 7 Filas x 9 Columnas:**
+  - **Fila 0:** Palabra horizontal `"ELEGANTE"` que abarca de Col 0 a Col 7 (orientación horizontal convencional en Col 0-6).
+  - **Columna 7 (Dirección Vertical Rotada 90° Horario):**
+    - `E` (Fila 0): Intersección con `ELEGANTE` y punto de partida de `EN`, con rotación a 90° en sentido horario.
+    - `N` (Fila 1): Con rotación a 90°, completando `"EN"`.
+    - **Fila 2:** Fila vacía de respiro arquitectónico y espaciado editorial.
+    - `C` (Fila 3): Con rotación a 90°, inicio de `"CADA"`.
+    - `A` (Fila 4): Con rotación a 90°.
+    - `D` (Fila 5): Con rotación a 90°, intersección con `"SEGUNDO"`.
+    - `A` (Fila 6): Con rotación a 90°, final de `"CADA"`.
+  - **Fila 5 (Dirección Horizontal):**
+    - Palabra `"SEGUNDO"` que se despliega horizontalmente de Col 2 a Col 8 (`S`, `E`, `G`, `U`, `N`, `D`, `O`), ubicando `S` alineado bajo la segunda `E` de `ELEGANTE`, intersectando en la `D` rotada de Col 7 y rematando con la `O` en Col 8.
+- **Secuencia de Animación Orgánica:**
+  - `ELEGANTE` (Fila 0) ➔ `EN` (Col 7) ➔ `CADA` (Col 7) ➔ `SEGUNDO` (Fila 5).
+- **Integración con Split-Color:** La columna 7 y columna 8 que penetran en el 50% derecho continúan beneficiándose del efecto bicolor automático (negro sobre blanco, blanco luminoso sobre el reloj oscuro).
+- **Compilación Validada:** `npm run build` completado exitosamente (código 0). Guardado y sincronizado en `origin/master`.
