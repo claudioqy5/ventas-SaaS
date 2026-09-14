@@ -3588,4 +3588,57 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
   - El encabezado del catálogo conmuta a la insignia `<svg> BÚSQUEDA INTELIGENTE`, título `Resultados para: "{searchQuery}"` y contador de coincidencias exactas.
   - Ocultamiento automático del Hero durante la búsqueda para enfocar al cliente de inmediato en los productos encontrados.
   - Estado vacío enriquecido en caso de no hallar piezas, con sugerencias de términos y botón de restauración a la colección completa.
-- **Validación y Compilación:** `npm run build` en Next.js 16 ejecutado con código 0 y 0 errores; ruta `ƒ /buscar` verificada y compilada. Guardado y sincronizado en `origin/master`.
+- **Validación y Compilación:** `npm run build` en Next.js 16 ejecutado con código 0 y 0 errores; ruta `ƒ /buscar` verificada y compilada. Guardado y sincronizado en `origin/master`.
+
+---
+
+**8. Integración Oficial de Pasarela de Pagos Mercado Pago Checkout Pro (Backend ASP.NET Core .NET 9 + Frontend-Relojes Next.js):**
+
+- **Arquitectura de la Integración:**
+  - **Requerimiento:** Integrar Mercado Pago Checkout Pro para que los clientes de la tienda de alta relojería puedan pagar sus compras online con tarjeta de crédito, débito (BCP, BBVA, Interbank, etc.), efectivo o saldo de Mercado Pago, y que los fondos ingresen directamente a la cuenta del titular del negocio.
+  - **Esquema de Flujo:**
+    1. El cliente arma su carrito y avanza en el checkout de 4 pasos.
+    2. En el paso 4 (Métodos de Pago), se habilita la 5ta opción oficial: **Mercado Pago** (con distintivo visual azul `#009ee3` e iconografía oficial).
+    3. Al hacer clic en *"Confirmar Compra"*, se registra primero la orden en MongoDB con estado `EstadoPago = "PENDIENTE_PAGO"` y `EstadoOrden = "PENDIENTE_PAGO"`.
+    4. El frontend invoca al backend para crear la **Preferencia de Pago** en Mercado Pago (`createMercadoPagoPreference`).
+    5. El backend responde con el `preferenceId` y los enlaces de checkout (`initPoint` y `sandboxInitPoint`).
+    6. El navegador redirige al cliente a la pasarela segura de Mercado Pago.
+    7. Al completarse el pago, el Webhook de Mercado Pago notifica al backend en tiempo real, actualizando la orden a `EstadoPago = "Pagado"` y `EstadoOrden = "EN_PREPARACION"`, mientras el cliente es redirigido a `/pedido-confirmado`.
+
+- **Componentes Implementados en Backend (`Backend/`):**
+  - **Instalación de Dependencia:** `mercadopago-sdk` v3.7.0 instalado vía NuGet en `Backend.csproj` (versión oficial compatible con .NET 9).
+  - **Configuración Segura (`appsettings.json`):**
+    ```json
+    "MercadoPago": {
+      "AccessToken": "APP_USR-4612024376801510-091318-0fc0afcc8f486444f6d6f4391ee4a8fb-3688279260",
+      "PublicKey": "APP_USR-2715e18b-bd69-497c-bac4-11af7047a2b3"
+    }
+    ```
+  - **Controlador API (`Backend/Controllers/MercadoPagoController.cs`):**
+    - `POST /api/mercadopago/{empresaId}/preference`: Valida autenticación del cliente JWT, construye los ítems con moneda peruana (`CurrencyId = "PEN"`), URLs de retorno automáticas (`AutoReturn = "approved"`, `BackUrls.Success`, `BackUrls.Failure`, `BackUrls.Pending`), `NotificationUrl` para webhooks y `ExternalReference = orderId`.
+    - `POST /api/mercadopago/{empresaId}/webhook` (anónimo con `[AllowAnonymous]`): Recibe las notificaciones IPN/Webhooks de Mercado Pago, consulta el estado del pago a la API de Mercado Pago (`PaymentClient.GetAsync(paymentId)`), y cuando `Status == "approved"`, actualiza la venta en MongoDB automáticamente.
+  - **Compilación Exitosa:** `dotnet build Backend.csproj` completado con 0 errores.
+
+- **Componentes Implementados en Frontend (`Frontend-Relojes/`):**
+  - **Servicio API (`src/services/api.js`):**
+    - Función exportada `createMercadoPagoPreference(token, { orderId, items })` que consume el endpoint `/api/mercadopago/{empresaId}/preference`.
+  - **Flujo de Pago (`src/components/ProcesoPago.jsx`):**
+    - Pestaña de pago número 5 integrada en la rejilla de métodos (después de Contra Entrega) con colores y badge MP.
+    - Panel informativo detallado (Vista 5) mostrando tarjetas aceptadas (Visa, Mastercard, Amex, Billetera MP, cuotas) y sello de seguridad cifrada.
+    - Manejador de compra `handleFinalizarCompra`: Detecta `paymentMethod === 'mercadopago'`, genera la preferencia y realiza la redirección.
+
+- **Diagnóstico y Hallazgos Clave de las Pruebas de Sandbox:**
+  - **Comportamiento del Sandbox en Checkout Pro:** Mercado Pago aplica restricciones sumamente estrictas en modo Sandbox (errores como *"Una de las partes con la que intentas hacer el pago es de prueba"*, bloqueo del botón Pagar al faltar o diferir el correo del pagador, y fallas internas en la API de Mercado Pago al crear usuarios de prueba).
+  - **Determinación Técnica:** Mercado Pago **NO exige** completar pruebas en Sandbox para activar la pasarela o comenzar a operar. Las credenciales configuradas (`APP_USR-...`) ya son credenciales operativas de producción.
+  - **Estrategia Acordada:** Pasar a **Producción Real**, eliminando todas las trabas artificiales del Sandbox y permitiendo pagos reales con cualquier tarjeta bancaria (BCP, BBVA, Interbank, etc.).
+
+- **Hoja de Ruta para Continuar Mañana:**
+  1. En `Backend/Controllers/MercadoPagoController.cs`: Asegurar que el objeto `Payer` envíe `Email = client.Correo` para que el cliente reciba su comprobante de pago oficial de Mercado Pago.
+  2. En `Frontend-Relojes/src/components/ProcesoPago.jsx`: Configurar la redirección a `const checkoutUrl = mpRes.initPoint` (pasarela oficial `www.mercadopago.com.pe`).
+  3. Realizar `git add .`, `git commit` y `git push origin master` para que el VPS despliegue la versión de producción.
+  4. Realizar una prueba controlada en vivo de bajo monto (S/ 1.00 o S/ 2.00) con tarjeta real:
+     - Comprobar que la pasarela abra limpiamente.
+     - Confirmar que el pago se apruebe en segundos.
+     - Verificar que el dinero ingrese a la cuenta de Mercado Pago del cliente.
+     - Verificar que el webhook actualice la orden a *"En preparación"*.
+     - Ejecutar el reembolso inmediato del S/ 1.00 desde el panel de Mercado Pago (*"Devolver dinero"*).
