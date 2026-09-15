@@ -127,12 +127,12 @@
       <!-- Filtros -->
       <div class="card font-card">
         <div class="filters-container">
-          <input v-model="searchQuery" type="text" placeholder="Buscar por cliente o ID..." class="filter-input" />
+          <input v-model="searchQuery" type="text" placeholder="Buscar por cliente o ID..." class="filter-input search-input" />
           <div class="date-filters">
             <span class="date-label">Desde:</span>
-            <input v-model="filterFechaDesde" type="date" class="filter-input" title="Fecha inicial" />
+            <input v-model="filterFechaDesde" type="date" class="date-input" title="Fecha inicial" />
             <span class="date-label">Hasta:</span>
-            <input v-model="filterFechaHasta" type="date" class="filter-input" title="Fecha final" />
+            <input v-model="filterFechaHasta" type="date" class="date-input" title="Fecha final" />
             <button @click="clearDateFilter" class="btn btn-secondary btn-sm" title="Mostrar todos los tiempos">Mostrar todo</button>
           </div>
         </div>
@@ -637,13 +637,22 @@ onMounted(() => fetchOrders())
 .date-filters {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 .date-label {
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-muted);
+}
+.date-input {
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  outline: none;
+  font-size: 0.9rem;
+  background: #fff;
+  color: var(--text-main);
 }
 
 .badge-count {
@@ -662,24 +671,19 @@ onMounted(() => fetchOrders())
   display: flex;
   gap: 16px;
   margin-bottom: 24px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 .filter-input {
-  flex-grow: 1;
   padding: 10px 16px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
   outline: none;
   font-size: 0.95rem;
 }
-.filter-select {
-  width: 220px;
-  padding: 10px 16px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background: #fff;
-  color: var(--text-main);
-  outline: none;
-  font-size: 0.95rem;
+.search-input {
+  flex-grow: 1;
+  min-width: 250px;
 }
 
 /* Estado badges */
