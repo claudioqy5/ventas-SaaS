@@ -128,14 +128,7 @@
       <div class="card font-card">
         <div class="filters-container">
           <input v-model="searchQuery" type="text" placeholder="Buscar por cliente o ID..." class="filter-input" />
-          <select v-model="filterEstado" class="filter-select">
-            <option value="">Todos los estados</option>
-            <option value="PENDIENTE_PAGO">Pendiente de Pago</option>
-            <option value="EN_PREPARACION">En Preparación</option>
-            <option value="ENVIADO">Enviado</option>
-            <option value="ENTREGADO">Entregado</option>
-            <option value="CANCELADO">Cancelado</option>
-          </select>
+          <input v-model="filterFecha" type="date" class="filter-input" style="max-width: 200px;" title="Filtrar por fecha" />
         </div>
 
         <HamsterLoader v-if="loading" label="Cargando pedidos web..." />
@@ -374,6 +367,7 @@ const authStore = useAuthStore()
 const orders = ref([])
 const loading = ref(false)
 const searchQuery = ref('')
+const filterFecha = ref('')
 const filterEstado = ref('PENDIENTE_PAGO')
 const selectedOrder = ref(null)
 const updatingStatus = ref(false)
@@ -421,7 +415,18 @@ const filteredOrders = computed(() => {
       (o.id && o.id.toLowerCase().includes(q)) ||
       (o.codigoOperacionPago && o.codigoOperacionPago.toLowerCase().includes(q))
     const matchesEstado = !filterEstado.value || o.estadoOrden === filterEstado.value
-    return matchesSearch && matchesEstado
+    
+    let matchesFecha = true
+    if (filterFecha.value) {
+      if (o.fechaCreacion) {
+        const orderDate = new Date(o.fechaCreacion).toISOString().split('T')[0]
+        matchesFecha = orderDate === filterFecha.value
+      } else {
+        matchesFecha = false
+      }
+    }
+    
+    return matchesSearch && matchesEstado && matchesFecha
   })
 })
 
@@ -602,13 +607,15 @@ onMounted(() => fetchOrders())
 }
 .actions-group {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  flex-wrap: nowrap;
+  gap: 6px;
 }
 .btn-action {
-  display: inline-flex;
+  width: 100%;
+  display: flex;
+  justify-content: center;
   align-items: center;
   gap: 5px;
   padding: 6px 12px;
