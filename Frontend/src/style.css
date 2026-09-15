@@ -537,7 +537,7 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
 /* Main Area */
 .main-content {
   flex-grow: 1;
-  padding: 2.5vw;
+  padding: 32px;
   background-color: var(--bg-app);
   overflow-y: auto;
 }
