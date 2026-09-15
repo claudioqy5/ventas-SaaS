@@ -25,6 +25,8 @@ services:
       - MongoDB__ConnectionString=mongodb://mongodb:27017
       - MongoDB__DatabaseName=VentasSaaS
       - JwtSettings__Secret=SuperSecretSaaSKeyOfLengthGreaterThan32Characters!12345
+      - MercadoPago__AccessToken=${MP_ACCESS_TOKEN}
+      - MercadoPago__PublicKey=${MP_PUBLIC_KEY}
     volumes:
       - uploads_data:/app/uploads
     depends_on:
