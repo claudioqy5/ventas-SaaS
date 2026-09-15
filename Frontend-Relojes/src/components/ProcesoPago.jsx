@@ -275,8 +275,8 @@ export default function ProcesoPago({
           orderId: res.orderId,
           items: items
         });
-        // Modo de prueba con Sandbox: usamos sandboxInitPoint
-        const checkoutUrl = mpRes.sandboxInitPoint || mpRes.initPoint;
+        // Pasamos a Producción real: usamos initPoint
+        const checkoutUrl = mpRes.initPoint;
         if (checkoutUrl && typeof window !== 'undefined') {
           window.location.href = checkoutUrl;
         }

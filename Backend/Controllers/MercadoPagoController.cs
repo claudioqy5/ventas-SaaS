@@ -67,7 +67,8 @@ public class MercadoPagoController : ControllerBase
             Payer = new PreferencePayerRequest
             {
                 Name    = client.Nombres ?? client.Nombre,
-                Surname = client.Apellidos ?? string.Empty
+                Surname = client.Apellidos ?? string.Empty,
+                Email   = client.Correo
             },
             BackUrls = new PreferenceBackUrlsRequest
             {
