@@ -646,6 +646,7 @@ onMounted(() => fetchOrders())
   color: var(--text-muted);
 }
 .date-input {
+  width: auto !important;
   padding: 8px 12px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
@@ -682,8 +683,7 @@ onMounted(() => fetchOrders())
   font-size: 0.95rem;
 }
 .search-input {
-  flex-grow: 1;
-  min-width: 250px;
+  flex: 1 1 250px;
 }
 
 /* Estado badges */
