@@ -27,6 +27,11 @@ services:
       - JwtSettings__Secret=SuperSecretSaaSKeyOfLengthGreaterThan32Characters!12345
       - MercadoPago__AccessToken=${MP_ACCESS_TOKEN}
       - MercadoPago__PublicKey=${MP_PUBLIC_KEY}
+      - SmtpSettings__Host=${SMTP_HOST}
+      - SmtpSettings__Port=${SMTP_PORT}
+      - SmtpSettings__Email=${SMTP_EMAIL}
+      - SmtpSettings__Password=${SMTP_PASSWORD}
+      - SmtpSettings__EnableSsl=true
     volumes:
       - uploads_data:/app/uploads
     depends_on:
