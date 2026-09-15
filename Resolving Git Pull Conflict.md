@@ -3641,4 +3641,61 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
      - Confirmar que el pago se apruebe en segundos.
      - Verificar que el dinero ingrese a la cuenta de Mercado Pago del cliente.
      - Verificar que el webhook actualice la orden a *"En preparación"*.
-     - Ejecutar el reembolso inmediato del S/ 1.00 desde el panel de Mercado Pago (*"Devolver dinero"*).
+     - Ejecutar el reembolso inmediato del S/ 1.00 desde el panel de Mercado Pago (*"Devolver dinero"*).
+
+---
+
+### Actualización - 15 de Septiembre de 2026
+
+**1. Correcciones de Interfaz y UX (Dashboard y Panel Administrativo):**
+- **Pedidos Web (`OnlineOrders.vue`):** Se resolvió el inconveniente de deformación donde los botones de filtro rápido de fechas (Hoy, 7D, Este Mes) y el buscador de clientes quedaban en filas separadas y con anchos desproporcionados. Se unificaron en una sola línea horizontal compacta (`flex`, `align-items: center`, `gap`) con anchos controlados y comportamiento responsivo.
+- **Barra Lateral / Sidebar (`style.css`):** Se corrigió el desplazamiento visual involuntario (*layout shift*) que ocurría durante la transición de apertura y cierre del menú lateral. Se fijó un ancho y alineación permanente para que los íconos y textos mantengan su posición exacta sin brincos visuales.
+
+**2. Sistema de Seguridad: Verificación de Cuentas por Correo Electrónico (Flujo Antifraude):**
+- **Objetivo:** Evitar que se registren cuentas con correos falsos o inventados, impidiendo el inicio de sesión hasta que el usuario demuestre la titularidad de su correo haciendo clic en un enlace de activación (flujo estándar idéntico al de plataformas como `punto.pe`).
+- **Backend (.NET 9 / C#):**
+  - **Modelo `User.cs`:** Se agregaron los campos `CorreoVerificado` (`bool`) y `TokenVerificacion` (`string?`).
+  - **Servicio `Backend/Services/EmailService.cs`:** Implementado con `System.Net.Mail.SmtpClient`. Despacha automáticamente correos con formato HTML corporativo, mensaje de bienvenida y botón de acción destacado: `[Verificar mi cuenta]` con enlace parametrizado (`?token=...`).
+  - **Controlador `Backend/Controllers/AuthController.cs`:**
+    - `POST /api/auth/registrar-empresa` y `POST /api/auth/create-user`: Crean las cuentas con `CorreoVerificado = false`, generan un token GUID seguro y disparan el correo de verificación al destinatario.
+    - `POST /api/auth/login`: Control de acceso. Si un usuario intenta autenticarse con `CorreoVerificado == false`, se rechaza con error 401: *"Debes verificar tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada."*
+    - `GET /api/auth/verify-email?token=...`: Endpoint que valida el token, marca `CorreoVerificado = true`, limpia el token de un solo uso y habilita la cuenta.
+    - `POST /api/auth/seed-superadmin`: El Superadministrador queda pre-verificado (`CorreoVerificado = true`) para no bloquear el acceso maestro del sistema.
+  - **Plantilla de configuración (`Backend/appsettings.example.json`):** Estructura documentada para la sección `SmtpSettings` (Host, Port, Email, Password, EnableSsl).
+- **Frontend (Vue 3):**
+  - **Vista `Frontend/src/views/VerifyEmail.vue`:** Pantalla dedicada que recibe el parámetro `token`, consulta la API de verificación y muestra retroalimentación visual (spinner de carga, estado de éxito con check verde y botón *"Ir a Iniciar Sesión"*, o mensaje de error en caso de token inválido/expirado).
+  - **Rutas (`Frontend/src/router/index.js`):** Registro de la ruta pública `/verificar-correo`.
+  - **Gestión de Usuarios (`Frontend/src/views/Users.vue`):** Se adecuaron los avisos para notificar al administrador que se ha enviado el correo de validación a la bandeja del colaborador recién creado.
+- **DevOps y Despliegue Docker:**
+  - **`docker-compose.yml`:** Se añadieron las variables de entorno en el contenedor `backend` (`SmtpSettings__Host`, `SmtpSettings__Port`, `SmtpSettings__Email`, `SmtpSettings__Password`, `FrontendUrl`) mapeadas a variables del archivo `.env` del VPS, facilitando su configuración sin intervenir archivos internos.
+  - **Control de Versiones:** Todo el código fue probado, compilado, commiteado (`d5e8d63`, `4ba92ed`) y subido satisfactoriamente a GitHub (`origin/master`).
+
+**3. Estado Actual y Dónde Nos Quedamos:**
+- El código fuente está **100% completado, subido al repositorio y listo para producción**.
+- **Configuración en Espera:** Se acordó **NO llenar aún el archivo `.env` en el VPS** debido a que todavía no se cuenta con el dominio final (`lgante.pe`) ni con el correo corporativo del negocio configurado.
+
+**4. Tareas Pendientes / Próximos Pasos:**
+1. **Adquisición y Configuración de Dominio / Correo:**
+   - Adquirir el dominio en `punto.pe` (`lgante.pe`).
+   - Configurar el buzón de correo emisor (ej. en Hostinger: `soporte@lgante.pe` / `contacto@lgante.pe`, o temporalmente una cuenta Gmail con contraseña de aplicación).
+2. **Carga de Credenciales en el VPS (`.env`):**
+   Completar las siguientes líneas en el archivo `.env` del servidor:
+   ```env
+   SMTP_HOST=smtp.hostinger.com (o smtp.gmail.com)
+   SMTP_PORT=465 (o 587)
+   SMTP_EMAIL=tu_correo@lgante.pe
+   SMTP_PASSWORD=tu_contraseña_o_clave_de_aplicacion
+   FRONTEND_URL=https://www.lgante.pe
+   ```
+3. **Reconstrucción y Reinicio de Contenedores en VPS:**
+   Ejecutar en la consola de Hostinger:
+   ```bash
+   docker-compose down
+   docker-compose up -d --build
+   ```
+4. **Validación en Vivo:**
+   - Registrar o crear un usuario de prueba.
+   - Confirmar recepción del correo en la bandeja de entrada.
+   - Probar que el login esté bloqueado antes del clic.
+   - Hacer clic en el enlace/botón de activación y confirmar inicio de sesión exitoso.
+
