@@ -27,3 +27,5 @@ dist/
 # OS temporary files
 .DS_Store
 Thumbs.db
+
+Backend/appsettings.json
