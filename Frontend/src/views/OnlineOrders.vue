@@ -128,7 +128,13 @@
       <div class="card font-card">
         <div class="filters-container">
           <input v-model="searchQuery" type="text" placeholder="Buscar por cliente o ID..." class="filter-input" />
-          <input v-model="filterFecha" type="date" class="filter-input" style="max-width: 200px;" title="Filtrar por fecha" />
+          <div class="date-filters">
+            <span class="date-label">Desde:</span>
+            <input v-model="filterFechaDesde" type="date" class="filter-input" title="Fecha inicial" />
+            <span class="date-label">Hasta:</span>
+            <input v-model="filterFechaHasta" type="date" class="filter-input" title="Fecha final" />
+            <button @click="clearDateFilter" class="btn btn-secondary btn-sm" title="Mostrar todos los tiempos">Mostrar todo</button>
+          </div>
         </div>
 
         <HamsterLoader v-if="loading" label="Cargando pedidos web..." />
@@ -186,18 +192,16 @@
               </td>
               <td class="actions-cell">
                 <div class="actions-group">
-                  <button @click="openDetail(order)" class="btn-action btn-action-detail" title="Ver Detalles del Pedido">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    <span>Detalles</span>
+                  <button @click="openDetail(order)" class="btn-action-icon edit" title="Ver Detalles del Pedido">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                   </button>
                   <button
                     v-if="order.estadoOrden !== 'CANCELADO' && order.estadoOrden !== 'ENTREGADO'"
                     @click="openStatusModal(order)"
-                    class="btn-action btn-action-status"
+                    class="btn-action-icon status"
                     title="Actualizar Estado del Pedido"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                    <span>Estado</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                   </button>
                 </div>
               </td>
@@ -367,10 +371,16 @@ const authStore = useAuthStore()
 const orders = ref([])
 const loading = ref(false)
 const searchQuery = ref('')
-const filterFecha = ref('')
+const filterFechaDesde = ref(new Date().toISOString().split('T')[0])
+const filterFechaHasta = ref(new Date().toISOString().split('T')[0])
 const filterEstado = ref('PENDIENTE_PAGO')
 const selectedOrder = ref(null)
 const updatingStatus = ref(false)
+
+const clearDateFilter = () => {
+  filterFechaDesde.value = ''
+  filterFechaHasta.value = ''
+}
 
 const selectStatusCard = (status) => {
   if (filterEstado.value === status) {
@@ -417,10 +427,11 @@ const filteredOrders = computed(() => {
     const matchesEstado = !filterEstado.value || o.estadoOrden === filterEstado.value
     
     let matchesFecha = true
-    if (filterFecha.value) {
+    if (filterFechaDesde.value || filterFechaHasta.value) {
       if (o.fechaCreacion) {
         const orderDate = new Date(o.fechaCreacion).toISOString().split('T')[0]
-        matchesFecha = orderDate === filterFecha.value
+        if (filterFechaDesde.value && orderDate < filterFechaDesde.value) matchesFecha = false
+        if (filterFechaHasta.value && orderDate > filterFechaHasta.value) matchesFecha = false
       } else {
         matchesFecha = false
       }
@@ -607,50 +618,32 @@ onMounted(() => fetchOrders())
 }
 .actions-group {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
 }
-.btn-action {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid transparent;
-  white-space: nowrap;
-  outline: none;
-}
-.btn-action-detail {
-  background: #eff6ff;
-  color: #2563eb;
-  border-color: #bfdbfe;
-}
-.btn-action-detail:hover {
-  background: #2563eb;
-  color: #ffffff;
-  border-color: #2563eb;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
-}
-.btn-action-status {
+.btn-action-icon.status {
   background: #f0fdf4;
   color: #15803d;
   border-color: #86efac;
 }
-.btn-action-status:hover {
+.btn-action-icon.status:hover {
   background: #16a34a;
   color: #ffffff;
   border-color: #16a34a;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(22, 163, 74, 0.25);
+}
+.date-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.date-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 .badge-count {
