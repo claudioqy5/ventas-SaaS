@@ -54,6 +54,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddSingleton<IJwtProvider, JwtProvider>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
 

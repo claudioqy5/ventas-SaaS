@@ -21,18 +21,21 @@ public class AuthController : ControllerBase
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtProvider _jwtProvider;
     private readonly IUserContext _userContext;
+    private readonly IEmailService _emailService;
 
     // Constructor: inyecta todos los servicios necesarios para autenticar y gestionar usuarios
     public AuthController(
         MongoDbContext context, 
         IPasswordHasher passwordHasher, 
         IJwtProvider jwtProvider,
-        IUserContext userContext)
+        IUserContext userContext,
+        IEmailService emailService)
     {
         _context = context;
         _passwordHasher = passwordHasher;
         _jwtProvider = jwtProvider;
         _userContext = userContext;
+        _emailService = emailService;
     }
 
     // POST api/auth/seed-superadmin — crea el Superadministrador inicial del sistema (solo una vez)
@@ -61,7 +64,8 @@ public class AuthController : ControllerBase
             Correo = request.Correo,
             ClaveHash = _passwordHasher.Hash(request.Clave),
             Rol = "Superadmin",
-            Permisos = new List<string> { "usuarios", "empresas" }
+            Permisos = new List<string> { "usuarios", "empresas" },
+            CorreoVerificado = true // Superadmin esta verificado por defecto
         };
         await _context.Users.InsertOneAsync(superadmin);
 
@@ -99,9 +103,14 @@ public class AuthController : ControllerBase
             Correo = request.CorreoPropietario,
             ClaveHash = _passwordHasher.Hash(request.ClavePropietario),
             Rol = "EmpresaOwner",
-            Permisos = new List<string> { "dashboard", "historial_negocio", "ventas", "productos", "categorias", "modificar_productos", "clientes", "proveedores", "compras", "movimientos", "config", "reminders", "cuentas_cobrar", "formas_pago", "colaboradores", "pedidos_web" }
+            Permisos = new List<string> { "dashboard", "historial_negocio", "ventas", "productos", "categorias", "modificar_productos", "clientes", "proveedores", "compras", "movimientos", "config", "reminders", "cuentas_cobrar", "formas_pago", "colaboradores", "pedidos_web" },
+            CorreoVerificado = false,
+            TokenVerificacion = Guid.NewGuid().ToString("N")
         };
         await _context.Users.InsertOneAsync(owner);
+
+        // Enviar correo de verificacion
+        _ = _emailService.SendVerificationEmailAsync(owner.Correo, owner.TokenVerificacion);
 
         // ACTUALIZACION: guardo el Id del propietario dentro del registro de la empresa
         var filter = Builders<Empresa>.Filter.Eq(e => e.Id, empresa.Id);
@@ -120,6 +129,12 @@ public class AuthController : ControllerBase
         if (user == null || !_passwordHasher.Verify(request.Clave, user.ClaveHash))
         {
             return Unauthorized(new { message = "Credenciales incorrectas o usuario inactivo." });
+        }
+
+        // VALIDACION DE CORREO: el usuario debe haber verificado su correo
+        if (!user.CorreoVerificado)
+        {
+            return Unauthorized(new { message = "Por favor, verifica tu correo antes de ingresar. Revisa tu bandeja de entrada o spam." });
         }
 
         // Genero el token JWT que el frontend guardara para autenticar las siguientes peticiones
@@ -206,9 +221,14 @@ public class AuthController : ControllerBase
             ClaveHash = _passwordHasher.Hash(request.Clave),
             Rol = request.Rol,
             Permisos = request.Permisos,
-            Activo = true
+            Activo = true,
+            CorreoVerificado = false,
+            TokenVerificacion = Guid.NewGuid().ToString("N")
         };
         await _context.Users.InsertOneAsync(newUser);
+
+        // Enviar correo de verificacion al nuevo usuario
+        _ = _emailService.SendVerificationEmailAsync(newUser.Correo, newUser.TokenVerificacion);
 
         // Si se creo un nuevo EmpresaOwner, actualizo la empresa para dejarlo como propietario
         if (role == "Superadmin" && request.Rol == "EmpresaOwner" && empresaId != null)
@@ -358,6 +378,26 @@ public class AuthController : ControllerBase
         // CONSULTA: traigo todas las empresas registradas en el sistema
         var empresas = await _context.Empresas.Find(_ => true).ToListAsync();
         return Ok(empresas.Select(e => new { e.Id, e.Nombre, e.PlanSuscripcion, e.Activo, e.FechaCreacion }));
+    }
+
+    // GET api/auth/verify-email — verifica un correo con su token
+    [HttpGet("verify-email")]
+    public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+    {
+        if (string.IsNullOrEmpty(token))
+            return BadRequest(new { message = "Token inválido." });
+
+        var user = await _context.Users.Find(u => u.TokenVerificacion == token).FirstOrDefaultAsync();
+        if (user == null)
+            return BadRequest(new { message = "Token inválido o expirado." });
+
+        var update = Builders<User>.Update
+            .Set(u => u.CorreoVerificado, true)
+            .Set(u => u.TokenVerificacion, null);
+        
+        await _context.Users.UpdateOneAsync(u => u.Id == user.Id, update);
+
+        return Ok(new { message = "Correo verificado exitosamente." });
     }
 }
 

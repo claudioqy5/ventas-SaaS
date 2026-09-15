@@ -17,8 +17,11 @@ import StockMovements from '../views/StockMovements.vue'
 import CreditSales from '../views/CreditSales.vue'
 import PaymentMethods from '../views/PaymentMethods.vue'
 
+import VerifyEmail from '../views/VerifyEmail.vue'
+
 const routes = [
   { path: '/login', component: Login, name: 'Login' },  
+  { path: '/verificar-correo', component: VerifyEmail, name: 'VerifyEmail' },
   { 
     path: '/dashboard', 
     component: Dashboard, 

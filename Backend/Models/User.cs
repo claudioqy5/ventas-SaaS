@@ -25,4 +25,8 @@ public class User
     public List<string> Permisos { get; set; } = new(); // Modulos disponibles: dashboard, ventas, productos, clientes, proveedores, compras, movimientos, config
     public bool Activo { get; set; } = true;
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+    
+    // Verificacion de Correo
+    public bool CorreoVerificado { get; set; } = false;
+    public string? TokenVerificacion { get; set; }
 }
