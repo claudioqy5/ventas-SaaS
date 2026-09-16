@@ -199,12 +199,11 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
   flex-direction: column;
   gap: 1.2vh;
   flex-shrink: 0;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   height: 100vh;
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
   z-index: 100;
 }
 
@@ -538,7 +537,7 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
 /* Main Area */
 .main-content {
   flex-grow: 1;
-  margin-left: 68px; /* Same as the collapsed sidebar width */
+  min-width: 0;
   padding: 32px;
   background-color: var(--bg-app);
   overflow-y: auto;
