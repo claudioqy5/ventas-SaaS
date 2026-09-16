@@ -1,177 +1,182 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
-import CrucigramaHero from './CrucigramaHero';
+import React from 'react';
+import { ArrowRight, Eye } from 'lucide-react';
 
 export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % 3);
-    }, 4500);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <section className="hero-section" style={{
       position: 'relative',
       minHeight: 'calc(100vh - 85px)',
       display: 'flex',
-      alignItems: 'center'
-      /* overflow: hidden quitado para permitir que la tarjeta sobresalga hacia abajo */
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'radial-gradient(circle at center, var(--c-charcoal) 0%, var(--c-obsidian) 80%)',
+      overflow: 'hidden',
+      color: '#fff'
     }}>
-      {/* Columna Derecha: Galería de Relojes (Crossfade) Full Bleed al 50% exacto */}
-      <div className="hero-images" style={{
+      {/* Giant Background Text */}
+      <div style={{
         position: 'absolute',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        width: '50%',
-        overflow: 'hidden',
+        top: '40%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: 'clamp(5rem, 18vw, 22rem)',
+        fontFamily: 'var(--font-sans)',
+        fontWeight: 900,
+        color: 'rgba(255,255,255,0.04)',
+        whiteSpace: 'nowrap',
         zIndex: 1,
-        boxShadow: '-30px 0 80px rgba(0,0,0,0.35)'
+        letterSpacing: '-0.02em',
+        lineHeight: 0.8
       }}>
-        {['/watches/chronograph_gold.jpg', '/watches/moonphase_blue.jpg', '/watches/skeleton_titanium.jpg'].map((img, idx) => (
-          <div
-            key={idx}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backgroundImage: `url(${img})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              opacity: currentImageIndex === idx ? 1 : 0,
-              transition: 'opacity 2s ease-in-out, transform 4.5s ease-out',
-              transform: currentImageIndex === idx ? 'scale(1)' : 'scale(1.05)',
-            }}
-          />
-        ))}
+        SYNTH ERA
       </div>
 
-      {/* Halos ambientales dorados suaves */}
+      {/* Floating Watch Image */}
+      <div style={{
+        position: 'relative',
+        zIndex: 2,
+        width: '100%',
+        maxWidth: '900px',
+        height: '70vh',
+        minHeight: '400px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        animation: 'floatElement 6s ease-in-out infinite'
+      }}>
+        <img 
+          src="/watches/edifice_hero.jpg" 
+          alt="Edifice Watch" 
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            mixBlendMode: 'lighten',
+            filter: 'drop-shadow(0 30px 40px rgba(0,0,0,0.8))'
+          }}
+        />
+      </div>
+
+      {/* Cursive Text Overlay "MODERN ARMOR" */}
+      <div style={{
+        position: 'absolute',
+        top: '55%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: 'clamp(3rem, 9vw, 11rem)',
+        fontFamily: 'LeBistrotDesAmoureux, cursive',
+        color: 'var(--c-gold)',
+        whiteSpace: 'nowrap',
+        zIndex: 3,
+        textShadow: '0 10px 30px rgba(0,0,0,0.8)',
+        pointerEvents: 'none'
+      }}>
+        Modern Armor
+      </div>
+
+      {/* "CREATED FOR YOU." */}
+      <div style={{
+        position: 'absolute',
+        top: '68%',
+        left: '15%',
+        fontFamily: 'LeBistrotDesAmoureux, cursive',
+        fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)',
+        color: '#fff',
+        zIndex: 4,
+        transform: 'rotate(-4deg)',
+        textShadow: '0 4px 15px rgba(0,0,0,0.5)'
+      }}>
+        Created for you.
+      </div>
+
+      {/* Bottom Left Info */}
       <div style={{
         position: 'absolute',
         bottom: '10%',
-        left: '5%',
-        width: '550px',
-        height: '450px',
-        background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%)',
-        filter: 'blur(70px)',
-        pointerEvents: 'none',
-        zIndex: 0
-      }} />
-
-      <div className="hero-content-wrapper" style={{
-        width: '100%',
-        padding: '50px clamp(28px, 4vw, 65px)',
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        zIndex: 2
+        left: '8%',
+        zIndex: 4,
+        maxWidth: '300px'
       }}>
-        {/* Columna Izquierda: Mensaje en fondo luminoso que fluye hacia el reloj */}
-        <div className="hero-content" style={{ width: '58%', maxWidth: '880px', position: 'relative' }}>
-          {/* Badge de Alta Horlogerie */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '12px',
-            fontFamily: '"Cinzel", serif',
-            fontSize: '0.72rem',
-            fontWeight: 600,
-            letterSpacing: '0.28em',
-            textTransform: 'uppercase',
-            color: 'var(--c-gold)',
-            marginBottom: '16px'
-          }}>
-            <span style={{ width: '24px', height: '1px', background: 'var(--c-gold)', opacity: 0.6 }}></span>
-            ALTA RELOJERÍA
-          </div>
-
-          {/* Titular SEO Oculto pero indexable */}
-          <h1 style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', borderWidth: 0 }}>
-            L'gant: Boutique de Alta Relojería y Relojes de Lujo en Perú
-          </h1>
-
-          {/* Crucigrama Tipográfico: ELEGANTE EN CADA SEGUNDO */}
-          <CrucigramaHero />
-
-          {/* Botón de Acción */}
-          <div className="hero-buttons" style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', marginTop: '14px', marginBottom: '40px' }}>
-            <button
-              onClick={onExplore}
-              className="btn-indigo blush-shimmer"
-            >
-              Explorar Guardatiempos
-              <ArrowRight size={17} />
-            </button>
-          </div>
-
-          {/* Sellos de Excelencia */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '20px',
-            borderTop: '1px solid rgba(59, 60, 65, 0.15)',
-            paddingTop: '26px',
-            maxWidth: '380px' // Limitar el ancho para dar espacio a la tarjeta
-          }}>
-            <div>
-              <div className="font-serif" style={{ color: 'var(--c-gold)', fontSize: '1.35rem', fontWeight: 600 }}>
-                100%
-              </div>
-              <div style={{ fontSize: '0.76rem', color: 'var(--c-steel)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 400 }}>
-                Originales Multimarca
-              </div>
-            </div>
-            <div>
-              <div className="font-serif" style={{ color: 'var(--c-gold)', fontSize: '1.35rem', fontWeight: 600 }}>
-                5 AÑOS
-              </div>
-              <div style={{ fontSize: '0.76rem', color: 'var(--c-steel)', letterSpacing: '0.04em', marginTop: '2px', fontWeight: 400 }}>
-                Garantía Internacional
-              </div>
-            </div>
-          </div>
-        </div>
+        <h3 style={{ 
+          fontFamily: 'var(--font-sans)', 
+          fontSize: '1.1rem', 
+          textTransform: 'uppercase', 
+          letterSpacing: '0.1em',
+          marginBottom: '15px',
+          fontWeight: 600,
+          color: '#fff'
+        }}>
+          LIMITED PRE-ORDERS
+        </h3>
+        <p style={{
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: '0.95rem',
+          lineHeight: 1.6,
+          fontWeight: 400
+        }}>
+          Own the next-generation watch engineered for your comfort and bold individuality.
+        </p>
       </div>
 
-      {/* Tarjeta Flotante Promocional para incentivar Scroll (Pegada al fondo de la sección) */}
-      <div 
-        className="hero-promo-card"
-        onClick={onExplore}
-        style={{
-          position: 'absolute',
-          left: 'max(25%, calc(50vw - 650px))', /* Alinear con el contenido izquierdo */
-          bottom: '-120px', /* Cuelga por debajo del Hero, mitad adentro mitad afuera */
-          background: 'linear-gradient(135deg, var(--c-obsidian) 0%, var(--c-charcoal) 100%)',
-          border: '1px solid rgba(212, 175, 55, 0.35)',
-          color: '#fff',
-          padding: '45px 50px',
-          borderRadius: '24px',
-          width: 'min(90%, 550px)',
-          boxShadow: '0 30px 60px rgba(11, 11, 12, 0.45)',
-          zIndex: 30,
-          cursor: 'pointer',
-          transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-15px)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-      >
-        <div style={{ fontSize: '0.9rem', letterSpacing: '0.2em', textTransform: 'uppercase', opacity: 0.8, marginBottom: '14px', fontWeight: 600 }}>
-          Beneficio Exclusivo
-        </div>
-        <div className="font-serif" style={{ fontSize: '3.6rem', lineHeight: 1.1, marginBottom: '10px', color: 'var(--c-gold)' }}>
-          30% <span style={{ fontSize: '1.6rem', fontWeight: 400, fontStyle: 'italic', fontFamily: 'var(--font-sans)' }}>OFF</span>
-        </div>
-        <div style={{ fontSize: '1.1rem', opacity: 0.9, marginBottom: '35px', lineHeight: 1.5, maxWidth: '400px' }}>
-          En tu primer pedido de Alta Relojería. Aplica para colecciones seleccionadas.
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--c-champagne)' }}>
-          Descubrir Ahora <ArrowRight size={20} />
+      {/* Bottom Right Glass Card */}
+      <div onClick={onExplore} style={{
+        position: 'absolute',
+        bottom: '10%',
+        right: '8%',
+        zIndex: 4,
+        background: 'rgba(26, 27, 31, 0.65)',
+        backdropFilter: 'blur(15px)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        padding: '30px',
+        borderRadius: '20px',
+        maxWidth: '320px',
+        cursor: 'pointer',
+        transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-12px)';
+        e.currentTarget.style.background = 'rgba(26, 27, 31, 0.85)';
+        e.currentTarget.style.border = '1px solid rgba(212, 175, 55, 0.3)'; // Gold hover border
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.background = 'rgba(26, 27, 31, 0.65)';
+        e.currentTarget.style.border = '1px solid rgba(255,255,255,0.08)';
+      }}>
+        <h3 style={{ 
+          fontFamily: 'var(--font-sans)', 
+          fontSize: '1rem', 
+          textTransform: 'uppercase', 
+          letterSpacing: '0.15em',
+          marginBottom: '15px',
+          fontWeight: 600,
+          color: '#fff'
+        }}>
+          THIS MONTH'S EXCLUSIVE
+        </h3>
+        <p style={{
+          color: 'rgba(255, 255, 255, 0.65)',
+          fontSize: '0.85rem',
+          lineHeight: 1.5,
+          marginBottom: '25px'
+        }}>
+          Pre-order now and unlock exclusive pricing this month.
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#fff' }}>
+          <span style={{ fontSize: '0.85rem', letterSpacing: '0.05em', fontWeight: 500 }}>See more info</span>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            borderRadius: '50%', 
+            border: '1px solid rgba(255,255,255,0.3)', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            transition: 'all 0.3s ease'
+          }}>
+            <Eye size={14} />
+          </div>
         </div>
       </div>
     </section>
