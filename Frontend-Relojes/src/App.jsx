@@ -11,6 +11,7 @@ import ModalAjustesInquilino from './components/ModalAjustesInquilino';
 import ModalAuthCliente from './components/ModalAuthCliente';
 import Testimonios from './components/Testimonios';
 import PieDePagina from './components/PieDePagina';
+import ArmaTuReloj from './components/ArmaTuReloj';
 import { fetchStoreProducts } from './services/api';
 import CargadorReloj from './components/CargadorReloj';
 import BotonWhatsApp from './components/BotonWhatsApp';
@@ -251,6 +252,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
         window.history.pushState({}, '', '/preguntas-frecuentes');
       } else if (viewName === 'terminos') {
         window.history.pushState({}, '', '/terminos-y-condiciones');
+      } else if (viewName === 'arma-tu-reloj') {
+        window.history.pushState({}, '', '/arma-tu-reloj');
       } else if (viewName === 'checkout') {
         window.history.pushState({}, '', '/checkout');
       } else if (viewName === 'pedido-confirmado') {
@@ -280,6 +283,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
         setSelectedProduct(null);
       } else if (path.includes('/terminos-y-condiciones')) {
         setActiveView('terminos');
+        setSelectedProduct(null);
+      } else if (path.includes('/arma-tu-reloj')) {
+        setActiveView('arma-tu-reloj');
         setSelectedProduct(null);
       } else if (path.includes('/checkout')) {
         setActiveView('checkout');
@@ -731,6 +737,12 @@ export default function App({ initialCategory, initialProductId, initialView = '
           onNavigate={handleNavigateView}
           onBack={handleBackToCatalog}
         />
+      ) : activeView === 'arma-tu-reloj' ? (
+        <ArmaTuReloj
+          products={products}
+          onBack={handleBackToCatalog}
+          onAddToCart={handleAddToCart}
+        />
       ) : (
         <>
           {/* Hero Section: Solo se muestra en la página principal, no en páginas de categoría, catálogo expandido o búsqueda */}
@@ -739,6 +751,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
               <Inicio
                 onExplore={scrollToCatalog}
                 onOpenWhatsAppConcierge={handleOpenWhatsAppConcierge}
+                onNavigateView={handleNavigateView}
               />
               {/* Banner de Marcas Reconocidas */}
               <MarcasDestacadas />

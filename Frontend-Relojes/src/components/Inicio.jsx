@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Eye } from 'lucide-react';
 
-export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
+export default function Inicio({ onExplore, onOpenWhatsAppConcierge, onNavigateView }) {
   return (
     <section className="hero-section" style={{
       position: 'relative',
@@ -28,7 +28,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         letterSpacing: '-0.02em',
         lineHeight: 0.8
       }}>
-        SYNTH ERA
+        ELEGANCIA
       </div>
 
       {/* Floating Watch Image */}
@@ -45,13 +45,13 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         animation: 'floatElement 6s ease-in-out infinite'
       }}>
         <img 
-          src="/watches/edifice_hero.jpg" 
+          src="/watches/edifice_pure_black.jpg" 
           alt="Edifice Watch" 
           style={{
             width: '100%',
             height: '100%',
             objectFit: 'contain',
-            mixBlendMode: 'lighten',
+            mixBlendMode: 'screen',
             filter: 'drop-shadow(0 30px 40px rgba(0,0,0,0.8))'
           }}
         />
@@ -119,7 +119,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
       </div>
 
       {/* Bottom Right Glass Card */}
-      <div onClick={onExplore} style={{
+      <div onClick={() => onNavigateView('arma-tu-reloj')} style={{
         position: 'absolute',
         bottom: '10%',
         right: '8%',
@@ -153,7 +153,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
           fontWeight: 600,
           color: '#fff'
         }}>
-          THIS MONTH'S EXCLUSIVE
+          ARMA TU RELOJ
         </h3>
         <p style={{
           color: 'rgba(255, 255, 255, 0.65)',
@@ -161,10 +161,10 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
           lineHeight: 1.5,
           marginBottom: '25px'
         }}>
-          Pre-order now and unlock exclusive pricing this month.
+          Combina caja, material de correa y colores para diseñar un reloj a tu medida.
         </p>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#fff' }}>
-          <span style={{ fontSize: '0.85rem', letterSpacing: '0.05em', fontWeight: 500 }}>See more info</span>
+          <span style={{ fontSize: '0.85rem', letterSpacing: '0.05em', fontWeight: 500 }}>Construye el tuyo</span>
           <div style={{ 
             width: '32px', 
             height: '32px', 
@@ -175,7 +175,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             alignItems: 'center',
             transition: 'all 0.3s ease'
           }}>
-            <Eye size={14} />
+            <ArrowRight size={14} />
           </div>
         </div>
       </div>
