@@ -3743,8 +3743,36 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 - Backend (.NET 9) y ambos Frontends (Vue y Next.js) compilan con 0 errores y 100% de coherencia arquitectónica.
 
 **4. Comportamiento del Sidebar en Panel Admin (`Frontend/src/style.css`):**
-- **Ajuste de Empuje Dinámico:** Se modificó la regla del `.sidebar` a `position: sticky; top: 0;` y se retiró el `margin-left: 68px;` fijo de `.main-content`.
-- **Efecto:** Ahora, al posar el cursor sobre el menú lateral, este se expande suavemente dentro del flujo flex y empuja físicamente el contenido principal hacia la derecha, evitando por completo que tape títulos, filtros o tablas.
+- **Diagnóstico:** Previamente se había aplicado `position: fixed` con `margin-left: 68px` en `.main-content`. Esto provocaba que al pasar el cursor sobre el menú lateral y expandirse a 250px, este flotaba por encima y tapaba los primeros 182px de la pantalla (títulos de sección, buscador y columnas de las tablas).
+- **Ajuste de Empuje Dinámico (Layout Shift Intencional):**
+  - Se configuró `.sidebar` como `position: sticky; top: 0;` como elemento en el flujo del contenedor flex (`.dashboard-layout`).
+  - Se eliminó el `margin-left: 68px;` fijo de `.main-content` y se agregó `min-width: 0;`.
+  - Se agregó `min-width 0.3s` a la transición CSS de la barra lateral.
+- **Efecto Visual Obtenido:** Al hacer hover sobre el sidebar, este se expande suavemente y **empuja físicamente todo el contenido hacia la derecha** en tiempo real. Al retirar el mouse, el contenido regresa a su posición original sin solapamientos ni elementos ocultos.
+
+**5. Compilación y Versionamiento:**
+- **Backend (.NET 9):** `dotnet build Backend.csproj` completado con 0 errores.
+- **Frontend Admin (Vue 3 / Vite):** `npm run build` completado exitosamente en 1.30s (código 0).
+- **Frontend E-Commerce (Next.js 16):** `npm run build` completado exitosamente, generando la ruta canónica `○ /verificar-correo` sin errores ni advertencias de linting.
+- **Sincronización Git:** Cambios consolidados y subidos a `origin/master` en los commits `50f91f9`, `188e92b` y `d1ea76d`.
+
+---
+
+### ¿Dónde nos quedamos? (Estado Actual y Hoja de Ruta Inmediata)
+
+1. **Despliegue del Backend en el Servidor VPS (Hostinger):**
+   Para aplicar los cambios (desbloqueo del login de administración y nuevo endpoint de verificación para la tienda online), ejecutar en el VPS:
+   ```bash
+   git pull origin master
+   docker-compose down
+   docker-compose up -d --build
+   ```
+   *Nota: Al reiniciar los contenedores, el login en `ventassaas.vercel.app` para `relojes@ventassaas.com` entrará de forma directa e inmediata.*
+
+2. **Pendientes de Producción para E-Commerce / Pagos:**
+   - **Mercado Pago Checkout Pro:** Realizar la prueba en vivo con tarjeta bancaria real de bajo monto (S/ 1.00 o S/ 2.00) y ejecutar el reembolso inmediato desde el panel de Mercado Pago.
+   - **Credenciales SMTP en VPS:** Una vez adquirido el dominio (`lgante.pe`) o configurado el buzón emisor corporativo, completar las variables `SMTP_*` en el archivo `.env` del servidor para habilitar el despacho de correos en producción.
+
 
 
 
