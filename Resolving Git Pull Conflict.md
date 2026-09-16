@@ -3742,4 +3742,9 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 **Estado Actual:**
 - Backend (.NET 9) y ambos Frontends (Vue y Next.js) compilan con 0 errores y 100% de coherencia arquitectónica.
 
+**4. Comportamiento del Sidebar en Panel Admin (`Frontend/src/style.css`):**
+- **Ajuste de Empuje Dinámico:** Se modificó la regla del `.sidebar` a `position: sticky; top: 0;` y se retiró el `margin-left: 68px;` fijo de `.main-content`.
+- **Efecto:** Ahora, al posar el cursor sobre el menú lateral, este se expande suavemente dentro del flujo flex y empuja físicamente el contenido principal hacia la derecha, evitando por completo que tape títulos, filtros o tablas.
+
+
 
