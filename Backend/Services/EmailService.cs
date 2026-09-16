@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ namespace SaaS.API.Services;
 
 public interface IEmailService
 {
+    Task SendClientVerificationEmailAsync(string toEmail, string clientName, string verificationToken);
     Task SendVerificationEmailAsync(string toEmail, string verificationToken);
 }
 
@@ -19,7 +21,12 @@ public class EmailService : IEmailService
         _config = config;
     }
 
-    public async Task SendVerificationEmailAsync(string toEmail, string verificationToken)
+    public Task SendVerificationEmailAsync(string toEmail, string verificationToken)
+    {
+        return SendClientVerificationEmailAsync(toEmail, "Distinguido Cliente", verificationToken);
+    }
+
+    public async Task SendClientVerificationEmailAsync(string toEmail, string clientName, string verificationToken)
     {
         var smtpConfig = _config.GetSection("SmtpSettings");
         var host = smtpConfig["Host"];
@@ -30,20 +37,13 @@ public class EmailService : IEmailService
 
         if (string.IsNullOrEmpty(host) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
-            // Si no hay configuración, no lanzamos error fatal pero logueamos (opcional). En producción esto debería estar configurado.
+            // Si no hay configuración SMTP cargada en .env, no bloqueamos el flujo de registro
             return;
         }
 
-        var verificationLink = $"http://localhost:5173/verificar-correo?token={verificationToken}";
-        // En producción cambiar a la URL real
-        if (_config["FrontendUrl"] != null)
-        {
-            verificationLink = $"{_config["FrontendUrl"].TrimEnd('/')}/verificar-correo?token={verificationToken}";
-        }
-        else 
-        {
-            verificationLink = $"https://ventassaas.vercel.app/verificar-correo?token={verificationToken}";
-        }
+        // URL base de la tienda online de relojes (Frontend-Relojes)
+        var storeBaseUrl = _config["StorefrontUrl"] ?? _config["FrontendUrl"] ?? "http://localhost:3000";
+        var verificationLink = $"{storeBaseUrl.TrimEnd('/')}/verificar-correo?token={verificationToken}";
 
         using var client = new SmtpClient(host, port)
         {
@@ -51,19 +51,41 @@ public class EmailService : IEmailService
             EnableSsl = enableSsl
         };
 
+        var displayName = string.IsNullOrWhiteSpace(clientName) ? "Estimado/a cliente" : clientName;
+
         var mailMessage = new MailMessage
         {
-            From = new MailAddress(email, "SaaS Administración"),
-            Subject = "Verifica tu cuenta - Bienvenido",
+            From = new MailAddress(email, "L'GANT Haute Horlogerie"),
+            Subject = "Verifica tu cuenta VIP - L'GANT Haute Horlogerie",
             Body = $@"
-                <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #edf2f7; border-radius: 8px;'>
-                    <h2 style='color: #2d3748;'>¡Bienvenido a nuestro sistema!</h2>
-                    <p style='color: #4a5568; font-size: 16px;'>Para comenzar a utilizar tu cuenta, necesitamos que verifiques tu dirección de correo electrónico.</p>
-                    <div style='text-align: center; margin: 30px 0;'>
-                        <a href='{verificationLink}' style='background-color: #a3c4f3; color: #1e3a8a; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;'>Verificar mi cuenta</a>
+                <div style='background-color: #0b0b0c; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, ""Segoe UI"", Roboto, Helvetica, Arial, sans-serif; color: #f4f4f5;'>
+                    <div style='max-width: 560px; margin: 0 auto; background-color: #121214; border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6);'>
+                        <div style='background: linear-gradient(135deg, #18181b 0%, #09090b 100%); padding: 32px 24px; text-align: center; border-bottom: 1px solid rgba(212, 175, 55, 0.2);'>
+                            <div style='font-size: 11px; letter-spacing: 3px; color: #d4af37; text-transform: uppercase; margin-bottom: 8px; font-weight: 600;'>HAUTE HORLOGERIE</div>
+                            <h1 style='color: #ffffff; font-size: 26px; margin: 0; font-weight: 700; letter-spacing: 1px;'>L'GANT</h1>
+                        </div>
+                        <div style='padding: 36px 30px;'>
+                            <h2 style='color: #ffffff; font-size: 20px; margin-top: 0; margin-bottom: 16px; font-weight: 600;'>Bienvenido a nuestra exclusiva colección</h2>
+                            <p style='color: #a1a1aa; font-size: 15px; line-height: 1.6; margin-bottom: 24px;'>
+                                Estimado/a <strong style='color: #f4f4f5;'>{displayName}</strong>,<br/>
+                                Gracias por registrarte como cliente distinguido en <strong>L'GANT</strong>. Para activar tu cuenta VIP y acceder a tus pedidos exclusivos, por favor confirma tu dirección de correo electrónico haciendo clic en el siguiente botón:
+                            </p>
+                            <div style='text-align: center; margin: 32px 0;'>
+                                <a href='{verificationLink}' style='display: inline-block; background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%); color: #0b0b0c; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);'>
+                                    Activar mi Cuenta VIP
+                                </a>
+                            </div>
+                            <p style='color: #71717a; font-size: 13px; line-height: 1.5; margin-bottom: 10px;'>
+                                Si tienes problemas con el botón, copia y pega el siguiente enlace en tu navegador:
+                            </p>
+                            <p style='color: #d4af37; font-size: 12px; word-break: break-all; margin: 0;'>
+                                {verificationLink}
+                            </p>
+                        </div>
+                        <div style='background-color: #09090b; padding: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); color: #52525b; font-size: 12px;'>
+                            © {DateTime.UtcNow.Year} L'GANT Haute Horlogerie • Todos los derechos reservados.
+                        </div>
                     </div>
-                    <p style='color: #718096; font-size: 14px;'>Si el botón no funciona, copia y pega el siguiente enlace en tu navegador:</p>
-                    <p style='color: #718096; font-size: 12px; word-break: break-all;'>{verificationLink}</p>
                 </div>
             ",
             IsBodyHtml = true
@@ -76,8 +98,7 @@ public class EmailService : IEmailService
         }
         catch
         {
-            // Loguear error de correo si falla (credenciales invalidas, etc)
-            // Se silencia para no romper el flujo de registro si el correo rebota
+            // Silencioso para no romper el registro si el servidor SMTP aún no está activo
         }
     }
 }

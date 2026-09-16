@@ -24,6 +24,7 @@ import VistaPreguntasFrecuentes from './components/VistaPreguntasFrecuentes';
 import VistaTerminosCondiciones from './components/VistaTerminosCondiciones';
 import VistaPanelCliente from './components/VistaPanelCliente';
 import VistaPedidoConfirmado from './components/VistaPedidoConfirmado';
+import VistaVerificarCorreo from './components/VistaVerificarCorreo';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 import { matchProductSmart } from './utils/searchEngine';
 
@@ -254,6 +255,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
         window.history.pushState({}, '', '/checkout');
       } else if (viewName === 'pedido-confirmado') {
         window.history.pushState({}, '', '/pedido-confirmado');
+      } else if (viewName === 'verificar-correo') {
+        window.history.pushState({}, '', '/verificar-correo');
       } else if (viewName === 'mis-compras') {
         window.history.pushState({}, '', '/mis-compras');
       } else if (viewName === 'cuenta') {
@@ -283,6 +286,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
         setSelectedProduct(null);
       } else if (path.includes('/pedido-confirmado')) {
         setActiveView('pedido-confirmado');
+        setSelectedProduct(null);
+      } else if (path.includes('/verificar-correo')) {
+        setActiveView('verificar-correo');
         setSelectedProduct(null);
       } else if (path.includes('/mis-compras')) {
         setActiveView('mis-compras');
@@ -689,6 +695,14 @@ export default function App({ initialCategory, initialProductId, initialView = '
           onNavigate={handleNavigateView}
           user={currentUser}
           whatsappNumber={WHATSAPP_CONCIERGE}
+        />
+      ) : activeView === 'verificar-correo' ? (
+        <VistaVerificarCorreo
+          onOpenAuth={() => {
+            setIsAuthOpen(true);
+            setAuthInitialTab('cuenta');
+          }}
+          onNavigateHome={handleBackToCatalog}
         />
       ) : selectedProduct ? (
         <PaginaDetalleProducto

@@ -3698,4 +3698,48 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
    - Confirmar recepción del correo en la bandeja de entrada.
    - Probar que el login esté bloqueado antes del clic.
    - Hacer clic en el enlace/botón de activación y confirmar inicio de sesión exitoso.
+
+---
+
+### Actualización - 15 de Septiembre de 2026 (Sesión Noche: Reubicación de Verificación de Correo al E-Commerce)
+
+**1. Desbloqueo y Corrección en Panel Administrativo (`ventassaas.vercel.app`):**
+- **Diagnóstico:** Se identificó que la verificación de correo por token se había acoplado al modelo general `User` (`AuthController.cs`), bloqueando el acceso al administrador del SaaS (`relojes@ventassaas.com`) en `ventassaas.vercel.app/login` con el mensaje *"Por favor, verifica tu correo antes de ingresar"*.
+- **Corrección en Backend (`AuthController.cs` y `User.cs`):**
+  - Se eliminó la validación obligatoria de verificación de correo en el endpoint `POST /api/auth/login`.
+  - El campo `CorreoVerificado` en `User.cs` quedó predeterminado en `true`, garantizando acceso instantáneo y sin trabas a dueños de negocio, administradores y empleados.
+  - Se eliminó el envío involuntario de correos de activación en `RegisterEmpresa` y `CreateUser`.
+
+**2. Implementación Exclusiva para Clientes del E-Commerce (`Frontend-Relojes` / L'GANT):**
+- **Modelo de Clientes (`Client.cs`):**
+  - Se agregaron los campos `CorreoVerificado` (`bool`, por defecto `false` en nuevos registros) y `TokenVerificacion` (`string?`).
+- **Lógica en Backend (`PublicStoreController.cs`):**
+  - En `POST /api/public/store/{empresaId}/auth/register`:
+    - Al registrarse un cliente nuevo (o convertir un cliente POS existente), se le genera un token GUID criptoseguro y se despacha en segundo plano el correo corporativo VIP de L'GANT.
+    - Responde con `requiresVerification = true` y mensaje amigable de confirmación.
+  - En `POST /api/public/store/{empresaId}/auth/login`:
+    - Si un cliente intenta iniciar sesión sin haber activado su cuenta (`!CorreoVerificado && TokenVerificacion != null`), se le notifica amablemente revisar su bandeja de entrada o carpeta de spam.
+    - Se respeta la retrocompatibilidad para clientes previos sin token.
+  - En `GET /api/public/store/auth/verify-email?token=...`:
+    - Endpoint público que valida el token recibido, marca `CorreoVerificado = true`, remueve el token y habilita la cuenta VIP.
+- **Servicio de Correos L'GANT (`EmailService.cs`):**
+  - Rediseño integral de la plantilla HTML con estética de alta relojería de L'GANT (fondos obsidiana `#0b0b0c`, acentos dorados `#d4af37`, tipografía formal y botón de acción: *"Activar mi Cuenta VIP"*).
+  - El enlace apunta directamente a la tienda online (`/verificar-correo?token=...`), no al panel del SaaS.
+
+**3. Frontend E-Commerce (`Frontend-Relojes`):**
+- **Servicio API (`src/services/api.js`):**
+  - Exportación de la función `verifyCustomerEmail(token)` consumiendo el endpoint público del backend.
+- **Modal de Autenticación (`ModalAuthCliente.jsx`):**
+  - Detección de `requiresVerification: true` al registrarse, conmutando automáticamente a la vista de login y exhibiendo un banner verde de confirmación con instrucciones claras para revisar el correo.
+- **Nueva Vista de Verificación (`VistaVerificarCorreo.jsx`):**
+  - Componente de alta gama L'GANT con 3 estados visuales interactivos:
+    1. *Cargando*: Spinner dorado y mensaje de validación de credenciales.
+    2. *Éxito*: Sello de membresía VIP activada, check verde, mensaje de felicitación y botón directo para *"Iniciar Sesión VIP"*.
+    3. *Error*: Alerta estilizada en caso de token inválido o expirado con botón para volver a la tienda.
+- **Enrutador Next.js App Router (`src/app/verificar-correo/page.jsx` y `App.jsx`):**
+  - Ruta canónica `○ /verificar-correo` compilada estáticamente en Next.js 16 con código 0 y 0 errores.
+
+**Estado Actual:**
+- Backend (.NET 9) y ambos Frontends (Vue y Next.js) compilan con 0 errores y 100% de coherencia arquitectónica.
+
 

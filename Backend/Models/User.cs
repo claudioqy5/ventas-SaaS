@@ -26,7 +26,7 @@ public class User
     public bool Activo { get; set; } = true;
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
     
-    // Verificacion de Correo
-    public bool CorreoVerificado { get; set; } = false;
+    // Verificacion de Correo (Por defecto activo para administradores y empleados del SaaS)
+    public bool CorreoVerificado { get; set; } = true;
     public string? TokenVerificacion { get; set; }
 }

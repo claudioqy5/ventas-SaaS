@@ -104,13 +104,10 @@ public class AuthController : ControllerBase
             ClaveHash = _passwordHasher.Hash(request.ClavePropietario),
             Rol = "EmpresaOwner",
             Permisos = new List<string> { "dashboard", "historial_negocio", "ventas", "productos", "categorias", "modificar_productos", "clientes", "proveedores", "compras", "movimientos", "config", "reminders", "cuentas_cobrar", "formas_pago", "colaboradores", "pedidos_web" },
-            CorreoVerificado = false,
-            TokenVerificacion = Guid.NewGuid().ToString("N")
+            CorreoVerificado = true,
+            TokenVerificacion = null
         };
         await _context.Users.InsertOneAsync(owner);
-
-        // Enviar correo de verificacion
-        _ = _emailService.SendVerificationEmailAsync(owner.Correo, owner.TokenVerificacion);
 
         // ACTUALIZACION: guardo el Id del propietario dentro del registro de la empresa
         var filter = Builders<Empresa>.Filter.Eq(e => e.Id, empresa.Id);
@@ -129,12 +126,6 @@ public class AuthController : ControllerBase
         if (user == null || !_passwordHasher.Verify(request.Clave, user.ClaveHash))
         {
             return Unauthorized(new { message = "Credenciales incorrectas o usuario inactivo." });
-        }
-
-        // VALIDACION DE CORREO: el usuario debe haber verificado su correo
-        if (!user.CorreoVerificado)
-        {
-            return Unauthorized(new { message = "Por favor, verifica tu correo antes de ingresar. Revisa tu bandeja de entrada o spam." });
         }
 
         // Genero el token JWT que el frontend guardara para autenticar las siguientes peticiones
@@ -222,13 +213,10 @@ public class AuthController : ControllerBase
             Rol = request.Rol,
             Permisos = request.Permisos,
             Activo = true,
-            CorreoVerificado = false,
-            TokenVerificacion = Guid.NewGuid().ToString("N")
+            CorreoVerificado = true,
+            TokenVerificacion = null
         };
         await _context.Users.InsertOneAsync(newUser);
-
-        // Enviar correo de verificacion al nuevo usuario
-        _ = _emailService.SendVerificationEmailAsync(newUser.Correo, newUser.TokenVerificacion);
 
         // Si se creo un nuevo EmpresaOwner, actualizo la empresa para dejarlo como propietario
         if (role == "Superadmin" && request.Rol == "EmpresaOwner" && empresaId != null)

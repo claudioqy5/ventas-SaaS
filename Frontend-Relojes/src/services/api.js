@@ -194,6 +194,16 @@ export async function loginCustomer(correo, clave) {
   return res.json();
 }
 
+export async function verifyCustomerEmail(token) {
+  const apiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '/api/public/store');
+  const res = await fetch(`${apiUrl}/auth/verify-email?token=${encodeURIComponent(token)}`);
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || 'El enlace de verificación no es válido o ha expirado.');
+  }
+  return res.json();
+}
+
 // ---- Gestión de Pedidos ----
 
 export async function submitOrder(token, orderData) {

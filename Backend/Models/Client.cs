@@ -38,6 +38,8 @@ public class Client
     // Autenticación de e-commerce
     public string? ClaveHash { get; set; }
     public bool EsUsuarioEcommerce { get; set; } = false;
+    public bool CorreoVerificado { get; set; } = false;
+    public string? TokenVerificacion { get; set; }
 
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 }

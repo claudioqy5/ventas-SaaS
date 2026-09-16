@@ -24,12 +24,18 @@ public class PublicStoreController : ControllerBase
     private readonly MongoDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtProvider _jwtProvider;
+    private readonly IEmailService _emailService;
 
-    public PublicStoreController(MongoDbContext context, IPasswordHasher passwordHasher, IJwtProvider jwtProvider)
+    public PublicStoreController(
+        MongoDbContext context, 
+        IPasswordHasher passwordHasher, 
+        IJwtProvider jwtProvider,
+        IEmailService emailService)
     {
         _context = context;
         _passwordHasher = passwordHasher;
         _jwtProvider = jwtProvider;
+        _emailService = emailService;
     }
 
     // GET api/public/store/{empresaId}
@@ -136,6 +142,7 @@ public class PublicStoreController : ControllerBase
             if (existing.EsUsuarioEcommerce)
                 return BadRequest(new { message = "El correo ya está registrado en la tienda." });
             
+            var tokenVerif = Guid.NewGuid().ToString("N");
             // Si ya existía como cliente de mostrador (POS), lo convertimos en cliente ecommerce
             existing.EsUsuarioEcommerce = true;
             existing.ClaveHash = _passwordHasher.Hash(request.Clave);
@@ -143,12 +150,21 @@ public class PublicStoreController : ControllerBase
             existing.Apellidos = !string.IsNullOrWhiteSpace(apellidos) ? apellidos : existing.Apellidos;
             existing.Nombre = !string.IsNullOrWhiteSpace(nombreCompleto) ? nombreCompleto : existing.Nombre;
             existing.Telefono = request.Telefono ?? existing.Telefono;
+            existing.CorreoVerificado = false;
+            existing.TokenVerificacion = tokenVerif;
             
             await _context.Clients.ReplaceOneAsync(c => c.Id == existing.Id, existing);
-            var token = _jwtProvider.GenerateClientToken(existing);
-            return Ok(new { token, client = new { existing.Id, existing.Nombre, existing.Nombres, existing.Apellidos, existing.Correo, existing.Telefono } });
+
+            // Despachar correo de activación VIP
+            _ = _emailService.SendClientVerificationEmailAsync(existing.Correo, existing.Nombres ?? existing.Nombre, tokenVerif);
+
+            return Ok(new { 
+                message = "Cuenta creada con éxito. Por favor revisa tu bandeja de entrada o spam para verificar tu correo antes de iniciar sesión.", 
+                requiresVerification = true 
+            });
         }
 
+        var tokenVerificacion = Guid.NewGuid().ToString("N");
         var newClient = new Client
         {
             EmpresaId = empresaId,
@@ -159,12 +175,20 @@ public class PublicStoreController : ControllerBase
             Telefono = request.Telefono ?? string.Empty,
             ClaveHash = _passwordHasher.Hash(request.Clave),
             EsUsuarioEcommerce = true,
+            CorreoVerificado = false,
+            TokenVerificacion = tokenVerificacion,
             FechaCreacion = DateTime.UtcNow
         };
 
         await _context.Clients.InsertOneAsync(newClient);
-        var newToken = _jwtProvider.GenerateClientToken(newClient);
-        return Ok(new { token = newToken, client = new { newClient.Id, newClient.Nombre, newClient.Nombres, newClient.Apellidos, newClient.Correo, newClient.Telefono } });
+
+        // Despachar correo de activación VIP
+        _ = _emailService.SendClientVerificationEmailAsync(newClient.Correo, newClient.Nombres ?? newClient.Nombre, tokenVerificacion);
+
+        return Ok(new { 
+            message = "Cuenta creada con éxito. Por favor revisa tu bandeja de entrada o spam para verificar tu correo antes de iniciar sesión.", 
+            requiresVerification = true 
+        });
     }
 
     // POST api/public/store/{empresaId}/auth/login
@@ -175,6 +199,11 @@ public class PublicStoreController : ControllerBase
         var client = await _context.Clients.Find(c => c.EmpresaId == empresaId && c.Correo == request.Correo && c.EsUsuarioEcommerce).FirstOrDefaultAsync();
         if (client == null || string.IsNullOrEmpty(client.ClaveHash) || !_passwordHasher.Verify(request.Clave, client.ClaveHash))
             return Unauthorized(new { message = "Correo o contraseña incorrectos." });
+
+        if (!client.CorreoVerificado && !string.IsNullOrEmpty(client.TokenVerificacion))
+        {
+            return Unauthorized(new { message = "Por favor, verifica tu correo antes de ingresar. Revisa tu bandeja de entrada o spam." });
+        }
 
         var token = _jwtProvider.GenerateClientToken(client);
         return Ok(new { token, client = new {
@@ -192,6 +221,26 @@ public class PublicStoreController : ControllerBase
             client.Distrito,
             client.Referencia
         } });
+    }
+
+    // GET api/public/store/auth/verify-email?token=...
+    [AllowAnonymous]
+    [HttpGet("auth/verify-email")]
+    public async Task<IActionResult> VerifyClientEmail([FromQuery] string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            return BadRequest(new { message = "Token de verificación inválido." });
+
+        var client = await _context.Clients.Find(c => c.TokenVerificacion == token).FirstOrDefaultAsync();
+        if (client == null)
+            return BadRequest(new { message = "El enlace de verificación es inválido o ya expiró." });
+
+        var update = Builders<Client>.Update
+            .Set(c => c.CorreoVerificado, true)
+            .Set(c => c.TokenVerificacion, null);
+
+        await _context.Clients.UpdateOneAsync(c => c.Id == client.Id, update);
+        return Ok(new { message = "¡Correo verificado exitosamente! Ya puedes iniciar sesión con tu cuenta VIP." });
     }
 
     // POST api/public/store/{empresaId}/orders

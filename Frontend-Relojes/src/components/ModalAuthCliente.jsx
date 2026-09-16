@@ -11,6 +11,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
   const [apellidos, setApellidos] = useState('');
   const [telefono, setTelefono] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -66,11 +67,20 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
 
     setIsLoading(true);
     setError('');
+    setSuccessMessage('');
     
     try {
       let data;
       if (isRegister) {
-        data = await registerCustomer(nombres.trim(), apellidos.trim(), email, password, telefono);
+        const regRes = await registerCustomer(nombres.trim(), apellidos.trim(), email, password, telefono);
+        if (regRes && regRes.requiresVerification) {
+          setIsRegister(false);
+          setError('');
+          setSuccessMessage(regRes.message || '¡Cuenta creada! Hemos enviado un enlace de activación a tu correo. Por favor revísalo antes de ingresar.');
+          setIsLoading(false);
+          return;
+        }
+        data = regRes;
       } else {
         data = await loginCustomer(email, password);
       }
@@ -471,6 +481,22 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
                 fontWeight: 500
               }}>
                 ⚠️ {error}
+              </div>
+            )}
+
+            {successMessage && (
+              <div style={{
+                backgroundColor: 'rgba(52, 199, 89, 0.1)',
+                border: '1px solid rgba(52, 199, 89, 0.3)',
+                color: '#248a3d',
+                padding: '12px 16px',
+                borderRadius: '8px',
+                fontSize: '0.86rem',
+                marginBottom: '18px',
+                fontWeight: 500,
+                lineHeight: 1.5
+              }}>
+                ✉️ {successMessage}
               </div>
             )}
 
