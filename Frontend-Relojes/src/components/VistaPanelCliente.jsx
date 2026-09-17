@@ -140,7 +140,7 @@ export default function VistaPanelCliente({
         </div>
       )}
 
-      <div style={{ maxWidth: '1140px', margin: '0 auto', padding: '0 20px' }}>
+      <div style={{ maxWidth: '85%', margin: '0 auto', padding: '0 20px' }}>
         
         {/* Barra superior de navegación */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>

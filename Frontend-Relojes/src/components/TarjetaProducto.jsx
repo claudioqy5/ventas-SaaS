@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, ShoppingBag, MessageCircle, Check } from 'lucide-react';
+import { ShoppingBag, MessageCircle, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function TarjetaProducto({
@@ -19,30 +19,11 @@ export default function TarjetaProducto({
 
   const [isHovered, setIsHovered] = useState(false);
   const [isImgHovered, setIsImgHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [added, setAdded] = useState(false);
 
   // Imágenes del producto (Foto 1 y Foto 2 si existe)
   const primaryImage = activeProduct.imagenUrl || (activeProduct.imagenes && activeProduct.imagenes[0]) || '/placeholder.jpg';
   const secondImage = activeProduct.imagenes && activeProduct.imagenes.length > 1 ? activeProduct.imagenes[1] : null;
-
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setMousePos({ x, y });
-
-    const tiltX = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
-    const tiltY = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
-    setTilt({ x: tiltX, y: tiltY });
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    setTilt({ x: 0, y: 0 });
-    setMousePos({ x: 50, y: 50 });
-  };
 
   const handleAdd = (e) => {
     e.stopPropagation();
@@ -50,10 +31,10 @@ export default function TarjetaProducto({
     setAdded(true);
 
     confetti({
-      particleCount: 30,
-      spread: 50,
+      particleCount: 25,
+      spread: 45,
       origin: { y: 0.8 },
-      colors: ['#0B0B0C', '#D4AF37', '#F5E6C8', '#3B3C41']
+      colors: ['#1a1a1a', '#c5a059', '#f4f4f6']
     });
 
     setTimeout(() => {
@@ -64,84 +45,70 @@ export default function TarjetaProducto({
   return (
     <article
       onMouseEnter={() => setIsHovered(true)}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={() => onQuickView(activeProduct)}
       style={{
         position: 'relative',
-        borderRadius: '20px',
+        borderRadius: '16px',
         backgroundColor: '#ffffff',
-        border: isHovered ? '1px solid var(--c-gold)' : '1px solid rgba(59, 60, 65, 0.16)',
-        padding: '20px',
+        border: '1px solid #eaeaea',
+        padding: '18px',
         cursor: 'pointer',
-        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(${isHovered ? '-6px' : '0'})`,
-        transition: 'transform 0.2s ease-out, border-color 0.3s ease, box-shadow 0.3s ease',
+        transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+        transition: 'all 0.25s ease',
         boxShadow: isHovered
-          ? '0 20px 45px -10px rgba(11, 11, 12, 0.15), 0 0 25px -5px rgba(212, 175, 55, 0.25)'
-          : '0 8px 25px -5px rgba(26, 27, 31, 0.06)',
+          ? '0 12px 30px rgba(0, 0, 0, 0.07)'
+          : '0 2px 10px rgba(0, 0, 0, 0.02)',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between'
       }}
     >
-      {/* Reflejo de luz especular interactivo en tono Dorado suave */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: `radial-gradient(circle 280px at ${mousePos.x}% ${mousePos.y}%, rgba(212, 175, 55, 0.12) 0%, transparent 80%)`,
-        pointerEvents: 'none',
-        zIndex: 4
-      }} />
-
-      {/* Header de la tarjeta */}
+      {/* Contenido Superior */}
       <div>
+        {/* Header de la tarjeta (Etiqueta + Stock) */}
         <div style={{
           display: 'flex',
-          justifyContent: 'space-between',
+          justify: 'space-between',
           alignItems: 'center',
-          marginBottom: '14px',
-          zIndex: 2,
-          position: 'relative'
+          marginBottom: '12px'
         }}>
           <span style={{
             fontSize: '0.68rem',
-            letterSpacing: '0.14em',
+            letterSpacing: '0.08em',
             textTransform: 'uppercase',
             fontFamily: 'var(--font-serif)',
             fontWeight: 500,
-            color: 'var(--c-obsidian)',
-            background: 'rgba(212, 175, 55, 0.14)',
-            border: '1px solid rgba(212, 175, 55, 0.35)',
-            padding: '4px 10px',
-            borderRadius: '9999px'
+            color: '#8a733e',
+            backgroundColor: '#faf8f5',
+            border: '1px solid #f0eae1',
+            padding: '3px 10px',
+            borderRadius: '12px'
           }}>
-            {activeProduct.etiqueta || 'Haute Horlogerie'}
+            {activeProduct.etiqueta || 'Boutique'}
           </span>
 
           <span style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '4px',
-            fontSize: '0.74rem',
-            fontWeight: 600,
-            color: activeProduct.stock > 0 ? '#10b981' : '#f43f5e'
+            gap: '5px',
+            fontSize: '0.72rem',
+            fontWeight: 400,
+            color: activeProduct.stock > 0 ? '#166534' : '#991b1b'
           }}>
             <span style={{
-              width: '6px',
-              height: '6px',
+              width: '5px',
+              height: '5px',
               borderRadius: '50%',
-              backgroundColor: activeProduct.stock > 0 ? '#10b981' : '#f43f5e',
+              backgroundColor: activeProduct.stock > 0 ? '#22c55e' : '#ef4444',
               display: 'inline-block'
-            }}></span>
-            {activeProduct.stock > 0 ? `${activeProduct.stock} disponibles` : 'Agotado'}
+            }} />
+            {activeProduct.stock > 0 ? `${activeProduct.stock} dispon.` : 'Agotado'}
           </span>
         </div>
 
-        {/* Imagen del Reloj sobre fondo perla suave */}
+        {/* Imagen del Reloj */}
         <div 
           onMouseEnter={(e) => {
             e.stopPropagation();
@@ -154,17 +121,17 @@ export default function TarjetaProducto({
           style={{
             position: 'relative',
             width: '100%',
-            height: '280px',
-            borderRadius: '14px',
+            height: '260px',
+            borderRadius: '12px',
             overflow: 'hidden',
-            backgroundColor: '#f8f6f2',
-            border: '1px solid rgba(59, 60, 65, 0.1)',
-            marginBottom: '18px'
+            backgroundColor: '#f8f8fa',
+            border: '1px solid #f0f0f0',
+            marginBottom: '16px'
           }}>
           {/* Foto Principal */}
           <img
             src={primaryImage}
-            alt={`Reloj de Lujo ${activeProduct.nombre}`}
+            alt={activeProduct.nombre}
             style={{
               position: 'absolute',
               top: 0,
@@ -173,15 +140,16 @@ export default function TarjetaProducto({
               height: '100%',
               objectFit: 'cover',
               opacity: (isImgHovered && secondImage) ? 0 : 1,
-              transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+              transform: isHovered && !secondImage ? 'scale(1.03)' : 'scale(1)',
+              transition: 'opacity 0.35s ease, transform 0.35s ease'
             }}
           />
 
-          {/* Segunda Foto (se muestra suavemente al hacer hover SOLO en la imagen) */}
+          {/* Segunda Foto (transición suave al hacer hover si existe) */}
           {secondImage && (
             <img
               src={secondImage}
-              alt={`Reloj de Lujo ${activeProduct.nombre} - Ángulo 2`}
+              alt={`${activeProduct.nombre} - vista 2`}
               style={{
                 position: 'absolute',
                 top: 0,
@@ -190,81 +158,43 @@ export default function TarjetaProducto({
                 height: '100%',
                 objectFit: 'cover',
                 opacity: isImgHovered ? 1 : 0,
-                transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+                transform: isImgHovered ? 'scale(1.03)' : 'scale(1)',
+                transition: 'opacity 0.35s ease, transform 0.35s ease'
               }}
             />
           )}
-
-          {/* Botón flotante para vista rápida */}
-          <div style={{
-            position: 'absolute',
-            bottom: '12px',
-            left: '50%',
-            transform: `translateX(-50%) translateY(${isHovered ? '0' : '20px'})`,
-            opacity: isHovered ? 1 : 0,
-            transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-            zIndex: 5
-          }}>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onQuickView(activeProduct);
-              }}
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid var(--c-indigo)',
-                color: 'var(--c-deep-purple)',
-                fontSize: '0.72rem',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                fontFamily: 'var(--font-serif)',
-                fontWeight: 700,
-                padding: '8px 16px',
-                borderRadius: '9999px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                boxShadow: '0 4px 15px rgba(11, 11, 12, 0.15)'
-              }}
-            >
-              <Eye size={13} color="var(--c-indigo)" />
-              Detalles de Manufactura
-            </button>
-          </div>
         </div>
 
-        {/* Información del Reloj */}
+        {/* Información del Producto */}
         <div>
-          <div style={{
-            fontSize: '0.72rem',
-            color: 'var(--c-blush)',
-            letterSpacing: '0.14em',
+          <span style={{
+            fontSize: '0.7rem',
+            color: '#888888',
+            letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            fontWeight: 500,
-            marginBottom: '6px'
+            fontWeight: 400,
+            display: 'block',
+            marginBottom: '4px'
           }}>
-            {activeProduct.categoria || 'Reloj de Lujo'}
-          </div>
+            {activeProduct.categoria || 'Relojes'}
+          </span>
 
           <h3 className="font-serif" style={{
-            fontSize: '1.18rem',
-            fontWeight: 600,
-            color: 'var(--c-deep-purple)',
-            letterSpacing: '0.01em',
-            marginBottom: '8px',
-            lineHeight: 1.3
+            fontSize: '1.05rem',
+            fontWeight: 500,
+            color: '#1a1a1a',
+            margin: '0 0 6px',
+            lineHeight: 1.35
           }}>
             {activeProduct.nombre}
           </h3>
 
           <p style={{
-            fontSize: '0.84rem',
-            color: 'var(--c-taupe)',
-            lineHeight: 1.5,
-            marginBottom: '16px',
+            fontSize: '0.82rem',
+            color: '#666666',
+            lineHeight: 1.45,
+            margin: '0 0 14px',
+            fontWeight: 400,
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
@@ -273,13 +203,13 @@ export default function TarjetaProducto({
             {activeProduct.descripcion}
           </p>
 
-          {/* Variantes (Circulitos de colores/modelos) */}
+          {/* Variantes (si existen) */}
           {variants.length > 1 && (
-            <div style={{ display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
               {variants.map(variant => {
                 const isSelected = activeProduct.id === variant.id;
                 const vImage = variant.imagenUrl || (variant.imagenes && variant.imagenes[0]);
-                const colorAttr = variant.atributos?.find(a => (a.nombre || a.Nombre)?.toLowerCase() === 'color')?.valor || variant.atributos?.find(a => (a.nombre || a.Nombre)?.toLowerCase() === 'color')?.Valor;
+                const colorAttr = variant.atributos?.find(a => (a.nombre || a.Nombre)?.toLowerCase() === 'color')?.valor;
                 return (
                   <div
                     key={variant.id}
@@ -289,11 +219,11 @@ export default function TarjetaProducto({
                     }}
                     title={colorAttr ? `${variant.nombre} - ${colorAttr}` : variant.nombre}
                     style={{
-                      width: '24px',
-                      height: '24px',
+                      width: '22px',
+                      height: '22px',
                       borderRadius: '50%',
                       padding: '2px',
-                      border: isSelected ? '1px solid var(--c-indigo)' : '1px solid transparent',
+                      border: isSelected ? '1px solid #1a1a1a' : '1px solid transparent',
                       cursor: 'pointer',
                       transition: 'border-color 0.2s',
                       display: 'flex',
@@ -307,8 +237,7 @@ export default function TarjetaProducto({
                       borderRadius: '50%',
                       backgroundImage: `url(${vImage})`,
                       backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      backgroundPosition: 'center'
                     }} />
                   </div>
                 );
@@ -318,42 +247,28 @@ export default function TarjetaProducto({
         </div>
       </div>
 
-      {/* Footer de la tarjeta */}
+      {/* Footer de la tarjeta (Precio + Botones) */}
       <div style={{
-        borderTop: '1px solid rgba(59, 60, 65, 0.12)',
-        paddingTop: '14px',
-        marginTop: '10px'
+        borderTop: '1px solid #f0f0f0',
+        paddingTop: '12px',
+        marginTop: '8px'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '6px' }}>
-          <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500 }}>
-            Valor de Catálogo
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '12px' }}>
+          <span style={{ fontSize: '0.72rem', color: '#888888', fontWeight: 400 }}>
+            Precio
           </span>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
+          <div style={{ textAlign: 'right' }}>
             {activeProduct.precioOferta > 0 ? (
-              <>
-                <span style={{ fontSize: '0.85rem', textDecoration: 'line-through', color: 'var(--c-taupe)', opacity: 0.6, fontFamily: 'var(--font-serif)', whiteSpace: 'nowrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '0.8rem', textDecoration: 'line-through', color: '#999999', fontWeight: 400 }}>
                   S/ {Number(activeProduct.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                 </span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className="font-serif" style={{ fontSize: '1.28rem', fontWeight: 600, color: 'var(--c-indigo)', whiteSpace: 'nowrap' }}>
-                    S/ {Number(activeProduct.precioOferta).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
-                  </span>
-                  <span style={{
-                    fontSize: '0.62rem',
-                    backgroundColor: 'var(--c-blush)',
-                    color: '#ffffff',
-                    padding: '2px 6px',
-                    borderRadius: '4px',
-                    fontFamily: 'var(--font-serif)',
-                    fontWeight: 600,
-                    letterSpacing: '0.04em'
-                  }}>
-                    -{Math.round((1 - activeProduct.precioOferta / activeProduct.precio) * 100)}%
-                  </span>
-                </div>
-              </>
+                <span className="font-serif" style={{ fontSize: '1.15rem', fontWeight: 600, color: '#1a1a1a' }}>
+                  S/ {Number(activeProduct.precioOferta).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                </span>
+              </div>
             ) : (
-              <span className="font-serif" style={{ fontSize: '1.28rem', fontWeight: 600, color: 'var(--c-indigo)', whiteSpace: 'nowrap' }}>
+              <span className="font-serif" style={{ fontSize: '1.15rem', fontWeight: 600, color: '#1a1a1a' }}>
                 S/ {Number(activeProduct.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
               </span>
             )}
@@ -366,43 +281,37 @@ export default function TarjetaProducto({
             onClick={handleAdd}
             disabled={activeProduct.stock <= 0}
             style={{
-              background: added
-                ? '#10b981'
-                : 'var(--c-indigo)',
+              backgroundColor: added ? '#166534' : '#1a1a1a',
               color: '#ffffff',
               border: 'none',
               borderRadius: '8px',
-              padding: '11px 14px',
-              fontSize: '0.78rem',
-              fontFamily: 'var(--font-serif)',
-              letterSpacing: '0.08em',
-              fontWeight: 500,
-              textTransform: 'uppercase',
-              cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
-              opacity: product.stock <= 0 ? 0.5 : 1,
+              padding: '10px 14px',
+              fontSize: '0.8rem',
+              fontWeight: 400,
+              cursor: activeProduct.stock <= 0 ? 'not-allowed' : 'pointer',
+              opacity: activeProduct.stock <= 0 ? 0.4 : 1,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              transition: 'all 0.25s ease',
-              boxShadow: '0 4px 14px rgba(11, 11, 12, 0.2)'
+              transition: 'background-color 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              if (!added && activeProduct.stock > 0) e.currentTarget.style.background = 'var(--c-indigo-hover)';
+              if (!added && activeProduct.stock > 0) e.currentTarget.style.backgroundColor = '#333333';
             }}
             onMouseLeave={(e) => {
-              if (!added && activeProduct.stock > 0) e.currentTarget.style.background = 'var(--c-indigo)';
+              if (!added && activeProduct.stock > 0) e.currentTarget.style.backgroundColor = '#1a1a1a';
             }}
           >
             {added ? (
               <>
-                <Check size={16} />
+                <Check size={15} />
                 Agregado
               </>
             ) : (
               <>
-                <ShoppingBag size={15} />
-                Agregar a la Bolsa
+                <ShoppingBag size={15} strokeWidth={1.5} />
+                Agregar a la bolsa
               </>
             )}
           </button>
@@ -412,35 +321,22 @@ export default function TarjetaProducto({
               e.stopPropagation();
               onWhatsAppInquiry(activeProduct);
             }}
-            title="Consultar disponibilidad con el Concierge por WhatsApp"
+            title="Consultar por WhatsApp"
             style={{
-              background: 'rgba(37, 211, 102, 0.12)',
-              border: '1px solid rgba(37, 211, 102, 0.4)',
-              color: '#1da851',
+              backgroundColor: '#f5f5f7',
+              border: '1px solid #e0e0e0',
+              color: '#1a1a1a',
               borderRadius: '8px',
-              width: '42px',
-              height: '42px',
+              width: '40px',
+              height: '40px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-              boxShadow: '0 2px 6px rgba(37, 211, 102, 0.15)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#25d366';
-              e.currentTarget.style.color = '#ffffff';
-              e.currentTarget.style.transform = 'scale(1.08)';
-              e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 211, 102, 0.45)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(37, 211, 102, 0.12)';
-              e.currentTarget.style.color = '#1da851';
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 2px 6px rgba(37, 211, 102, 0.15)';
+              transition: 'all 0.2s ease'
             }}
           >
-            <MessageCircle size={18} />
+            <MessageCircle size={17} strokeWidth={1.5} />
           </button>
         </div>
       </div>

@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { 
   ShoppingBag, User, Truck, CreditCard, ChevronLeft, Trash2, MapPin,
-  Building2, PackageCheck, Copy, Check, ShieldCheck, Lock,
-  Smartphone, AlertCircle
+  Building2, Copy, Check, ShieldCheck, Lock,
+  Smartphone, AlertCircle, Zap
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { submitOrder, createMercadoPagoPreference } from '../services/api';
 
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
+
+const WhatsAppIcon = ({ size = 18, color = 'currentColor' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </svg>
+);
 
 
 
@@ -79,7 +85,8 @@ export default function ProcesoPago({
   const [additionalNotes, setAdditionalNotes] = useState('');
 
   // PASO 4: Método de Pago
-  const [paymentMethod, setPaymentMethod] = useState('yape'); // 'yape' | 'tarjeta' | 'transferencia' | 'contraentrega'
+  const [isGuestMode, setIsGuestMode] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('yape'); // 'yape' | 'tarjeta' | 'transferencia' | 'mercadopago'
   const [paymentDetails, setPaymentDetails] = useState({
     codigoOperacionYape: '',
     tarjetaNumero: '',
@@ -87,8 +94,7 @@ export default function ProcesoPago({
     tarjetaExpiracion: '',
     tarjetaCvv: '',
     bancoTransferencia: 'BCP',
-    codigoOperacionTransferencia: '',
-    modoContraentrega: 'efectivo'
+    codigoOperacionTransferencia: ''
   });
 
   // Comprobante y Términos
@@ -96,8 +102,6 @@ export default function ProcesoPago({
   const [facturaData, setFacturaData] = useState({ ruc: '', razonSocial: '', direccionFiscal: '' });
   const [termsAccepted, setTermsAccepted] = useState(true);
   const [copiedText, setCopiedText] = useState('');
-
-
 
   const subtotal = items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
   const discount = 0;
@@ -116,6 +120,26 @@ export default function ProcesoPago({
       setCopiedText(key);
       setTimeout(() => setCopiedText(''), 2500);
     }
+  };
+
+  const handleGuestCheckout = () => {
+    setIsGuestMode(true);
+    setCurrentStep(4);
+  };
+
+  const handleDirectWhatsAppPurchase = () => {
+    const whatsappNumber = '51962956919';
+    const itemsSummary = (items || [])
+      .map(i => `  • ${i.quantity}x ${i.nombre} (S/ ${Number(i.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })})`)
+      .join('\n');
+
+    const text = `*NUEVO PEDIDO RÁPIDO (INVITADO) - L'GANT BOUTIQUE*\n\n` +
+      `Hola, me gustaría realizar la compra de estos productos de forma rápida como invitado:\n\n` +
+      `*PRODUCTOS EN CARRITO:*\n${itemsSummary}\n\n` +
+      `*TOTAL A PAGAR: S/ ${total.toLocaleString('es-PE', { minimumFractionDigits: 2 })}*\n\n` +
+      `Deseo coordinar el método de pago (Yape / BCP / Interbank) y los datos de despacho directamente por WhatsApp. ¡Gracias!`;
+
+    window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(text)}`, '_blank');
   };
 
   // Validaciones por paso
@@ -200,20 +224,22 @@ export default function ProcesoPago({
   };
 
   const handleFinalizarCompra = async () => {
-    if (!validateStep2()) {
-      setCurrentStep(2);
-      return;
-    }
-    if (!validateStep3()) {
-      setCurrentStep(3);
-      return;
-    }
-    if (!validateStep4()) {
-      return;
+    if (!isGuestMode) {
+      if (!validateStep2()) {
+        setCurrentStep(2);
+        return;
+      }
+      if (!validateStep3()) {
+        setCurrentStep(3);
+        return;
+      }
+      if (!token) {
+        onRequireAuth();
+        return;
+      }
     }
 
-    if (!token) {
-      onRequireAuth();
+    if (!validateStep4()) {
       return;
     }
 
@@ -225,11 +251,12 @@ export default function ProcesoPago({
         subtotal: subtotal,
         impuesto: 0,
         total: total,
-        metodoPago: `Online - ${paymentMethod}`,
-
-        // Datos de identidad del comprador (para actualizar perfil en backend)
-        tipoDocumento: personalData.tipoDoc,
-        numeroDocumento: personalData.numDoc,
+        metodoPago: `Online - ${paymentMethod}${isGuestMode ? ' (Invitado)' : ''}`,
+        nombreCliente: isGuestMode
+          ? (personalData.nombres ? `${personalData.nombres} ${personalData.apellidos}` : 'Cliente Invitado (WhatsApp)')
+          : `${personalData.nombres} ${personalData.apellidos}`,
+        tipoDocumento: isGuestMode ? '-' : personalData.tipoDoc,
+        numeroDocumento: isGuestMode ? '' : personalData.numDoc,
 
         // Productos del carrito
         items: items.map(item => ({
@@ -240,19 +267,19 @@ export default function ProcesoPago({
         })),
 
         // Datos de entrega
-        direccionEntrega: deliveryAddress.direccion,
-        departamentoEntrega: deliveryAddress.departamento,
-        provinciaEntrega: deliveryAddress.provincia,
-        distritoEntrega: deliveryAddress.distrito,
-        referenciaEntrega: deliveryAddress.referencia,
+        direccionEntrega: isGuestMode ? 'Coordinar entrega por WhatsApp' : deliveryAddress.direccion,
+        departamentoEntrega: isGuestMode ? '' : deliveryAddress.departamento,
+        provinciaEntrega: isGuestMode ? '' : deliveryAddress.provincia,
+        distritoEntrega: isGuestMode ? '' : deliveryAddress.distrito,
+        referenciaEntrega: isGuestMode ? '' : deliveryAddress.referencia,
 
         // Datos del receptor
-        esEntregaATercero: recipientType === 'otro',
-        nombreReceptor: recipientType === 'otro' ? `${recipientData.nombres} ${recipientData.apellidos}`.trim() : null,
-        dniReceptor: recipientType === 'otro' ? recipientData.dni : null,
+        esEntregaATercero: isGuestMode ? false : recipientType === 'otro',
+        nombreReceptor: (!isGuestMode && recipientType === 'otro') ? `${recipientData.nombres} ${recipientData.apellidos}`.trim() : null,
+        dniReceptor: (!isGuestMode && recipientType === 'otro') ? recipientData.dni : null,
         notasEntrega: additionalNotes || null,
 
-        // Datos de comprobante y facturación
+        // Datos de comprobante
         tipoComprobante: tipoComprobante === 'factura' ? 'Factura' : 'Boleta',
         rucFactura: tipoComprobante === 'factura' ? facturaData.ruc : null,
         razonSocialFactura: tipoComprobante === 'factura' ? facturaData.razonSocial : null,
@@ -266,21 +293,20 @@ export default function ProcesoPago({
             : null
       };
 
-      // 1. Crear la orden en el backend (siempre primero)
+      // 1. Crear la orden en el backend (registra en BD y en Pedidos Web del Admin)
       const res = await submitOrder(token, orderData);
 
-      // 2. Si es Mercado Pago: crear la preferencia y redirigir al checkout de MP
+      // 2. Si es Mercado Pago: redirigir a MP
       if (paymentMethod === 'mercadopago') {
         const mpRes = await createMercadoPagoPreference(token, {
           orderId: res.orderId,
           items: items
         });
-        // Pasamos a Producción real: usamos initPoint
         const checkoutUrl = mpRes.initPoint;
         if (checkoutUrl && typeof window !== 'undefined') {
           window.location.href = checkoutUrl;
         }
-        return; // No seguir — MP maneja el resultado vía back_urls y webhook
+        return;
       }
 
       const newOrder = {
@@ -290,18 +316,19 @@ export default function ProcesoPago({
         subtotal,
         discount,
         total,
-        personalData,
-        deliveryAddress,
+        personalData: isGuestMode ? { nombres: 'Cliente', apellidos: 'Invitado', email: 'invitado@tienda.com', telefono: 'WhatsApp' } : personalData,
+        deliveryAddress: isGuestMode ? { direccion: 'Coordinación por WhatsApp', distrito: 'Por definir' } : deliveryAddress,
         recipientType,
         recipientData,
         additionalNotes,
         paymentMethod,
         paymentDetails,
         tipoComprobante,
-        facturaData
+        facturaData,
+        isGuestMode
       };
 
-      // Confetti de celebración elegante sin emojis
+      // Confetti de celebración elegante
       try {
         if (typeof window !== 'undefined') {
           import('canvas-confetti').then((confettiModule) => {
@@ -318,6 +345,29 @@ export default function ProcesoPago({
 
       if (onClearCart) onClearCart();
       if (onOrderSuccess) onOrderSuccess(newOrder);
+
+      // Si es compra como invitado, derivar a WhatsApp para coordinar despacho
+      if (isGuestMode) {
+        const whatsappNumber = '51962956919';
+        const itemsSummary = (items || [])
+          .map(i => `  • ${i.quantity}x ${i.nombre} (S/ ${Number(i.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })})`)
+          .join('\n');
+
+        const opCodeText = (paymentMethod === 'yape' && paymentDetails.codigoOperacionYape)
+          ? `\n*N° Operación Yape:* ${paymentDetails.codigoOperacionYape}`
+          : (paymentMethod === 'transferencia' && paymentDetails.codigoOperacionTransferencia)
+            ? `\n*N° Operación Transferencia (${paymentDetails.bancoTransferencia}):* ${paymentDetails.codigoOperacionTransferencia}`
+            : '';
+
+        const text = `*NUEVO PEDIDO RÁPIDO #${res.orderId ? res.orderId.slice(-6).toUpperCase() : ''} - L'GANT BOUTIQUE*\n\n` +
+          `¡Hola! Registré mi compra como invitado en la tienda web:\n\n` +
+          `*MÉTODO DE PAGO:* ${paymentMethod.toUpperCase()}${opCodeText}\n` +
+          `*TOTAL ABONADO:* S/ ${total.toLocaleString('es-PE', { minimumFractionDigits: 2 })}\n\n` +
+          `*PRODUCTOS:*\n${itemsSummary}\n\n` +
+          `Envío este mensaje para coordinar los datos de envío y la entrega. ¡Muchas gracias!`;
+
+        window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(text)}`, '_blank');
+      }
     } catch (err) {
       setSubmitError(err.message || 'Error al procesar el pedido. Por favor intenta de nuevo.');
     } finally {
@@ -454,9 +504,28 @@ export default function ProcesoPago({
                       </tbody>
                     </table>
 
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '30px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', paddingTop: '20px', borderTop: '1px solid var(--border-light)' }}>
                       <button 
-                        onClick={() => setCurrentStep(2)}
+                        type="button"
+                        onClick={handleGuestCheckout}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: 'var(--c-obsidian)',
+                          fontWeight: 600,
+                          fontSize: '0.85rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          textDecoration: 'underline'
+                        }}
+                      >
+                        Comprar como invitado &rarr;
+                      </button>
+
+                      <button 
+                        onClick={() => { setIsGuestMode(false); setCurrentStep(2); }}
                         style={{ padding: '14px 28px', background: 'var(--c-obsidian)', color: 'var(--text-light)', border: 'none', borderRadius: '6px', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.05em', cursor: 'pointer' }}
                       >
                         CONTINUAR
@@ -751,9 +820,37 @@ export default function ProcesoPago({
             {currentStep === 4 && (
               <div style={{ padding: '10px 0' }}>
                 <h2 style={{ fontSize: '1.2rem', color: 'var(--c-obsidian)', fontWeight: 600, marginBottom: '8px' }}>Método de Pago</h2>
-                <p style={{ fontSize: '0.85rem', color: 'var(--c-taupe)', marginBottom: '25px' }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--c-taupe)', marginBottom: '20px' }}>
                   Selecciona tu método de pago preferido. Todas las transacciones son seguras y verificadas.
                 </p>
+
+                {isGuestMode && (
+                  <div style={{
+                    background: 'rgba(212, 175, 55, 0.08)',
+                    border: '1px solid rgba(212, 175, 55, 0.3)',
+                    borderRadius: '8px',
+                    padding: '12px 16px',
+                    marginBottom: '20px',
+                    fontSize: '0.83rem',
+                    color: 'var(--c-obsidian)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '10px'
+                  }}>
+                    <span>
+                      <strong>Modo Invitado:</strong> Selecciona tu pago. Al finalizar la compra, se registrará tu pedido en el sistema y serás derivado a WhatsApp para coordinar la entrega.
+                    </span>
+                    <button 
+                      type="button"
+                      onClick={() => setIsGuestMode(false)} 
+                      style={{ background: 'none', border: 'none', color: 'var(--c-taupe)', fontSize: '0.75rem', cursor: 'pointer', textDecoration: 'underline' }}
+                    >
+                      Llenar formulario completo
+                    </button>
+                  </div>
+                )}
 
                 {/* Tabs de Métodos de Pago */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginBottom: '25px' }}>
@@ -835,34 +932,7 @@ export default function ProcesoPago({
                     </div>
                     <div>
                       <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>Transferencia</div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--c-taupe)' }}>BCP / BBVA / Interbank</div>
-                    </div>
-                  </div>
-
-                  {/* Opción 4: Contra Entrega */}
-                  <div 
-                    onClick={() => setPaymentMethod('contraentrega')}
-                    style={{
-                      padding: '16px 12px',
-                      borderRadius: '8px',
-                      border: paymentMethod === 'contraentrega' ? '2px solid var(--c-blush)' : '1px solid var(--border-light)',
-                      background: paymentMethod === 'contraentrega' ? '#ffffff' : '#fcfbf8',
-                      boxShadow: paymentMethod === 'contraentrega' ? '0 4px 14px rgba(212, 175, 55, 0.15)' : 'none',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      textAlign: 'center',
-                      gap: '8px',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: paymentMethod === 'contraentrega' ? 'rgba(212, 175, 55, 0.15)' : '#f0ede8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: paymentMethod === 'contraentrega' ? 'var(--c-obsidian)' : 'var(--c-taupe)' }}>
-                      <PackageCheck size={18} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>Contra Entrega</div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--c-taupe)' }}>Paga al recibir</div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--c-taupe)' }}>BCP / Interbank</div>
                     </div>
                   </div>
 
@@ -1087,7 +1157,7 @@ export default function ProcesoPago({
                     <div>
                       {/* Selector de Banco */}
                       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-                        {['BCP', 'BBVA', 'Interbank'].map(banco => (
+                        {['BCP', 'Interbank'].map(banco => (
                           <button
                             key={banco}
                             type="button"
@@ -1111,37 +1181,26 @@ export default function ProcesoPago({
 
                       {/* Datos del Banco Seleccionado */}
                       <div style={{ background: '#ffffff', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--c-taupe)', marginBottom: '4px' }}>Titular: <strong>L'GANT PERÚ S.A.C.</strong> | RUC: <strong>20608945123</strong></div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--c-taupe)', marginBottom: '10px', fontWeight: 500 }}>
+                          Titular: <strong style={{ color: 'var(--c-obsidian)' }}>GRUPO SERCAL S.A.C.</strong>
+                        </div>
                         
                         {paymentDetails.bancoTransferencia === 'BCP' && (
                           <>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px dashed var(--border-light)' }}>
-                              <span style={{ fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>Cta. Corriente BCP Soles: <strong>191-84920412-0-45</strong></span>
-                              <button type="button" onClick={() => handleCopy('19184920412045', 'bcp_cta')} style={{ background: 'none', border: 'none', color: 'var(--c-blush)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                              <span style={{ fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>
+                                Cta. Corriente BCP Soles: <strong style={{ fontFamily: 'monospace' }}>355-7216688-0-94</strong>
+                              </span>
+                              <button type="button" onClick={() => handleCopy('355-7216688-0-94', 'bcp_cta')} style={{ background: 'none', border: 'none', color: 'var(--c-blush)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
                                 {copiedText === 'bcp_cta' ? <Check size={14} color="#16a34a" /> : <Copy size={14} />} Copiar
                               </button>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
-                              <span style={{ fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>CCI Interbancario: <strong>002-191-008492041204-56</strong></span>
-                              <button type="button" onClick={() => handleCopy('00219100849204120456', 'bcp_cci')} style={{ background: 'none', border: 'none', color: 'var(--c-blush)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                              <span style={{ fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>
+                                CCI Interbancario: <strong style={{ fontFamily: 'monospace' }}>002 355 007216688094 67</strong>
+                              </span>
+                              <button type="button" onClick={() => handleCopy('00235500721668809467', 'bcp_cci')} style={{ background: 'none', border: 'none', color: 'var(--c-blush)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
                                 {copiedText === 'bcp_cci' ? <Check size={14} color="#16a34a" /> : <Copy size={14} />} Copiar
-                              </button>
-                            </div>
-                          </>
-                        )}
-
-                        {paymentDetails.bancoTransferencia === 'BBVA' && (
-                          <>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px dashed var(--border-light)' }}>
-                              <span style={{ fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>Cta. Corriente BBVA Soles: <strong>0011-0342-0100482910</strong></span>
-                              <button type="button" onClick={() => handleCopy('001103420100482910', 'bbva_cta')} style={{ background: 'none', border: 'none', color: 'var(--c-blush)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                                {copiedText === 'bbva_cta' ? <Check size={14} color="#16a34a" /> : <Copy size={14} />} Copiar
-                              </button>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
-                              <span style={{ fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>CCI Interbancario: <strong>011-342-000100482910-18</strong></span>
-                              <button type="button" onClick={() => handleCopy('01134200010048291018', 'bbva_cci')} style={{ background: 'none', border: 'none', color: 'var(--c-blush)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                                {copiedText === 'bbva_cci' ? <Check size={14} color="#16a34a" /> : <Copy size={14} />} Copiar
                               </button>
                             </div>
                           </>
@@ -1150,14 +1209,18 @@ export default function ProcesoPago({
                         {paymentDetails.bancoTransferencia === 'Interbank' && (
                           <>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px dashed var(--border-light)' }}>
-                              <span style={{ fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>Cta. Corriente Interbank Soles: <strong>200-3001849201</strong></span>
-                              <button type="button" onClick={() => handleCopy('2003001849201', 'ibk_cta')} style={{ background: 'none', border: 'none', color: 'var(--c-blush)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                              <span style={{ fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>
+                                Cta. Corriente Interbank Soles: <strong style={{ fontFamily: 'monospace' }}>500-3007303149</strong>
+                              </span>
+                              <button type="button" onClick={() => handleCopy('500-3007303149', 'ibk_cta')} style={{ background: 'none', border: 'none', color: 'var(--c-blush)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
                                 {copiedText === 'ibk_cta' ? <Check size={14} color="#16a34a" /> : <Copy size={14} />} Copiar
                               </button>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
-                              <span style={{ fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>CCI Interbancario: <strong>003-200-003001849201-32</strong></span>
-                              <button type="button" onClick={() => handleCopy('00320000300184920132', 'ibk_cci')} style={{ background: 'none', border: 'none', color: 'var(--c-blush)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                              <span style={{ fontSize: '0.8rem', color: 'var(--c-obsidian)' }}>
+                                CCI Interbancario: <strong style={{ fontFamily: 'monospace' }}>003-500-003007303149-61</strong>
+                              </span>
+                              <button type="button" onClick={() => handleCopy('003-500-003007303149-61', 'ibk_cci')} style={{ background: 'none', border: 'none', color: 'var(--c-blush)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
                                 {copiedText === 'ibk_cci' ? <Check size={14} color="#16a34a" /> : <Copy size={14} />} Copiar
                               </button>
                             </div>
@@ -1184,51 +1247,6 @@ export default function ProcesoPago({
                             <AlertCircle size={12} /> {formErrors.codigoOperacionTransferencia}
                           </span>
                         )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Vista 4: Contra Entrega */}
-                  {paymentMethod === 'contraentrega' && (
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '20px' }}>
-                        <PackageCheck size={24} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                        <div>
-                          <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--c-obsidian)', marginBottom: '4px' }}>
-                            Pago Seguro al Recibir en Domicilio
-                          </div>
-                          <p style={{ fontSize: '0.8rem', color: 'var(--c-taupe)', lineHeight: 1.4, margin: 0 }}>
-                            Válido para Lima Metropolitana y Callao. Nuestro agente motorizado te permitirá verificar el precinto de seguridad del reloj antes de realizar el cobro.
-                          </p>
-                        </div>
-                      </div>
-
-                      <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 600, marginBottom: '10px' }}>
-                        ¿Cómo pagarás al repartidor?
-                      </label>
-                      <div style={{ display: 'flex', gap: '15px' }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--c-obsidian)' }}>
-                          <input 
-                            type="radio" 
-                            name="modoContraentrega" 
-                            value="efectivo" 
-                            checked={paymentDetails.modoContraentrega === 'efectivo'} 
-                            onChange={() => setPaymentDetails({...paymentDetails, modoContraentrega: 'efectivo'})}
-                            style={{ accentColor: 'var(--c-obsidian)' }}
-                          />
-                          Efectivo exacto
-                        </label>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--c-obsidian)' }}>
-                          <input 
-                            type="radio" 
-                            name="modoContraentrega" 
-                            value="pos" 
-                            checked={paymentDetails.modoContraentrega === 'pos'} 
-                            onChange={() => setPaymentDetails({...paymentDetails, modoContraentrega: 'pos'})}
-                            style={{ accentColor: 'var(--c-obsidian)' }}
-                          />
-                          Tarjeta con POS físico
-                        </label>
                       </div>
                     </div>
                   )}
@@ -1437,6 +1455,41 @@ export default function ProcesoPago({
             >
               {isSubmitting ? 'PROCESANDO...' : currentStep < 4 ? 'CONTINUAR' : 'FINALIZAR COMPRA'}
             </button>
+
+            {items.length > 0 && (
+              <div style={{ marginTop: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '14px 0 10px 0' }}>
+                  <div style={{ flex: 1, height: '1px', background: 'var(--border-light)' }} />
+                  <span style={{ fontSize: '0.7rem', color: 'var(--c-taupe)', fontWeight: 600, letterSpacing: '0.05em' }}>O TAMBIÉN</span>
+                  <div style={{ flex: 1, height: '1px', background: 'var(--border-light)' }} />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleDirectWhatsAppPurchase}
+                  style={{
+                    width: '100%',
+                    padding: '13px',
+                    background: '#25D366',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontWeight: 600,
+                    fontSize: '0.84rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    boxShadow: '0 4px 14px rgba(37, 211, 102, 0.25)',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  <WhatsAppIcon size={18} color="#ffffff" />
+                  COMPRA RÁPIDA POR WHATSAPP
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

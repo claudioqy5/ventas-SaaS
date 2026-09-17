@@ -55,7 +55,7 @@ export default function VistaPedidoConfirmado({
       yape: 'Billetera Móvil (Yape/Plin)',
       tarjeta: 'Tarjeta de Crédito / Débito',
       transferencia: 'Transferencia Bancaria',
-      contraentrega: 'Pago Contra Entrega'
+      mercadopago: 'Mercado Pago'
     };
 
     const clientName = order.personalData 
@@ -170,7 +170,7 @@ export default function VistaPedidoConfirmado({
     yape: 'Billetera Móvil (Yape / Plin)',
     tarjeta: 'Tarjeta de Crédito / Débito',
     transferencia: `Transferencia ${order.paymentDetails?.bancoTransferencia || 'Bancaria'}`,
-    contraentrega: 'Pago Contra Entrega'
+    mercadopago: 'Mercado Pago'
   };
 
   return (
@@ -563,10 +563,6 @@ export default function VistaPedidoConfirmado({
               {order.paymentMethod === 'yape' || order.paymentMethod === 'transferencia' ? (
                 <p style={{ margin: 0, color: 'var(--c-taupe)', lineHeight: 1.5 }}>
                   Por favor envíanos la captura o constancia de tu operación por WhatsApp pulsando el botón verde de la derecha. De esta forma registramos tu pago de inmediato y procedemos al empaque sellado de alta seguridad.
-                </p>
-              ) : order.paymentMethod === 'contraentrega' ? (
-                <p style={{ margin: 0, color: 'var(--c-taupe)', lineHeight: 1.5 }}>
-                  Nos pondremos en contacto contigo vía WhatsApp o llamada para confirmar la fecha y franja horaria de entrega en tu domicilio antes del despacho.
                 </p>
               ) : (
                 <p style={{ margin: 0, color: 'var(--c-taupe)', lineHeight: 1.5 }}>

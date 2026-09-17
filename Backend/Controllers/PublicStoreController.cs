@@ -244,36 +244,46 @@ public class PublicStoreController : ControllerBase
     }
 
     // POST api/public/store/{empresaId}/orders
-    [Authorize]
+    [AllowAnonymous]
     [HttpPost("{empresaId}/orders")]
     public async Task<IActionResult> SubmitOrder(string empresaId, [FromBody] StoreOrderRequest request)
     {
-        var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
-        if (string.IsNullOrEmpty(clientId)) return Unauthorized();
+        string? clientId = null;
+        Client? client = null;
 
-        var client = await _context.Clients.Find(c => c.Id == clientId && c.EmpresaId == empresaId).FirstOrDefaultAsync();
-        if (client == null) return Unauthorized();
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
+            if (!string.IsNullOrEmpty(clientId))
+            {
+                client = await _context.Clients.Find(c => c.Id == clientId && c.EmpresaId == empresaId).FirstOrDefaultAsync();
+            }
+        }
+
+        var nombreClienteFinal = !string.IsNullOrWhiteSpace(request.NombreCliente)
+            ? request.NombreCliente.Trim()
+            : (client != null ? client.Nombre : "Cliente Invitado (WhatsApp)");
 
         // Validar y crear la venta (Sale) con todos los datos de entrega y facturación.
         // Los datos son aislados por EmpresaId para garantizar la separación multi-tenant del SaaS.
         var newSale = new Sale
         {
             EmpresaId = empresaId,
-            ClienteId = client.Id,
-            NombreCliente = client.Nombre,
+            ClienteId = client?.Id ?? "INVITADO",
+            NombreCliente = nombreClienteFinal,
             Subtotal = request.Subtotal,
             Impuesto = request.Impuesto,
             Total = request.Total,
             MetodoPago = request.MetodoPago,
             EstadoPago = "Pendiente",
             EstadoOrden = "PENDIENTE_PAGO",
-            CreadoPor = client.Id,
-            CreadoPorNombre = "Tienda Virtual",
+            CreadoPor = client?.Id ?? "INVITADO",
+            CreadoPorNombre = client != null ? "Tienda Virtual" : "Tienda Virtual (Invitado)",
             FechaCreacion = DateTime.UtcNow,
             Detalles = new List<SaleItem>(),
 
             // Datos de entrega
-            DireccionEntrega = request.DireccionEntrega,
+            DireccionEntrega = string.IsNullOrWhiteSpace(request.DireccionEntrega) ? "Coordinación directa por WhatsApp" : request.DireccionEntrega,
             DepartamentoEntrega = request.DepartamentoEntrega,
             ProvinciaEntrega = request.ProvinciaEntrega,
             DistritoEntrega = request.DistritoEntrega,
@@ -320,22 +330,22 @@ public class PublicStoreController : ControllerBase
 
         await _context.Sales.InsertOneAsync(newSale);
 
-        // Actualizar el perfil del cliente con la dirección de entrega de esta compra.
-        // Esto permite que el checkout autocomplete los campos en la próxima compra.
-        // Solo se actualiza si el cliente pertenece a esta empresa (multi-tenant seguro).
-        var updateDef = Builders<Client>.Update
-            .Set(c => c.Direccion, request.DireccionEntrega ?? client.Direccion)
-            .Set(c => c.Departamento, request.DepartamentoEntrega ?? client.Departamento)
-            .Set(c => c.Provincia, request.ProvinciaEntrega ?? client.Provincia)
-            .Set(c => c.Distrito, request.DistritoEntrega ?? client.Distrito)
-            .Set(c => c.Referencia, request.ReferenciaEntrega ?? client.Referencia)
-            .Set(c => c.TipoDocumento, request.TipoDocumento ?? client.TipoDocumento)
-            .Set(c => c.NumeroDocumento, request.NumeroDocumento ?? client.NumeroDocumento);
+        if (client != null)
+        {
+            var updateDef = Builders<Client>.Update
+                .Set(c => c.Direccion, request.DireccionEntrega ?? client.Direccion)
+                .Set(c => c.Departamento, request.DepartamentoEntrega ?? client.Departamento)
+                .Set(c => c.Provincia, request.ProvinciaEntrega ?? client.Provincia)
+                .Set(c => c.Distrito, request.DistritoEntrega ?? client.Distrito)
+                .Set(c => c.Referencia, request.ReferenciaEntrega ?? client.Referencia)
+                .Set(c => c.TipoDocumento, request.TipoDocumento ?? client.TipoDocumento)
+                .Set(c => c.NumeroDocumento, request.NumeroDocumento ?? client.NumeroDocumento);
 
-        await _context.Clients.UpdateOneAsync(
-            c => c.Id == client.Id && c.EmpresaId == empresaId,
-            updateDef
-        );
+            await _context.Clients.UpdateOneAsync(
+                c => c.Id == client.Id && c.EmpresaId == empresaId,
+                updateDef
+            );
+        }
 
         return Ok(new { message = "Pedido registrado con éxito", orderId = newSale.Id });
     }
@@ -394,7 +404,8 @@ public record StoreOrderRequest(
     decimal Total,
     string MetodoPago,
     List<StoreOrderItem> Items,
-    // Datos personales del comprador (para actualizar perfil)
+    // Datos personales del comprador (para actualizar perfil o para invitado)
+    string? NombreCliente,
     string? TipoDocumento,
     string? NumeroDocumento,
     // Datos de entrega

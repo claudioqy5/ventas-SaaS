@@ -3780,20 +3780,52 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 
 ---
 
+### Actualización de Métodos de Pago, Compra como Invitado e Integración Pedidos Web
+**Fecha:** Septiembre 17, 2026
+
+**1. Gestión de Marcas en Panel Admin y Backend:**
+- **Backend (.NET 9 / C#):** Creado modelo `Brand.cs` y controlador `BrandsController.cs` con soporte CRUD multi-tenant aislado por `EmpresaId`.
+- **Panel Admin (Vue 3 / Vite):** Creada vista `Brands.vue` e integrada al router (`/brands`) y al menú de navegación lateral.
+
+**2. Rediseño Limpio y Tipografía Refinada (Frontend Relojes):**
+- **Panel de Cliente (`VistaPanelCliente.jsx`):** Rediseñado con pesos de fuente sutiles (`font-serif` para títulos), eliminando negritas pesadas y agregando el stepper horizontal de avance del pedido (*Pendiente de Pago*, *En Preparación*, *Enviado*, *Entregado*).
+- **Tarjetas de Producto (`TarjetaProducto.jsx`):** Eliminados efectos 3D inclinados, destellos radiales y marcos dorados excesivos para lograr una presentación limpia y de alta relojería.
+
+**3. Métodos de Pago Actualizados (`ProcesoPago.jsx` & `VistaPedidoConfirmado.jsx`):**
+- **Retiro de Contra Entrega:** Removido por completo el método de pago "Contra Entrega" de las pestañas de selección, validaciones y vistas de confirmación.
+- **Transferencia Bancaria:**
+  - Titular oficial actualizado: **GRUPO SERCAL S.A.C.**
+  - **BCP:** Cta. Corriente Soles `355-7216688-0-94` | CCI `002 355 007216688094 67`
+  - **Interbank:** Cta. Corriente Soles `500-3007303149` | CCI `003-500-003007303149-61`
+  - Actualizadas las funciones de copiado directo a portapapeles.
+
+**4. Flujo de Compra como Invitado & Registro en Pedidos Web (`ProcesoPago.jsx` & `PublicStoreController.cs`):**
+- **E-Commerce Checkout (`ProcesoPago.jsx`):**
+  - Añadido enlace de acción limpia `Comprar como invitado ->` en el Paso 1 (Carrito), que salta directamente al Paso 4 (Métodos de Pago) desactivando las validaciones obligatorias de datos personales y dirección.
+- **Backend (.NET 9 / C# - `PublicStoreController.cs`):**
+  - Actualizado el endpoint `SubmitOrder` con atributo `[AllowAnonymous]` y soporte para `NombreCliente`.
+  - Registra las ventas como invitado en MongoDB con `EstadoOrden = "PENDIENTE_PAGO"`, logrando que la compra **aparezca instantáneamente en la sección de Pedidos Web (`/online-orders`) del Panel Administrativo**.
+- **Derivación Automática a WhatsApp:**
+  - Al hacer clic en `FINALIZAR COMPRA` en modo invitado, se crea la orden en la BD y se genera una derivación automática a WhatsApp con la constancia del pedido (`#...`), método de pago, número de operación y lista de productos para coordinar la entrega.
+
+**5. Verificación de Compilaciones:**
+- **Frontend Relojes (Next.js 16):** `npm run build` ejecutado exitosamente con 0 errores y 0 advertencias de compilación.
+
+---
+
 ### ¿Dónde nos quedamos? (Estado Actual y Hoja de Ruta Inmediata)
 
 1. **Despliegue del Backend en el Servidor VPS (Hostinger):**
-   Para aplicar los cambios (desbloqueo del login de administración y nuevo endpoint de verificación para la tienda online), ejecutar en el VPS:
+   Para aplicar las actualizaciones de marcas, compra anónima como invitado y corrección de auth en el servidor de producción:
    ```bash
    git pull origin master
    docker-compose down
    docker-compose up -d --build
    ```
-   *Nota: Al reiniciar los contenedores, el login en `ventassaas.vercel.app` para `relojes@ventassaas.com` entrará de forma directa e inmediata.*
 
 2. **Pendientes de Producción para E-Commerce / Pagos:**
-   - **Mercado Pago Checkout Pro:** Realizar la prueba en vivo con tarjeta bancaria real de bajo monto (S/ 1.00 o S/ 2.00) y ejecutar el reembolso inmediato desde el panel de Mercado Pago.
-   - **Credenciales SMTP en VPS:** Una vez adquirido el dominio (`lgante.pe`) o configurado el buzón emisor corporativo, completar las variables `SMTP_*` en el archivo `.env` del servidor para habilitar el despacho de correos en producción.
+   - **Mercado Pago Checkout Pro:** Prueba en producción real de pago con tarjeta bancaria de bajo monto y verificación de la notificación de webhook.
+   - **Pruebas de Pedidos Web:** Confirmar la recepción de pedidos web de invitados y clientes registrados en el panel admin `ventassaas.vercel.app/online-orders`.
 
 
 
