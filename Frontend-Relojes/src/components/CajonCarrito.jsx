@@ -275,7 +275,7 @@ export default function CajonCarrito({
               color: 'var(--c-taupe)'
             }}>
               <span>Custodia y Transporte Asegurado</span>
-              <span style={{ color: 'var(--c-indigo)', fontWeight: 600 }}>Cortesía VIP (S/ 0.00)</span>
+              <span style={{ color: 'var(--c-indigo)', fontWeight: 600 }}>Cortesía (S/ 0.00)</span>
             </div>
 
             <div style={{

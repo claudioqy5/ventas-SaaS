@@ -11,7 +11,6 @@ import ModalAjustesInquilino from './components/ModalAjustesInquilino';
 import ModalAuthCliente from './components/ModalAuthCliente';
 import Testimonios from './components/Testimonios';
 import PieDePagina from './components/PieDePagina';
-import ArmaTuReloj from './components/ArmaTuReloj';
 import { fetchStoreProducts } from './services/api';
 import CargadorReloj from './components/CargadorReloj';
 import BotonWhatsApp from './components/BotonWhatsApp';
@@ -29,7 +28,7 @@ import VistaVerificarCorreo from './components/VistaVerificarCorreo';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 import { matchProductSmart } from './utils/searchEngine';
 
-const STORAGE_KEY_CART = 'lgant_vip_cart_v1';
+const STORAGE_KEY_CART = 'lgant_cart_v1';
 const STORAGE_KEY_EMPRESA = 'lgant_saas_empresa_id';
 const STORAGE_KEY_API_URL = 'lgant_saas_api_url';
 const WHATSAPP_CONCIERGE = '51962956919';
@@ -252,8 +251,6 @@ export default function App({ initialCategory, initialProductId, initialView = '
         window.history.pushState({}, '', '/preguntas-frecuentes');
       } else if (viewName === 'terminos') {
         window.history.pushState({}, '', '/terminos-y-condiciones');
-      } else if (viewName === 'arma-tu-reloj') {
-        window.history.pushState({}, '', '/arma-tu-reloj');
       } else if (viewName === 'checkout') {
         window.history.pushState({}, '', '/checkout');
       } else if (viewName === 'pedido-confirmado') {
@@ -283,9 +280,6 @@ export default function App({ initialCategory, initialProductId, initialView = '
         setSelectedProduct(null);
       } else if (path.includes('/terminos-y-condiciones')) {
         setActiveView('terminos');
-        setSelectedProduct(null);
-      } else if (path.includes('/arma-tu-reloj')) {
-        setActiveView('arma-tu-reloj');
         setSelectedProduct(null);
       } else if (path.includes('/checkout')) {
         setActiveView('checkout');
@@ -342,7 +336,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [cart, setCart] = useState(() => {
     if (typeof window === 'undefined') return [];
     try {
-      const saved = localStorage.getItem(STORAGE_KEY_CART) || localStorage.getItem('aurelia_vip_cart_v1');
+      const saved = localStorage.getItem(STORAGE_KEY_CART) || localStorage.getItem('aurelia_cart_v1');
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -641,7 +635,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
 
   const handleOpenWhatsAppConcierge = () => {
     const text = encodeURIComponent(
-      `👋 *ATENCIÓN VIP - CONCIERGE L'GANT*\n\n` +
+      `👋 *ATENCIÓN - CONCIERGE L'GANT*\n\n` +
       `Hola, deseo comunicarme con un asesor de la boutique para recibir asesoramiento sobre su colección de alta relojería.`
     );
     window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_CONCIERGE}&text=${text}`, '_blank');
@@ -736,12 +730,6 @@ export default function App({ initialCategory, initialProductId, initialView = '
           onLogout={handleCustomerLogout}
           onNavigate={handleNavigateView}
           onBack={handleBackToCatalog}
-        />
-      ) : activeView === 'arma-tu-reloj' ? (
-        <ArmaTuReloj
-          products={products}
-          onBack={handleBackToCatalog}
-          onAddToCart={handleAddToCart}
         />
       ) : (
         <>

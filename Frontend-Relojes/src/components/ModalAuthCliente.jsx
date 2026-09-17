@@ -92,7 +92,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
         apellidos: data.client.apellidos || apellidos,
         email: data.client.correo,
         correo: data.client.correo,
-        nivel: 'Cliente VIP',
+        nivel: 'Cliente',
         telefono: data.client.telefono || '',
         // Documento de identidad
         tipoDocumento: data.client.tipoDocumento || 'DNI',
@@ -175,7 +175,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
             <div style={{ padding: '32px 32px 14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
                 <h2 className="font-serif" style={{ fontSize: '1.45rem', color: 'var(--c-deep-purple)', fontWeight: 600 }}>
-                  Panel de Cliente VIP
+                  Panel de Cliente
                 </h2>
               </div>
 
@@ -352,7 +352,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
                         {user.nombre}
                       </h3>
                       <p style={{ fontSize: '0.82rem', color: 'var(--c-gold)', fontWeight: 600 }}>
-                        {user.nivel || 'Cliente VIP Concierge'}
+                        {user.nivel || 'Cliente Concierge'}
                       </p>
                       <p style={{ fontSize: '0.78rem', color: 'var(--c-taupe)', marginTop: '2px', fontWeight: 400 }}>
                         {user.email}
@@ -463,7 +463,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
                 }}
               >
                 <LogOut size={16} />
-                Cerrar Sesión VIP
+                Cerrar Sesión
               </button>
             </div>
           </div>
@@ -509,7 +509,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
                 />
               </div>
               <h2 className="font-serif" style={{ fontSize: '1.6rem', color: 'var(--c-deep-purple)', fontWeight: 600, marginBottom: '6px' }}>
-                {isRegister ? 'Crear Cuenta VIP' : 'Acceso Clientes VIP'}
+                {isRegister ? 'Crear Cuenta' : 'Acceso Clientes'}
               </h2>
               <p style={{ fontSize: '0.86rem', color: 'var(--c-taupe)' }}>
                 {isRegister 

@@ -74,7 +74,7 @@ export default function VistaVerificarCorreo({ onOpenAuth, onNavigateHome }) {
               <Loader2 size={36} color="var(--c-gold)" style={{ animation: 'spin 1.2s linear infinite' }} />
             </div>
             <h2 className="font-serif" style={{ fontSize: '1.5rem', color: 'var(--c-deep-purple)', marginBottom: '10px', fontWeight: 600 }}>
-              Verificando tu cuenta VIP
+              Verificando tu cuenta
             </h2>
             <p style={{ fontSize: '0.92rem', color: 'var(--c-taupe)', margin: 0 }}>
               Por favor espera unos instantes mientras confirmamos tus credenciales...
@@ -110,7 +110,7 @@ export default function VistaVerificarCorreo({ onOpenAuth, onNavigateHome }) {
               borderRadius: '20px',
               marginBottom: '14px'
             }}>
-              Membresía VIP Activada
+              Cuenta Activada
             </span>
 
             <h2 className="font-serif" style={{ fontSize: '1.6rem', color: 'var(--c-deep-purple)', marginBottom: '12px', fontWeight: 600 }}>
@@ -144,7 +144,7 @@ export default function VistaVerificarCorreo({ onOpenAuth, onNavigateHome }) {
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--c-deep-purple)'}
               >
-                Iniciar Sesión VIP
+                Iniciar Sesión
                 <ArrowRight size={18} />
               </button>
 

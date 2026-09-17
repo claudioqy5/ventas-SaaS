@@ -153,10 +153,10 @@ export default function VistaPedidoConfirmado({
     );
   }
 
-  const clientFirstName = order.personalData?.nombres || (user?.nombre || 'Cliente VIP');
+  const clientFirstName = order.personalData?.nombres || (user?.nombre || 'Cliente');
   const clientFullName = order.personalData 
     ? `${order.personalData.nombres} ${order.personalData.apellidos}`.trim()
-    : (user?.nombre || 'Cliente VIP');
+    : (user?.nombre || 'Cliente');
 
   const recipientFullName = order.recipientType === 'yo'
     ? clientFullName
@@ -689,7 +689,7 @@ export default function VistaPedidoConfirmado({
                 boxShadow: '0 4px 16px rgba(0,0,0,0.02)'
               }}>
                 <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--c-obsidian)', marginBottom: '4px' }}>
-                  ¿Deseas guardar tu cuenta VIP?
+                  ¿Deseas guardar tu cuenta?
                 </div>
                 <p style={{ fontSize: '0.78rem', color: 'var(--c-taupe)', lineHeight: 1.4, marginBottom: '14px' }}>
                   Crea una contraseña para acceder a tu historial de compras y realizar futuras adquisiciones en 1 solo clic.

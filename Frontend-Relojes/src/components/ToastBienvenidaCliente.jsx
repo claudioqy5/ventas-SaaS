@@ -72,7 +72,7 @@ export default function ToastBienvenidaCliente({ user, onClose }) {
           }}
         />
 
-        {/* Monograma / Avatar VIP */}
+        {/* Monograma / Avatar */}
         <div
           style={{
             width: '46px',
@@ -128,7 +128,7 @@ export default function ToastBienvenidaCliente({ user, onClose }) {
                 gap: '4px'
               }}
             >
-              <Sparkles size={12} color="#d4af37" /> SESIÓN VIP INICIADA
+              <Sparkles size={12} color="#d4af37" /> SESIÓN INICIADA
             </span>
           </div>
 

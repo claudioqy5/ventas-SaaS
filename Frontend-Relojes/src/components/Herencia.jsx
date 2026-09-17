@@ -152,7 +152,7 @@ export default function Herencia() {
               <Award size={24} color="var(--c-deep-purple)" />
             </div>
             <h3 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--c-deep-purple)', marginBottom: '12px', fontWeight: 800 }}>
-              Entrega VIP Segura en Perú
+              Entrega Segura en Perú
             </h3>
             <p style={{ fontSize: '0.88rem', color: 'var(--c-taupe)', lineHeight: 1.6 }}>
               Despachos asegurados a Lima y provincias, con atención preferencial de nuestro equipo de concierge en cada paso de su adquisición.

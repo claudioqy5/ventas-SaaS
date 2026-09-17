@@ -203,7 +203,7 @@ export default function BarraNavegacion({
               />
               <div style={{ width: '1.5px', height: '36px', backgroundColor: 'var(--c-gold)', opacity: 0.6 }}></div>
               <div style={{ fontSize: '2.1rem', fontFamily: '"Cinzel", serif', color: 'var(--c-obsidian)', lineHeight: 1, letterSpacing: '0.06em', fontWeight: 700 }}>
-                L'GANT
+                L'G
               </div>
             </div>
             <div style={{
@@ -227,8 +227,8 @@ export default function BarraNavegacion({
             { label: 'Hombre', href: '/categoria/hombre', tag: 'Hombre' },
             { label: 'Mujer', href: '/categoria/mujer', tag: 'Mujer' },
             { label: 'Marcas', href: '/categoria/marcas', isHighlight: true, isBrand: true },
-            { label: 'Novedades', href: '/categoria/novedades', tag: 'Novedades', badge: 'Nuevo' },
-            { label: 'Ofertas', href: '/categoria/ofertas', tag: 'Ofertas', badge: 'VIP' },
+            { label: 'Novedades', href: '/categoria/novedades', tag: 'Novedades' },
+            { label: 'Ofertas', href: '/categoria/ofertas', tag: 'Ofertas' },
             { label: 'Accesorios', href: '/categoria/accesorios', tag: 'Accesorios' }
           ].map((item, idx) => {
             const targetTag = item.tag || item.label;
@@ -282,7 +282,7 @@ export default function BarraNavegacion({
                 {item.badge && (
                   <span style={{
                     fontSize: '0.58rem',
-                    backgroundColor: item.badge === 'VIP' ? 'var(--c-blush)' : 'var(--c-indigo)',
+                    backgroundColor: item.badge === 'OFERTA' ? 'var(--c-blush)' : 'var(--c-indigo)',
                     color: '#ffffff',
                     padding: '2px 5px',
                     borderRadius: '4px',
@@ -300,7 +300,7 @@ export default function BarraNavegacion({
 
         {/* Acciones */}
         <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          {/* Menú de Usuario VIP (Dropdown desplegable estilo popover) */}
+          {/* Menú de Usuario (Dropdown desplegable estilo popover) */}
           <div ref={userMenuRef} style={{ position: 'relative' }}>
             <button
               type="button"
@@ -311,7 +311,7 @@ export default function BarraNavegacion({
                   onOpenAuth('login');
                 }
               }}
-              title={user ? `Cuenta VIP: ${user.nombre}` : "Mi Cuenta VIP / Iniciar Sesión"}
+              title={user ? `Cuenta: ${user.nombre}` : "Mi Cuenta / Iniciar Sesión"}
               style={{
                 height: '42px',
                 padding: user ? '0 16px 0 14px' : '0',

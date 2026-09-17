@@ -334,7 +334,7 @@ export default function ModalProducto({
                   borderRadius: '4px',
                   fontWeight: 800
                 }}>
-                  -20% VIP
+                  -20% OFERTA
                 </span>
               </div>
 

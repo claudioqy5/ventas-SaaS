@@ -398,7 +398,7 @@ export default function PaginaDetalleProducto({
                       S/ {Number(product.precioOferta).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                     </span>
                     <span style={{ backgroundColor: 'var(--c-blush)', color: '#ffffff', fontSize: '0.76rem', fontWeight: 600, fontFamily: 'var(--font-serif)', letterSpacing: '0.06em', padding: '4px 10px', borderRadius: '6px', boxShadow: '0 2px 8px var(--c-blush-glow)' }}>
-                      OFERTA VIP -{Math.round((1 - product.precioOferta / product.precio) * 100)}%
+                      OFERTA -{Math.round((1 - product.precioOferta / product.precio) * 100)}%
                     </span>
                   </div>
                 </>
@@ -552,7 +552,7 @@ export default function PaginaDetalleProducto({
               </div>
               <div>
                 <Sparkles size={22} color="var(--c-blush)" style={{ margin: '0 auto 6px' }} />
-                <div style={{ fontSize: '0.76rem', color: 'var(--c-deep-purple)', fontFamily: 'var(--font-serif)', fontWeight: 600 }}>Envío Gratuito VIP</div>
+                <div style={{ fontSize: '0.76rem', color: 'var(--c-deep-purple)', fontFamily: 'var(--font-serif)', fontWeight: 600 }}>Envío Gratuito Asegurado</div>
               </div>
               <div>
                 <ShieldCheck size={22} color="var(--c-indigo)" style={{ margin: '0 auto 6px' }} />

@@ -3753,6 +3753,28 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 **5. Compilación y Versionamiento:**
 - **Backend (.NET 9):** `dotnet build Backend.csproj` completado con 0 errores.
 - **Frontend Admin (Vue 3 / Vite):** `npm run build` completado exitosamente en 1.30s (código 0).
+
+---
+
+### Refactorización de Diseño Minimalista y Limpieza de Identidad Visual (Frontend Relojes)
+**Fecha:** Septiembre 16-17, 2026
+
+**1. Rediseño Total de la Sección Hero (`Inicio.jsx`):**
+- **Fondo Minimalista:** Se reemplazó el fondo oscuro degradado radial (`var(--c-charcoal)` a `var(--c-obsidian)`) por un fondo blanco sólido y luminoso (`#ffffff`).
+- **Limpieza de Elementos Gráficos:** Se eliminaron por completo la imagen renderizada del reloj flotante (Casio) y el recurso gráfico del "montículo de tierra" del código base para lograr un diseño más editorial.
+- **Ajuste de Tipografía y Contraste:** 
+  - El texto gigante de fondo ("L'GANT") cambió de blanco transparente a gris muy claro (`rgba(0,0,0, 0.04)`) para contrastar sin ser invasivo.
+  - El trazado (stroke) del texto "EN CADA SEGUNDO" se cambió a gris (`rgba(0,0,0, 0.05)`).
+  - El bloque de texto informativo de "LIMITED PRE-ORDERS" pasó de blanco a negro.
+- **Eliminación de Rutas Inactivas:** Se removió por completo la tarjeta interactiva oscura ("ARMA TU RELOJ") del hero y se eliminó toda la lógica, importaciones y rutas (`/arma-tu-reloj`) relacionadas dentro del ruteador de `App.jsx`.
+
+**2. Limpieza de Copywriting y Tono de Marca (Global):**
+- **Eliminación del concepto "VIP":** Se ejecutó una refactorización de texto a lo largo de más de 10 archivos del frontend (BarraNavegacion, App, VistaPanelCliente, ModalAuthCliente, CajonCarrito, PaginaDetalleProducto, ToastBienvenidaCliente, VistaPedidoConfirmado, VistaVerificarCorreo, metadatos, etc.).
+  - Las etiquetas como "Cliente VIP" pasaron a ser simplemente "Cliente" o "Cuenta".
+  - "Ofertas VIP" pasó a ser "OFERTA".
+  - Se eliminó la palabra "VIP" de notificaciones de WhatsApp (Concierge), estados de sesión, botones y garantías internacionales. Esto se hizo para darle a la marca un tono más serio, exclusivo y directo, eliminando el exceso de adjetivos.
+- **Eliminación de Badges (Píldoras) en el Menú:**
+  - En `BarraNavegacion.jsx`, se retiraron las etiquetas (badges) de `badge: 'Nuevo'` y `badge: 'OFERTA'` junto a los menús de "Novedades" y "Ofertas" para mantener un menú principal impecablemente limpio y de corte minimalista de lujo.
 - **Frontend E-Commerce (Next.js 16):** `npm run build` completado exitosamente, generando la ruta canónica `○ /verificar-correo` sin errores ni advertencias de linting.
 - **Sincronización Git:** Cambios consolidados y subidos a `origin/master` en los commits `50f91f9`, `188e92b` y `d1ea76d`.
 

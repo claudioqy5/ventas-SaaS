@@ -5,89 +5,53 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge, onNavigateV
   return (
     <section className="hero-section" style={{
       position: 'relative',
-      minHeight: 'calc(100vh - 85px)',
+      height: 'calc(98vh - 85px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'radial-gradient(circle at center, var(--c-charcoal) 0%, var(--c-obsidian) 80%)',
+      background: '#ffffff',
       overflow: 'hidden',
-      color: '#fff'
+      color: '#000',
+      borderBottomLeftRadius: '100px',
+      borderBottomRightRadius: '100px'
     }}>
-      {/* Giant Background Text */}
+      {/* Giant Background Text Top - L'GANTE */}
       <div style={{
         position: 'absolute',
-        top: '40%',
+        top: '30%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        fontSize: 'clamp(5rem, 18vw, 22rem)',
+        fontSize: 'clamp(5rem, 16vw, 22rem)',
         fontFamily: 'var(--font-sans)',
         fontWeight: 900,
-        color: 'rgba(255,255,255,0.04)',
+        color: 'rgba(0, 0, 0, 0.04)',
         whiteSpace: 'nowrap',
         zIndex: 1,
         letterSpacing: '-0.02em',
         lineHeight: 0.8
       }}>
-        ELEGANCIA
+        L'GANT
       </div>
 
-      {/* Floating Watch Image */}
-      <div style={{
-        position: 'relative',
-        zIndex: 2,
-        width: '100%',
-        maxWidth: '900px',
-        height: '70vh',
-        minHeight: '400px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        animation: 'floatElement 6s ease-in-out infinite'
-      }}>
-        <img 
-          src="/watches/edifice_pure_black.jpg" 
-          alt="Edifice Watch" 
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            mixBlendMode: 'screen',
-            filter: 'drop-shadow(0 30px 40px rgba(0,0,0,0.8))'
-          }}
-        />
-      </div>
-
-      {/* Cursive Text Overlay "MODERN ARMOR" */}
+      {/* Giant Background Text Bottom - EN CADA SEGUNDO */}
       <div style={{
         position: 'absolute',
-        top: '55%',
+        top: '70%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        fontSize: 'clamp(3rem, 9vw, 11rem)',
-        fontFamily: 'LeBistrotDesAmoureux, cursive',
-        color: 'var(--c-gold)',
+        fontSize: 'clamp(4rem, 12vw, 15rem)',
+        fontFamily: 'var(--font-sans)',
+        fontWeight: 900,
+        color: 'transparent',
+        WebkitTextStroke: '3px rgba(0, 0, 0, 0.05)',
         whiteSpace: 'nowrap',
-        zIndex: 3,
-        textShadow: '0 10px 30px rgba(0,0,0,0.8)',
-        pointerEvents: 'none'
+        zIndex: 1,
+        letterSpacing: '-0.02em',
+        lineHeight: 0.8
       }}>
-        Modern Armor
+        EN CADA SEGUNDO
       </div>
 
-      {/* "CREATED FOR YOU." */}
-      <div style={{
-        position: 'absolute',
-        top: '68%',
-        left: '15%',
-        fontFamily: 'LeBistrotDesAmoureux, cursive',
-        fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)',
-        color: '#fff',
-        zIndex: 4,
-        transform: 'rotate(-4deg)',
-        textShadow: '0 4px 15px rgba(0,0,0,0.5)'
-      }}>
-        Created for you.
-      </div>
 
       {/* Bottom Left Info */}
       <div style={{
@@ -104,12 +68,12 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge, onNavigateV
           letterSpacing: '0.1em',
           marginBottom: '15px',
           fontWeight: 600,
-          color: '#fff'
+          color: '#000'
         }}>
           LIMITED PRE-ORDERS
         </h3>
         <p style={{
-          color: 'rgba(255, 255, 255, 0.7)',
+          color: 'rgba(0, 0, 0, 0.7)',
           fontSize: '0.95rem',
           lineHeight: 1.6,
           fontWeight: 400
@@ -118,67 +82,6 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge, onNavigateV
         </p>
       </div>
 
-      {/* Bottom Right Glass Card */}
-      <div onClick={() => onNavigateView('arma-tu-reloj')} style={{
-        position: 'absolute',
-        bottom: '10%',
-        right: '8%',
-        zIndex: 4,
-        background: 'rgba(26, 27, 31, 0.65)',
-        backdropFilter: 'blur(15px)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        padding: '30px',
-        borderRadius: '20px',
-        maxWidth: '320px',
-        cursor: 'pointer',
-        transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-12px)';
-        e.currentTarget.style.background = 'rgba(26, 27, 31, 0.85)';
-        e.currentTarget.style.border = '1px solid rgba(212, 175, 55, 0.3)'; // Gold hover border
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.background = 'rgba(26, 27, 31, 0.65)';
-        e.currentTarget.style.border = '1px solid rgba(255,255,255,0.08)';
-      }}>
-        <h3 style={{ 
-          fontFamily: 'var(--font-sans)', 
-          fontSize: '1rem', 
-          textTransform: 'uppercase', 
-          letterSpacing: '0.15em',
-          marginBottom: '15px',
-          fontWeight: 600,
-          color: '#fff'
-        }}>
-          ARMA TU RELOJ
-        </h3>
-        <p style={{
-          color: 'rgba(255, 255, 255, 0.65)',
-          fontSize: '0.85rem',
-          lineHeight: 1.5,
-          marginBottom: '25px'
-        }}>
-          Combina caja, material de correa y colores para diseñar un reloj a tu medida.
-        </p>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#fff' }}>
-          <span style={{ fontSize: '0.85rem', letterSpacing: '0.05em', fontWeight: 500 }}>Construye el tuyo</span>
-          <div style={{ 
-            width: '32px', 
-            height: '32px', 
-            borderRadius: '50%', 
-            border: '1px solid rgba(255,255,255,0.3)', 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center',
-            transition: 'all 0.3s ease'
-          }}>
-            <ArrowRight size={14} />
-          </div>
-        </div>
-      </div>
     </section>
   );
 }

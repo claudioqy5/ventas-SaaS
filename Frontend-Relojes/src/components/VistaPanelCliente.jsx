@@ -106,11 +106,11 @@ export default function VistaPanelCliente({
   const totalInvertido = pedidos.reduce((acc, p) => acc + (Number(p.total) || 0), 0);
 
   const handleWhatsAppOrderInquiry = (ped) => {
-    const refCode = ped.id ? String(ped.id).slice(-6).toUpperCase() : 'VIP';
+    const refCode = ped.id ? String(ped.id).slice(-6).toUpperCase() : 'CLIENTE';
     const text = encodeURIComponent(
       `👋 *CONSULTA DE COMPRA - CONCIERGE L'GANT*\n\n` +
       `Hola, deseo información sobre el seguimiento de mi orden *#${refCode}* realizada el ${new Date(ped.fechaCreacion || Date.now()).toLocaleDateString('es-PE')}.\n` +
-      `Titular: ${user?.nombre || 'Cliente VIP'}`
+      `Titular: ${user?.nombre || 'Cliente'}`
     );
     window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${text}`, '_blank');
   };
@@ -175,7 +175,7 @@ export default function VistaPanelCliente({
             fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase'
           }}>
             <Sparkles size={13} color="var(--c-indigo)" />
-            Portal Exclusivo VIP
+            Portal Exclusivo
           </div>
         </div>
 
@@ -190,13 +190,13 @@ export default function VistaPanelCliente({
           }}>
             <User size={48} color="var(--c-taupe)" style={{ margin: '0 auto 20px', opacity: 0.5 }} />
             <h3 className="font-serif" style={{ fontSize: '1.6rem', color: 'var(--c-deep-purple)', marginBottom: '12px' }}>
-              Acceso a tu Cuenta VIP
+              Acceso a tu Cuenta
             </h3>
             <p style={{ fontSize: '0.95rem', color: 'var(--c-taupe)', lineHeight: 1.6, marginBottom: '32px' }}>
-              Para visualizar tu historial de compras, seguimiento y beneficios de la membresía VIP, por favor inicia sesión.
+              Para visualizar tu historial de compras, seguimiento y beneficios de tu cuenta, por favor inicia sesión.
             </p>
             <button type="button" onClick={onRequireAuth} className="btn-indigo">
-              Iniciar Sesión VIP
+              Iniciar Sesión
             </button>
           </div>
         ) : (
@@ -227,7 +227,7 @@ export default function VistaPanelCliente({
                 </h3>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--c-taupe)' }}>{user.email}</p>
                 <div style={{ marginTop: '16px', display: 'inline-block', backgroundColor: 'rgba(52, 199, 89, 0.12)', color: '#1f7a35', padding: '4px 12px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.05em' }}>
-                  VIP ACTIVO
+                  CUENTA ACTIVA
                 </div>
               </div>
 
@@ -294,7 +294,7 @@ export default function VistaPanelCliente({
               {/* Encabezado del área de contenido */}
               <div style={{ padding: '0 8px 12px' }}>
                 <h1 className="font-serif" style={{ fontSize: '2.2rem', color: 'var(--c-obsidian)', margin: '0 0 10px', fontWeight: 600, letterSpacing: '-0.5px' }}>
-                  {activeTab === 'compras' ? 'Historial de Compras' : 'Mi Cuenta VIP'}
+                  {activeTab === 'compras' ? 'Historial de Compras' : 'Mi Cuenta'}
                 </h1>
                 <p style={{ color: 'var(--c-taupe)', margin: 0, fontSize: '0.98rem', lineHeight: 1.5 }}>
                   {activeTab === 'compras' 
@@ -329,7 +329,7 @@ export default function VistaPanelCliente({
                   {cargandoPedidos ? (
                     <div style={{ textAlign: 'center', padding: '60px 20px', backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(59, 60, 65, 0.1)' }}>
                       <div style={{ width: '36px', height: '36px', border: '3px solid rgba(212, 175, 55, 0.2)', borderTopColor: 'var(--c-gold)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
-                      <p style={{ color: 'var(--c-taupe)', fontSize: '0.92rem', margin: 0 }}>Consultando el libro de órdenes VIP...</p>
+                      <p style={{ color: 'var(--c-taupe)', fontSize: '0.92rem', margin: 0 }}>Consultando el libro de órdenes...</p>
                     </div>
                   ) : pedidos.length === 0 ? (
                     <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid rgba(59, 60, 65, 0.1)', padding: '64px 24px', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
@@ -406,7 +406,7 @@ export default function VistaPanelCliente({
                                   onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ffffff'}
                                 >
                                   <ExternalLink size={14} />
-                                  Soporte VIP
+                                  Soporte al Cliente
                                 </button>
                               </div>
                             </div>
@@ -587,7 +587,7 @@ export default function VistaPanelCliente({
                         <Award size={28} color="var(--c-indigo)" style={{ flexShrink: 0, marginTop: '2px' }} />
                         <div>
                           <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--c-deep-purple)', margin: '0 0 6px' }}>Garantía Internacional Activa</h4>
-                          <p style={{ fontSize: '0.88rem', color: 'var(--c-taupe)', margin: 0, lineHeight: 1.6 }}>Tu cuenta VIP goza de 5 años de mantenimiento preventivo, ajuste de calibre y pulido sin cargo en nuestras boutiques oficiales de San Isidro y Surco.</p>
+                          <p style={{ fontSize: '0.88rem', color: 'var(--c-taupe)', margin: 0, lineHeight: 1.6 }}>Tu cuenta goza de 5 años de mantenimiento preventivo, ajuste de calibre y pulido sin cargo en nuestras boutiques oficiales de San Isidro y Surco.</p>
                         </div>
                       </div>
                     </div>
