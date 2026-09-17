@@ -4,22 +4,20 @@ import {
   ArrowLeft, 
   Truck, 
   User, 
-  Award, 
   ShieldCheck, 
-  Clock, 
   CheckCircle2, 
   LogOut, 
   Package, 
   ExternalLink, 
   Calendar, 
-  CreditCard, 
   Sparkles,
   MapPin,
-  Phone,
-  Mail,
   Edit2,
   Save,
-  X
+  X,
+  Clock,
+  Check,
+  ChevronRight
 } from 'lucide-react';
 import { getCustomerOrders, updateCustomerProfile } from '../services/api';
 
@@ -31,11 +29,10 @@ export default function VistaPanelCliente({
   onBack,
   onLogout,
   onRequireAuth,
-  whatsappNumber = '51999999999'
+  whatsappNumber = '51962956919'
 }) {
   const [pedidos, setPedidos] = useState([]);
   const [cargandoPedidos, setCargandoPedidos] = useState(false);
-
   const [toastMessage, setToastMessage] = useState(null);
 
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -118,139 +115,210 @@ export default function VistaPanelCliente({
   return (
     <div style={{
       minHeight: '85vh',
-      backgroundColor: 'var(--bg-main)',
-      paddingTop: '36px',
+      backgroundColor: '#fafafa',
+      paddingTop: '32px',
       paddingBottom: '80px',
-      position: 'relative'
+      color: '#1a1a1a',
+      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
-      {/* Notificación Toast */}
+      {/* Toast Notificación */}
       {toastMessage && (
         <div style={{
           position: 'fixed',
-          bottom: '40px',
-          right: '40px',
+          bottom: '32px',
+          right: '32px',
           zIndex: 9999,
-          backgroundColor: '#2e3135',
+          backgroundColor: '#1a1a1a',
           color: '#ffffff',
-          padding: '16px 24px',
-          borderRadius: '12px',
+          padding: '14px 22px',
+          borderRadius: '10px',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
-          boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
-          animation: 'slideUpToast 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+          gap: '10px',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+          animation: 'slideUpToast 0.3s ease'
         }}>
-          <CheckCircle2 size={20} color="var(--c-gold)" />
-          <span style={{ fontSize: '0.94rem', fontWeight: 500 }}>{toastMessage}</span>
-          <style>{`
-            @keyframes slideUpToast {
-              from { opacity: 0; transform: translateY(20px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-          `}</style>
+          <CheckCircle2 size={18} color="#c5a059" />
+          <span style={{ fontSize: '0.9rem', fontWeight: 400 }}>{toastMessage}</span>
         </div>
       )}
 
-      <div style={{ maxWidth: '1140px', margin: '0 auto', padding: '0 20px' }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
         
-        {/* Barra superior */}
+        {/* Barra superior de navegación */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
           <button
             type="button"
             onClick={onBack}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              background: '#ffffff', border: '1px solid rgba(59, 60, 65, 0.15)', padding: '10px 18px',
-              borderRadius: '9999px', color: 'var(--c-deep-purple)', fontSize: '0.85rem', fontWeight: 600,
-              cursor: 'pointer', transition: 'all 0.2s ease'
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'transparent',
+              border: 'none',
+              padding: '6px 0',
+              color: '#666666',
+              fontSize: '0.88rem',
+              fontWeight: 400,
+              cursor: 'pointer',
+              transition: 'color 0.2s ease'
             }}
+            onMouseEnter={e => e.currentTarget.style.color = '#1a1a1a'}
+            onMouseLeave={e => e.currentTarget.style.color = '#666666'}
           >
             <ArrowLeft size={16} /> Volver a la boutique
           </button>
 
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: '6px',
-            backgroundColor: 'rgba(212, 175, 55, 0.1)', border: '1px solid rgba(212, 175, 55, 0.3)',
-            padding: '6px 14px', borderRadius: '9999px', fontSize: '0.74rem', color: 'var(--c-deep-purple)',
-            fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase'
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            backgroundColor: '#ffffff',
+            border: '1px solid #e8e8e8',
+            padding: '5px 14px',
+            borderRadius: '20px',
+            fontSize: '0.75rem',
+            color: '#8a733e',
+            fontWeight: 400,
+            letterSpacing: '0.06em'
           }}>
-            <Sparkles size={13} color="var(--c-indigo)" />
-            Portal Exclusivo
+            <Sparkles size={12} color="#c5a059" />
+            Portal de Cliente
           </div>
         </div>
 
         {!user ? (
-          /* ========================================================== */
-          /* NO AUTENTICADO                                             */
-          /* ========================================================== */
+          /* NO AUTENTICADO */
           <div style={{
-            backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid rgba(59, 60, 65, 0.1)',
-            padding: '60px 24px', textAlign: 'center', maxWidth: '500px', margin: '40px auto 0',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.03)'
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            border: '1px solid #eaeaea',
+            padding: '56px 24px',
+            textAlign: 'center',
+            maxWidth: '460px',
+            margin: '40px auto 0',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.02)'
           }}>
-            <User size={48} color="var(--c-taupe)" style={{ margin: '0 auto 20px', opacity: 0.5 }} />
-            <h3 className="font-serif" style={{ fontSize: '1.6rem', color: 'var(--c-deep-purple)', marginBottom: '12px' }}>
+            <User size={40} color="#999999" style={{ margin: '0 auto 16px', strokeWidth: 1.5 }} />
+            <h3 style={{ fontSize: '1.4rem', color: '#1a1a1a', marginBottom: '10px', fontWeight: 500, fontFamily: 'serif' }}>
               Acceso a tu Cuenta
             </h3>
-            <p style={{ fontSize: '0.95rem', color: 'var(--c-taupe)', lineHeight: 1.6, marginBottom: '32px' }}>
-              Para visualizar tu historial de compras, seguimiento y beneficios de tu cuenta, por favor inicia sesión.
+            <p style={{ fontSize: '0.9rem', color: '#666666', lineHeight: 1.6, marginBottom: '28px', fontWeight: 400 }}>
+              Para visualizar tu historial de compras y gestionar tu información personal, inicia sesión.
             </p>
-            <button type="button" onClick={onRequireAuth} className="btn-indigo">
+            <button
+              type="button"
+              onClick={onRequireAuth}
+              style={{
+                backgroundColor: '#1a1a1a',
+                color: '#ffffff',
+                border: 'none',
+                padding: '12px 28px',
+                borderRadius: '8px',
+                fontSize: '0.9rem',
+                fontWeight: 400,
+                cursor: 'pointer'
+              }}
+            >
               Iniciar Sesión
             </button>
           </div>
         ) : (
-          /* ========================================================== */
-          /* AUTENTICADO: LAYOUT SIDEBAR + CONTENIDO                    */
-          /* ========================================================== */
+          /* AUTENTICADO: LAYOUT SIDEBAR + CONTENIDO */
           <div style={{
-            display: 'flex', gap: '32px', alignItems: 'flex-start', flexWrap: 'wrap'
+            display: 'flex', gap: '36px', alignItems: 'flex-start', flexWrap: 'wrap'
           }}>
             {/* --- SIDEBAR IZQUIERDO --- */}
-            <aside style={{ width: '100%', maxWidth: '300px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <aside style={{ width: '100%', maxWidth: '270px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
               
               {/* Resumen del Perfil */}
               <div style={{
-                backgroundColor: '#ffffff', borderRadius: '24px', padding: '36px 24px',
-                border: '1px solid rgba(59, 60, 65, 0.1)', boxShadow: '0 8px 24px rgba(0,0,0,0.02)',
-                textAlign: 'center', position: 'relative'
+                backgroundColor: '#ffffff',
+                borderRadius: '16px',
+                padding: '28px 20px',
+                border: '1px solid #eaeaea',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.01)',
+                textAlign: 'center'
               }}>
                 <div style={{
-                  width: '76px', height: '76px', borderRadius: '50%', backgroundColor: 'var(--c-deep-purple)', color: '#fff',
-                  margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem',
-                  fontFamily: 'Cinzel, serif', fontWeight: 600, boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  backgroundColor: '#f4f4f6',
+                  color: '#1a1a1a',
+                  margin: '0 auto 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem',
+                  fontFamily: 'serif',
+                  fontWeight: 400,
+                  border: '1px solid #e0e0e0'
                 }}>
                   {user.nombre ? user.nombre.charAt(0).toUpperCase() : 'U'}
                 </div>
-                <h3 className="font-serif" style={{ margin: '0 0 6px', fontSize: '1.25rem', color: 'var(--c-obsidian)', fontWeight: 600 }}>
+                <h3 style={{ margin: '0 0 4px', fontSize: '1.1rem', color: '#1a1a1a', fontWeight: 500, fontFamily: 'serif' }}>
                   {user.nombre}
                 </h3>
-                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--c-taupe)' }}>{user.email}</p>
-                <div style={{ marginTop: '16px', display: 'inline-block', backgroundColor: 'rgba(52, 199, 89, 0.12)', color: '#1f7a35', padding: '4px 12px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.05em' }}>
-                  CUENTA ACTIVA
+                <p style={{ margin: '0 0 14px', fontSize: '0.82rem', color: '#737373', fontWeight: 400 }}>{user.email}</p>
+                
+                <div style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  backgroundColor: '#f0fdf4',
+                  border: '1px solid #dcfce7',
+                  color: '#166534',
+                  padding: '3px 10px',
+                  borderRadius: '12px',
+                  fontSize: '0.72rem',
+                  fontWeight: 400
+                }}>
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
+                  Cuenta activa
                 </div>
               </div>
 
               {/* Menú de Navegación */}
               <nav style={{
-                backgroundColor: '#ffffff', borderRadius: '24px', padding: '20px',
-                border: '1px solid rgba(59, 60, 65, 0.1)', boxShadow: '0 8px 24px rgba(0,0,0,0.02)',
-                display: 'flex', flexDirection: 'column', gap: '6px'
+                backgroundColor: '#ffffff',
+                borderRadius: '16px',
+                padding: '12px',
+                border: '1px solid #eaeaea',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.01)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px'
               }}>
                 <button
                   onClick={() => onNavigate && onNavigate('mis-compras')}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '14px', width: '100%', padding: '14px 20px',
-                    borderRadius: '16px', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease', textAlign: 'left',
-                    backgroundColor: activeTab === 'compras' ? '#f4f4f6' : 'transparent',
-                    color: activeTab === 'compras' ? 'var(--c-obsidian)' : 'var(--c-taupe)',
-                    fontWeight: activeTab === 'compras' ? 700 : 500
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    width: '100%',
+                    padding: '12px 16px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    textAlign: 'left',
+                    backgroundColor: activeTab === 'compras' ? '#f5f5f7' : 'transparent',
+                    color: activeTab === 'compras' ? '#1a1a1a' : '#666666',
+                    fontWeight: activeTab === 'compras' ? 500 : 400
                   }}
                 >
-                  <Truck size={20} color={activeTab === 'compras' ? 'var(--c-obsidian)' : 'var(--c-taupe)'} />
-                  <span style={{ flex: 1, fontSize: '0.96rem' }}>Mis Compras</span>
+                  <Truck size={18} color={activeTab === 'compras' ? '#1a1a1a' : '#888888'} strokeWidth={1.5} />
+                  <span style={{ flex: 1, fontSize: '0.9rem' }}>Mis Compras</span>
                   {pedidos.length > 0 && (
-                    <span style={{ backgroundColor: 'var(--c-deep-purple)', color: '#fff', fontSize: '0.7rem', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
+                    <span style={{
+                      backgroundColor: '#e5e5e7',
+                      color: '#444444',
+                      fontSize: '0.72rem',
+                      padding: '2px 7px',
+                      borderRadius: '10px',
+                      fontWeight: 400
+                    }}>
                       {pedidos.length}
                     </span>
                   )}
@@ -259,183 +327,235 @@ export default function VistaPanelCliente({
                 <button
                   onClick={() => onNavigate && onNavigate('cuenta')}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '14px', width: '100%', padding: '14px 20px',
-                    borderRadius: '16px', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease', textAlign: 'left',
-                    backgroundColor: activeTab === 'cuenta' ? '#f4f4f6' : 'transparent',
-                    color: activeTab === 'cuenta' ? 'var(--c-obsidian)' : 'var(--c-taupe)',
-                    fontWeight: activeTab === 'cuenta' ? 700 : 500
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    width: '100%',
+                    padding: '12px 16px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    textAlign: 'left',
+                    backgroundColor: activeTab === 'cuenta' ? '#f5f5f7' : 'transparent',
+                    color: activeTab === 'cuenta' ? '#1a1a1a' : '#666666',
+                    fontWeight: activeTab === 'cuenta' ? 500 : 400
                   }}
                 >
-                  <User size={20} color={activeTab === 'cuenta' ? 'var(--c-obsidian)' : 'var(--c-taupe)'} />
-                  <span style={{ flex: 1, fontSize: '0.96rem' }}>Mi Cuenta</span>
+                  <User size={18} color={activeTab === 'cuenta' ? '#1a1a1a' : '#888888'} strokeWidth={1.5} />
+                  <span style={{ flex: 1, fontSize: '0.9rem' }}>Mi Cuenta</span>
                 </button>
 
-                <div style={{ height: '1px', backgroundColor: 'rgba(59,60,65,0.08)', margin: '12px 0' }} />
+                <div style={{ height: '1px', backgroundColor: '#f0f0f0', margin: '8px 0' }} />
 
                 <button
                   onClick={() => { if (onLogout) onLogout(); if (onBack) onBack(); }}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '14px', width: '100%', padding: '14px 20px',
-                    borderRadius: '16px', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease', textAlign: 'left',
-                    backgroundColor: 'transparent', color: 'var(--c-blush)', fontWeight: 600
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    width: '100%',
+                    padding: '12px 16px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    textAlign: 'left',
+                    backgroundColor: 'transparent',
+                    color: '#dc2626',
+                    fontWeight: 400
                   }}
-                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(219, 74, 43, 0.05)'}
+                  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fef2f2'}
                   onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
-                  <LogOut size={20} />
-                  <span style={{ fontSize: '0.96rem' }}>Cerrar Sesión</span>
+                  <LogOut size={18} strokeWidth={1.5} />
+                  <span style={{ fontSize: '0.9rem' }}>Cerrar Sesión</span>
                 </button>
               </nav>
             </aside>
 
             {/* --- CONTENIDO PRINCIPAL DERECHO --- */}
-            <main style={{ flex: 1, minWidth: '320px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <main style={{ flex: 1, minWidth: '300px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
               
-              {/* Encabezado del área de contenido */}
-              <div style={{ padding: '0 8px 12px' }}>
-                <h1 className="font-serif" style={{ fontSize: '2.2rem', color: 'var(--c-obsidian)', margin: '0 0 10px', fontWeight: 600, letterSpacing: '-0.5px' }}>
+              {/* Encabezado */}
+              <div>
+                <h1 style={{ fontSize: '1.75rem', color: '#1a1a1a', margin: '0 0 6px', fontWeight: 500, fontFamily: 'serif', letterSpacing: '-0.02em' }}>
                   {activeTab === 'compras' ? 'Historial de Compras' : 'Mi Cuenta'}
                 </h1>
-                <p style={{ color: 'var(--c-taupe)', margin: 0, fontSize: '0.98rem', lineHeight: 1.5 }}>
+                <p style={{ color: '#666666', margin: 0, fontSize: '0.9rem', lineHeight: 1.5, fontWeight: 400 }}>
                   {activeTab === 'compras' 
-                    ? 'Supervisa tus recientes adquisiciones y consulta su estado de entrega blindada en tiempo real.' 
-                    : 'Gestiona tu información personal, direcciones de despacho y aprovecha tus garantías exclusivas.'}
+                    ? 'Supervisa tus compras y consulta el estado de envío de tus productos.' 
+                    : 'Gestiona tu información personal y datos de contacto.'}
                 </p>
               </div>
 
               {activeTab === 'compras' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  {/* Resumen de inversiones */}
-                  <div style={{ display: 'flex', gap: '24px', backgroundColor: '#ffffff', padding: '24px 32px', borderRadius: '20px', border: '1px solid rgba(59,60,65,0.1)', boxShadow: '0 6px 16px rgba(0,0,0,0.02)' }}>
-                    <div>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
-                        Total Adquisiciones
+                  
+                  {/* Resumen simple */}
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                    gap: '16px'
+                  }}>
+                    <div style={{
+                      backgroundColor: '#ffffff',
+                      padding: '20px 24px',
+                      borderRadius: '14px',
+                      border: '1px solid #eaeaea'
+                    }}>
+                      <span style={{ fontSize: '0.8rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>
+                        Total de adquisiciones
                       </span>
-                      <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--c-obsidian)' }}>
-                        {pedidos.length} {pedidos.length === 1 ? 'Reloj' : 'Relojes'}
+                      <span style={{ fontSize: '1.35rem', fontWeight: 500, color: '#1a1a1a' }}>
+                        {pedidos.length} {pedidos.length === 1 ? 'reloj' : 'relojes'}
                       </span>
                     </div>
-                    <div style={{ width: '1px', backgroundColor: 'rgba(59,60,65,0.1)' }} />
-                    <div>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
-                        Inversión Acumulada
+
+                    <div style={{
+                      backgroundColor: '#ffffff',
+                      padding: '20px 24px',
+                      borderRadius: '14px',
+                      border: '1px solid #eaeaea'
+                    }}>
+                      <span style={{ fontSize: '0.8rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>
+                        Inversión acumulada
                       </span>
-                      <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--c-indigo)' }}>
+                      <span style={{ fontSize: '1.35rem', fontWeight: 500, color: '#1a1a1a' }}>
                         S/ {totalInvertido.toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                       </span>
                     </div>
                   </div>
 
                   {cargandoPedidos ? (
-                    <div style={{ textAlign: 'center', padding: '60px 20px', backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(59, 60, 65, 0.1)' }}>
-                      <div style={{ width: '36px', height: '36px', border: '3px solid rgba(212, 175, 55, 0.2)', borderTopColor: 'var(--c-gold)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
-                      <p style={{ color: 'var(--c-taupe)', fontSize: '0.92rem', margin: 0 }}>Consultando el libro de órdenes...</p>
+                    <div style={{ textAlign: 'center', padding: '48px 20px', backgroundColor: '#ffffff', borderRadius: '14px', border: '1px solid #eaeaea' }}>
+                      <div style={{ width: '28px', height: '28px', border: '2px solid #e0e0e0', borderTopColor: '#1a1a1a', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
+                      <p style={{ color: '#737373', fontSize: '0.88rem', margin: 0, fontWeight: 400 }}>Cargando información de pedidos...</p>
                     </div>
                   ) : pedidos.length === 0 ? (
-                    <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid rgba(59, 60, 65, 0.1)', padding: '64px 24px', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
-                      <div style={{ width: '72px', height: '72px', borderRadius: '50%', backgroundColor: 'rgba(212, 175, 55, 0.08)', color: 'var(--c-indigo)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px' }}>
-                        <Truck size={34} />
+                    <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', border: '1px solid #eaeaea', padding: '56px 24px', textAlign: 'center' }}>
+                      <div style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: '#f5f5f7', color: '#666666', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                        <Truck size={26} strokeWidth={1.5} />
                       </div>
-                      <h3 className="font-serif" style={{ fontSize: '1.4rem', color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
+                      <h3 style={{ fontSize: '1.25rem', color: '#1a1a1a', marginBottom: '6px', fontWeight: 500, fontFamily: 'serif' }}>
                         Aún no registras compras online
                       </h3>
-                      <p style={{ fontSize: '0.92rem', color: 'var(--c-taupe)', maxWidth: '460px', margin: '0 auto 28px', lineHeight: 1.6 }}>
-                        Descubre piezas exclusivas de alta relojería suiza y japonesa con garantía internacional de 5 años.
+                      <p style={{ fontSize: '0.88rem', color: '#666666', maxWidth: '420px', margin: '0 auto 24px', lineHeight: 1.6, fontWeight: 400 }}>
+                        Explora nuestro catálogo para encontrar piezas exclusivas de alta relojería.
                       </p>
-                      <button type="button" onClick={onBack} className="btn-indigo">Explorar la Colección</button>
+                      <button
+                        type="button"
+                        onClick={onBack}
+                        style={{
+                          backgroundColor: '#1a1a1a',
+                          color: '#ffffff',
+                          border: 'none',
+                          padding: '10px 24px',
+                          borderRadius: '8px',
+                          fontSize: '0.88rem',
+                          fontWeight: 400,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Explorar Colección
+                      </button>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                       {pedidos.map((ped, idx) => {
                         const refCode = ped.id ? String(ped.id).slice(-6).toUpperCase() : `ORD-${idx + 1}`;
-                        const isPaid = ped.estadoPago === 'PAGADO' || ped.estadoPago === 'APROBADO';
                         
                         return (
-                          <div key={ped.id || idx} style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(59, 60, 65, 0.1)', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.02)', overflow: 'hidden' }}>
+                          <div key={ped.id || idx} style={{
+                            backgroundColor: '#ffffff',
+                            borderRadius: '14px',
+                            border: '1px solid #eaeaea',
+                            overflow: 'hidden'
+                          }}>
                             {/* Cabecera del pedido */}
-                            <div style={{ padding: '20px 28px', backgroundColor: '#fbf9f6', borderBottom: '1px solid rgba(59, 60, 65, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                <span style={{ fontSize: '0.94rem', fontWeight: 700, color: 'var(--c-deep-purple)', fontFamily: 'monospace' }}>#{refCode}</span>
-                                <span style={{ color: 'var(--c-taupe)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                  <Calendar size={15} />
+                            <div style={{
+                              padding: '16px 22px',
+                              backgroundColor: '#fafafa',
+                              borderBottom: '1px solid #eaeaea',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              flexWrap: 'wrap',
+                              gap: '12px'
+                            }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                <span style={{ fontSize: '0.88rem', fontWeight: 500, color: '#1a1a1a', fontFamily: 'monospace' }}>#{refCode}</span>
+                                <span style={{ color: '#737373', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 400 }}>
+                                  <Calendar size={14} strokeWidth={1.5} />
                                   {new Date(ped.fechaCreacion || Date.now()).toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}
                                 </span>
                               </div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                {ped.estadoOrden === 'CANCELADO' ? (
-                                  <span style={{ fontSize: '0.78rem', fontWeight: 700, padding: '6px 14px', borderRadius: '9999px', backgroundColor: '#fee2e2', color: '#b91c1c', letterSpacing: '0.04em' }}>
-                                    ORDEN CANCELADA
+
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                {/* Estado del pedido en barra limpia */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#555555', fontWeight: 400 }}>
+                                  <span style={{
+                                    width: '8px',
+                                    height: '8px',
+                                    borderRadius: '50%',
+                                    backgroundColor: ped.estadoOrden === 'ENTREGADO' ? '#22c55e' : (ped.estadoOrden === 'ENVIADO' ? '#3b82f6' : '#f59e0b')
+                                  }} />
+                                  <span>
+                                    {ped.estadoOrden === 'ENTREGADO' ? 'Entregado' : (ped.estadoOrden === 'ENVIADO' ? 'En camino' : (ped.estadoOrden === 'EN_PREPARACION' ? 'En preparación' : 'Pendiente'))}
                                   </span>
-                                ) : (
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'PENDIENTE_PAGO' || ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? 1 : 0.4 }}>
-                                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#d97706' }}></div>
-                                      </div>
-                                      <span style={{ fontSize: '0.65rem', color: '#d97706', marginTop: '4px', fontWeight: 600 }}>Pendiente</span>
-                                    </div>
-                                    <div style={{ width: '20px', height: '2px', backgroundColor: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#3b82f6' : '#e5e7eb' }}></div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? 1 : 0.4 }}>
-                                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#dbeafe' : '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        {ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#2563eb' }}></div> : null}
-                                      </div>
-                                      <span style={{ fontSize: '0.65rem', color: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#2563eb' : 'var(--c-taupe)', marginTop: '4px', fontWeight: 600 }}>Preparación</span>
-                                    </div>
-                                    <div style={{ width: '20px', height: '2px', backgroundColor: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#8b5cf6' : '#e5e7eb' }}></div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? 1 : 0.4 }}>
-                                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#ede9fe' : '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        {ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#7c3aed' }}></div> : null}
-                                      </div>
-                                      <span style={{ fontSize: '0.65rem', color: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#7c3aed' : 'var(--c-taupe)', marginTop: '4px', fontWeight: 600 }}>Enviado</span>
-                                    </div>
-                                    <div style={{ width: '20px', height: '2px', backgroundColor: ped.estadoOrden === 'ENTREGADO' ? '#22c55e' : '#e5e7eb' }}></div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'ENTREGADO' ? 1 : 0.4 }}>
-                                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: ped.estadoOrden === 'ENTREGADO' ? '#dcfce7' : '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        {ped.estadoOrden === 'ENTREGADO' ? <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#16a34a' }}></div> : null}
-                                      </div>
-                                      <span style={{ fontSize: '0.65rem', color: ped.estadoOrden === 'ENTREGADO' ? '#16a34a' : 'var(--c-taupe)', marginTop: '4px', fontWeight: 600 }}>Entregado</span>
-                                    </div>
-                                  </div>
-                                )}
-                                
+                                </div>
+
                                 <button
                                   type="button"
                                   onClick={() => handleWhatsAppOrderInquiry(ped)}
-                                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: '#ffffff', border: '1px solid rgba(59, 60, 65, 0.15)', padding: '8px 14px', borderRadius: '10px', color: 'var(--c-deep-purple)', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease' }}
-                                  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fbf9f6'}
-                                  onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ffffff'}
+                                  style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    backgroundColor: '#ffffff',
+                                    border: '1px solid #e0e0e0',
+                                    padding: '6px 12px',
+                                    borderRadius: '8px',
+                                    color: '#444444',
+                                    fontSize: '0.8rem',
+                                    fontWeight: 400,
+                                    cursor: 'pointer',
+                                    transition: 'all 0.15s ease'
+                                  }}
+                                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#1a1a1a'; e.currentTarget.style.color = '#1a1a1a'; }}
+                                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.color = '#444444'; }}
                                 >
-                                  <ExternalLink size={14} />
-                                  Soporte al Cliente
+                                  <ExternalLink size={13} strokeWidth={1.5} />
+                                  Soporte
                                 </button>
                               </div>
                             </div>
                             
-                            {/* Alerta de seguimiento si hay número */}
+                            {/* Alerta de seguimiento */}
                             {ped.numeroSeguimiento && ped.estadoOrden === 'ENVIADO' && (
-                              <div style={{ backgroundColor: '#f0fdfa', borderBottom: '1px solid rgba(59,60,65,0.08)', padding: '12px 28px', display: 'flex', alignItems: 'center', gap: '10px', color: '#0f766e', fontSize: '0.85rem' }}>
-                                <Truck size={16} />
-                                <span>Tu pedido está en camino. Código de seguimiento: <strong>{ped.numeroSeguimiento}</strong></span>
+                              <div style={{ backgroundColor: '#f0f9ff', borderBottom: '1px solid #e0f2fe', padding: '10px 22px', display: 'flex', alignItems: 'center', gap: '8px', color: '#0369a1', fontSize: '0.82rem', fontWeight: 400 }}>
+                                <Truck size={15} strokeWidth={1.5} />
+                                <span>Código de seguimiento: <span style={{ fontFamily: 'monospace' }}>{ped.numeroSeguimiento}</span></span>
                               </div>
                             )}
                             
                             {/* Detalles del pedido */}
-                            <div style={{ padding: '24px 28px' }}>
+                            <div style={{ padding: '20px 22px' }}>
                               {ped.detalles && ped.detalles.length > 0 ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                   {ped.detalles.map((item, itemIdx) => (
-                                    <div key={item.id || itemIdx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-                                        <div style={{ width: '52px', height: '52px', borderRadius: '12px', backgroundColor: '#f4f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--c-indigo)', flexShrink: 0 }}>
-                                          <Package size={24} />
+                                    <div key={item.id || itemIdx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px' }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                        <div style={{ width: '44px', height: '44px', borderRadius: '10px', backgroundColor: '#f5f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666666', flexShrink: 0 }}>
+                                          <Package size={20} strokeWidth={1.5} />
                                         </div>
                                         <div>
-                                          <h4 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--c-deep-purple)', margin: '0 0 4px' }}>{item.nombreProducto}</h4>
-                                          <span style={{ fontSize: '0.82rem', color: 'var(--c-taupe)' }}>Cantidad: {item.cantidad} • Serie certificada</span>
+                                          <h4 style={{ fontSize: '0.92rem', fontWeight: 500, color: '#1a1a1a', margin: '0 0 2px' }}>{item.nombreProducto}</h4>
+                                          <span style={{ fontSize: '0.8rem', color: '#737373', fontWeight: 400 }}>Cantidad: {item.cantidad}</span>
                                         </div>
                                       </div>
                                       <div style={{ textAlign: 'right' }}>
-                                        <span style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--c-deep-purple)' }}>
+                                        <span style={{ fontSize: '0.95rem', fontWeight: 500, color: '#1a1a1a' }}>
                                           S/ {Number(item.subtotal || item.precioUnitario * item.cantidad || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                                         </span>
                                       </div>
@@ -443,17 +563,17 @@ export default function VistaPanelCliente({
                                   ))}
                                 </div>
                               ) : (
-                                <div style={{ fontSize: '0.9rem', color: 'var(--c-taupe)' }}>Compra en boutique física exclusiva</div>
+                                <div style={{ fontSize: '0.85rem', color: '#737373', fontWeight: 400 }}>Compra realizada en tienda</div>
                               )}
                               
-                              <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid rgba(59,60,65,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ fontSize: '0.88rem', color: 'var(--c-taupe)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                  <ShieldCheck size={16} color="var(--c-gold)" />
-                                  Custodia y transporte con seguro incluido
+                              <div style={{ marginTop: '18px', paddingTop: '16px', borderTop: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ fontSize: '0.82rem', color: '#737373', fontWeight: 400, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                  <ShieldCheck size={15} color="#8a733e" strokeWidth={1.5} />
+                                  Envío asegurado incluido
                                 </span>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                  <span style={{ fontSize: '0.9rem', color: 'var(--c-taupe)', fontWeight: 500 }}>Total:</span>
-                                  <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--c-indigo)', letterSpacing: '-0.01em' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <span style={{ fontSize: '0.85rem', color: '#737373', fontWeight: 400 }}>Total:</span>
+                                  <span style={{ fontSize: '1.15rem', fontWeight: 500, color: '#1a1a1a' }}>
                                     S/ {Number(ped.total || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                                   </span>
                                 </div>
@@ -468,16 +588,14 @@ export default function VistaPanelCliente({
               )}
 
               {activeTab === 'cuenta' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   
                   {/* Tarjeta: Información Personal */}
-                  <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid rgba(59, 60, 65, 0.1)', padding: '32px', boxShadow: '0 6px 20px rgba(0, 0, 0, 0.02)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{ backgroundColor: 'rgba(212,175,55,0.1)', padding: '8px', borderRadius: '10px' }}>
-                          <User size={22} color="var(--c-gold)" />
-                        </div>
-                        <h3 className="font-serif" style={{ fontSize: '1.3rem', color: 'var(--c-deep-purple)', margin: 0, fontWeight: 600 }}>
+                  <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', border: '1px solid #eaeaea', padding: '24px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.01)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '22px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <User size={20} color="#1a1a1a" strokeWidth={1.5} />
+                        <h3 style={{ fontSize: '1.15rem', color: '#1a1a1a', margin: 0, fontWeight: 500, fontFamily: 'serif' }}>
                           Información Personal
                         </h3>
                       </div>
@@ -486,108 +604,103 @@ export default function VistaPanelCliente({
                         <button
                           onClick={handleEditClick}
                           style={{
-                            display: 'flex', alignItems: 'center', gap: '8px', background: '#f4f4f6', border: 'none',
-                            padding: '8px 16px', borderRadius: '10px', cursor: 'pointer', color: 'var(--c-obsidian)',
-                            fontSize: '0.88rem', fontWeight: 600, transition: 'background 0.2s'
+                            display: 'flex', alignItems: 'center', gap: '6px', background: '#f5f5f7', border: 'none',
+                            padding: '6px 14px', borderRadius: '8px', cursor: 'pointer', color: '#1a1a1a',
+                            fontSize: '0.82rem', fontWeight: 400, transition: 'background 0.15s'
                           }}
-                          onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e8e8eb'}
-                          onMouseLeave={e => e.currentTarget.style.backgroundColor = '#f4f4f6'}
+                          onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e5e5e7'}
+                          onMouseLeave={e => e.currentTarget.style.backgroundColor = '#f5f5f7'}
                         >
-                          <Edit2 size={16} /> Editar Perfil
+                          <Edit2 size={14} strokeWidth={1.5} /> Editar
                         </button>
                       ) : (
-                        <div style={{ display: 'flex', gap: '10px' }}>
+                        <div style={{ display: 'flex', gap: '8px' }}>
                           <button
                             onClick={() => setIsEditingProfile(false)}
                             disabled={savingProfile}
                             style={{
-                              display: 'flex', alignItems: 'center', gap: '6px', background: 'transparent', border: '1px solid rgba(59,60,65,0.2)', 
-                              borderRadius: '10px', padding: '8px 14px', cursor: 'pointer', color: 'var(--c-taupe)', fontSize: '0.85rem', fontWeight: 500
+                              display: 'flex', alignItems: 'center', gap: '4px', background: 'transparent', border: '1px solid #e0e0e0', 
+                              borderRadius: '8px', padding: '6px 12px', cursor: 'pointer', color: '#666666', fontSize: '0.82rem', fontWeight: 400
                             }}
                           >
-                            <X size={16} /> Cancelar
+                            <X size={14} /> Cancelar
                           </button>
                           <button
                             onClick={handleSaveProfile}
                             disabled={savingProfile}
                             style={{
-                              display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--c-deep-purple)', border: 'none', 
-                              borderRadius: '10px', padding: '8px 16px', cursor: 'pointer', color: '#fff', fontSize: '0.85rem', fontWeight: 600
+                              display: 'flex', alignItems: 'center', gap: '4px', background: '#1a1a1a', border: 'none', 
+                              borderRadius: '8px', padding: '6px 14px', cursor: 'pointer', color: '#ffffff', fontSize: '0.82rem', fontWeight: 400
                             }}
                           >
-                            <Save size={16} /> {savingProfile ? 'Guardando...' : 'Guardar Cambios'}
+                            <Save size={14} /> {savingProfile ? 'Guardando...' : 'Guardar'}
                           </button>
                         </div>
                       )}
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
-                      <div style={{ padding: '16px 20px', borderRadius: '14px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Nombres del Titular</span>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+                      <div style={{ padding: '14px 16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>Nombres</span>
                         {!isEditingProfile ? (
-                          <span style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>{user.nombres || user.nombre.split(' ')[0]}</span>
+                          <span style={{ fontSize: '0.95rem', fontWeight: 400, color: '#1a1a1a' }}>{user.nombres || user.nombre.split(' ')[0]}</span>
                         ) : (
                           <input type="text" value={profileFormData.nombres} onChange={e => setProfileFormData(p => ({ ...p, nombres: e.target.value }))}
-                            style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '2px solid var(--c-gold)', background: 'transparent', outline: 'none', fontSize: '1.05rem', color: 'var(--c-obsidian)', fontWeight: 600 }}
+                            style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '1px solid #1a1a1a', background: 'transparent', outline: 'none', fontSize: '0.95rem', color: '#1a1a1a', fontWeight: 400 }}
                           />
                         )}
                       </div>
 
-                      <div style={{ padding: '16px 20px', borderRadius: '14px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Apellidos</span>
+                      <div style={{ padding: '14px 16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>Apellidos</span>
                         {!isEditingProfile ? (
-                          <span style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>{user.apellidos || (user.nombre.split(' ').slice(1).join(' ') || '-')}</span>
+                          <span style={{ fontSize: '0.95rem', fontWeight: 400, color: '#1a1a1a' }}>{user.apellidos || (user.nombre.split(' ').slice(1).join(' ') || '-')}</span>
                         ) : (
                           <input type="text" value={profileFormData.apellidos} onChange={e => setProfileFormData(p => ({ ...p, apellidos: e.target.value }))}
-                            style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '2px solid var(--c-gold)', background: 'transparent', outline: 'none', fontSize: '1.05rem', color: 'var(--c-obsidian)', fontWeight: 600 }}
+                            style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '1px solid #1a1a1a', background: 'transparent', outline: 'none', fontSize: '0.95rem', color: '#1a1a1a', fontWeight: 400 }}
                           />
                         )}
                       </div>
 
-                      <div style={{ padding: '16px 20px', borderRadius: '14px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Correo Electrónico</span>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <span style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>{user.email}</span>
-                          {isEditingProfile && <span style={{ fontSize: '0.65rem', padding: '4px 8px', background: 'rgba(59,60,65,0.1)', borderRadius: '6px', fontWeight: 600, color: 'var(--c-taupe)' }}>No editable</span>}
-                        </div>
+                      <div style={{ padding: '14px 16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>Correo Electrónico</span>
+                        <span style={{ fontSize: '0.95rem', fontWeight: 400, color: '#1a1a1a' }}>{user.email}</span>
                       </div>
 
-                      <div style={{ padding: '16px 20px', borderRadius: '14px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Teléfono de Contacto</span>
+                      <div style={{ padding: '14px 16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>Teléfono</span>
                         {!isEditingProfile ? (
-                          <span style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>{user.telefono || 'No especificado'}</span>
+                          <span style={{ fontSize: '0.95rem', fontWeight: 400, color: '#1a1a1a' }}>{user.telefono || 'No especificado'}</span>
                         ) : (
                           <input type="tel" value={profileFormData.telefono} onChange={e => setProfileFormData(p => ({ ...p, telefono: e.target.value }))}
-                            style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '2px solid var(--c-gold)', background: 'transparent', outline: 'none', fontSize: '1.05rem', color: 'var(--c-obsidian)', fontWeight: 600 }}
+                            style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '1px solid #1a1a1a', background: 'transparent', outline: 'none', fontSize: '0.95rem', color: '#1a1a1a', fontWeight: 400 }}
                           />
                         )}
                       </div>
                     </div>
                   </div>
 
-                  {/* Tarjeta: Dirección y Entregas */}
-                  <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid rgba(59, 60, 65, 0.1)', padding: '32px', boxShadow: '0 6px 20px rgba(0, 0, 0, 0.02)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-                      <div style={{ backgroundColor: 'rgba(212,175,55,0.1)', padding: '8px', borderRadius: '10px' }}>
-                        <MapPin size={22} color="var(--c-gold)" />
-                      </div>
-                      <h3 className="font-serif" style={{ fontSize: '1.3rem', color: 'var(--c-deep-purple)', margin: 0, fontWeight: 600 }}>
+                  {/* Tarjeta: Preferencias de Entrega */}
+                  <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', border: '1px solid #eaeaea', padding: '24px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.01)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
+                      <MapPin size={20} color="#1a1a1a" strokeWidth={1.5} />
+                      <h3 style={{ fontSize: '1.15rem', color: '#1a1a1a', margin: 0, fontWeight: 500, fontFamily: 'serif' }}>
                         Preferencias de Entrega
                       </h3>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                      <div style={{ padding: '20px', borderRadius: '16px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Ciudad Base de Operaciones</span>
-                        <p style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--c-obsidian)', margin: '0 0 6px' }}>{user.ciudad || 'Lima Metropolitana, Perú'}</p>
-                        <p style={{ fontSize: '0.85rem', color: 'var(--c-taupe)', margin: 0 }}>Transporte blindado de alta seguridad pre-habilitado para todas tus compras con despacho directo en esta localidad.</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                      <div style={{ padding: '16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>Ciudad Principal</span>
+                        <p style={{ fontSize: '0.95rem', fontWeight: 400, color: '#1a1a1a', margin: '0 0 4px' }}>{user.ciudad || 'Lima Metropolitana, Perú'}</p>
+                        <p style={{ fontSize: '0.82rem', color: '#737373', margin: 0, fontWeight: 400 }}>Dirección configurada para tus entregas.</p>
                       </div>
 
-                      <div style={{ padding: '20px', borderRadius: '16px', backgroundColor: 'rgba(212, 175, 55, 0.06)', border: '1px solid rgba(212, 175, 55, 0.25)', display: 'flex', gap: '18px', alignItems: 'flex-start' }}>
-                        <Award size={28} color="var(--c-indigo)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <div style={{ padding: '16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #eaeaea', display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                        <ShieldCheck size={22} color="#8a733e" style={{ flexShrink: 0, marginTop: '2px' }} strokeWidth={1.5} />
                         <div>
-                          <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--c-deep-purple)', margin: '0 0 6px' }}>Garantía Internacional Activa</h4>
-                          <p style={{ fontSize: '0.88rem', color: 'var(--c-taupe)', margin: 0, lineHeight: 1.6 }}>Tu cuenta goza de 5 años de mantenimiento preventivo, ajuste de calibre y pulido sin cargo en nuestras boutiques oficiales de San Isidro y Surco.</p>
+                          <h4 style={{ fontSize: '0.92rem', fontWeight: 500, color: '#1a1a1a', margin: '0 0 4px' }}>Garantía Internacional</h4>
+                          <p style={{ fontSize: '0.82rem', color: '#666666', margin: 0, lineHeight: 1.5, fontWeight: 400 }}>Tus piezas cuentan con garantía de mantenimiento y ajuste en nuestras boutique oficiales.</p>
                         </div>
                       </div>
                     </div>
