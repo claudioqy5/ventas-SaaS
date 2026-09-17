@@ -4,6 +4,7 @@ import {
   ArrowLeft, 
   Truck, 
   User, 
+  Award,
   ShieldCheck, 
   CheckCircle2, 
   LogOut, 
@@ -14,10 +15,7 @@ import {
   MapPin,
   Edit2,
   Save,
-  X,
-  Clock,
-  Check,
-  ChevronRight
+  X
 } from 'lucide-react';
 import { getCustomerOrders, updateCustomerProfile } from '../services/api';
 
@@ -115,35 +113,34 @@ export default function VistaPanelCliente({
   return (
     <div style={{
       minHeight: '85vh',
-      backgroundColor: '#fafafa',
+      backgroundColor: 'var(--bg-main)',
       paddingTop: '32px',
       paddingBottom: '80px',
-      color: '#1a1a1a',
-      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      position: 'relative'
     }}>
-      {/* Toast Notificación */}
+      {/* Notificación Toast */}
       {toastMessage && (
         <div style={{
           position: 'fixed',
-          bottom: '32px',
-          right: '32px',
+          bottom: '36px',
+          right: '36px',
           zIndex: 9999,
-          backgroundColor: '#1a1a1a',
+          backgroundColor: '#2e3135',
           color: '#ffffff',
           padding: '14px 22px',
-          borderRadius: '10px',
+          borderRadius: '12px',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-          animation: 'slideUpToast 0.3s ease'
+          boxShadow: '0 10px 25px rgba(0,0,0,0.12)',
+          animation: 'slideUpToast 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
         }}>
-          <CheckCircle2 size={18} color="#c5a059" />
+          <CheckCircle2 size={18} color="var(--c-gold)" />
           <span style={{ fontSize: '0.9rem', fontWeight: 400 }}>{toastMessage}</span>
         </div>
       )}
 
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
+      <div style={{ maxWidth: '1140px', margin: '0 auto', padding: '0 20px' }}>
         
         {/* Barra superior de navegación */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
@@ -151,174 +148,99 @@ export default function VistaPanelCliente({
             type="button"
             onClick={onBack}
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              background: 'transparent',
-              border: 'none',
-              padding: '6px 0',
-              color: '#666666',
-              fontSize: '0.88rem',
-              fontWeight: 400,
-              cursor: 'pointer',
-              transition: 'color 0.2s ease'
+              display: 'inline-flex', alignItems: 'center', gap: '8px',
+              background: '#ffffff', border: '1px solid rgba(59, 60, 65, 0.15)', padding: '9px 18px',
+              borderRadius: '9999px', color: 'var(--c-deep-purple)', fontSize: '0.85rem', fontWeight: 500,
+              cursor: 'pointer', transition: 'all 0.2s ease'
             }}
-            onMouseEnter={e => e.currentTarget.style.color = '#1a1a1a'}
-            onMouseLeave={e => e.currentTarget.style.color = '#666666'}
           >
             <ArrowLeft size={16} /> Volver a la boutique
           </button>
 
           <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            backgroundColor: '#ffffff',
-            border: '1px solid #e8e8e8',
-            padding: '5px 14px',
-            borderRadius: '20px',
-            fontSize: '0.75rem',
-            color: '#8a733e',
-            fontWeight: 400,
-            letterSpacing: '0.06em'
+            display: 'inline-flex', alignItems: 'center', gap: '6px',
+            backgroundColor: 'rgba(212, 175, 55, 0.08)', border: '1px solid rgba(212, 175, 55, 0.25)',
+            padding: '5px 14px', borderRadius: '9999px', fontSize: '0.74rem', color: 'var(--c-deep-purple)',
+            fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase'
           }}>
-            <Sparkles size={12} color="#c5a059" />
-            Portal de Cliente
+            <Sparkles size={12} color="var(--c-indigo)" />
+            Portal Exclusivo
           </div>
         </div>
 
         {!user ? (
           /* NO AUTENTICADO */
           <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '16px',
-            border: '1px solid #eaeaea',
-            padding: '56px 24px',
-            textAlign: 'center',
-            maxWidth: '460px',
-            margin: '40px auto 0',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.02)'
+            backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(59, 60, 65, 0.1)',
+            padding: '56px 24px', textAlign: 'center', maxWidth: '480px', margin: '40px auto 0',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.02)'
           }}>
-            <User size={40} color="#999999" style={{ margin: '0 auto 16px', strokeWidth: 1.5 }} />
-            <h3 style={{ fontSize: '1.4rem', color: '#1a1a1a', marginBottom: '10px', fontWeight: 500, fontFamily: 'serif' }}>
+            <User size={44} color="var(--c-taupe)" style={{ margin: '0 auto 18px', opacity: 0.5 }} />
+            <h3 className="font-serif" style={{ fontSize: '1.5rem', color: 'var(--c-deep-purple)', marginBottom: '10px', fontWeight: 500 }}>
               Acceso a tu Cuenta
             </h3>
-            <p style={{ fontSize: '0.9rem', color: '#666666', lineHeight: 1.6, marginBottom: '28px', fontWeight: 400 }}>
-              Para visualizar tu historial de compras y gestionar tu información personal, inicia sesión.
+            <p style={{ fontSize: '0.92rem', color: 'var(--c-taupe)', lineHeight: 1.6, marginBottom: '28px', fontWeight: 400 }}>
+              Para visualizar tu historial de compras, seguimiento y gestión de tu cuenta, inicia sesión.
             </p>
-            <button
-              type="button"
-              onClick={onRequireAuth}
-              style={{
-                backgroundColor: '#1a1a1a',
-                color: '#ffffff',
-                border: 'none',
-                padding: '12px 28px',
-                borderRadius: '8px',
-                fontSize: '0.9rem',
-                fontWeight: 400,
-                cursor: 'pointer'
-              }}
-            >
+            <button type="button" onClick={onRequireAuth} className="btn-indigo">
               Iniciar Sesión
             </button>
           </div>
         ) : (
           /* AUTENTICADO: LAYOUT SIDEBAR + CONTENIDO */
           <div style={{
-            display: 'flex', gap: '36px', alignItems: 'flex-start', flexWrap: 'wrap'
+            display: 'flex', gap: '32px', alignItems: 'flex-start', flexWrap: 'wrap'
           }}>
             {/* --- SIDEBAR IZQUIERDO --- */}
-            <aside style={{ width: '100%', maxWidth: '270px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <aside style={{ width: '100%', maxWidth: '280px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '18px' }}>
               
               {/* Resumen del Perfil */}
               <div style={{
-                backgroundColor: '#ffffff',
-                borderRadius: '16px',
-                padding: '28px 20px',
-                border: '1px solid #eaeaea',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.01)',
+                backgroundColor: '#ffffff', borderRadius: '20px', padding: '32px 20px',
+                border: '1px solid rgba(59, 60, 65, 0.1)', boxShadow: '0 6px 20px rgba(0,0,0,0.01)',
                 textAlign: 'center'
               }}>
                 <div style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  backgroundColor: '#f4f4f6',
-                  color: '#1a1a1a',
-                  margin: '0 auto 14px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem',
-                  fontFamily: 'serif',
-                  fontWeight: 400,
-                  border: '1px solid #e0e0e0'
+                  width: '70px', height: '70px', borderRadius: '50%', backgroundColor: 'var(--c-deep-purple)', color: '#fff',
+                  margin: '0 auto 14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem',
+                  fontFamily: 'Cinzel, serif', fontWeight: 500, boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
                 }}>
                   {user.nombre ? user.nombre.charAt(0).toUpperCase() : 'U'}
                 </div>
-                <h3 style={{ margin: '0 0 4px', fontSize: '1.1rem', color: '#1a1a1a', fontWeight: 500, fontFamily: 'serif' }}>
+                <h3 className="font-serif" style={{ margin: '0 0 4px', fontSize: '1.2rem', color: 'var(--c-obsidian)', fontWeight: 500 }}>
                   {user.nombre}
                 </h3>
-                <p style={{ margin: '0 0 14px', fontSize: '0.82rem', color: '#737373', fontWeight: 400 }}>{user.email}</p>
-                
+                <p style={{ margin: '0 0 12px', fontSize: '0.84rem', color: 'var(--c-taupe)', fontWeight: 400 }}>{user.email}</p>
                 <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  backgroundColor: '#f0fdf4',
-                  border: '1px solid #dcfce7',
-                  color: '#166534',
-                  padding: '3px 10px',
-                  borderRadius: '12px',
-                  fontSize: '0.72rem',
-                  fontWeight: 400
+                  display: 'inline-flex', alignItems: 'center', gap: '6px',
+                  backgroundColor: 'rgba(52, 199, 89, 0.1)', color: '#166534',
+                  padding: '3px 12px', borderRadius: '16px', fontSize: '0.72rem', fontWeight: 500
                 }}>
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
-                  Cuenta activa
+                  Cuenta Activa
                 </div>
               </div>
 
               {/* Menú de Navegación */}
               <nav style={{
-                backgroundColor: '#ffffff',
-                borderRadius: '16px',
-                padding: '12px',
-                border: '1px solid #eaeaea',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.01)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px'
+                backgroundColor: '#ffffff', borderRadius: '20px', padding: '14px',
+                border: '1px solid rgba(59, 60, 65, 0.1)', boxShadow: '0 6px 20px rgba(0,0,0,0.01)',
+                display: 'flex', flexDirection: 'column', gap: '4px'
               }}>
                 <button
                   onClick={() => onNavigate && onNavigate('mis-compras')}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    width: '100%',
-                    padding: '12px 16px',
-                    borderRadius: '10px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                    textAlign: 'left',
-                    backgroundColor: activeTab === 'compras' ? '#f5f5f7' : 'transparent',
-                    color: activeTab === 'compras' ? '#1a1a1a' : '#666666',
+                    display: 'flex', alignItems: 'center', gap: '12px', width: '100%', padding: '12px 18px',
+                    borderRadius: '14px', border: 'none', cursor: 'pointer', transition: 'all 0.15s ease', textAlign: 'left',
+                    backgroundColor: activeTab === 'compras' ? '#f4f4f6' : 'transparent',
+                    color: activeTab === 'compras' ? 'var(--c-obsidian)' : 'var(--c-taupe)',
                     fontWeight: activeTab === 'compras' ? 500 : 400
                   }}
                 >
-                  <Truck size={18} color={activeTab === 'compras' ? '#1a1a1a' : '#888888'} strokeWidth={1.5} />
-                  <span style={{ flex: 1, fontSize: '0.9rem' }}>Mis Compras</span>
+                  <Truck size={19} color={activeTab === 'compras' ? 'var(--c-obsidian)' : 'var(--c-taupe)'} />
+                  <span style={{ flex: 1, fontSize: '0.94rem' }}>Mis Compras</span>
                   {pedidos.length > 0 && (
-                    <span style={{
-                      backgroundColor: '#e5e5e7',
-                      color: '#444444',
-                      fontSize: '0.72rem',
-                      padding: '2px 7px',
-                      borderRadius: '10px',
-                      fontWeight: 400
-                    }}>
+                    <span style={{ backgroundColor: 'var(--c-deep-purple)', color: '#fff', fontSize: '0.7rem', padding: '2px 8px', borderRadius: '10px', fontWeight: 500 }}>
                       {pedidos.length}
                     </span>
                   )}
@@ -327,235 +249,186 @@ export default function VistaPanelCliente({
                 <button
                   onClick={() => onNavigate && onNavigate('cuenta')}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    width: '100%',
-                    padding: '12px 16px',
-                    borderRadius: '10px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                    textAlign: 'left',
-                    backgroundColor: activeTab === 'cuenta' ? '#f5f5f7' : 'transparent',
-                    color: activeTab === 'cuenta' ? '#1a1a1a' : '#666666',
+                    display: 'flex', alignItems: 'center', gap: '12px', width: '100%', padding: '12px 18px',
+                    borderRadius: '14px', border: 'none', cursor: 'pointer', transition: 'all 0.15s ease', textAlign: 'left',
+                    backgroundColor: activeTab === 'cuenta' ? '#f4f4f6' : 'transparent',
+                    color: activeTab === 'cuenta' ? 'var(--c-obsidian)' : 'var(--c-taupe)',
                     fontWeight: activeTab === 'cuenta' ? 500 : 400
                   }}
                 >
-                  <User size={18} color={activeTab === 'cuenta' ? '#1a1a1a' : '#888888'} strokeWidth={1.5} />
-                  <span style={{ flex: 1, fontSize: '0.9rem' }}>Mi Cuenta</span>
+                  <User size={19} color={activeTab === 'cuenta' ? 'var(--c-obsidian)' : 'var(--c-taupe)'} />
+                  <span style={{ flex: 1, fontSize: '0.94rem' }}>Mi Cuenta</span>
                 </button>
 
-                <div style={{ height: '1px', backgroundColor: '#f0f0f0', margin: '8px 0' }} />
+                <div style={{ height: '1px', backgroundColor: 'rgba(59,60,65,0.08)', margin: '8px 0' }} />
 
                 <button
                   onClick={() => { if (onLogout) onLogout(); if (onBack) onBack(); }}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    width: '100%',
-                    padding: '12px 16px',
-                    borderRadius: '10px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                    textAlign: 'left',
-                    backgroundColor: 'transparent',
-                    color: '#dc2626',
-                    fontWeight: 400
+                    display: 'flex', alignItems: 'center', gap: '12px', width: '100%', padding: '12px 18px',
+                    borderRadius: '14px', border: 'none', cursor: 'pointer', transition: 'all 0.15s ease', textAlign: 'left',
+                    backgroundColor: 'transparent', color: 'var(--c-blush)', fontWeight: 500
                   }}
-                  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fef2f2'}
+                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(219, 74, 43, 0.05)'}
                   onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
-                  <LogOut size={18} strokeWidth={1.5} />
-                  <span style={{ fontSize: '0.9rem' }}>Cerrar Sesión</span>
+                  <LogOut size={19} />
+                  <span style={{ fontSize: '0.94rem' }}>Cerrar Sesión</span>
                 </button>
               </nav>
             </aside>
 
             {/* --- CONTENIDO PRINCIPAL DERECHO --- */}
-            <main style={{ flex: 1, minWidth: '300px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <main style={{ flex: 1, minWidth: '310px', display: 'flex', flexDirection: 'column', gap: '22px' }}>
               
-              {/* Encabezado */}
-              <div>
-                <h1 style={{ fontSize: '1.75rem', color: '#1a1a1a', margin: '0 0 6px', fontWeight: 500, fontFamily: 'serif', letterSpacing: '-0.02em' }}>
+              {/* Encabezado del área de contenido */}
+              <div style={{ padding: '0 4px 6px' }}>
+                <h1 className="font-serif" style={{ fontSize: '2.1rem', color: 'var(--c-obsidian)', margin: '0 0 8px', fontWeight: 500, letterSpacing: '-0.5px' }}>
                   {activeTab === 'compras' ? 'Historial de Compras' : 'Mi Cuenta'}
                 </h1>
-                <p style={{ color: '#666666', margin: 0, fontSize: '0.9rem', lineHeight: 1.5, fontWeight: 400 }}>
+                <p style={{ color: 'var(--c-taupe)', margin: 0, fontSize: '0.95rem', lineHeight: 1.5, fontWeight: 400 }}>
                   {activeTab === 'compras' 
-                    ? 'Supervisa tus compras y consulta el estado de envío de tus productos.' 
-                    : 'Gestiona tu información personal y datos de contacto.'}
+                    ? 'Supervisa tus recientes adquisiciones y consulta su estado de entrega en tiempo real.' 
+                    : 'Gestiona tu información personal, preferencias y garantías exclusivas.'}
                 </p>
               </div>
 
               {activeTab === 'compras' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   
-                  {/* Resumen simple */}
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                    gap: '16px'
-                  }}>
-                    <div style={{
-                      backgroundColor: '#ffffff',
-                      padding: '20px 24px',
-                      borderRadius: '14px',
-                      border: '1px solid #eaeaea'
-                    }}>
-                      <span style={{ fontSize: '0.8rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>
-                        Total de adquisiciones
+                  {/* Resumen de adquisiciones */}
+                  <div style={{ display: 'flex', gap: '24px', backgroundColor: '#ffffff', padding: '22px 28px', borderRadius: '18px', border: '1px solid rgba(59,60,65,0.1)', boxShadow: '0 4px 14px rgba(0,0,0,0.015)' }}>
+                    <div>
+                      <span style={{ fontSize: '0.74rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 500, display: 'block', marginBottom: '4px' }}>
+                        Total Adquisiciones
                       </span>
-                      <span style={{ fontSize: '1.35rem', fontWeight: 500, color: '#1a1a1a' }}>
-                        {pedidos.length} {pedidos.length === 1 ? 'reloj' : 'relojes'}
+                      <span className="font-serif" style={{ fontSize: '1.3rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>
+                        {pedidos.length} {pedidos.length === 1 ? 'Reloj' : 'Relojes'}
                       </span>
                     </div>
-
-                    <div style={{
-                      backgroundColor: '#ffffff',
-                      padding: '20px 24px',
-                      borderRadius: '14px',
-                      border: '1px solid #eaeaea'
-                    }}>
-                      <span style={{ fontSize: '0.8rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>
-                        Inversión acumulada
+                    <div style={{ width: '1px', backgroundColor: 'rgba(59,60,65,0.1)' }} />
+                    <div>
+                      <span style={{ fontSize: '0.74rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 500, display: 'block', marginBottom: '4px' }}>
+                        Inversión Acumulada
                       </span>
-                      <span style={{ fontSize: '1.35rem', fontWeight: 500, color: '#1a1a1a' }}>
+                      <span className="font-serif" style={{ fontSize: '1.3rem', fontWeight: 600, color: 'var(--c-indigo)' }}>
                         S/ {totalInvertido.toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                       </span>
                     </div>
                   </div>
 
                   {cargandoPedidos ? (
-                    <div style={{ textAlign: 'center', padding: '48px 20px', backgroundColor: '#ffffff', borderRadius: '14px', border: '1px solid #eaeaea' }}>
-                      <div style={{ width: '28px', height: '28px', border: '2px solid #e0e0e0', borderTopColor: '#1a1a1a', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
-                      <p style={{ color: '#737373', fontSize: '0.88rem', margin: 0, fontWeight: 400 }}>Cargando información de pedidos...</p>
+                    <div style={{ textAlign: 'center', padding: '54px 20px', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px solid rgba(59, 60, 65, 0.1)' }}>
+                      <div style={{ width: '32px', height: '32px', border: '2px solid rgba(212, 175, 55, 0.25)', borderTopColor: 'var(--c-gold)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 14px' }} />
+                      <p style={{ color: 'var(--c-taupe)', fontSize: '0.9rem', margin: 0, fontWeight: 400 }}>Consultando historial de compras...</p>
                     </div>
                   ) : pedidos.length === 0 ? (
-                    <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', border: '1px solid #eaeaea', padding: '56px 24px', textAlign: 'center' }}>
-                      <div style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: '#f5f5f7', color: '#666666', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                        <Truck size={26} strokeWidth={1.5} />
+                    <div style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(59, 60, 65, 0.1)', padding: '60px 24px', textAlign: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.015)' }}>
+                      <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(212, 175, 55, 0.08)', color: 'var(--c-indigo)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                        <Truck size={30} />
                       </div>
-                      <h3 style={{ fontSize: '1.25rem', color: '#1a1a1a', marginBottom: '6px', fontWeight: 500, fontFamily: 'serif' }}>
+                      <h3 className="font-serif" style={{ fontSize: '1.35rem', color: 'var(--c-deep-purple)', marginBottom: '8px', fontWeight: 500 }}>
                         Aún no registras compras online
                       </h3>
-                      <p style={{ fontSize: '0.88rem', color: '#666666', maxWidth: '420px', margin: '0 auto 24px', lineHeight: 1.6, fontWeight: 400 }}>
-                        Explora nuestro catálogo para encontrar piezas exclusivas de alta relojería.
+                      <p style={{ fontSize: '0.9rem', color: 'var(--c-taupe)', maxWidth: '440px', margin: '0 auto 26px', lineHeight: 1.6, fontWeight: 400 }}>
+                        Descubre piezas exclusivas de alta relojería con garantía internacional.
                       </p>
-                      <button
-                        type="button"
-                        onClick={onBack}
-                        style={{
-                          backgroundColor: '#1a1a1a',
-                          color: '#ffffff',
-                          border: 'none',
-                          padding: '10px 24px',
-                          borderRadius: '8px',
-                          fontSize: '0.88rem',
-                          fontWeight: 400,
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Explorar Colección
-                      </button>
+                      <button type="button" onClick={onBack} className="btn-indigo">Explorar la Colección</button>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                       {pedidos.map((ped, idx) => {
                         const refCode = ped.id ? String(ped.id).slice(-6).toUpperCase() : `ORD-${idx + 1}`;
                         
                         return (
-                          <div key={ped.id || idx} style={{
-                            backgroundColor: '#ffffff',
-                            borderRadius: '14px',
-                            border: '1px solid #eaeaea',
-                            overflow: 'hidden'
-                          }}>
-                            {/* Cabecera del pedido */}
-                            <div style={{
-                              padding: '16px 22px',
-                              backgroundColor: '#fafafa',
-                              borderBottom: '1px solid #eaeaea',
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              flexWrap: 'wrap',
-                              gap: '12px'
-                            }}>
+                          <div key={ped.id || idx} style={{ backgroundColor: '#ffffff', borderRadius: '18px', border: '1px solid rgba(59, 60, 65, 0.1)', boxShadow: '0 4px 14px rgba(0, 0, 0, 0.015)', overflow: 'hidden' }}>
+                            {/* Cabecera del pedido con Croquis / Stepper de Estado */}
+                            <div style={{ padding: '18px 24px', backgroundColor: '#fbf9f6', borderBottom: '1px solid rgba(59, 60, 65, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                                <span style={{ fontSize: '0.88rem', fontWeight: 500, color: '#1a1a1a', fontFamily: 'monospace' }}>#{refCode}</span>
-                                <span style={{ color: '#737373', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 400 }}>
-                                  <Calendar size={14} strokeWidth={1.5} />
+                                <span style={{ fontSize: '0.92rem', fontWeight: 600, color: 'var(--c-deep-purple)', fontFamily: 'monospace' }}>#{refCode}</span>
+                                <span style={{ color: 'var(--c-taupe)', fontSize: '0.84rem', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 400 }}>
+                                  <Calendar size={14} />
                                   {new Date(ped.fechaCreacion || Date.now()).toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}
                                 </span>
                               </div>
 
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                                {/* Estado del pedido en barra limpia */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#555555', fontWeight: 400 }}>
-                                  <span style={{
-                                    width: '8px',
-                                    height: '8px',
-                                    borderRadius: '50%',
-                                    backgroundColor: ped.estadoOrden === 'ENTREGADO' ? '#22c55e' : (ped.estadoOrden === 'ENVIADO' ? '#3b82f6' : '#f59e0b')
-                                  }} />
-                                  <span>
-                                    {ped.estadoOrden === 'ENTREGADO' ? 'Entregado' : (ped.estadoOrden === 'ENVIADO' ? 'En camino' : (ped.estadoOrden === 'EN_PREPARACION' ? 'En preparación' : 'Pendiente'))}
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                                {/* CROQUIS / STEPPER VISUAL DE ESTADO DEL PEDIDO */}
+                                {ped.estadoOrden === 'CANCELADO' ? (
+                                  <span style={{ fontSize: '0.75rem', fontWeight: 500, padding: '5px 12px', borderRadius: '9999px', backgroundColor: '#fee2e2', color: '#b91c1c', letterSpacing: '0.03em' }}>
+                                    ORDEN CANCELADA
                                   </span>
-                                </div>
-
+                                ) : (
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    {/* Pasos: Pendiente -> Preparación -> Enviado -> Entregado */}
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'PENDIENTE_PAGO' || ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? 1 : 0.35 }}>
+                                      <div style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#d97706' }}></div>
+                                      </div>
+                                      <span style={{ fontSize: '0.64rem', color: '#d97706', marginTop: '3px', fontWeight: 500 }}>Pendiente</span>
+                                    </div>
+                                    <div style={{ width: '18px', height: '2px', backgroundColor: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#3b82f6' : '#e5e7eb' }}></div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? 1 : 0.35 }}>
+                                      <div style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#dbeafe' : '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#2563eb' }}></div> : null}
+                                      </div>
+                                      <span style={{ fontSize: '0.64rem', color: ped.estadoOrden === 'EN_PREPARACION' || ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#2563eb' : 'var(--c-taupe)', marginTop: '3px', fontWeight: 500 }}>Preparación</span>
+                                    </div>
+                                    <div style={{ width: '18px', height: '2px', backgroundColor: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#8b5cf6' : '#e5e7eb' }}></div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? 1 : 0.35 }}>
+                                      <div style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#ede9fe' : '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#7c3aed' }}></div> : null}
+                                      </div>
+                                      <span style={{ fontSize: '0.64rem', color: ped.estadoOrden === 'ENVIADO' || ped.estadoOrden === 'ENTREGADO' ? '#7c3aed' : 'var(--c-taupe)', marginTop: '3px', fontWeight: 500 }}>Enviado</span>
+                                    </div>
+                                    <div style={{ width: '18px', height: '2px', backgroundColor: ped.estadoOrden === 'ENTREGADO' ? '#22c55e' : '#e5e7eb' }}></div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: ped.estadoOrden === 'ENTREGADO' ? 1 : 0.35 }}>
+                                      <div style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: ped.estadoOrden === 'ENTREGADO' ? '#dcfce7' : '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {ped.estadoOrden === 'ENTREGADO' ? <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#16a34a' }}></div> : null}
+                                      </div>
+                                      <span style={{ fontSize: '0.64rem', color: ped.estadoOrden === 'ENTREGADO' ? '#16a34a' : 'var(--c-taupe)', marginTop: '3px', fontWeight: 500 }}>Entregado</span>
+                                    </div>
+                                  </div>
+                                )}
+                                
                                 <button
                                   type="button"
                                   onClick={() => handleWhatsAppOrderInquiry(ped)}
-                                  style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '6px',
-                                    backgroundColor: '#ffffff',
-                                    border: '1px solid #e0e0e0',
-                                    padding: '6px 12px',
-                                    borderRadius: '8px',
-                                    color: '#444444',
-                                    fontSize: '0.8rem',
-                                    fontWeight: 400,
-                                    cursor: 'pointer',
-                                    transition: 'all 0.15s ease'
-                                  }}
-                                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#1a1a1a'; e.currentTarget.style.color = '#1a1a1a'; }}
-                                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.color = '#444444'; }}
+                                  style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', backgroundColor: '#ffffff', border: '1px solid rgba(59, 60, 65, 0.15)', padding: '7px 13px', borderRadius: '9px', color: 'var(--c-deep-purple)', fontSize: '0.8rem', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s ease' }}
+                                  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fbf9f6'}
+                                  onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ffffff'}
                                 >
-                                  <ExternalLink size={13} strokeWidth={1.5} />
-                                  Soporte
+                                  <ExternalLink size={13} />
+                                  Soporte al Cliente
                                 </button>
                               </div>
                             </div>
                             
-                            {/* Alerta de seguimiento */}
+                            {/* Alerta de seguimiento si hay número */}
                             {ped.numeroSeguimiento && ped.estadoOrden === 'ENVIADO' && (
-                              <div style={{ backgroundColor: '#f0f9ff', borderBottom: '1px solid #e0f2fe', padding: '10px 22px', display: 'flex', alignItems: 'center', gap: '8px', color: '#0369a1', fontSize: '0.82rem', fontWeight: 400 }}>
-                                <Truck size={15} strokeWidth={1.5} />
-                                <span>Código de seguimiento: <span style={{ fontFamily: 'monospace' }}>{ped.numeroSeguimiento}</span></span>
+                              <div style={{ backgroundColor: '#f0fdfa', borderBottom: '1px solid rgba(59,60,65,0.08)', padding: '10px 24px', display: 'flex', alignItems: 'center', gap: '8px', color: '#0f766e', fontSize: '0.84rem' }}>
+                                <Truck size={15} />
+                                <span>Tu pedido está en camino. Código de seguimiento: <strong style={{ fontWeight: 600 }}>{ped.numeroSeguimiento}</strong></span>
                               </div>
                             )}
                             
                             {/* Detalles del pedido */}
-                            <div style={{ padding: '20px 22px' }}>
+                            <div style={{ padding: '22px 24px' }}>
                               {ped.detalles && ped.detalles.length > 0 ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                   {ped.detalles.map((item, itemIdx) => (
                                     <div key={item.id || itemIdx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px' }}>
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                                        <div style={{ width: '44px', height: '44px', borderRadius: '10px', backgroundColor: '#f5f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666666', flexShrink: 0 }}>
-                                          <Package size={20} strokeWidth={1.5} />
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                        <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#f4f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--c-indigo)', flexShrink: 0 }}>
+                                          <Package size={22} />
                                         </div>
                                         <div>
-                                          <h4 style={{ fontSize: '0.92rem', fontWeight: 500, color: '#1a1a1a', margin: '0 0 2px' }}>{item.nombreProducto}</h4>
-                                          <span style={{ fontSize: '0.8rem', color: '#737373', fontWeight: 400 }}>Cantidad: {item.cantidad}</span>
+                                          <h4 className="font-serif" style={{ fontSize: '0.98rem', fontWeight: 500, color: 'var(--c-deep-purple)', margin: '0 0 3px' }}>{item.nombreProducto}</h4>
+                                          <span style={{ fontSize: '0.82rem', color: 'var(--c-taupe)', fontWeight: 400 }}>Cantidad: {item.cantidad} • Serie certificada</span>
                                         </div>
                                       </div>
                                       <div style={{ textAlign: 'right' }}>
-                                        <span style={{ fontSize: '0.95rem', fontWeight: 500, color: '#1a1a1a' }}>
+                                        <span className="font-serif" style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--c-deep-purple)' }}>
                                           S/ {Number(item.subtotal || item.precioUnitario * item.cantidad || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                                         </span>
                                       </div>
@@ -563,17 +436,17 @@ export default function VistaPanelCliente({
                                   ))}
                                 </div>
                               ) : (
-                                <div style={{ fontSize: '0.85rem', color: '#737373', fontWeight: 400 }}>Compra realizada en tienda</div>
+                                <div style={{ fontSize: '0.88rem', color: 'var(--c-taupe)' }}>Compra en boutique física exclusiva</div>
                               )}
                               
-                              <div style={{ marginTop: '18px', paddingTop: '16px', borderTop: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ fontSize: '0.82rem', color: '#737373', fontWeight: 400, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                  <ShieldCheck size={15} color="#8a733e" strokeWidth={1.5} />
-                                  Envío asegurado incluido
+                              <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid rgba(59,60,65,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ fontSize: '0.84rem', color: 'var(--c-taupe)', fontWeight: 400, display: 'flex', alignItems: 'center', gap: '7px' }}>
+                                  <ShieldCheck size={15} color="var(--c-gold)" />
+                                  Custodia y transporte con seguro incluido
                                 </span>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                  <span style={{ fontSize: '0.85rem', color: '#737373', fontWeight: 400 }}>Total:</span>
-                                  <span style={{ fontSize: '1.15rem', fontWeight: 500, color: '#1a1a1a' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                  <span style={{ fontSize: '0.86rem', color: 'var(--c-taupe)', fontWeight: 400 }}>Total:</span>
+                                  <span className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--c-indigo)', letterSpacing: '-0.01em' }}>
                                     S/ {Number(ped.total || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                                   </span>
                                 </div>
@@ -588,14 +461,16 @@ export default function VistaPanelCliente({
               )}
 
               {activeTab === 'cuenta' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
                   
                   {/* Tarjeta: Información Personal */}
-                  <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', border: '1px solid #eaeaea', padding: '24px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.01)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '22px' }}>
+                  <div style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(59, 60, 65, 0.1)', padding: '28px', boxShadow: '0 6px 18px rgba(0, 0, 0, 0.015)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <User size={20} color="#1a1a1a" strokeWidth={1.5} />
-                        <h3 style={{ fontSize: '1.15rem', color: '#1a1a1a', margin: 0, fontWeight: 500, fontFamily: 'serif' }}>
+                        <div style={{ backgroundColor: 'rgba(212,175,55,0.1)', padding: '7px', borderRadius: '9px' }}>
+                          <User size={20} color="var(--c-gold)" />
+                        </div>
+                        <h3 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--c-deep-purple)', margin: 0, fontWeight: 500 }}>
                           Información Personal
                         </h3>
                       </div>
@@ -604,14 +479,14 @@ export default function VistaPanelCliente({
                         <button
                           onClick={handleEditClick}
                           style={{
-                            display: 'flex', alignItems: 'center', gap: '6px', background: '#f5f5f7', border: 'none',
-                            padding: '6px 14px', borderRadius: '8px', cursor: 'pointer', color: '#1a1a1a',
-                            fontSize: '0.82rem', fontWeight: 400, transition: 'background 0.15s'
+                            display: 'flex', alignItems: 'center', gap: '6px', background: '#f4f4f6', border: 'none',
+                            padding: '7px 15px', borderRadius: '9px', cursor: 'pointer', color: 'var(--c-obsidian)',
+                            fontSize: '0.84rem', fontWeight: 500, transition: 'background 0.2s'
                           }}
-                          onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e5e5e7'}
-                          onMouseLeave={e => e.currentTarget.style.backgroundColor = '#f5f5f7'}
+                          onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e8e8eb'}
+                          onMouseLeave={e => e.currentTarget.style.backgroundColor = '#f4f4f6'}
                         >
-                          <Edit2 size={14} strokeWidth={1.5} /> Editar
+                          <Edit2 size={15} /> Editar Perfil
                         </button>
                       ) : (
                         <div style={{ display: 'flex', gap: '8px' }}>
@@ -619,88 +494,93 @@ export default function VistaPanelCliente({
                             onClick={() => setIsEditingProfile(false)}
                             disabled={savingProfile}
                             style={{
-                              display: 'flex', alignItems: 'center', gap: '4px', background: 'transparent', border: '1px solid #e0e0e0', 
-                              borderRadius: '8px', padding: '6px 12px', cursor: 'pointer', color: '#666666', fontSize: '0.82rem', fontWeight: 400
+                              display: 'flex', alignItems: 'center', gap: '5px', background: 'transparent', border: '1px solid rgba(59,60,65,0.2)', 
+                              borderRadius: '9px', padding: '7px 12px', cursor: 'pointer', color: 'var(--c-taupe)', fontSize: '0.82rem', fontWeight: 400
                             }}
                           >
-                            <X size={14} /> Cancelar
+                            <X size={15} /> Cancelar
                           </button>
                           <button
                             onClick={handleSaveProfile}
                             disabled={savingProfile}
                             style={{
-                              display: 'flex', alignItems: 'center', gap: '4px', background: '#1a1a1a', border: 'none', 
-                              borderRadius: '8px', padding: '6px 14px', cursor: 'pointer', color: '#ffffff', fontSize: '0.82rem', fontWeight: 400
+                              display: 'flex', alignItems: 'center', gap: '5px', background: 'var(--c-deep-purple)', border: 'none', 
+                              borderRadius: '9px', padding: '7px 15px', cursor: 'pointer', color: '#fff', fontSize: '0.82rem', fontWeight: 500
                             }}
                           >
-                            <Save size={14} /> {savingProfile ? 'Guardando...' : 'Guardar'}
+                            <Save size={15} /> {savingProfile ? 'Guardando...' : 'Guardar Cambios'}
                           </button>
                         </div>
                       )}
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-                      <div style={{ padding: '14px 16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0' }}>
-                        <span style={{ fontSize: '0.75rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>Nombres</span>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px' }}>
+                      <div style={{ padding: '14px 18px', borderRadius: '12px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Nombres del Titular</span>
                         {!isEditingProfile ? (
-                          <span style={{ fontSize: '0.95rem', fontWeight: 400, color: '#1a1a1a' }}>{user.nombres || user.nombre.split(' ')[0]}</span>
+                          <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--c-obsidian)' }}>{user.nombres || user.nombre.split(' ')[0]}</span>
                         ) : (
                           <input type="text" value={profileFormData.nombres} onChange={e => setProfileFormData(p => ({ ...p, nombres: e.target.value }))}
-                            style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '1px solid #1a1a1a', background: 'transparent', outline: 'none', fontSize: '0.95rem', color: '#1a1a1a', fontWeight: 400 }}
+                            style={{ width: '100%', padding: '3px 0', border: 'none', borderBottom: '2px solid var(--c-gold)', background: 'transparent', outline: 'none', fontSize: '1rem', color: 'var(--c-obsidian)', fontWeight: 500 }}
                           />
                         )}
                       </div>
 
-                      <div style={{ padding: '14px 16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0' }}>
-                        <span style={{ fontSize: '0.75rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>Apellidos</span>
+                      <div style={{ padding: '14px 18px', borderRadius: '12px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Apellidos</span>
                         {!isEditingProfile ? (
-                          <span style={{ fontSize: '0.95rem', fontWeight: 400, color: '#1a1a1a' }}>{user.apellidos || (user.nombre.split(' ').slice(1).join(' ') || '-')}</span>
+                          <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--c-obsidian)' }}>{user.apellidos || (user.nombre.split(' ').slice(1).join(' ') || '-')}</span>
                         ) : (
                           <input type="text" value={profileFormData.apellidos} onChange={e => setProfileFormData(p => ({ ...p, apellidos: e.target.value }))}
-                            style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '1px solid #1a1a1a', background: 'transparent', outline: 'none', fontSize: '0.95rem', color: '#1a1a1a', fontWeight: 400 }}
+                            style={{ width: '100%', padding: '3px 0', border: 'none', borderBottom: '2px solid var(--c-gold)', background: 'transparent', outline: 'none', fontSize: '1rem', color: 'var(--c-obsidian)', fontWeight: 500 }}
                           />
                         )}
                       </div>
 
-                      <div style={{ padding: '14px 16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0' }}>
-                        <span style={{ fontSize: '0.75rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>Correo Electrónico</span>
-                        <span style={{ fontSize: '0.95rem', fontWeight: 400, color: '#1a1a1a' }}>{user.email}</span>
+                      <div style={{ padding: '14px 18px', borderRadius: '12px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Correo Electrónico</span>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--c-obsidian)' }}>{user.email}</span>
+                          {isEditingProfile && <span style={{ fontSize: '0.65rem', padding: '3px 7px', background: 'rgba(59,60,65,0.08)', borderRadius: '5px', fontWeight: 500, color: 'var(--c-taupe)' }}>No editable</span>}
+                        </div>
                       </div>
 
-                      <div style={{ padding: '14px 16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0' }}>
-                        <span style={{ fontSize: '0.75rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>Teléfono</span>
+                      <div style={{ padding: '14px 18px', borderRadius: '12px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Teléfono de Contacto</span>
                         {!isEditingProfile ? (
-                          <span style={{ fontSize: '0.95rem', fontWeight: 400, color: '#1a1a1a' }}>{user.telefono || 'No especificado'}</span>
+                          <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--c-obsidian)' }}>{user.telefono || 'No especificado'}</span>
                         ) : (
                           <input type="tel" value={profileFormData.telefono} onChange={e => setProfileFormData(p => ({ ...p, telefono: e.target.value }))}
-                            style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '1px solid #1a1a1a', background: 'transparent', outline: 'none', fontSize: '0.95rem', color: '#1a1a1a', fontWeight: 400 }}
+                            style={{ width: '100%', padding: '3px 0', border: 'none', borderBottom: '2px solid var(--c-gold)', background: 'transparent', outline: 'none', fontSize: '1rem', color: 'var(--c-obsidian)', fontWeight: 500 }}
                           />
                         )}
                       </div>
                     </div>
                   </div>
 
-                  {/* Tarjeta: Preferencias de Entrega */}
-                  <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', border: '1px solid #eaeaea', padding: '24px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.01)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
-                      <MapPin size={20} color="#1a1a1a" strokeWidth={1.5} />
-                      <h3 style={{ fontSize: '1.15rem', color: '#1a1a1a', margin: 0, fontWeight: 500, fontFamily: 'serif' }}>
+                  {/* Tarjeta: Dirección y Entregas */}
+                  <div style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(59, 60, 65, 0.1)', padding: '28px', boxShadow: '0 6px 18px rgba(0, 0, 0, 0.015)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+                      <div style={{ backgroundColor: 'rgba(212,175,55,0.1)', padding: '7px', borderRadius: '9px' }}>
+                        <MapPin size={20} color="var(--c-gold)" />
+                      </div>
+                      <h3 className="font-serif" style={{ fontSize: '1.25rem', color: 'var(--c-deep-purple)', margin: 0, fontWeight: 500 }}>
                         Preferencias de Entrega
                       </h3>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                      <div style={{ padding: '16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0' }}>
-                        <span style={{ fontSize: '0.75rem', color: '#737373', fontWeight: 400, display: 'block', marginBottom: '4px' }}>Ciudad Principal</span>
-                        <p style={{ fontSize: '0.95rem', fontWeight: 400, color: '#1a1a1a', margin: '0 0 4px' }}>{user.ciudad || 'Lima Metropolitana, Perú'}</p>
-                        <p style={{ fontSize: '0.82rem', color: '#737373', margin: 0, fontWeight: 400 }}>Dirección configurada para tus entregas.</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      <div style={{ padding: '18px', borderRadius: '14px', backgroundColor: '#fbf9f6', border: '1px solid rgba(59, 60, 65, 0.08)' }}>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', textTransform: 'uppercase', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Ciudad Base de Operaciones</span>
+                        <p style={{ fontSize: '1.05rem', fontWeight: 500, color: 'var(--c-obsidian)', margin: '0 0 4px' }}>{user.ciudad || 'Lima Metropolitana, Perú'}</p>
+                        <p style={{ fontSize: '0.84rem', color: 'var(--c-taupe)', margin: 0, fontWeight: 400 }}>Transporte blindado pre-habilitado para todas tus compras con despacho directo.</p>
                       </div>
 
-                      <div style={{ padding: '16px', borderRadius: '10px', backgroundColor: '#fafafa', border: '1px solid #eaeaea', display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-                        <ShieldCheck size={22} color="#8a733e" style={{ flexShrink: 0, marginTop: '2px' }} strokeWidth={1.5} />
+                      <div style={{ padding: '18px', borderRadius: '14px', backgroundColor: 'rgba(212, 175, 55, 0.05)', border: '1px solid rgba(212, 175, 55, 0.2)', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                        <Award size={26} color="var(--c-indigo)" style={{ flexShrink: 0, marginTop: '2px' }} />
                         <div>
-                          <h4 style={{ fontSize: '0.92rem', fontWeight: 500, color: '#1a1a1a', margin: '0 0 4px' }}>Garantía Internacional</h4>
-                          <p style={{ fontSize: '0.82rem', color: '#666666', margin: 0, lineHeight: 1.5, fontWeight: 400 }}>Tus piezas cuentan con garantía de mantenimiento y ajuste en nuestras boutique oficiales.</p>
+                          <h4 className="font-serif" style={{ fontSize: '0.96rem', fontWeight: 600, color: 'var(--c-deep-purple)', margin: '0 0 4px' }}>Garantía Internacional Activa</h4>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--c-taupe)', margin: 0, lineHeight: 1.5, fontWeight: 400 }}>Tu cuenta cuenta con mantenimiento preventivo, ajuste de calibre y pulido sin cargo en nuestras boutiques oficiales.</p>
                         </div>
                       </div>
                     </div>
