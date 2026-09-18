@@ -119,7 +119,7 @@ export default function CajonCarrito({
                 letterSpacing: '0.02em',
                 fontWeight: 600
               }}>
-                Bolsa de Compras
+                Carrito de Compras
               </h3>
             </div>
             <button
@@ -150,7 +150,7 @@ export default function CajonCarrito({
             }}>
               <ShoppingBag size={44} color="var(--c-blush)" style={{ margin: '0 auto 16px' }} />
               <p className="font-serif" style={{ fontSize: '1rem', color: 'var(--c-deep-purple)', marginBottom: '8px', fontWeight: 600 }}>
-                Tu bolsa de compras está vacía
+                Tu carrito de compras está vacío
               </p>
               <p style={{ fontSize: '0.84rem', color: 'var(--c-taupe)', fontFamily: 'var(--font-serif)' }}>
                 Explora el catálogo y añade los relojes que deseas ordenar.

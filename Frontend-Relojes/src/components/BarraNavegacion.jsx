@@ -62,6 +62,21 @@ export default function BarraNavegacion({
     };
   }, [isUserMenuOpen]);
 
+  // Cerrar búsqueda al hacer click fuera
+  useEffect(() => {
+    const handleClickOutsideSearch = (event) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setShowSearch(false);
+      }
+    };
+    if (showSearch) {
+      document.addEventListener('mousedown', handleClickOutsideSearch);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideSearch);
+    };
+  }, [showSearch]);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -724,7 +739,7 @@ export default function BarraNavegacion({
                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                       >
                         <img
-                          src={p.imagen || p.image || '/watches/chronograph_gold.jpg'}
+                          src={p.imagenUrl || (p.imagenes && p.imagenes[0]) || '/watches/chronograph_gold.jpg'}
                           alt={p.nombre}
                           style={{
                             width: '42px',
@@ -803,10 +818,10 @@ export default function BarraNavegacion({
             )}
           </div>
 
-          {/* Bolsa de Compras */}
+          {/* Carrito de Compras */}
           <button
             onClick={onOpenCart}
-            title="Bolsa de Compras"
+            title="Carrito de Compras"
             style={{
               position: 'relative',
               width: '42px',

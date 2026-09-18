@@ -218,13 +218,40 @@ export default function App({ initialCategory, initialProductId, initialView = '
 
   const handleBackToCatalog = () => {
     setSelectedProduct(null);
-    setActiveView('catalog');
-    setSearchQuery('');
-    setShowFullCatalog(false);
-    if (typeof window !== 'undefined') {
-      window.history.pushState({}, '', '/');
+    
+    let isCatalogExpanded = false;
+
+    if (searchQuery) {
+      setActiveView('search');
+      setShowFullCatalog(true);
+      isCatalogExpanded = true;
+      if (typeof window !== 'undefined') {
+        window.history.pushState({}, '', `/buscar?q=${encodeURIComponent(searchQuery)}`);
+      }
+    } else if (selectedCategory) {
+      setActiveView('catalog');
+      setShowFullCatalog(true);
+      isCatalogExpanded = true;
+      if (typeof window !== 'undefined') {
+        window.history.pushState({}, '', `/categoria/${selectedCategory.toLowerCase()}`);
+      }
+    } else {
+      setActiveView('catalog');
+      setShowFullCatalog(false);
+      setSearchQuery('');
+      if (typeof window !== 'undefined') {
+        window.history.pushState({}, '', '/');
+      }
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    setTimeout(() => {
+      const catalogoEl = document.getElementById('catalogo');
+      if (catalogoEl && isCatalogExpanded) {
+        catalogoEl.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 40);
   };
 
   const handleSearchSubmit = (queryToSearch) => {
@@ -864,50 +891,6 @@ export default function App({ initialCategory, initialProductId, initialView = '
               )}
             </div>
 
-            {/* Pestañas de Categoría (Barra Deslizable en Móvil) */}
-            {showFullCatalog && (
-              <div className="category-chips-container" style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '10px',
-                marginBottom: '36px',
-                paddingBottom: '16px',
-                borderBottom: '1px solid rgba(59, 60, 65, 0.12)'
-              }}>
-                {categories.map((cat) => {
-                  const isSelected = selectedCategory === cat;
-                  return (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      style={{
-                        background: isSelected
-                          ? 'var(--c-indigo)'
-                          : '#ffffff',
-                        border: isSelected
-                          ? '1px solid var(--c-indigo)'
-                          : '1px solid rgba(59, 60, 65, 0.18)',
-                        color: isSelected ? '#ffffff' : 'var(--c-deep-purple)',
-                        fontFamily: 'var(--font-serif)',
-                        fontSize: '0.78rem',
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        fontWeight: isSelected ? 600 : 400,
-                        padding: '9px 20px',
-                        borderRadius: '9999px',
-                        cursor: 'pointer',
-                        transition: 'all 0.25s ease',
-                        boxShadow: isSelected
-                          ? '0 6px 18px rgba(11, 11, 12, 0.25)'
-                          : '0 2px 8px rgba(11, 11, 12, 0.04)'
-                      }}
-                    >
-                      {cat}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
 
             {/* Layout Principal de Contenido: Sidebar + Grid */}
             <div className="catalog-layout" style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
@@ -1161,7 +1144,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onSelectCategory={handleSelectCategory}
       />
 
-      {/* Bolsa de Compras VIP / Drawer */}
+      {/* Carrito de Compras VIP / Drawer */}
       <CajonCarrito
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}

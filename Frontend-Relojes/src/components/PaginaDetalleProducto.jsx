@@ -87,7 +87,14 @@ export default function PaginaDetalleProducto({
     material: 'Acero Inoxidable Quirúrgico 316L / Oro Rose'
   };
 
-  const brandName = product.marca || product.categoria || 'HAUTE HORLOGERIE';
+  const categoryStr = Array.isArray(product.categorias) && product.categorias.length > 0
+    ? product.categorias.join(' • ')
+    : (product.categoria || 'Colección');
+    
+  const tagsText = product.marca 
+    ? `${product.marca} • ${categoryStr}`
+    : categoryStr;
+
   const skuCode = `REL${String(product.id).padStart(7, '0')}`;
 
   // Variantes del mismo modelo
@@ -312,9 +319,7 @@ export default function PaginaDetalleProducto({
               fontFamily: 'var(--font-serif)',
               marginBottom: '6px'
             }}>
-              {Array.isArray(product.categorias) && product.categorias.length > 0 
-                ? `${brandName} • ${product.categorias.join(' • ')}` 
-                : brandName}
+              {tagsText}
             </div>
 
             {/* Título Principal */}
@@ -411,36 +416,7 @@ export default function PaginaDetalleProducto({
               )}
             </div>
 
-            {/* Cuadro Promocional de Cuotas en Paleta del Sistema */}
-            <div style={{
-              border: '1px solid var(--border-light)',
-              borderRadius: 'var(--radius-sm)',
-              padding: '14px 18px',
-              backgroundColor: 'var(--bg-card-alt)',
-              marginBottom: '28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '12px'
-            }}>
-              <div>
-                <div style={{ fontSize: '0.84rem', color: 'var(--c-deep-purple)', fontFamily: 'var(--font-serif)', fontWeight: 500 }}>
-                  Desde <strong style={{ color: 'var(--c-indigo)' }}>S/ {Number(product.precio / 6).toFixed(2)} al mes</strong> o en 3 cuotas sin intereses.
-                </div>
-                <div style={{ fontSize: '0.76rem', color: 'var(--c-taupe)', marginTop: '2px', fontFamily: 'var(--font-serif)' }}>
-                  Con todas las tarjetas de crédito <span style={{ textDecoration: 'underline', cursor: 'pointer', fontWeight: 600, color: 'var(--c-indigo)' }}>Más información</span>
-                </div>
-              </div>
-              <span style={{
-                fontSize: '0.9rem',
-                fontWeight: 600,
-                color: 'var(--c-indigo)',
-                fontFamily: 'var(--font-serif)',
-                letterSpacing: '0.05em'
-              }}>
-                Powerpay
-              </span>
-            </div>
+
 
             {/* Fila de Selección de Cantidad + Botón Principal AÑADIR A LA BOLSA */}
             <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
@@ -492,7 +468,7 @@ export default function PaginaDetalleProducto({
                 ) : (
                   <>
                     <ShoppingBag size={18} />
-                    Añadir a la Bolsa de Compras
+                    {added ? 'Añadido' : 'Añadir al Carrito de Compras'}
                   </>
                 )}
               </button>

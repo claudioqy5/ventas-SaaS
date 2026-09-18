@@ -509,26 +509,48 @@ export default function ProcesoPago({
                         type="button"
                         onClick={handleGuestCheckout}
                         style={{
-                          background: 'none',
-                          border: 'none',
+                          padding: '12px 24px',
+                          background: 'transparent',
+                          border: '1px solid var(--c-obsidian)',
                           color: 'var(--c-obsidian)',
+                          borderRadius: '6px',
                           fontWeight: 600,
                           fontSize: '0.85rem',
+                          letterSpacing: '0.05em',
+                          textTransform: 'uppercase',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '6px',
-                          textDecoration: 'underline'
+                          gap: '8px',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(0,0,0,0.04)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent';
                         }}
                       >
-                        Comprar como invitado &rarr;
+                        Como Invitado &rarr;
                       </button>
 
                       <button 
                         onClick={() => { setIsGuestMode(false); setCurrentStep(2); }}
-                        style={{ padding: '14px 28px', background: 'var(--c-obsidian)', color: 'var(--text-light)', border: 'none', borderRadius: '6px', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.05em', cursor: 'pointer' }}
+                        style={{ 
+                          padding: '14px 28px', 
+                          background: 'var(--c-obsidian)', 
+                          color: '#fff', 
+                          border: 'none', 
+                          borderRadius: '6px', 
+                          fontWeight: 600, 
+                          fontSize: '0.9rem', 
+                          letterSpacing: '0.05em', 
+                          cursor: 'pointer',
+                          textTransform: 'uppercase',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                        }}
                       >
-                        CONTINUAR
+                        Continuar
                       </button>
                     </div>
                   </div>
@@ -1292,70 +1314,7 @@ export default function ProcesoPago({
 
                 </div>
 
-                {/* Tipo de Comprobante (Boleta / Factura) */}
-                <div style={{ marginBottom: '25px', padding: '18px', background: '#fcfbf8', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
-                  <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--c-obsidian)', fontWeight: 600, marginBottom: '10px' }}>
-                    Tipo de Comprobante de Pago
-                  </label>
-                  <div style={{ display: 'flex', gap: '20px', marginBottom: tipoComprobante === 'factura' ? '15px' : '0' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--c-obsidian)' }}>
-                      <input 
-                        type="radio" 
-                        name="comprobante" 
-                        value="boleta" 
-                        checked={tipoComprobante === 'boleta'} 
-                        onChange={() => setTipoComprobante('boleta')}
-                        style={{ accentColor: 'var(--c-obsidian)' }}
-                      />
-                      Boleta de Venta
-                    </label>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--c-obsidian)' }}>
-                      <input 
-                        type="radio" 
-                        name="comprobante" 
-                        value="factura" 
-                        checked={tipoComprobante === 'factura'} 
-                        onChange={() => setTipoComprobante('factura')}
-                        style={{ accentColor: 'var(--c-obsidian)' }}
-                      />
-                      Factura Electrónica
-                    </label>
-                  </div>
 
-                  {tipoComprobante === 'factura' && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '15px', paddingTop: '15px', borderTop: '1px solid var(--border-light)' }}>
-                      <div>
-                        <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '6px' }}>RUC (11 dígitos) *</label>
-                        <input 
-                          type="text" 
-                          maxLength="11"
-                          value={facturaData.ruc} 
-                          onChange={e => {
-                            setFacturaData({...facturaData, ruc: e.target.value.replace(/\D/g, '')});
-                            if (formErrors.ruc) setFormErrors({...formErrors, ruc: null});
-                          }} 
-                          style={{ width: '100%', padding: '10px 12px', border: `1px solid ${formErrors.ruc ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '6px', fontSize: '0.85rem', outline: 'none', background: '#fff' }} 
-                          placeholder="20XXXXXXXXX" 
-                        />
-                        {formErrors.ruc && <span style={{ color: '#ef4444', fontSize: '0.7rem', marginTop: '2px', display: 'block' }}>{formErrors.ruc}</span>}
-                      </div>
-                      <div>
-                        <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '6px' }}>Razón Social *</label>
-                        <input 
-                          type="text" 
-                          value={facturaData.razonSocial} 
-                          onChange={e => {
-                            setFacturaData({...facturaData, razonSocial: e.target.value});
-                            if (formErrors.razonSocial) setFormErrors({...formErrors, razonSocial: null});
-                          }} 
-                          style={{ width: '100%', padding: '10px 12px', border: `1px solid ${formErrors.razonSocial ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '6px', fontSize: '0.85rem', outline: 'none', background: '#fff' }} 
-                          placeholder="Nombre de la empresa" 
-                        />
-                        {formErrors.razonSocial && <span style={{ color: '#ef4444', fontSize: '0.7rem', marginTop: '2px', display: 'block' }}>{formErrors.razonSocial}</span>}
-                      </div>
-                    </div>
-                  )}
-                </div>
 
                 {/* Términos y Condiciones */}
                 <div style={{ marginBottom: '30px' }}>

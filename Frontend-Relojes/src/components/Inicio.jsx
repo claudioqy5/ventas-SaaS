@@ -1,38 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, MessageCircle, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
 
 const HERO_SLIDES = [
   {
     id: 1,
     image: '/hero/hero1.jpg',
-    tag: 'TÁCTICO & RESISTENCIA',
-    title: 'CASIO MUDMASTER & EDIFICE',
-    desc: 'Ingeniería extrema diseñada para resistir ambientes exigentes con un acabado robusto de alta precisión.'
+    title: 'Reloj Casio ABL-100WE-1A',
+    desc: 'Un clásico retro reimaginado. Elegancia digital atemporal en acero inoxidable.'
   },
   {
     id: 2,
     image: '/hero/hero2.jpg',
-    tag: 'COLECCIÓN PRIVADA',
-    title: 'CRONÓGRAFOS DE ALTA GAMA',
-    desc: 'Piezas maestras que combinan la tradición suiza con acabados artesanales en titanio y acero inoxidable.'
+    title: 'Reloj Casio AE-1000W-4AVDF',
+    desc: 'Deportivo y audaz. Diseño resistente con mapa mundial y correa de resina roja.'
   },
   {
     id: 3,
     image: '/hero/hero3.jpg',
-    tag: 'EDICIONES LIMITADAS 2026',
-    title: 'PRECISIÓN & ELEGANCIA AUDAL',
-    desc: 'Diseño vanguardista creado para reflejar tu individualidad y destacar en cada segundo.'
+    title: 'Reloj Casio Edifice Slim EFR-S567D-2AV',
+    desc: 'Precisión ultradelgada. Esfera azul profundo con acabados de alta gama y cristal de zafiro.'
   },
   {
     id: 4,
     image: '/hero/hero4.jpg',
-    tag: 'HAUTE HORLOGERIE PERÚ',
-    title: 'OBRAS MAESTRAS DEL TIEMPO',
-    desc: 'Curaduría exclusiva con garantía oficial de 3 años y entrega asegurada en todo el Perú.'
+    title: 'Reloj Casio MDV-107D-1A3VDF',
+    desc: 'El legendario diver. Bisel bicolor y resistencia superior para las mayores exigencias.'
   }
 ];
 
-export default function Inicio({ onExplore, onOpenWhatsAppConcierge, onNavigateView }) {
+export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Cambio automático cada 6 segundos
@@ -57,335 +53,147 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge, onNavigateV
     <section className="hero-section" style={{
       position: 'relative',
       height: 'calc(98vh - 85px)',
-      minHeight: '620px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#0B0B0C',
+      background: '#ffffff',
       overflow: 'hidden',
-      color: '#ffffff',
-      borderBottomLeftRadius: '60px',
-      borderBottomRightRadius: '60px'
+      color: '#000',
+      borderBottomLeftRadius: '100px',
+      borderBottomRightRadius: '100px'
     }}>
-      <style>{`
-        @keyframes heroPanSmooth {
-          0% {
-            transform: scale(1.06) translate3d(-18px, 0, 0);
-          }
-          100% {
-            transform: scale(1.12) translate3d(18px, 0, 0);
-          }
-        }
-        .hero-bg-pan {
-          animation: heroPanSmooth 7s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
-        }
-      `}</style>
-
-      {/* CAROUSEL DE IMÁGENES DE FONDO CON PANNING Y SUAVE CROSSFADE */}
-      {HERO_SLIDES.map((slide, idx) => {
-        const isActive = idx === currentIndex;
-        return (
-          <div
-            key={slide.id}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              opacity: isActive ? 1 : 0,
-              transition: 'opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)',
-              zIndex: 1,
-              pointerEvents: 'none',
-              overflow: 'hidden'
-            }}
-          >
-            <div
-              className={isActive ? 'hero-bg-pan' : ''}
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundImage: `url(${slide.image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center center',
-                willChange: 'transform'
-              }}
-            />
-          </div>
-        );
-      })}
-
-      {/* MARCA DE AGUA TIPOGRÁFICA GIGANTE VERTICAL EN EL LADO IZQUIERDO (DE ABAJO HACIA ARRIBA) */}
+      {/* Giant Background Text Top - L'GANTE */}
       <div style={{
         position: 'absolute',
-        left: '20px',
-        top: '50%',
-        transform: 'translateY(-50%) rotate(-90deg)',
-        transformOrigin: 'center center',
-        fontSize: 'clamp(5rem, 14vh, 15rem)',
-        fontFamily: '"Cinzel", serif',
+        top: '25%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: 'clamp(5rem, 16vw, 22rem)',
+        fontFamily: 'var(--font-sans)',
         fontWeight: 900,
-        color: 'rgba(255, 255, 255, 0.14)',
-        WebkitTextStroke: '1px rgba(255, 255, 255, 0.25)',
+        color: 'rgba(0, 0, 0, 0.03)',
         whiteSpace: 'nowrap',
-        zIndex: 3,
-        letterSpacing: '0.15em',
-        lineHeight: 1,
-        userSelect: 'none',
-        pointerEvents: 'none'
+        zIndex: 1,
+        letterSpacing: '-0.02em',
+        lineHeight: 0.8
       }}>
         L'GANT
       </div>
 
-      
+      {/* Giant Background Text Bottom - EN CADA SEGUNDO */}
+      <div style={{
+        position: 'absolute',
+        top: '75%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: 'clamp(4rem, 12vw, 15rem)',
+        fontFamily: 'var(--font-sans)',
+        fontWeight: 900,
+        color: 'transparent',
+        WebkitTextStroke: '2px rgba(0, 0, 0, 0.05)',
+        whiteSpace: 'nowrap',
+        zIndex: 1,
+        letterSpacing: '-0.02em',
+        lineHeight: 0.8
+      }}>
+        EN CADA SEGUNDO
+      </div>
 
-      {/* CONTENIDO PRINCIPAL HERO */}
+      {/* CARRUSEL DE RELOJES */}
       <div style={{
         position: 'relative',
-        zIndex: 4,
-        maxWidth: '1280px',
+        zIndex: 10,
         width: '100%',
-        padding: '0 40px',
+        maxWidth: '1200px',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        height: '100%'
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
-        <div style={{ maxWidth: '640px' }}>
+        {/* Textos del Reloj y Navegación */}
+        <div style={{
+          position: 'relative',
+          textAlign: 'center',
+          maxWidth: '800px',
+          width: '100%',
+          padding: '40px 60px',
+          background: 'rgba(255, 255, 255, 0.8)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '24px',
+          boxShadow: '0 20px 50px rgba(0,0,0,0.05)',
+          border: '1px solid rgba(0,0,0,0.05)'
+        }}>
+          {/* FLECHAS FLOTANTES DE NAVEGACIÓN */}
+          <button
+            onClick={handlePrev}
+            style={{
+              position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', zIndex: 15,
+              width: '40px', height: '40px', borderRadius: '50%',
+              backgroundColor: '#fff', border: '1px solid #eaeaea',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
+            }}
+          >
+            <ChevronLeft size={20} color="#000" />
+          </button>
           
-          {/* BADGE DORADO DE CATEGORÍA */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            backgroundColor: 'rgba(212, 175, 55, 0.15)',
-            border: '1px solid rgba(212, 175, 55, 0.4)',
-            color: 'var(--c-gold)',
-            padding: '6px 16px',
-            borderRadius: '999px',
-            fontSize: '0.75rem',
+          <button
+            onClick={handleNext}
+            style={{
+              position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', zIndex: 15,
+              width: '40px', height: '40px', borderRadius: '50%',
+              backgroundColor: '#fff', border: '1px solid #eaeaea',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
+            }}
+          >
+            <ChevronRight size={20} color="#000" />
+          </button>
+          <h2 style={{
+            fontFamily: '"Cormorant Garamond", "Cinzel", serif',
+            fontSize: 'clamp(1.8rem, 3vw, 2.5rem)',
             fontWeight: 700,
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            marginBottom: '20px',
-            backdropFilter: 'blur(8px)'
-          }}>
-            <Sparkles size={14} color="var(--c-gold)" />
-            {activeSlide.tag}
-          </div>
-
-          {/* TÍTULO PRINCIPAL DINÁMICO */}
-          <h1 style={{
-            fontFamily: '"Cinzel", serif',
-            fontSize: 'clamp(2.2rem, 4.2vw, 3.8rem)',
-            fontWeight: 700,
-            color: '#ffffff',
-            lineHeight: 1.15,
-            letterSpacing: '0.03em',
-            marginBottom: '18px',
-            textShadow: '0 4px 20px rgba(0,0,0,0.8)'
+            color: 'var(--c-obsidian)',
+            marginBottom: '10px'
           }}>
             {activeSlide.title}
-          </h1>
-
-          {/* DESCRIPCIÓN */}
+          </h2>
           <p style={{
-            color: 'rgba(255, 255, 255, 0.85)',
-            fontSize: 'clamp(0.95rem, 1.2vw, 1.1rem)',
-            lineHeight: 1.65,
-            marginBottom: '35px',
-            fontWeight: 400,
-            textShadow: '0 2px 10px rgba(0,0,0,0.8)'
+            fontFamily: 'var(--font-sans)',
+            fontSize: '1rem',
+            color: 'var(--c-steel)',
+            lineHeight: 1.6,
+            marginBottom: '30px'
           }}>
             {activeSlide.desc}
           </p>
 
-          {/* BOTONES DE ACCIÓN */}
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
             <button
               onClick={onExplore}
               style={{
-                padding: '16px 32px',
-                backgroundColor: 'var(--c-gold)',
-                color: '#0B0B0C',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '0.85rem',
-                fontWeight: 800,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                boxShadow: '0 10px 25px rgba(212, 175, 55, 0.3)',
-                transition: 'all 0.25s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#ffffff';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--c-gold)';
-                e.currentTarget.style.transform = 'none';
+                padding: '14px 28px', backgroundColor: '#000', color: '#fff',
+                border: 'none', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600,
+                letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer',
+                display: 'inline-flex', alignItems: 'center', gap: '10px', transition: 'all 0.3s ease'
               }}
             >
-              Explorar Colección
-              <ArrowRight size={18} />
+              Explorar <ArrowRight size={16} />
             </button>
-
             <button
               onClick={onOpenWhatsAppConcierge}
               style={{
-                padding: '16px 28px',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-                borderRadius: '8px',
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                backdropFilter: 'blur(10px)',
-                transition: 'all 0.25s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(37, 211, 102, 0.2)';
-                e.currentTarget.style.borderColor = '#25D366';
-                e.currentTarget.style.color = '#25D366';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
-                e.currentTarget.style.color = '#ffffff';
+                padding: '14px 28px', backgroundColor: '#fff', color: '#000',
+                border: '1px solid #ddd', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600,
+                letterSpacing: '0.05em', textTransform: 'uppercase', cursor: 'pointer',
+                display: 'inline-flex', alignItems: 'center', gap: '10px', transition: 'all 0.3s ease'
               }}
             >
-              <MessageCircle size={18} />
-              Concierge WhatsApp
+              <MessageCircle size={16} /> Contactar
             </button>
           </div>
-
         </div>
       </div>
-
-      {/* FLECHAS FLOTANTES DE NAVEGACIÓN */}
-      <button
-        onClick={handlePrev}
-        aria-label="Anterior"
-        style={{
-          position: 'absolute',
-          left: '24px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          zIndex: 5,
-          width: '44px',
-          height: '44px',
-          borderRadius: '50%',
-          backgroundColor: 'rgba(11, 11, 12, 0.4)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          color: '#ffffff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          backdropFilter: 'blur(8px)',
-          transition: 'all 0.2s ease'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = 'var(--c-gold)';
-          e.currentTarget.style.color = '#000';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(11, 11, 12, 0.4)';
-          e.currentTarget.style.color = '#ffffff';
-        }}
-      >
-        <ChevronLeft size={22} />
-      </button>
-
-      <button
-        onClick={handleNext}
-        aria-label="Siguiente"
-        style={{
-          position: 'absolute',
-          right: '24px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          zIndex: 5,
-          width: '44px',
-          height: '44px',
-          borderRadius: '50%',
-          backgroundColor: 'rgba(11, 11, 12, 0.4)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          color: '#ffffff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          backdropFilter: 'blur(8px)',
-          transition: 'all 0.2s ease'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = 'var(--c-gold)';
-          e.currentTarget.style.color = '#000';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(11, 11, 12, 0.4)';
-          e.currentTarget.style.color = '#ffffff';
-        }}
-      >
-        <ChevronRight size={22} />
-      </button>
-
-      {/* NAVEGACIÓN POR INDICADORES (DOTS & CONTADOR 01/04) */}
-      <div style={{
-        position: 'absolute',
-        bottom: '30px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 5,
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        backgroundColor: 'rgba(11, 11, 12, 0.5)',
-        padding: '8px 20px',
-        borderRadius: '999px',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
-        backdropFilter: 'blur(10px)'
-      }}>
-        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--c-gold)', fontFamily: '"Cinzel", serif' }}>
-          0{currentIndex + 1}
-        </span>
-
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          {HERO_SLIDES.map((_, idx) => {
-            const isDotActive = idx === currentIndex;
-            return (
-              <button
-                key={idx}
-                onClick={() => setCurrentIndex(idx)}
-                aria-label={`Diapositiva ${idx + 1}`}
-                style={{
-                  height: '6px',
-                  width: isDotActive ? '28px' : '8px',
-                  borderRadius: '999px',
-                  backgroundColor: isDotActive ? 'var(--c-gold)' : 'rgba(255, 255, 255, 0.3)',
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                  padding: 0
-                }}
-              />
-            );
-          })}
-        </div>
-
-        <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.5)', fontFamily: '"Cinzel", serif' }}>
-          0{HERO_SLIDES.length}
-        </span>
-      </div>
-
     </section>
   );
 }
