@@ -27,7 +27,7 @@ export default function VistaPanelCliente({
   onBack,
   onLogout,
   onRequireAuth,
-  whatsappNumber = '51997099683'
+  whatsappNumber = '51916382742'
 }) {
   const [pedidos, setPedidos] = useState([]);
   const [cargandoPedidos, setCargandoPedidos] = useState(false);

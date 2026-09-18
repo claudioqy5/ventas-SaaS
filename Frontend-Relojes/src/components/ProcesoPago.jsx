@@ -128,7 +128,7 @@ export default function ProcesoPago({
   };
 
   const handleDirectWhatsAppPurchase = () => {
-    const whatsappNumber = '51997099683';
+    const whatsappNumber = '51916382742';
     const itemsSummary = (items || [])
       .map(i => `  • ${i.quantity}x ${i.nombre} (S/ ${Number(i.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })})`)
       .join('\n');
@@ -348,7 +348,7 @@ export default function ProcesoPago({
 
       // Si es compra como invitado, derivar a WhatsApp para coordinar despacho
       if (isGuestMode) {
-        const whatsappNumber = '51997099683';
+        const whatsappNumber = '51916382742';
         const itemsSummary = (items || [])
           .map(i => `  • ${i.quantity}x ${i.nombre} (S/ ${Number(i.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })})`)
           .join('\n');
@@ -632,7 +632,7 @@ export default function ProcesoPago({
                         if (formErrors.telefono) setFormErrors({...formErrors, telefono: null});
                       }}
                       style={{ flex: 1, padding: '12px 14px', border: `1px solid ${formErrors.telefono ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '0 6px 6px 0', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} 
-                      placeholder="997 099 683" 
+                      placeholder="916 382 742" 
                     />
                   </div>
                   {formErrors.telefono && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={12} /> {formErrors.telefono}</span>}

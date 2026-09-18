@@ -172,7 +172,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
                     onClick={onOpenWhatsAppConcierge}
                     style={{ background: 'none', border: 'none', padding: 0, color: '#25D366', fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}
                   >
-                    +51 997 099 683
+                    +51 916 382 742
                   </button>
                 </div>
               </div>

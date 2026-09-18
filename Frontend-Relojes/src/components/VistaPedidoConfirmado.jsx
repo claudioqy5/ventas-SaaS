@@ -19,7 +19,7 @@ export default function VistaPedidoConfirmado({
   onBackToCatalog,
   onNavigate,
   user,
-  whatsappNumber = '51997099683'
+  whatsappNumber = '51916382742'
 }) {
   const [copied, setCopied] = useState(false);
   const [accountCreated, setAccountCreated] = useState(false);

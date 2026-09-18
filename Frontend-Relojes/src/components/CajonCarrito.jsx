@@ -9,7 +9,7 @@ export default function CajonCarrito({
   onRemoveItem,
   onClearCart,
   onGoToCheckout,
-  whatsappNumber = '51997099683'
+  whatsappNumber = '51916382742'
 }) {
   // Control de animación suave de entrada y salida
   const [render, setRender] = useState(isOpen);
