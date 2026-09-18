@@ -3813,6 +3813,27 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 
 ---
 
+### Actualización de Números de Atención y Carrusel Hero de Alta Relojería
+**Fecha:** Septiembre 18, 2026
+
+**1. Separación Categórica de Números Telefónicos (Yape vs. WhatsApp Concierge):**
+- **Sección de Pago con Yape (`ProcesoPago.jsx`):** Configurado oficialmente en **`997 099 683`** (Titular: *Grupo Sercal S.a.c.*) con botón interactivo de copiado rápido (`997099683`).
+- **Línea de Ventas y Concierge de WhatsApp Global:** Actualizado en todo el frontend de la tienda al número **`916 382 742`** (`51916382742` / `+51 916 382 742`).
+  - **Archivos actualizados:** `App.jsx`, `BarraNavegacion.jsx` (cinta superior), `PieDePagina.jsx`, `Beneficios.jsx`, `CajonCarrito.jsx`, `ProcesoPago.jsx` (derivación de compras anónimas por WhatsApp), `VistaPanelCliente.jsx`, `VistaPedidoConfirmado.jsx`, `VistaTerminosCondiciones.jsx` y metadatos SEO JSON-LD en `layout.jsx`.
+
+**2. Rediseño del Hero con Carrusel de Imágenes y Marca de Agua Vertical (`Inicio.jsx`):**
+- **Galería de Alta Resolución:** Se agregaron 4 imágenes representativas (`hero1.jpg`, `hero2.jpg`, `hero3.jpg`, `hero4.jpg`) almacenadas en `public/hero/` y `src/assets/hero/`.
+- **Efecto Pan/Zoom Suave (GPU Accelerated):** Animación CSS `@keyframes heroPanSmooth` que desplaza suavemente la imagen de izquierda a derecha a 60 FPS sin afectar la carga ni la CPU.
+- **Transición Crossfade de 6s:** Fundido suave de opacidad (1.8s) entre diapositivas con controles laterales (`ChevronLeft`/`ChevronRight`) y barra de estado flotante (`01 / 04`).
+- **Presentación Clara (Sin Filtros Oscuros):** Se eliminaron los overlays degradados oscuros para preservar el brillo, calidez y contraste fotográfico original de las piezas.
+- **Marca de Agua Vertical `"L'GANT"`:** Reubicada en la franja izquierda en orientación de abajo hacia arriba (`rotate(-90deg)`), con tipografía de alta gama (*Cinzel*) y trazo translúcido.
+
+**3. Verificación de Compilaciones y Despliegue:**
+- **Compilación Next.js 16:** `npm run build` completado exitosamente con 0 errores.
+- **Sincronización Git:** Cambios consolidados y pusheados a `origin/master`.
+
+---
+
 ### ¿Dónde nos quedamos? (Estado Actual y Hoja de Ruta Inmediata)
 
 1. **Despliegue del Backend en el Servidor VPS (Hostinger):**
@@ -3826,6 +3847,7 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 2. **Pendientes de Producción para E-Commerce / Pagos:**
    - **Mercado Pago Checkout Pro:** Prueba en producción real de pago con tarjeta bancaria de bajo monto y verificación de la notificación de webhook.
    - **Pruebas de Pedidos Web:** Confirmar la recepción de pedidos web de invitados y clientes registrados en el panel admin `ventassaas.vercel.app/online-orders`.
+
 
 
 
