@@ -112,62 +112,29 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge, onNavigateV
         );
       })}
 
-      {/* OVERLAY DE LUJO / GRADIENTE DE CONTRASTE */}
+      {/* MARCA DE AGUA TIPOGRÁFICA GIGANTE VERTICAL EN EL LADO IZQUIERDO (DE ABAJO HACIA ARRIBA) */}
       <div style={{
         position: 'absolute',
-        inset: 0,
-        background: 'radial-gradient(circle at 50% 50%, rgba(11, 11, 12, 0.45) 0%, rgba(11, 11, 12, 0.78) 75%, rgba(11, 11, 12, 0.92) 100%)',
-        zIndex: 2
-      }} />
-
-      {/* CAPA DE GRADIENTE DIRECCIONAL */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'linear-gradient(to right, rgba(11, 11, 12, 0.85) 0%, rgba(11, 11, 12, 0.3) 50%, rgba(11, 11, 12, 0.85) 100%)',
-        zIndex: 2
-      }} />
-
-      {/* MARCA DE AGUA TIPOGRÁFICA GIGANTE TOP - L'GANT */}
-      <div style={{
-        position: 'absolute',
-        top: '28%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        fontSize: 'clamp(5rem, 16vw, 20rem)',
-        fontFamily: 'var(--font-sans)',
+        left: '20px',
+        top: '50%',
+        transform: 'translateY(-50%) rotate(-90deg)',
+        transformOrigin: 'center center',
+        fontSize: 'clamp(5rem, 14vh, 15rem)',
+        fontFamily: '"Cinzel", serif',
         fontWeight: 900,
-        color: 'rgba(255, 255, 255, 0.05)',
+        color: 'rgba(255, 255, 255, 0.14)',
+        WebkitTextStroke: '1px rgba(255, 255, 255, 0.25)',
         whiteSpace: 'nowrap',
         zIndex: 3,
-        letterSpacing: '-0.02em',
-        lineHeight: 0.8,
+        letterSpacing: '0.15em',
+        lineHeight: 1,
         userSelect: 'none',
         pointerEvents: 'none'
       }}>
         L'GANT
       </div>
 
-      {/* MARCA DE AGUA TIPOGRÁFICA GIGANTE BOTTOM - EN CADA SEGUNDO */}
-      <div style={{
-        position: 'absolute',
-        top: '72%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        fontSize: 'clamp(4rem, 12vw, 14rem)',
-        fontFamily: 'var(--font-sans)',
-        fontWeight: 900,
-        color: 'transparent',
-        WebkitTextStroke: '2px rgba(255, 255, 255, 0.08)',
-        whiteSpace: 'nowrap',
-        zIndex: 3,
-        letterSpacing: '-0.02em',
-        lineHeight: 0.8,
-        userSelect: 'none',
-        pointerEvents: 'none'
-      }}>
-        EN CADA SEGUNDO
-      </div>
+      
 
       {/* CONTENIDO PRINCIPAL HERO */}
       <div style={{
