@@ -128,7 +128,7 @@ export default function ProcesoPago({
   };
 
   const handleDirectWhatsAppPurchase = () => {
-    const whatsappNumber = '51962956919';
+    const whatsappNumber = '51997099683';
     const itemsSummary = (items || [])
       .map(i => `  • ${i.quantity}x ${i.nombre} (S/ ${Number(i.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })})`)
       .join('\n');
@@ -348,7 +348,7 @@ export default function ProcesoPago({
 
       // Si es compra como invitado, derivar a WhatsApp para coordinar despacho
       if (isGuestMode) {
-        const whatsappNumber = '51962956919';
+        const whatsappNumber = '51997099683';
         const itemsSummary = (items || [])
           .map(i => `  • ${i.quantity}x ${i.nombre} (S/ ${Number(i.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })})`)
           .join('\n');
@@ -632,7 +632,7 @@ export default function ProcesoPago({
                         if (formErrors.telefono) setFormErrors({...formErrors, telefono: null});
                       }}
                       style={{ flex: 1, padding: '12px 14px', border: `1px solid ${formErrors.telefono ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '0 6px 6px 0', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} 
-                      placeholder="999 999 999" 
+                      placeholder="997 099 683" 
                     />
                   </div>
                   {formErrors.telefono && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={12} /> {formErrors.telefono}</span>}
@@ -1013,7 +1013,7 @@ export default function ProcesoPago({
                           </div>
                           
                           <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--c-obsidian)', marginBottom: '3px', letterSpacing: '0.04em' }}>
-                            999 999 999
+                            997 099 683
                           </div>
                           <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--c-obsidian)', marginBottom: '4px' }}>
                             Titular: Grupo Sercal S.a.c.
@@ -1023,7 +1023,7 @@ export default function ProcesoPago({
                           </div>
                           <button 
                             type="button"
-                            onClick={() => handleCopy('999999999', 'yape_num')}
+                            onClick={() => handleCopy('997099683', 'yape_num')}
                             style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '7px 14px', background: '#ffffff', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.8rem', color: 'var(--c-obsidian)', cursor: 'pointer', fontWeight: 500, boxShadow: '0 2px 6px rgba(0,0,0,0.04)' }}
                           >
                             {copiedText === 'yape_num' ? <Check size={14} color="#16a34a" /> : <Copy size={14} />}

@@ -34,7 +34,7 @@ const jsonLd = {
     "addressLocality": "Lima",
     "addressCountry": "PE"
   },
-  "telephone": "+51962956919",
+  "telephone": "+51997099683",
   "priceRange": "$$$$"
 };
 

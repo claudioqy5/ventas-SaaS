@@ -31,7 +31,7 @@ import { matchProductSmart } from './utils/searchEngine';
 const STORAGE_KEY_CART = 'lgant_cart_v1';
 const STORAGE_KEY_EMPRESA = 'lgant_saas_empresa_id';
 const STORAGE_KEY_API_URL = 'lgant_saas_api_url';
-const WHATSAPP_CONCIERGE = '51962956919';
+const WHATSAPP_CONCIERGE = '51997099683';
 
 
 export default function App({ initialCategory, initialProductId, initialView = 'catalog', initialSearchQuery = '' }) {

@@ -235,7 +235,7 @@ export default function VistaTerminosCondiciones({ onBack }) {
               <li><strong>Razón Social:</strong> L'GANT S.A.C.</li>
               <li><strong>RUC:</strong> 20608945123</li>
               <li><strong>Domicilio Fiscal:</strong> Av. Camino Real 1225, San Isidro, Lima - Perú</li>
-              <li><strong>Canal Oficial de Atención:</strong> concierge@lgant.pe | +51 962 956 919</li>
+              <li><strong>Canal Oficial de Atención:</strong> concierge@lgant.pe | +51 997 099 683</li>
             </ul>
           </section>
 
