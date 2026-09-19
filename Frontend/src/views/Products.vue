@@ -214,6 +214,19 @@
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
         </select>
 
+        <select v-model="selectedAttribute" class="filter-select">
+          <option value="">Cualquier Especificación</option>
+          <option v-for="attr in uniqueAttributes" :key="attr" :value="attr">{{ attr }}</option>
+        </select>
+
+        <select v-model="sortMode" class="filter-select">
+          <option value="newest">Más recientes</option>
+          <option value="price-desc">Mayor a menor precio</option>
+          <option value="price-asc">Menor a mayor precio</option>
+          <option value="stock-desc">Mayor a menor stock</option>
+          <option value="stock-asc">Menor a mayor stock</option>
+        </select>
+
         <!-- Selector de Vista: Agrupado por Modelo vs Lista Completa -->
         <div class="view-mode-pill-group">
           <button 
@@ -1370,7 +1383,23 @@ const currentProductId = ref(null)
 
 const searchQuery = ref('')
 const selectedCategory = ref('')
+const selectedAttribute = ref('')
+const sortMode = ref('newest')
 const productAnalysis = ref({})
+
+const uniqueAttributes = computed(() => {
+  const attrs = new Set()
+  products.value.forEach(p => {
+    if (p.atributos && Array.isArray(p.atributos)) {
+      p.atributos.forEach(a => {
+        if (a.nombre && a.valor && a.valor !== 'No aplica' && a.valor !== '-') {
+          attrs.add(`${a.nombre}: ${a.valor}`)
+        }
+      })
+    }
+  })
+  return Array.from(attrs).sort()
+})
 
 const defaultImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><rect width='100%25' height='100%25' fill='%23f1f5f9'/><path d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M11 11.5L5 17h14l-4.5-6-3.5 4.5z'/></svg>"
 
@@ -1414,15 +1443,45 @@ const getProductColor = (prod) => {
 
 const filteredProducts = computed(() => {
   const q = searchQuery.value.toLowerCase()
-  return products.value.filter(p => {
+  let filtered = products.value.filter(p => {
     const matchesSearch = (p.nombre && p.nombre.toLowerCase().includes(q)) || 
                           (p.codigoBarras && p.codigoBarras.toLowerCase().includes(q)) ||
                           (p.codigoModelo && p.codigoModelo.toLowerCase().includes(q)) ||
                           (p.descripcion && p.descripcion.toLowerCase().includes(q)) ||
                           (p.atributos && p.atributos.some(a => a.valor && a.valor.toLowerCase().includes(q)))
-    const matchesCategory = !selectedCategory.value || p.categoriaId === selectedCategory.value
-    return matchesSearch && matchesCategory
+    const matchesCategory = !selectedCategory.value || 
+                            p.categoriaId === selectedCategory.value || 
+                            (p.categoriaIds && p.categoriaIds.includes(selectedCategory.value))
+    
+    let matchesAttribute = true
+    if (selectedAttribute.value) {
+      const [attrName, attrVal] = selectedAttribute.value.split(': ')
+      matchesAttribute = p.atributos && p.atributos.some(a => a.nombre === attrName && a.valor === attrVal)
+    }
+
+    return matchesSearch && matchesCategory && matchesAttribute
   })
+
+  if (sortMode.value === 'price-desc') {
+    filtered.sort((a, b) => (b.precioOferta || b.precio || 0) - (a.precioOferta || a.precio || 0))
+  } else if (sortMode.value === 'price-asc') {
+    filtered.sort((a, b) => (a.precioOferta || a.precio || 0) - (b.precioOferta || b.precio || 0))
+  } else if (sortMode.value === 'stock-desc') {
+    filtered.sort((a, b) => (b.stock || 0) - (a.stock || 0))
+  } else if (sortMode.value === 'stock-asc') {
+    filtered.sort((a, b) => (a.stock || 0) - (b.stock || 0))
+  } else if (sortMode.value === 'newest') {
+    filtered.sort((a, b) => {
+      if (a.createdAt && b.createdAt) return new Date(b.createdAt) - new Date(a.createdAt)
+      if (a.id && b.id) {
+        if (a.id > b.id) return -1
+        if (a.id < b.id) return 1
+      }
+      return 0
+    })
+  }
+
+  return filtered
 })
 
 const groupedProductsList = computed(() => {

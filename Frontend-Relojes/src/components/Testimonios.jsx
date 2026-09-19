@@ -5,23 +5,23 @@ export default function Testimonios() {
   const opiniones = [
     {
       id: 1,
-      name: "Carlos M.",
-      location: "Madrid",
-      text: "El nivel de detalle y precisión de este reloj supera mis expectativas. Una verdadera joya que transmite elegancia y estatus.",
+      name: "Mateo V.",
+      location: "San Isidro, Lima",
+      text: "El nivel de detalle y precisión de este reloj supera mis expectativas. Una verdadera joya que transmite elegancia. La entrega fue rapidísima y el empaque es de primer nivel.",
       rating: 5,
     },
     {
       id: 2,
-      name: "Elena R.",
-      location: "Barcelona",
-      text: "La atención al cliente fue impecable desde el primer momento. Recibí mi pedido al día siguiente en un empaque sumamente cuidado. Excelente servicio.",
+      name: "Valeria C.",
+      location: "Arequipa",
+      text: "La atención por WhatsApp fue impecable desde el primer momento. Recibí mi pedido en provincia súper rápido y en un empaque sumamente cuidado. 100% confiables.",
       rating: 5,
     },
     {
       id: 3,
-      name: "Javier G.",
-      location: "Valencia",
-      text: "Materiales premium, un mecanismo asombroso y un diseño espectacular. Sin duda mi marca de cabecera para relojes automáticos a partir de ahora.",
+      name: "Luis F.",
+      location: "Miraflores, Lima",
+      text: "Materiales premium, un mecanismo asombroso y un diseño espectacular. Sin duda mi tienda de cabecera para relojes automáticos aquí en Perú. Vale cada sol invertido.",
       rating: 5,
     }
   ];
