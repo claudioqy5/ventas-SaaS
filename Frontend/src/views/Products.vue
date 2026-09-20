@@ -202,30 +202,34 @@
       <!-- Seccion de filtros de busqueda -->
       <div class="table-filters card">
         <div class="filter-input-wrap">
-          <svg class="search-icon-svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="search-icon-svg" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código, modelo o color..." class="filter-input" />
+          <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código o modelo..." class="filter-input" />
         </div>
 
-        <select v-model="selectedCategory" class="filter-select">
+        <select v-model="selectedCategory" class="filter-select select-category" title="Filtrar por categoría">
           <option value="">Todas las Categorías</option>
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
         </select>
 
-        <select v-model="selectedAttribute" class="filter-select">
-          <option value="">Cualquier Especificación</option>
-          <option v-for="attr in uniqueAttributes" :key="attr" :value="attr">{{ attr }}</option>
+        <select v-model="selectedAttribute" class="filter-select select-attribute" title="Filtrar por especificación">
+          <option value="">Especificaciones</option>
+          <optgroup v-for="(vals, groupName) in groupedAttributes" :key="groupName" :label="groupName">
+            <option v-for="val in vals" :key="val" :value="`${groupName}: ${val}`">{{ val }}</option>
+          </optgroup>
         </select>
 
-        <select v-model="sortMode" class="filter-select">
+        <select v-model="sortMode" class="filter-select select-sort" title="Ordenar lista">
           <option value="newest">Más recientes</option>
-          <option value="price-desc">Mayor a menor precio</option>
-          <option value="price-asc">Menor a mayor precio</option>
-          <option value="stock-desc">Mayor a menor stock</option>
-          <option value="stock-asc">Menor a mayor stock</option>
+          <option value="price-desc">Mayor precio</option>
+          <option value="price-asc">Menor precio</option>
+          <option value="stock-desc">Mayor stock</option>
+          <option value="stock-asc">Menor stock</option>
         </select>
+
+        <div class="filter-divider"></div>
 
         <!-- Selector de Vista: Agrupado por Modelo vs Lista Completa -->
         <div class="view-mode-pill-group">
@@ -239,7 +243,7 @@
               <polyline points="2 17 12 22 22 17"></polyline>
               <polyline points="2 12 12 17 22 12"></polyline>
             </svg>
-            Por Modelo
+            <span>Por Modelo</span>
           </button>
           <button 
             type="button" 
@@ -254,7 +258,7 @@
               <line x1="3" y1="12" x2="3.01" y2="12"></line>
               <line x1="3" y1="18" x2="3.01" y2="18"></line>
             </svg>
-            Lista Plana
+            <span>Lista Plana</span>
           </button>
         </div>
 
@@ -263,11 +267,11 @@
           type="button" 
           class="btn-expand-all-pill"
           @click="toggleAllExpand"
-          title="Expandir o colapsar todos los modelos">
+          :title="areAllExpanded ? 'Colapsar todos los modelos' : 'Expandir todos los modelos'">
           <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline :points="areAllExpanded ? '18 15 12 9 6 15' : '6 9 12 15 18 9'"></polyline>
           </svg>
-          {{ areAllExpanded ? 'Colapsar Todo' : 'Expandir Todo' }}
+          <span>{{ areAllExpanded ? 'Colapsar' : 'Expandir' }}</span>
         </button>
       </div>
 
@@ -1401,6 +1405,31 @@ const uniqueAttributes = computed(() => {
   return Array.from(attrs).sort()
 })
 
+const groupedAttributes = computed(() => {
+  const groups = {}
+  products.value.forEach(p => {
+    if (p.atributos && Array.isArray(p.atributos)) {
+      p.atributos.forEach(a => {
+        const rawName = a.nombre || a.Nombre
+        const rawVal = a.valor || a.Valor
+        if (rawName && rawVal && rawVal !== 'No aplica' && rawVal !== '-') {
+          const groupName = rawName.trim()
+          const valName = rawVal.trim()
+          if (!groups[groupName]) {
+            groups[groupName] = new Set()
+          }
+          groups[groupName].add(valName)
+        }
+      })
+    }
+  })
+  const sorted = {}
+  Object.keys(groups).sort((a, b) => a.localeCompare(b)).forEach(key => {
+    sorted[key] = Array.from(groups[key]).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+  })
+  return sorted
+})
+
 const defaultImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><rect width='100%25' height='100%25' fill='%23f1f5f9'/><path d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M11 11.5L5 17h14l-4.5-6-3.5 4.5z'/></svg>"
 
 const viewMode = ref('grouped') // 'grouped' (acordeón) o 'flat' (lista plana)
@@ -1455,8 +1484,19 @@ const filteredProducts = computed(() => {
     
     let matchesAttribute = true
     if (selectedAttribute.value) {
-      const [attrName, attrVal] = selectedAttribute.value.split(': ')
-      matchesAttribute = p.atributos && p.atributos.some(a => a.nombre === attrName && a.valor === attrVal)
+      const idx = selectedAttribute.value.indexOf(': ')
+      if (idx !== -1) {
+        const attrName = selectedAttribute.value.substring(0, idx).trim().toLowerCase()
+        const attrVal = selectedAttribute.value.substring(idx + 2).trim().toLowerCase()
+        matchesAttribute = p.atributos && p.atributos.some(a => 
+          (a.nombre || a.Nombre || '').trim().toLowerCase() === attrName && 
+          (a.valor || a.Valor || '').trim().toLowerCase() === attrVal
+        )
+      } else {
+        matchesAttribute = p.atributos && p.atributos.some(a => 
+          `${a.nombre || a.Nombre}: ${a.valor || a.Valor}`.toLowerCase() === selectedAttribute.value.toLowerCase()
+        )
+      }
     }
 
     return matchesSearch && matchesCategory && matchesAttribute
@@ -2092,14 +2132,15 @@ onUnmounted(() => {
 
 .filter-input-wrap {
   position: relative;
-  flex-grow: 1;
+  flex: 1 1 220px;
+  min-width: 170px;
   display: flex;
   align-items: center;
 }
 
 .search-icon-svg {
   position: absolute;
-  left: 14px;
+  left: 11px;
   color: #94a3b8;
   pointer-events: none;
   z-index: 2;
@@ -2313,42 +2354,108 @@ onUnmounted(() => {
 
 .table-filters {
   display: flex;
-  gap: 16px;
-  padding: 16px 20px;
-  margin-bottom: 20px;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
   background-color: #ffffff;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--border-color, #e2e8f0);
   align-items: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
 .filter-input {
-  flex-grow: 1;
-  padding: 10px 16px 10px 40px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  font-size: 0.95rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: 12px center;
-  background-size: 18px;
+  width: 100%;
+  height: 38px;
+  padding: 0 12px 0 34px;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--border-color, #e2e8f0);
+  background-color: #f8fafc;
+  font-size: 0.88rem;
+  color: var(--text-main, #1e293b);
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  background-image: none !important;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 
 .filter-input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+  background-color: #ffffff;
+  border-color: var(--primary, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 .filter-select {
-  padding: 10px 16px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background-color: #ffffff;
-  color: var(--text-main);
+  height: 38px;
+  padding: 0 26px 0 11px;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--border-color, #e2e8f0);
+  background-color: #f8fafc;
+  color: var(--text-main, #334155);
   font-weight: 500;
+  font-size: 0.84rem;
   outline: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.filter-select:hover {
+  border-color: #cbd5e1;
+  background-color: #ffffff;
+}
+
+.filter-select:focus {
+  border-color: var(--primary, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+  background-color: #ffffff;
+}
+
+.filter-select.select-category {
+  width: 160px;
+  max-width: 160px;
+}
+
+.filter-select.select-attribute {
+  width: 175px;
+  max-width: 175px;
+}
+
+.filter-select.select-sort {
+  width: 130px;
+  max-width: 130px;
+}
+
+.filter-select optgroup {
+  font-weight: 700;
+  color: #0f172a;
+  background-color: #f1f5f9;
+  padding: 6px 4px;
+}
+
+.filter-select option {
+  font-weight: 400;
+  color: #334155;
+  background-color: #ffffff;
+  padding: 5px 8px;
+}
+
+.filter-divider {
+  width: 1px;
+  height: 22px;
+  background-color: var(--border-color, #e2e8f0);
+  flex-shrink: 0;
+  margin: 0 2px;
 }
 
 .image-preview-box {
@@ -3337,13 +3444,15 @@ onUnmounted(() => {
   padding: 3px;
   border-radius: 8px;
   border: 1px solid var(--border-color, #e2e8f0);
+  flex-shrink: 0;
 }
 
 .btn-view-pill {
-  padding: 6px 12px;
+  padding: 5px 10px;
+  height: 32px;
   border: none;
   background: transparent;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: var(--text-muted, #64748b);
   border-radius: 6px;
@@ -3351,7 +3460,8 @@ onUnmounted(() => {
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  white-space: nowrap;
 }
 
 .btn-view-pill.active {
@@ -3362,7 +3472,8 @@ onUnmounted(() => {
 }
 
 .btn-expand-all-pill {
-  padding: 6px 12px;
+  height: 38px;
+  padding: 0 12px;
   border: 1px solid var(--border-color, #cbd5e1);
   background: #ffffff;
   border-radius: 8px;
@@ -3372,6 +3483,10 @@ onUnmounted(() => {
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
 }
 
 .btn-expand-all-pill:hover {
