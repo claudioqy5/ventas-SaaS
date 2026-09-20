@@ -32,6 +32,7 @@ services:
       - SmtpSettings__Email=${SMTP_EMAIL}
       - SmtpSettings__Password=${SMTP_PASSWORD}
       - SmtpSettings__EnableSsl=true
+      - StorefrontUrl=${STOREFRONT_URL}
     volumes:
       - uploads_data:/app/uploads
     depends_on:
