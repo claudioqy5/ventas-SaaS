@@ -141,4 +141,27 @@ public class ClientsController : ControllerBase
 
         return NoContent();
     }
+
+    // PUT api/clients/{id}/verify — activa la cuenta de un cliente manualmente
+    [HttpPut("{id}/verify")]
+    public async Task<IActionResult> Verify(string id)
+    {
+        if (!_userContext.HasPermission("clientes"))
+            return Forbid();
+
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        var filter = Builders<Client>.Filter.And(
+            Builders<Client>.Filter.Eq(c => c.Id, id),
+            Builders<Client>.Filter.Eq(c => c.EmpresaId, empresaId)
+        );
+
+        var update = Builders<Client>.Update.Set(c => c.CorreoVerificado, true);
+
+        var result = await _context.Clients.UpdateOneAsync(filter, update);
+        if (result.MatchedCount == 0) return NotFound();
+
+        return Ok(new { message = "Cliente verificado correctamente." });
+    }
 }

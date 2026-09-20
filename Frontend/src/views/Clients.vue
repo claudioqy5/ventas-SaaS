@@ -97,6 +97,7 @@
                 <td>{{ client.direccion || 'N/A' }}</td>
                 <td>
                   <div class="actions-cell">
+                    <button @click="openProfileModal(client)" class="btn-action" style="background:none; border:none; cursor:pointer;" title="Ver Perfil">👁️</button>
                     <button @click="openEditModal(client)" class="btn-action edit" title="Editar">✏️</button>
                     <button @click="confirmDelete(client.id)" class="btn-action delete" title="Eliminar">🗑️</button>
                   </div>
@@ -459,6 +460,44 @@
           </form>
         </div>
       </div>
+      <!-- Perfil Completo del Cliente -->
+      <div v-if="showProfileModal && selectedProfile" class="modal-overlay">
+        <div class="modal-card card" style="max-width: 600px;">
+          <h2 class="modal-title">👁️ Perfil del Cliente</h2>
+          <div class="grid grid-2" style="gap: 15px; margin-bottom: 20px;">
+            <div><strong>Nombres:</strong> {{ selectedProfile.nombres || selectedProfile.nombre || '' }}</div>
+            <div><strong>Apellidos:</strong> {{ selectedProfile.apellidos || '' }}</div>
+            <div><strong>Teléfono:</strong> {{ selectedProfile.telefono || '' }}</div>
+            <div><strong>Correo Electrónico:</strong> {{ selectedProfile.correo || '' }}</div>
+            <div><strong>Documento:</strong> {{ selectedProfile.tipoDocumento || 'DNI' }} - {{ selectedProfile.numeroDocumento || '' }}</div>
+            <div><strong>Cuenta Ecommerce:</strong> 
+              <span v-if="selectedProfile.esUsuarioEcommerce" class="badge badge-info">Sí</span>
+              <span v-else class="text-muted">No</span>
+            </div>
+            <div style="grid-column: span 2;">
+              <strong>Dirección de Entrega:</strong> 
+              {{ selectedProfile.direccion || '' }}
+              <span v-if="selectedProfile.distrito">, {{ selectedProfile.distrito }}</span>
+              <span v-if="selectedProfile.provincia">, {{ selectedProfile.provincia }}</span>
+              <span v-if="selectedProfile.departamento">, {{ selectedProfile.departamento }}</span>
+            </div>
+            <div style="grid-column: span 2;" v-if="selectedProfile.referencia">
+              <strong>Referencia:</strong> {{ selectedProfile.referencia }}
+            </div>
+            <div><strong>Cliente desde:</strong> {{ new Date(selectedProfile.fechaCreacion).toLocaleDateString() }}</div>
+            <div>
+              <strong>Correo Verificado:</strong> 
+              <span v-if="selectedProfile.correoVerificado" class="badge badge-success" style="background-color: #10b981; color: white;">Sí</span>
+              <span v-else class="badge badge-warning" style="background-color: #f59e0b; color: white;">No</span>
+            </div>
+          </div>
+          <div class="modal-actions" style="display: flex; justify-content: space-between;">
+            <button v-if="selectedProfile.esUsuarioEcommerce && !selectedProfile.correoVerificado" @click="verifyClient(selectedProfile.id)" class="btn btn-primary" style="background-color: #10b981; border: none;">✅ Activar Cuenta (Forzar Verificación)</button>
+            <div style="flex-grow: 1;"></div>
+            <button @click="showProfileModal = false" class="btn btn-secondary">Cerrar</button>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 </template>
@@ -476,6 +515,9 @@ const clients = ref([])
 const showModal = ref(false)
 const isEdit = ref(false)
 const currentId = ref(null)
+
+const showProfileModal = ref(false)
+const selectedProfile = ref(null)
 
 const searchQuery = ref('')
 
@@ -581,6 +623,27 @@ const confirmDelete = async (id) => {
     if (!res.ok) throw new Error('Error al eliminar el cliente.')
 
     alert('¡Cliente eliminado!')
+    fetchClients()
+  } catch (err) {
+    alert(err.message)
+  }
+}
+
+const openProfileModal = (client) => {
+  selectedProfile.value = client
+  showProfileModal.value = true
+}
+
+const verifyClient = async (id) => {
+  if (!confirm('¿Deseas marcar este correo como verificado manualmente?')) return
+  try {
+    const res = await fetch(`${API_URL}/api/clients/${id}/verify`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (!res.ok) throw new Error('Error al verificar el cliente.')
+    alert('Cuenta activada correctamente.')
+    showProfileModal.value = false
     fetchClients()
   } catch (err) {
     alert(err.message)
