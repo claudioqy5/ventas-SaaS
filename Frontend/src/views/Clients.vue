@@ -97,9 +97,15 @@
                 <td>{{ client.direccion || 'N/A' }}</td>
                 <td>
                   <div class="actions-cell">
-                    <button @click="openProfileModal(client)" class="btn-action" style="background:none; border:none; cursor:pointer;" title="Ver Perfil">👁️</button>
-                    <button @click="openEditModal(client)" class="btn-action edit" title="Editar">✏️</button>
-                    <button @click="confirmDelete(client.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                    <button @click="openProfileModal(client)" class="btn-action" title="Ver Perfil">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                    <button @click="openEditModal(client)" class="btn-action edit" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button @click="confirmDelete(client.id)" class="btn-action delete" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -417,9 +423,15 @@
 
       <!-- Formulario modal de creacion/edicion -->
       <div v-if="showModal" class="modal-overlay">
-        <div class="modal-card card">
-          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Cliente' : '⚇ Registrar Cliente' }}</h2>
-          <form @submit.prevent="saveClient" class="grid">
+        <div class="modal-card card" style="max-width: 650px;">
+          <h2 class="modal-title">
+            <svg v-if="isEdit" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+            {{ isEdit ? 'Editar Cliente' : 'Registrar Cliente' }}
+          </h2>
+          <form @submit.prevent="saveClient">
+            
+            <h3 style="font-size: 0.95rem; color: var(--primary); margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">Datos Personales</h3>
             <div class="grid grid-2">
               <div class="field">
                 <label>Nombres</label>
@@ -430,30 +442,59 @@
                 <input v-model="form.apellidos" type="text" placeholder="Ej. Pérez Gómez" required />
               </div>
             </div>
-
             <div class="grid grid-2">
               <div class="field">
-                <label>Documento de Identidad</label>
-                <input v-model="form.numeroDocumento" type="text" placeholder="DNI, RUC, RUT, etc." />
+                <label>Tipo Documento</label>
+                <select v-model="form.tipoDocumento" class="filter-input" style="width: 100%; height: 38px;">
+                  <option value="DNI">DNI</option>
+                  <option value="RUC">RUC</option>
+                  <option value="CE">Carnet Ext.</option>
+                  <option value="PASAPORTE">Pasaporte</option>
+                </select>
               </div>
+              <div class="field">
+                <label>Número Documento</label>
+                <input v-model="form.numeroDocumento" type="text" placeholder="Número de documento..." />
+              </div>
+            </div>
+
+            <h3 style="font-size: 0.95rem; color: var(--primary); margin-top: 15px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">Contacto</h3>
+            <div class="grid grid-2">
               <div class="field">
                 <label>Teléfono de Contacto</label>
                 <input v-model="form.telefono" type="text" placeholder="987654321" />
               </div>
-            </div>
-
-            <div class="grid grid-2">
               <div class="field">
                 <label>Correo Electrónico</label>
                 <input v-model="form.correo" type="email" placeholder="juan@correo.com" />
               </div>
-              <div class="field">
-                <label>Dirección</label>
-                <input v-model="form.direccion" type="text" placeholder="Calle Las Flores 123" />
-              </div>
             </div>
 
-            <div class="modal-actions">
+            <h3 style="font-size: 0.95rem; color: var(--primary); margin-top: 15px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">Datos de Entrega</h3>
+            <div class="field" style="margin-bottom: 15px;">
+              <label>Dirección Principal</label>
+              <input v-model="form.direccion" type="text" placeholder="Calle Las Flores 123" />
+            </div>
+            <div class="grid grid-3" style="grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+              <div class="field">
+                <label>Departamento</label>
+                <input v-model="form.departamento" type="text" placeholder="Ej. Lima" />
+              </div>
+              <div class="field">
+                <label>Provincia</label>
+                <input v-model="form.provincia" type="text" placeholder="Ej. Lima" />
+              </div>
+              <div class="field">
+                <label>Distrito</label>
+                <input v-model="form.distrito" type="text" placeholder="Ej. Miraflores" />
+              </div>
+            </div>
+            <div class="field" style="margin-top: 15px; margin-bottom: 15px;">
+              <label>Referencia</label>
+              <input v-model="form.referencia" type="text" placeholder="Ej. Frente al parque, casa azul" />
+            </div>
+
+            <div class="modal-actions" style="margin-top: 25px;">
               <button type="button" @click="showModal = false" class="btn btn-secondary">Cancelar</button>
               <button type="submit" class="btn btn-primary">{{ isEdit ? 'Guardar Cambios' : 'Registrar Cliente' }}</button>
             </div>
@@ -537,10 +578,15 @@ const form = reactive({
   nombres: '',
   apellidos: '',
   nombre: '',
+  tipoDocumento: 'DNI',
   numeroDocumento: '',
   telefono: '',
   correo: '',
-  direccion: ''
+  direccion: '',
+  departamento: '',
+  provincia: '',
+  distrito: '',
+  referencia: ''
 })
 
 const fetchClients = async () => {
@@ -561,10 +607,15 @@ const openCreateModal = () => {
   form.nombres = ''
   form.apellidos = ''
   form.nombre = ''
+  form.tipoDocumento = 'DNI'
   form.numeroDocumento = ''
   form.telefono = ''
   form.correo = ''
   form.direccion = ''
+  form.departamento = ''
+  form.provincia = ''
+  form.distrito = ''
+  form.referencia = ''
   showModal.value = true
 }
 
@@ -574,10 +625,15 @@ const openEditModal = (client) => {
   form.nombres = client.nombres || (client.nombre ? client.nombre.trim().split(' ')[0] : '')
   form.apellidos = client.apellidos || (client.nombre ? client.nombre.trim().split(' ').slice(1).join(' ') : '')
   form.nombre = client.nombre || `${form.nombres} ${form.apellidos}`.trim()
+  form.tipoDocumento = client.tipoDocumento || 'DNI'
   form.numeroDocumento = client.numeroDocumento || ''
   form.telefono = client.telefono || ''
   form.correo = client.correo || ''
   form.direccion = client.direccion || ''
+  form.departamento = client.departamento || ''
+  form.provincia = client.provincia || ''
+  form.distrito = client.distrito || ''
+  form.referencia = client.referencia || ''
   showModal.value = true
 }
 
