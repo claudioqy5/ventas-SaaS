@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -52,9 +52,30 @@
           <h1 class="text-title">◫ Resumen del Negocio</h1>
           <p class="text-subtitle">Monitorea tus ventas, inventario y alertas</p>
         </div>
-        <div class="date-filter-container">
-          <label for="dashboard-date" class="text-subtitle" style="margin-right: 10px; font-weight: 500;">Filtrar por Fecha:</label>
-          <input type="date" id="dashboard-date" v-model="selectedDate" @change="fetchStats" class="form-input" style="padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);" />
+        <div style="display: flex; gap: 20px; align-items: center;">
+          
+          <!-- Bot Toggle Control -->
+          <div class="bot-control" style="display: flex; align-items: center; gap: 10px; background: #fff; padding: 6px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 5px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                Bot Inteligente
+              </span>
+              <span :style="{ color: isBotToggling ? 'var(--text-muted)' : (stats.botWhatsAppActivo ? '#16a34a' : '#dc2626'), fontSize: '0.75rem', fontWeight: '500' }">
+                {{ isBotToggling ? 'Cambiando...' : (stats.botWhatsAppActivo ? 'Encendido' : 'Apagado') }}
+              </span>
+            </div>
+            <label class="switch-toggle" style="position: relative; display: inline-block; width: 44px; height: 24px; cursor: pointer;">
+              <input type="checkbox" v-model="stats.botWhatsAppActivo" @change="toggleBot" :disabled="isBotToggling" style="opacity: 0; width: 0; height: 0;">
+              <span class="slider" :class="{ 'slider-active': stats.botWhatsAppActivo }" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px;"></span>
+              <span class="slider-dot" :class="{ 'dot-active': stats.botWhatsAppActivo }" style="position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></span>
+            </label>
+          </div>
+
+          <div class="date-filter-container">
+            <label for="dashboard-date" class="text-subtitle" style="margin-right: 10px; font-weight: 500;">Filtrar por Fecha:</label>
+            <input type="date" id="dashboard-date" v-model="selectedDate" @change="fetchStats" class="form-input" style="padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);" />
+          </div>
         </div>
       </header>
 
@@ -264,8 +285,43 @@ const stats = ref({
   ventasHorarias: [],
   metodosPagoDia: [],
   productosMasVendidosDia: [],
-  fechaDiaActual: ''
+  fechaDiaActual: '',
+  botWhatsAppActivo: false
 })
+
+const isBotToggling = ref(false)
+
+const toggleBot = async () => {
+  if (isBotToggling.value) return
+  isBotToggling.value = true
+  try {
+    const res = await fetch(`${API_URL}/api/dashboard/bot-toggle`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.token}`
+      },
+      body: JSON.stringify({
+        botWhatsAppActivo: stats.value.botWhatsAppActivo,
+        n8nWebhookUrl: 'https://n8n-web.helifyferdigital.cloud/webhook/bot-admin' // Endpoint dedicado para eventos del sistema
+      })
+    })
+    
+    if (!res.ok) throw new Error('Error al cambiar estado del bot')
+    
+    const data = await res.json()
+    // Si se apagó y había clientes pendientes, se notifica
+    if (!stats.value.botWhatsAppActivo && data.clientesNotificados > 0) {
+      alert(`Bot apagado. Se enviaron mensajes a ${data.clientesNotificados} cliente(s) para que completen su compra en WhatsApp humano.`)
+    }
+  } catch (err) {
+    console.error('Error toggling bot', err)
+    // Revertir estado si falló
+    stats.value.botWhatsAppActivo = !stats.value.botWhatsAppActivo
+  } finally {
+    isBotToggling.value = false
+  }
+}
 
 const hoveredSegmentDia = ref(null)
 
@@ -367,7 +423,8 @@ const fetchStats = async () => {
       ventasHorarias: data.ventasHorarias || [],
       metodosPagoDia: data.metodosPagoDia || [],
       productosMasVendidosDia: data.productosMasVendidosDia || [],
-      fechaDiaActual: data.fechaDiaActual || ''
+      fechaDiaActual: data.fechaDiaActual || '',
+      botWhatsAppActivo: data.botWhatsAppActivo || false
     }
     // Sync the date in case the backend overrides it
     if (data.fechaDiaActual) {
@@ -809,5 +866,13 @@ onMounted(() => {
   background-color: #fef2f2;
   color: #b91c1c;
   border: 1px solid #fee2e2;
+}
+
+/* Bot Toggle Switch */
+.slider-active {
+  background-color: #25D366 !important;
+}
+.dot-active {
+  transform: translateX(20px);
 }
 </style>

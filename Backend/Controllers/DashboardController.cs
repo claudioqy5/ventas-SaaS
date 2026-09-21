@@ -1,6 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -36,6 +40,9 @@ public class DashboardController : ControllerBase
 
         var empresaId = _userContext.EmpresaId;
         if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        var empresa = await _context.Empresas.Find(e => e.Id == empresaId).FirstOrDefaultAsync();
+        if (empresa == null) return NotFound(new { message = "Empresa no encontrada." });
 
         // Obtener la cantidad total de productos registrados en el inventario
         var totalProductos = await _context.Products.CountDocumentsAsync(p => p.EmpresaId == empresaId);
@@ -193,7 +200,9 @@ public class DashboardController : ControllerBase
             ProductosMasVendidos = productosMasVendidos,
             ProductosMasVendidosDia = productosMasVendidosDia,
             VentasHorarias = ventasHorarias,
-            FechaDiaActual = targetDate.ToString("yyyy-MM-dd")
+            FechaDiaActual = targetDate.ToString("yyyy-MM-dd"),
+            BotWhatsAppActivo = empresa.BotWhatsAppActivo,
+            NumeroWhatsAppHumano = empresa.NumeroWhatsAppHumano
         });
     }
 
@@ -364,5 +373,87 @@ public class DashboardController : ControllerBase
             return NotFound(new { message = "Empresa no encontrada." });
 
         return Ok(new { message = "Configuración del bot actualizada correctamente." });
+    }
+
+    public class BotToggleRequest
+    {
+        public bool BotWhatsAppActivo { get; set; }
+        // URL del webhook de n8n para notificar el apagado del bot
+        public string? N8nWebhookUrl { get; set; }
+    }
+
+    // POST api/dashboard/bot-toggle — Enciende o apaga el bot. Si se apaga, notifica al n8n
+    // para que envíe mensajes de despedida a los clientes con pedidos pendientes.
+    [HttpPost("bot-toggle")]
+    public async Task<IActionResult> ToggleBot([FromBody] BotToggleRequest request)
+    {
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        // Obtener estado anterior del bot
+        var empresa = await _context.Empresas.Find(e => e.Id == empresaId).FirstOrDefaultAsync();
+        if (empresa == null) return NotFound(new { message = "Empresa no encontrada." });
+
+        bool eraActivo = empresa.BotWhatsAppActivo;
+        bool ahoraActivo = request.BotWhatsAppActivo;
+
+        // Actualizar estado del bot en la base de datos
+        var update = Builders<Empresa>.Update.Set(e => e.BotWhatsAppActivo, ahoraActivo);
+        await _context.Empresas.UpdateOneAsync(e => e.Id == empresaId, update);
+
+        List<string> numbersNotified = new();
+
+        // Si el bot se está APAGANDO y había un webhook configurado, notificar a n8n
+        if (eraActivo && !ahoraActivo && !string.IsNullOrEmpty(request.N8nWebhookUrl))
+        {
+            // Obtener clientes con pedidos pendientes de pago (aún esperando comprobante)
+            var pendingFilter = Builders<Sale>.Filter.And(
+                Builders<Sale>.Filter.Eq(s => s.EmpresaId, empresaId),
+                Builders<Sale>.Filter.Eq(s => s.EstadoOrden, "PENDIENTE_PAGO"),
+                Builders<Sale>.Filter.Eq(s => s.OrigenPedido, "WhatsAppBot"),
+                Builders<Sale>.Filter.Ne(s => s.WhatsAppCliente, (string?)null)
+            );
+
+            var pendingOrders = await _context.Sales.Find(pendingFilter).ToListAsync();
+
+            // Obtener números únicos de clientes activos
+            var uniqueNumbers = pendingOrders
+                .Where(o => !string.IsNullOrEmpty(o.WhatsAppCliente))
+                .Select(o => o.WhatsAppCliente!)
+                .Distinct()
+                .ToList();
+
+            if (uniqueNumbers.Count > 0)
+            {
+                try
+                {
+                    using var httpClient = new HttpClient();
+                    httpClient.Timeout = TimeSpan.FromSeconds(10);
+
+                    var payload = new
+                    {
+                        evento = "BOT_APAGADO",
+                        numeroHumano = empresa.NumeroWhatsAppHumano,
+                        numerosClientes = uniqueNumbers
+                    };
+
+                    var json = JsonSerializer.Serialize(payload);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    await httpClient.PostAsync(request.N8nWebhookUrl, content);
+                    numbersNotified = uniqueNumbers;
+                }
+                catch
+                {
+                    // Si el webhook falla, el toggle igual procede (el estado ya se guardó)
+                }
+            }
+        }
+
+        return Ok(new
+        {
+            message = ahoraActivo ? "Bot activado correctamente." : "Bot desactivado correctamente.",
+            botActivo = ahoraActivo,
+            clientesNotificados = numbersNotified.Count
+        });
     }
 }
