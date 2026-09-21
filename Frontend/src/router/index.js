@@ -18,6 +18,7 @@ import CreditSales from '../views/CreditSales.vue'
 import PaymentMethods from '../views/PaymentMethods.vue'
 
 import WhatsAppChats from '../views/WhatsAppChats.vue'
+import VerifyEmail from '../views/VerifyEmail.vue'
 
 const routes = [
   { path: '/login', component: Login, name: 'Login' },  
