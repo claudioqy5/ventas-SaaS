@@ -425,7 +425,145 @@ public class PublicStoreController : ControllerBase
 
         return Ok(new { message = "Perfil actualizado con éxito" });
     }
+
+    // =============================================
+    // ENDPOINTS EXCLUSIVOS PARA EL BOT DE WHATSAPP
+    // =============================================
+
+    // POST api/public/store/{empresaId}/bot/orders
+    // n8n llama a este endpoint cuando el cliente confirma un pedido por WhatsApp
+    [AllowAnonymous]
+    [HttpPost("{empresaId}/bot/orders")]
+    public async Task<IActionResult> SubmitBotOrder(string empresaId, [FromBody] BotOrderRequest request)
+    {
+        if (request == null || request.Items == null || !request.Items.Any())
+            return BadRequest(new { message = "El pedido no tiene productos." });
+
+        var detalles = new List<SaleItem>();
+        decimal total = 0;
+
+        foreach (var item in request.Items)
+        {
+            var product = await _context.Products
+                .Find(p => p.Id == item.ProductoId && p.EmpresaId == empresaId)
+                .FirstOrDefaultAsync();
+
+            if (product == null)
+                return BadRequest(new { message = $"El producto '{item.NombreProducto}' no existe." });
+
+            detalles.Add(new SaleItem
+            {
+                ProductoId = product.Id,
+                NombreProducto = product.Nombre,
+                Cantidad = item.Cantidad,
+                PrecioUnitario = item.PrecioUnitario,
+                UnidadMedida = product.UnidadMedida,
+                CantidadPresentacion = 1,
+                PrecioPresentacion = item.PrecioUnitario,
+                Presentacion = "Unidad"
+            });
+
+            total += item.Cantidad * item.PrecioUnitario;
+        }
+
+        var newSale = new Sale
+        {
+            EmpresaId = empresaId,
+            ClienteId = "WHATSAPP_BOT",
+            NombreCliente = request.NombreCliente ?? "Cliente WhatsApp",
+            Detalles = detalles,
+            Subtotal = total,
+            Impuesto = 0,
+            Total = total,
+            MetodoPago = request.MetodoPago ?? "Yape/Plin",
+            EstadoPago = "Pendiente",
+            EstadoOrden = "PENDIENTE_PAGO",
+            OrigenPedido = "WhatsAppBot",
+            WhatsAppCliente = request.WhatsAppCliente,
+            CreadoPor = "WhatsAppBot",
+            CreadoPorNombre = "Bot WhatsApp",
+            FechaCreacion = DateTime.UtcNow,
+            DireccionEntrega = request.DireccionEntrega ?? "Coordinación por WhatsApp",
+            NotasEntrega = request.NotasEntrega,
+            TipoComprobante = "Nota de Venta",
+            CodigoTipoComprobanteSunat = "00",
+            Serie = "NV01",
+            ClienteTipoDocumento = "-"
+        };
+
+        await _context.Sales.InsertOneAsync(newSale);
+
+        return Ok(new { message = "Pedido registrado exitosamente", orderId = newSale.Id });
+    }
+
+    // POST api/public/store/bot/upload-image
+    // n8n llama a este endpoint para subir la foto del comprobante de pago recibida por WhatsApp.
+    // Recibe la imagen en base64 y la guarda en /uploads/images/, devuelve la URL pública.
+    [AllowAnonymous]
+    [HttpPost("bot/upload-image")]
+    public async Task<IActionResult> UploadBotImage([FromBody] BotImageUploadRequest request)
+    {
+        if (request == null || string.IsNullOrEmpty(request.Base64Image))
+            return BadRequest(new { message = "No se recibió imagen." });
+
+        try
+        {
+            // Limpiar prefijo data:image/...;base64,
+            var base64Data = request.Base64Image;
+            if (base64Data.Contains(","))
+                base64Data = base64Data.Split(',')[1];
+
+            var bytes = Convert.FromBase64String(base64Data);
+            var ext = request.Extension?.ToLowerInvariant() ?? ".jpg";
+            if (!new[] { ".jpg", ".jpeg", ".png", ".webp" }.Contains(ext))
+                ext = ".jpg";
+
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", "images");
+            Directory.CreateDirectory(uploadsPath);
+            var filePath = Path.Combine(uploadsPath, fileName);
+
+            await System.IO.File.WriteAllBytesAsync(filePath, bytes);
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var imageUrl = $"{baseUrl}/uploads/images/{fileName}";
+
+            return Ok(new { url = imageUrl });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = $"Error al procesar la imagen: {ex.Message}" });
+        }
+    }
+
+    // POST api/public/store/{empresaId}/bot/orders/{orderId}/voucher
+    // n8n llama a este endpoint para adjuntar la URL de la foto del comprobante al pedido.
+    [AllowAnonymous]
+    [HttpPost("{empresaId}/bot/orders/{orderId}/voucher")]
+    public async Task<IActionResult> AddVoucherToOrder(string empresaId, string orderId, [FromBody] BotVoucherRequest request)
+    {
+        if (string.IsNullOrEmpty(request?.ImageUrl))
+            return BadRequest(new { message = "Se requiere la URL de la imagen." });
+
+        var order = await _context.Sales
+            .Find(s => s.Id == orderId && s.EmpresaId == empresaId)
+            .FirstOrDefaultAsync();
+
+        if (order == null)
+            return NotFound(new { message = "Pedido no encontrado." });
+
+        var update = Builders<Sale>.Update
+            .Push(s => s.ComprobantePagoUrls, request.ImageUrl);
+
+        await _context.Sales.UpdateOneAsync(
+            s => s.Id == orderId && s.EmpresaId == empresaId,
+            update
+        );
+
+        return Ok(new { message = "Comprobante adjuntado al pedido." });
+    }
 }
+
 
 public record ClientRegisterRequest(string? Nombre, string? Nombres, string? Apellidos, string Correo, string Clave, string? Telefono);
 public record ClientLoginRequest(string Correo, string Clave);
@@ -467,3 +605,21 @@ public record StoreOrderRequest(
 );
 
 public record StoreOrderItem(string ProductoId, string NombreProducto, decimal Cantidad, decimal PrecioUnitario);
+
+/// <summary>Solicitud de pedido desde el Bot de WhatsApp.</summary>
+public record BotOrderRequest(
+    string? NombreCliente,
+    string? WhatsAppCliente,
+    string? MetodoPago,
+    string? DireccionEntrega,
+    string? NotasEntrega,
+    List<BotOrderItem> Items
+);
+
+public record BotOrderItem(string ProductoId, string NombreProducto, decimal Cantidad, decimal PrecioUnitario);
+
+/// <summary>Solicitud para subir una imagen en base64 recibida por WhatsApp.</summary>
+public record BotImageUploadRequest(string Base64Image, string? Extension);
+
+/// <summary>Solicitud para adjuntar URL de comprobante de pago a un pedido.</summary>
+public record BotVoucherRequest(string ImageUrl);

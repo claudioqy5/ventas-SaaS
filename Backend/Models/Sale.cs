@@ -134,6 +134,19 @@ public class Sale
     public string? EstadoOrden { get; set; } = null;
     public DateTime? FechaConfirmacionPago { get; set; }
     public string? NumeroSeguimiento { get; set; }
+
+    // =============================================
+    // ORIGEN Y COMPROBANTE DE PAGO (WhatsApp Bot)
+    // =============================================
+
+    // Origen del pedido: "TiendaVirtual", "WhatsAppBot"
+    public string OrigenPedido { get; set; } = "TiendaVirtual";
+
+    // Número de WhatsApp del cliente que realizó el pedido por bot
+    public string? WhatsAppCliente { get; set; }
+
+    // URLs de las fotos del comprobante de pago enviadas por el cliente vía WhatsApp
+    public List<string> ComprobantePagoUrls { get; set; } = new();
 }
 
 
