@@ -28,7 +28,8 @@ export default function ProcesoPago({
   user,
   token,
   onRequireAuth,
-  onOrderSuccess
+  onOrderSuccess,
+  whatsappNumber = '51916382742'
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formErrors, setFormErrors] = useState({});
@@ -128,7 +129,7 @@ export default function ProcesoPago({
   };
 
   const handleDirectWhatsAppPurchase = () => {
-    const whatsappNumber = '51916382742';
+    const waNumber = whatsappNumber;
     const itemsSummary = (items || [])
       .map(i => `  • ${i.quantity}x ${i.nombre} (S/ ${Number(i.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })})`)
       .join('\n');
@@ -348,7 +349,7 @@ export default function ProcesoPago({
 
       // Si es compra como invitado, derivar a WhatsApp para coordinar despacho
       if (isGuestMode) {
-        const whatsappNumber = '51916382742';
+        const waNumber = whatsappNumber;
         const itemsSummary = (items || [])
           .map(i => `  • ${i.quantity}x ${i.nombre} (S/ ${Number(i.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })})`)
           .join('\n');

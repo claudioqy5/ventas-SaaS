@@ -33,8 +33,8 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     
-    // Traer información de la tienda
-    let storeInfo = { nombre: "L'gant" };
+    // Traer información de la tienda (incluye configuración del bot)
+    let storeInfo = { nombre: "L'gant", botWhatsAppActivo: false, numeroWhatsAppBot: '51955115893', numeroWhatsAppHumano: '51916382742' };
     try {
       const storeRes = await fetch(`${apiUrl}/${empresaId}`);
       if (storeRes.ok) {
@@ -107,6 +107,9 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
       connected: true,
       isFallback: false,
       storeName: storeInfo.nombre || "L'gant • Boutique Perú",
+      // Número dinámico: si el bot está activo, usa el número del bot; si no, el número humano
+      whatsappNumber: storeInfo.botWhatsAppActivo ? (storeInfo.numeroWhatsAppBot || '51955115893') : (storeInfo.numeroWhatsAppHumano || '51916382742'),
+      botActivo: storeInfo.botWhatsAppActivo || false,
       products: mapped.length > 0 ? mapped : LUXURY_SAMPLE_WATCHES
     };
   } catch (err) {
@@ -115,6 +118,8 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
       connected: false,
       isFallback: true,
       storeName: "L'gant • Boutique Perú",
+      whatsappNumber: '51916382742',
+      botActivo: false,
       products: LUXURY_SAMPLE_WATCHES,
       error: err.message
     };

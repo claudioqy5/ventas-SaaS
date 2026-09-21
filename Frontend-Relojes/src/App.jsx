@@ -31,7 +31,8 @@ import { matchProductSmart } from './utils/searchEngine';
 const STORAGE_KEY_CART = 'lgant_cart_v1';
 const STORAGE_KEY_EMPRESA = 'lgant_saas_empresa_id';
 const STORAGE_KEY_API_URL = 'lgant_saas_api_url';
-const WHATSAPP_CONCIERGE = '51916382742';
+// Número de fallback — se sobreescribe con el valor dinámico del backend
+const DEFAULT_WHATSAPP = '51916382742';
 
 
 export default function App({ initialCategory, initialProductId, initialView = 'catalog', initialSearchQuery = '' }) {
@@ -59,6 +60,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
 
   const [products, setProducts] = useState([]);
   const [storeName, setStoreName] = useState("L'gant");
+  const [whatsappConcierge, setWhatsappConcierge] = useState(DEFAULT_WHATSAPP);
   const [isConnected, setIsConnected] = useState(false);
   const [isFallback, setIsFallback] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -386,6 +388,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
     setIsConnected(data.connected);
     setIsFallback(data.isFallback);
     if (data.storeName) setStoreName(data.storeName);
+    // Actualizar el número de WhatsApp dinámicamente (bot prendido/apagado)
+    if (data.whatsappNumber) setWhatsappConcierge(data.whatsappNumber);
     setLoading(false);
   };
 
@@ -657,7 +661,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
       `💰 Precio: S/ ${Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}\n` +
       `¿Podría un asesor de la boutique brindarme información de disponibilidad y entrega?`
     );
-    window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_CONCIERGE}&text=${text}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=${whatsappConcierge}&text=${text}`, '_blank');
   };
 
   const handleOpenWhatsAppConcierge = () => {
@@ -665,7 +669,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
       `👋 *ATENCIÓN - CONCIERGE L'GANT*\n\n` +
       `Hola, deseo comunicarme con un asesor de la boutique para recibir asesoramiento sobre su colección de alta relojería.`
     );
-    window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_CONCIERGE}&text=${text}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=${whatsappConcierge}&text=${text}`, '_blank');
   };
 
   const scrollToCatalog = () => {
@@ -714,6 +718,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
           token={authToken}
           onRequireAuth={() => setIsAuthOpen(true)}
           onOrderSuccess={handleOrderSuccess}
+          whatsappNumber={whatsappConcierge}
         />
       ) : activeView === 'pedido-confirmado' ? (
         <VistaPedidoConfirmado
@@ -721,7 +726,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
           onBackToCatalog={handleBackToCatalog}
           onNavigate={handleNavigateView}
           user={currentUser}
-          whatsappNumber={WHATSAPP_CONCIERGE}
+          whatsappNumber={whatsappConcierge}
         />
       ) : activeView === 'verificar-correo' ? (
         <VistaVerificarCorreo
@@ -757,6 +762,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
           onLogout={handleCustomerLogout}
           onNavigate={handleNavigateView}
           onBack={handleBackToCatalog}
+          whatsappNumber={whatsappConcierge}
         />
       ) : (
         <>
@@ -1152,7 +1158,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
         onClearCart={handleClearCart}
-        whatsappNumber={WHATSAPP_CONCIERGE}
+        whatsappNumber={whatsappConcierge}
         onGoToCheckout={() => {
           setSelectedProduct(null);
           setActiveView('checkout');
@@ -1200,7 +1206,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
       />
 
       {/* Botón flotante de WhatsApp global (oculto en el carrito, durante el checkout y en pedido confirmado) */}
-      <BotonWhatsApp phoneNumber={WHATSAPP_CONCIERGE} isVisible={!isCartOpen && activeView !== 'checkout' && activeView !== 'pedido-confirmado'} />
+      <BotonWhatsApp phoneNumber={whatsappConcierge} isVisible={!isCartOpen && activeView !== 'checkout' && activeView !== 'pedido-confirmado'} />
 
       {/* Notificación Toast al agregar al carrito */}
       <ToastNotificacion

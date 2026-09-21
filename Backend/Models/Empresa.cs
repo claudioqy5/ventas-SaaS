@@ -20,4 +20,9 @@ public class Empresa
     public string PlanSuscripcion { get; set; } = "Basic"; // Planes de suscripcion: Basic, Premium, System
     public bool Activo { get; set; } = true;
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+
+    // --- Configuraciones del Bot de WhatsApp ---
+    public bool BotWhatsAppActivo { get; set; } = false;
+    public string NumeroWhatsAppBot { get; set; } = "51955115893";
+    public string NumeroWhatsAppHumano { get; set; } = "51916382742";
 }

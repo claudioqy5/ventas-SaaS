@@ -55,7 +55,10 @@ public class PublicStoreController : ControllerBase
             empresa.Id,
             empresa.Nombre,
             empresa.PlanSuscripcion,
-            empresa.Activo
+            empresa.Activo,
+            empresa.BotWhatsAppActivo,
+            empresa.NumeroWhatsAppBot,
+            empresa.NumeroWhatsAppHumano
         });
     }
 
@@ -104,6 +107,41 @@ public class PublicStoreController : ControllerBase
         });
 
         return Ok(publicProducts);
+    }
+
+    // GET api/public/store/{empresaId}/bot/products
+    // Endpoint específico para la Inteligencia Artificial (n8n).
+    // NO devuelve costos ni información de proveedores, pero sí descripciones e inventario.
+    [AllowAnonymous]
+    [HttpGet("{empresaId}/bot/products")]
+    public async Task<IActionResult> GetBotStoreProducts(string empresaId)
+    {
+        if (string.IsNullOrWhiteSpace(empresaId))
+            return BadRequest(new { message = "El identificador de la empresa es requerido." });
+
+        var empresa = await _context.Empresas.Find(e => e.Id == empresaId && e.Activo).FirstOrDefaultAsync();
+        if (empresa == null)
+            return NotFound(new { message = "Tienda no encontrada o inactiva." });
+
+        var products = await _context.Products.Find(p => p.EmpresaId == empresaId).ToListAsync();
+
+        var botProducts = products.Select(p => new
+        {
+            p.Id,
+            p.Nombre,
+            p.Descripcion,
+            p.CodigoBarras,
+            p.TipoProducto,
+            p.UnidadMedida,
+            p.Precio,
+            p.PrecioOferta,
+            p.Stock,
+            p.ImagenUrl,
+            p.CodigoModelo,
+            p.Atributos
+        });
+
+        return Ok(botProducts);
     }
 
     // GET api/public/store/{empresaId}/categories

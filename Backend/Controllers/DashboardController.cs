@@ -338,4 +338,31 @@ public class DashboardController : ControllerBase
             ProductosMasVendidos = productosMasVendidos
         });
     }
+
+    public class BotSettingsRequest
+    {
+        public bool BotWhatsAppActivo { get; set; }
+        public string NumeroWhatsAppBot { get; set; } = string.Empty;
+        public string NumeroWhatsAppHumano { get; set; } = string.Empty;
+    }
+
+    // POST api/dashboard/bot-settings — Actualiza la configuración del bot de WhatsApp para la empresa
+    [HttpPost("bot-settings")]
+    public async Task<IActionResult> UpdateBotSettings([FromBody] BotSettingsRequest request)
+    {
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        var update = Builders<Empresa>.Update
+            .Set(e => e.BotWhatsAppActivo, request.BotWhatsAppActivo)
+            .Set(e => e.NumeroWhatsAppBot, request.NumeroWhatsAppBot)
+            .Set(e => e.NumeroWhatsAppHumano, request.NumeroWhatsAppHumano);
+
+        var result = await _context.Empresas.UpdateOneAsync(e => e.Id == empresaId, update);
+
+        if (result.MatchedCount == 0)
+            return NotFound(new { message = "Empresa no encontrada." });
+
+        return Ok(new { message = "Configuración del bot actualizada correctamente." });
+    }
 }
