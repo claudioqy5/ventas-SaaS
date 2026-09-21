@@ -111,9 +111,7 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useAuthStore } from '../stores/auth';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-import config from '../config';
+import { API_URL } from '../config';
 
 const authStore = useAuthStore();
 const empresaId = computed(() => authStore.user?.empresaId);
@@ -138,7 +136,7 @@ const loadChats = async () => {
   
   loading.value = true;
   try {
-    const response = await fetch(`${config.apiBaseUrl}/api/whatsapp-chats/${empresaId.value}`, {
+    const response = await fetch(`${API_URL}/api/whatsapp-chats/${empresaId.value}`, {
       headers: {
         'Authorization': `Bearer ${authStore.token}`
       }
@@ -183,7 +181,7 @@ const formatTime = (dateString) => {
   
   // Si es hoy, mostrar hora
   if (date.toDateString() === now.toDateString()) {
-    return format(date, 'HH:mm');
+    return date.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
   }
   // Si fue ayer
   const yesterday = new Date(now);
@@ -192,7 +190,7 @@ const formatTime = (dateString) => {
     return 'Ayer';
   }
   // Otro dia
-  return format(date, 'dd/MM/yyyy');
+  return date.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
 
 const getLastMessagePreview = (chat) => {
