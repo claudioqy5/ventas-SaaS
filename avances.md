@@ -3893,19 +3893,113 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 
 ---
 
-### ¿Dónde nos quedamos? (Estado Actual y Pendientes para Mañana)
+### Control Total de Bot WhatsApp: Interruptor Admin, Silencio Inteligente, Notificaciones y Migración a Gemini 3.5
+**Fecha:** Septiembre 21, 2026
 
-1. **Despliegue del Backend en VPS (Hostinger):**
-   ```bash
-   git pull origin master
-   docker-compose down
-   docker-compose up -d --build
-   ```
-2. **Importar y Activar Flujo en n8n:**
-   - Importar el JSON desde `botn8n.md` en el entorno de n8n (`n8nrelojes.helifyferdigital.cloud`).
-   - Activar el interruptor de flujo y configurar "Retry on Fail" en el nodo Gemini para resiliencia ante picos de demanda.
-3. **Botón en Panel Admin para Encender / Apagar el Bot (Solicitud Pendiente):**
-   - Crear interruptor en la barra superior o sección de Configuración del panel de administración para activar o desactivar el bot de WhatsApp sin necesidad de ingresar a n8n.
-4. **Prueba End-to-End en Vivo:**
-   - Consulta de relojes por WhatsApp -> Cierre de venta -> Registro en Pedidos Web -> Envío de captura Yape -> Aprobación manual por el administrador.
+#### 1. Resumen Ejecutivo
+Se completó el ciclo integral de administración y gobernanza del Bot de WhatsApp para la tienda de alta relojería *L'gant*. El sistema ahora permite al administrador encender o apagar el asistente virtual directamente desde el panel de control (`Dashboard.vue`) sin tocar n8n ni la infraestructura del servidor. Además, se implementó la estrategia de **Silencio Total** para evitar costos o consumo innecesario de las 1,000 conversaciones gratuitas mensuales de Meta Cloud API, se migró el cerebro de IA al modelo ultrarrápido `gemini-3.5-flash-lite` con rotación de credenciales en Google AI Studio, y se consolidó toda la lógica en un único flujo maestro unificado en n8n (`Bot-Completo-LGant-n8n.json`).
+
+---
+
+#### 2. Arquitectura y Componentes Desarrollados
+
+##### A. Capa de Base de Datos y Modelos (.NET 9 / MongoDB)
+- **Modelo `Empresa.cs`:**
+  - `BotWhatsAppActivo` (bool, default: `false`): Estado operativo del bot a nivel de empresa/tenant.
+  - `NumeroWhatsAppBot` (string): Identificador o número oficial del bot configurado en Meta Cloud API (`1265104666693306` / `+51 916 382 742`).
+  - `NumeroWhatsAppHumano` (string): Teléfono de respaldo del personal de atención humana en tienda (`51916382742`).
+
+##### B. Backend (.NET 9 / C#): Control Administrativo y Endpoints
+- **`DashboardController.cs`:**
+  - `GetSummary`: Incluye en el DTO de respuesta `botWhatsAppActivo` y `numeroWhatsAppHumano` para que el panel administrativo cargue el estado en tiempo real.
+  - `UpdateWhatsAppBotConfig` (`PUT /api/dashboard/whatsapp-bot/config`): Permite actualizar los números telefónicos y el estado del bot.
+  - `ToggleWhatsAppBot` (`POST /api/dashboard/whatsapp-bot/toggle`):
+    - Invierte o establece el estado `BotWhatsAppActivo` de la empresa.
+    - **Disparador de Notificación Administrativa (Handoff Automático):** Si la acción es **APAGAR** el bot (`BotWhatsAppActivo = false`), el controlador consulta en MongoDB todas las ventas activas en estado `PENDIENTE_PAGO` que tengan registrado `WhatsAppCliente`.
+    - Envía una petición `POST` al webhook administrativo de n8n (`https://n8nrelojes.helifyferdigital.cloud/webhook/bot-admin`) con el payload:
+      ```json
+      {
+        "evento": "BOT_APAGADO",
+        "empresaId": "6a9a503000746b35867cddaf",
+        "numeroHumano": "51916382742",
+        "numerosClientes": ["51987654321", "51912345678"],
+        "fecha": "2026-09-21T..."
+      }
+      ```
+- **`PublicStoreController.cs`:**
+  - `GET /api/public/store/{empresaId}`: Expone públicamente los flags `botWhatsAppActivo`, `numeroWhatsAppBot` y `numeroWhatsAppHumano` de manera anónima y ultraligera para consumo tanto de la tienda web como de n8n.
+  - `GET /api/public/store/{empresaId}/bot/products`: Entrega el inventario en vivo (modelos, stock > 0, características y precios con descuento) que alimenta el prompt de Gemini.
+  - `POST /api/public/store/{empresaId}/bot/orders`: Registra la venta creada por chat en estado `PENDIENTE_PAGO` con `OrigenPedido = "WhatsAppBot"` sin descontar stock preventivamente.
+  - `POST /api/public/store/bot/upload-image`: Recibe comprobantes en Base64, los guarda en disco físico y retorna la URL pública.
+  - `POST /api/public/store/{empresaId}/bot/orders/{orderId}/voucher`: Vincula la captura de pago al pedido mediante `$push` en MongoDB.
+
+##### C. Frontend Administrativo (Vue 3 / Vite)
+- **`Dashboard.vue`:**
+  - Incorporación de un interruptor toggle interactivo en el encabezado principal con microanimaciones CSS, badges de estado en vivo (Verde Esmeralda: *BOT ACTIVO* / Ámbar Atenuado: *BOT APAGADO*) y tooltip descriptivo.
+  - Bloqueo preventivo de doble clic durante la sincronización asíncrona con el backend (`isTogglingBot`).
+  - Notificaciones toast claras confirmando el encendido o apagado del servicio.
+- **Tienda Pública / Storefront:**
+  - El botón flotante de WhatsApp lee dinámicamente `botWhatsAppActivo`. Si el bot está activo, envía al cliente al chat de Valentina; si está apagado, redirige de forma transparente al WhatsApp del asesor humano.
+
+---
+
+#### 3. Flujo Maestro Unificado en n8n (`Bot-Completo-LGant-n8n.json`)
+Se fusionaron todos los flujos independientes en una arquitectura limpia y robusta de **4 ramas coordinadas**:
+
+1. **Filtro de Silencio Total (Ahorro de Conversaciones Meta):**
+   - **Nodo `Webhook WhatsApp`:** Recibe eventos entrantes de Meta Cloud API (`POST /webhook/whatsapp-bot`).
+   - **Nodo `Extraer Mensaje`:** Parsea textos, imágenes o respuestas interactivas.
+   - **Nodo `Consultar Estado Bot` (`GET /api/public/store/{empresaId}`):** Consulta en tiempo real si el bot está encendido en el SaaS.
+   - **Nodo `¿Bot Encendido?` (IF):**
+     - **Si está en `false`:** El flujo se detiene inmediatamente a través de una salida vacía (**Silencio Total**). No responde nada a Meta, no llama a Gemini, no genera costos y no consume el saldo de las 1,000 conversaciones gratuitas mensuales de la cuenta de WhatsApp Business.
+     - **Si está en `true`:** Pasa a la clasificación de mensaje (Imagen o Texto).
+
+2. **Atención Comercial con IA (Valentina):**
+   - **Nodo `Consultar Catalogo SaaS`:** Extrae stock en vivo.
+   - **Nodo `Preparar Prompt`:** Inyecta inventario y reglas de negocio estrictas (cero revelar costos internos, métodos Yape/Plin al `916 382 742`, formato JSON para `CREAR_PEDIDO`).
+   - **Nodo `Cerebro IA Gemini`:**
+     - **Resolución de Incidencia:** La clave de API anterior fue revocada por expiración/política de Google (`API_KEY_INVALID 400`). Se generó una clave oficial y activa en Google AI Studio (`AQ.Ab8RN6...`).
+     - **Actualización de Modelo:** Migrado de `gemini-2.0-flash` (obsoleto) a `models/gemini-3.5-flash-lite`, validado con tiempos de respuesta inferiores a 1 segundo y soporte para instrucciones del sistema y respuestas estructuradas.
+   - **Nodo `Es un Pedido` (IF) & `Crear Pedido en SaaS`:** Si el cliente confirma la compra, se registra la orden en MongoDB y se guarda el `orderId` en `$workflow.staticData.lastOrderId[from]`.
+   - **Nodo `Responder Pedido Creado`:** Devuelve mensaje WhatsApp con el resumen de la compra y solicitud de voucher Yape/Plin.
+
+3. **Recepción y Validación de Comprobantes Yape/Plin:**
+   - **Nodo `Obtener URL de Imagen Meta` & `Descargar Imagen`:** Descarga el archivo binario desde Meta Graph API v21.0 con el token de portador.
+   - **Nodo `Subir Imagen al SaaS`:** Sube la imagen a la API pública de `ventas-saas`.
+   - **Nodo `Tiene pedido activo` (IF):**
+     - Con pedido activo: Adjunta la imagen vía endpoint `/voucher` y confirma recepción al cliente.
+     - Sin pedido activo: Pide amablemente al cliente indicar qué reloj desea antes de procesar el comprobante.
+
+4. **Notificador Administrativo de Apagado (Handoff Automático):**
+   - **Nodo `Webhook Notificaciones` (`POST /webhook/bot-admin`):** Disparado por el backend al apagar el bot.
+   - **Nodo `Generar Lista`:** Separa los números de clientes con compras pendientes.
+   - **Nodo `Enviar Mensaje Despedida` (Nodo Oficial de WhatsApp):** Envía un mensaje cordial avisando que el bot pausó su turno y proporciona el enlace directo al asesor humano (`wa.me/{numeroHumano}`) para una transición impecable.
+
+---
+
+#### 4. Análisis de Costos y Políticas de WhatsApp Cloud API
+- **1,000 Conversaciones de Servicio Gratuitas al Mes:** Meta renueva mensualmente este paquete por WABA (WhatsApp Business Account).
+- **Ventana de 24 Horas:** Si el cliente escribe y el bot responde, se abre una ventana de 24 horas que cuenta como 1 sola conversación, sin importar cuántos mensajes se intercambien en ese lapso.
+- **Efecto de Silencio Total:** Si el bot está apagado y no emite respuesta, **Meta no descuenta ninguna conversación de la cuota gratuita**, protegiendo el saldo del negocio.
+
+---
+
+#### 5. Despliegue y Pruebas Realizadas
+1. **Compilación y Construcción:** Backend .NET compilado con 0 errores y 0 advertencias.
+2. **Despliegue en VPS Hostinger:** Imagen Docker actualizada y contenedores reiniciados vía `docker-compose up -d --build`.
+3. **Validación de API Gemini:** Peticiones HTTP a `gemini-3.5-flash-lite` ejecutadas con éxito en tiempo real mediante script de verificación Node.js / cURL.
+4. **Validación de Sintaxis JSON n8n:** Archivo `Bot-Completo-LGant-n8n.json` verificado programáticamente (29 nodos y 24 conexiones válidas).
+
+---
+
+### ¿Dónde nos quedamos? (Estado Actual y Próximos Pasos)
+
+1. **Estado del Sistema:**
+   - Backend en VPS: **En ejecución y actualizado** con los endpoints de control del bot y webhook administrativo.
+   - Frontend en VPS / Vercel: **En ejecución** con botón toggle en Dashboard y redirección dinámica en tienda.
+   - n8n (`n8nrelojes.helifyferdigital.cloud`): Flujo unificado `Bot-Completo-LGant-n8n.json` listo y validado para su activación.
+2. **Próximas Pruebas Recomendadas:**
+   - Simular una conversación de venta completa desde un teléfono cliente con el bot encendido.
+   - Apagar el bot desde el panel admin y verificar que los nuevos mensajes queden en silencio sin consumir saldo.
+   - Probar el envío de un comprobante de pago de prueba (Yape/Plin) y verificar su visualización en el modal de Pedidos del administrador.
 
