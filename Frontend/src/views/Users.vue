@@ -19,7 +19,7 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg> <span class="sidebar-text">Historial Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('pedidos_web')" to="/online-orders" class="nav-item" active-class="active">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><circle cx="12" cy="12" r="10"/><path d="M2 12h20 M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          <span class="sidebar-text">Pedidos Web</span>
+          <span class="sidebar-text">Pedidos</span>
           <span v-if="authStore.pendingOrdersCount > 0" class="badge-count">{{ authStore.pendingOrdersCount }}</span>
         </router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v2 M3 5v14a2 2 0 0 0 2 2h16v-5 M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg> <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
@@ -284,7 +284,7 @@
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="pedidos_web" v-model="form.permisos" />
-                  <span>🌐 Pedidos Web</span>
+                  <span>📦 Pedidos</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="reminders" v-model="form.permisos" />
@@ -460,7 +460,7 @@ const formatPermissionName = (perm) => {
     'movimientos': '⟳ Movimientos',
     'modificar_productos': '✏️ Editar Prod.',
     'historial_ventas': '≡ Historial Ventas',
-    'pedidos_web': '🌐 Pedidos Web',
+    'pedidos_web': '📦 Pedidos',
     'cuentas_cobrar': '▫ Cuentas por Cobrar',
     'formas_pago': '▪ Formas de Pago',
     'colaboradores': '⚇ Colaboradores'
