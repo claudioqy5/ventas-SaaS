@@ -3834,7 +3834,9 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
 
 ---
 
-### ¿Dónde nos quedamos? (Estado Actual y Hoja de Ruta Inmediata)
+---
+
+### ¿Dónde nos quedamos? (Sesión Anterior)
 
 1. **Despliegue del Backend en el Servidor VPS (Hostinger):**
    Para aplicar las actualizaciones de marcas, compra anónima como invitado y corrección de auth en el servidor de producción:
@@ -3848,7 +3850,62 @@ El sistema compila sin advertencias ni errores. La navegación de rutas entre el
    - **Mercado Pago Checkout Pro:** Prueba en producción real de pago con tarjeta bancaria de bajo monto y verificación de la notificación de webhook.
    - **Pruebas de Pedidos Web:** Confirmar la recepción de pedidos web de invitados y clientes registrados en el panel admin `ventassaas.vercel.app/online-orders`.
 
+---
 
+### Integración de Bot Asesor & Vendedor WhatsApp con IA (Gemini + n8n) y Recepción de Comprobantes Yape/Plin
+**Fecha:** Septiembre 21, 2026
 
+**1. Arquitectura del Bot de WhatsApp Inteligente (`botn8n.md` / n8n):**
+- **Cerebro Asesor con Google Gemini:**
+  - Consulta en tiempo real al catálogo de MongoDB (`/api/relojes-store/productos/{empresaId}`) inyectando modelos, stock y características actualizadas.
+  - Prompt especializado como asesor comercial de alta relojería de *L'gant* con tono profesional, conciso y directo (sin saludos reiterativos).
+- **Cierre y Generación de Pedidos por Chat:**
+  - Gemini detecta automáticamente la confirmación de compra y emite un payload estructurado JSON con la acción `CREAR_PEDIDO`.
+  - n8n registra el pedido en el SaaS y devuelve al cliente las instrucciones de pago (Yape/Plin al `916 382 742`).
+  - Almacena el `orderId` temporalmente en `$workflow.staticData.lastOrderId[from]` vinculándolo al número de WhatsApp del cliente.
+- **Ruta de Imágenes / Recepción de Comprobantes:**
+  - Al recibir una imagen por WhatsApp, n8n obtiene la URL segura desde los servidores de Meta Graph API v21.0, la descarga, la convierte a base64 y la sube al SaaS.
+  - Si el cliente tiene un pedido activo reciente, adjunta el comprobante a la orden y responde con mensaje de confirmación y aviso de contacto. Si no tiene orden previa, solicita amablemente que confirme el reloj a comprar.
 
+**2. Backend (.NET 9 / C# - `PublicStoreController.cs` & `Sale.cs`):**
+- **Nuevos Campos en Modelo `Sale.cs`:**
+  - `OrigenPedido` (string, por defecto "TiendaVirtual", "WhatsAppBot" para ventas por chat).
+  - `WhatsAppCliente` (string opcional para guardar el teléfono con código de país).
+  - `ComprobantePagoUrls` (`List<string>` para guardar las URLs de capturas de pago).
+- **Nuevos Endpoints Anónimos `[AllowAnonymous]`:**
+  - `POST /api/public/store/{empresaId}/bot/orders`: Registra la venta generada por el bot con `EstadoOrden = "PENDIENTE_PAGO"`. **No descuenta stock automáticamente** (se respeta la regla de validación humana previa por parte del administrador).
+  - `POST /api/public/store/bot/upload-image`: Recibe la imagen en base64 desde n8n, la almacena físicamente en `/uploads/images/` del servidor y retorna la URL pública.
+  - `POST /api/public/store/{empresaId}/bot/orders/{orderId}/voucher`: Adjunta la URL de la imagen del comprobante a la orden mediante operador `$push` en MongoDB.
+- **Validación de Compilación:** Compilación exitosa con 0 errores y 0 advertencias (`dotnet build`).
+
+**3. Panel Administrativo (`OnlineOrders.vue` - Vue 3 / Vite):**
+- **Identificación de Origen:**
+  - Nueva columna "Origen" en la tabla con insignia verde brillante (`#25d366`) para pedidos de `WhatsApp`.
+  - Detalle del pedido con teléfono del cliente formateado y origen resaltado.
+- **Visor de Comprobantes de Pago de WhatsApp:**
+  - Sección interactiva en el modal de detalle con miniaturas de fotos (`140x140px`) con borde verde y zoom al pasar el cursor.
+  - Clic directo para inspeccionar el comprobante o captura de Yape/Plin en alta resolución.
+  - Mensaje informativo de advertencia si el cliente aún no adjunta su comprobante.
+
+**4. Seguridad y Gestión de Repositorio:**
+- Inclusión de `botn8n.md` en `.gitignore` para resguardar tokens de Meta y claves de API de Gemini ante la protección de secretos de GitHub (`GH013 - Secret Scanning & Push Protection`).
+- Sincronización exitosa en la rama principal (`origin/master`).
+
+---
+
+### ¿Dónde nos quedamos? (Estado Actual y Pendientes para Mañana)
+
+1. **Despliegue del Backend en VPS (Hostinger):**
+   ```bash
+   git pull origin master
+   docker-compose down
+   docker-compose up -d --build
+   ```
+2. **Importar y Activar Flujo en n8n:**
+   - Importar el JSON desde `botn8n.md` en el entorno de n8n (`n8nrelojes.helifyferdigital.cloud`).
+   - Activar el interruptor de flujo y configurar "Retry on Fail" en el nodo Gemini para resiliencia ante picos de demanda.
+3. **Botón en Panel Admin para Encender / Apagar el Bot (Solicitud Pendiente):**
+   - Crear interruptor en la barra superior o sección de Configuración del panel de administración para activar o desactivar el bot de WhatsApp sin necesidad de ingresar a n8n.
+4. **Prueba End-to-End en Vivo:**
+   - Consulta de relojes por WhatsApp -> Cierre de venta -> Registro en Pedidos Web -> Envío de captura Yape -> Aprobación manual por el administrador.
 
