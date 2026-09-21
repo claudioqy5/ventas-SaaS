@@ -17,7 +17,7 @@ import StockMovements from '../views/StockMovements.vue'
 import CreditSales from '../views/CreditSales.vue'
 import PaymentMethods from '../views/PaymentMethods.vue'
 
-import VerifyEmail from '../views/VerifyEmail.vue'
+import WhatsAppChats from '../views/WhatsAppChats.vue'
 
 const routes = [
   { path: '/login', component: Login, name: 'Login' },  
@@ -51,6 +51,12 @@ const routes = [
     component: OnlineOrders, 
     name: 'OnlineOrders',
     meta: { requiresAuth: true, permission: 'pedidos_web' } 
+  },
+  { 
+    path: '/whatsapp-chats', 
+    component: WhatsAppChats, 
+    name: 'WhatsAppChats',
+    meta: { requiresAuth: true, permission: 'chats_bot' } 
   },
   { 
     path: '/products', 
