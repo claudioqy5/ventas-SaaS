@@ -4002,4 +4002,15 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
    - Simular una conversación de venta completa desde un teléfono cliente con el bot encendido.
    - Apagar el bot desde el panel admin y verificar que los nuevos mensajes queden en silencio sin consumir saldo.
    - Probar el envío de un comprobante de pago de prueba (Yape/Plin) y verificar su visualización en el modal de Pedidos del administrador.
-
+
+
+## Actualización Reciente - Módulo de Chatbot Inteligente (WhatsApp + n8n)
+- **Backend (C# .NET)**: Creación de modelos y controladores para `WhatsAppChat`. Se implementaron los endpoints (`/api/public/store/{empresaId}/bot/chat` y `/bot/chat-history`) para almacenar todo el flujo de mensajes entre el cliente y el bot en la colección de MongoDB `whatsapp_chats`.
+- **Frontend (Vue.js)**: Implementación de la vista `WhatsAppChats.vue` en el panel de administrador para monitorear conversaciones en tiempo real. 
+  - Corrección de error crítico de enrutamiento (pantalla blanca) por importación faltante de `VerifyEmail` en `router/index.js`.
+  - Inyección de `dashboard-layout` y `sidebar` en la vista de chats para unificar el diseño con el resto del SaaS.
+  - Limpieza de código y remoción de dependencia externa `date-fns` por funciones nativas de JS.
+- **Automatización (n8n)**: 
+  - Reestructuración profunda del flujo de WhatsApp para dotar al bot de "Memoria de Corto Plazo".
+  - Agregado de nodos: "Guardar Mensaje Cliente", "Obtener Historial", "Mapear Historial" y "Guardar Mensaje Bot".
+  - Solución de errores de formato JSON (Bad control character) al enviar respuestas dinámicas de Gemini hacia el Backend usando `JSON.stringify()` directamente en las expresiones de n8n.
