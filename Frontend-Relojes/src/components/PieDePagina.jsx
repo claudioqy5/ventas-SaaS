@@ -68,7 +68,7 @@ const FooterLink = ({ href = "#", onClick, children }) => (
   </li>
 );
 
-export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavigate, onSelectCategory }) {
+export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavigate, onSelectCategory, whatsappNumber }) {
   const marcas = [
     "Rolex", "Cartier", "Patek Philippe", "Audemars Piguet",
     "Omega", "Tag Heuer", "Breitling", "Hublot",
@@ -172,7 +172,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
                     onClick={onOpenWhatsAppConcierge}
                     style={{ background: 'none', border: 'none', padding: 0, color: '#25D366', fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}
                   >
-                    +51 916 382 742
+                    {whatsappNumber ? '+51 ' + whatsappNumber.replace(/^51/, '').replace(/(\d{3})(?=\d)/g, "$1 ") : '+51 916 382 742'}
                   </button>
                 </div>
               </div>

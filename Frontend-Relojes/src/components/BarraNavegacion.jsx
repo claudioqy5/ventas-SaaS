@@ -21,7 +21,8 @@ export default function BarraNavegacion({
   onSelectCategory,
   onSearchSubmit,
   products = [],
-  onSelectProduct
+  onSelectProduct,
+  whatsappNumber
 }) {
   const [showSearch, setShowSearch] = useState(false);
   const searchInputRef = useRef(null);
@@ -168,7 +169,7 @@ export default function BarraNavegacion({
         }}>
           <div className="marquee-container" style={{ width: '100%' }}>
             <div className="marquee-text" style={{ color: 'var(--c-gold)' }}>
-              ENVIOS A TODO EL PERÚ &nbsp;&nbsp;•&nbsp;&nbsp; ENTREGA EN TU DOMICILIO &nbsp;&nbsp;•&nbsp;&nbsp; 3 AÑOS DE GARANTIA &nbsp;&nbsp;•&nbsp;&nbsp; ESCRIBE A NUESTRA LINEA DE VENTAS POR WHATSAPP +51 916 382 742
+              ENVIOS A TODO EL PERÚ &nbsp;&nbsp;•&nbsp;&nbsp; ENTREGA EN TU DOMICILIO &nbsp;&nbsp;•&nbsp;&nbsp; 3 AÑOS DE GARANTIA &nbsp;&nbsp;•&nbsp;&nbsp; ESCRIBE A NUESTRA LINEA DE VENTAS POR WHATSAPP {whatsappNumber ? '+51 ' + whatsappNumber.replace(/^51/, '').replace(/(\d{3})(?=\d)/g, "$1 ") : '+51 916 382 742'}
             </div>
           </div>
         </div>

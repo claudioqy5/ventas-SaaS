@@ -636,7 +636,7 @@ export default function ProcesoPago({
                         if (formErrors.telefono) setFormErrors({...formErrors, telefono: null});
                       }}
                       style={{ flex: 1, padding: '12px 14px', border: `1px solid ${formErrors.telefono ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '0 6px 6px 0', fontSize: '0.9rem', outline: 'none', fontFamily: 'var(--font-main)' }} 
-                      placeholder="916 382 742" 
+                      placeholder={whatsappNumber ? whatsappNumber.replace(/^51/, '').replace(/(\d{3})(?=\d)/g, "$1 ") : "916 382 742"} 
                     />
                   </div>
                   {formErrors.telefono && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={12} /> {formErrors.telefono}</span>}

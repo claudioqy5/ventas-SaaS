@@ -45,7 +45,7 @@ const SECCIONES = [
   { id: 'sec-10', titulo: '10. Jurisdicción y Ley Aplicable' }
 ];
 
-export default function VistaTerminosCondiciones({ onBack }) {
+export default function VistaTerminosCondiciones({ onBack, whatsappNumber }) {
   const [seccionActiva, setSeccionActiva] = useState('sec-1');
 
   const scrollToSection = (id) => {
@@ -235,7 +235,7 @@ export default function VistaTerminosCondiciones({ onBack }) {
               <li><strong>Razón Social:</strong> L'GANT S.A.C.</li>
               <li><strong>RUC:</strong> 20608945123</li>
               <li><strong>Domicilio Fiscal:</strong> Av. Camino Real 1225, San Isidro, Lima - Perú</li>
-              <li><strong>Canal Oficial de Atención:</strong> concierge@lgant.pe | +51 916 382 742</li>
+              <li><strong>Canal Oficial de Atención:</strong> concierge@lgant.pe | {whatsappNumber ? '+51 ' + whatsappNumber.replace(/^51/, '').replace(/(\d{3})(?=\d)/g, "$1 ") : '+51 916 382 742'}</li>
             </ul>
           </section>
 

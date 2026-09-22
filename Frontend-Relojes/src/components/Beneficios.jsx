@@ -1,7 +1,7 @@
 import React from 'react';
 import { Truck, MonitorSmartphone, Headset, ShieldCheck } from 'lucide-react';
 
-export default function Beneficios() {
+export default function Beneficios({ whatsappNumber }) {
   const beneficios = [
     {
       icon: <Truck size={40} strokeWidth={1.5} color="var(--c-indigo)" />,
@@ -16,7 +16,7 @@ export default function Beneficios() {
     {
       icon: <Headset size={40} strokeWidth={1.5} color="var(--c-indigo)" />,
       title: 'ATENCIÓN 24 HORAS',
-      description: 'Escríbenos al 916 382 742 por whatsapp',
+      description: `Escríbenos al ${whatsappNumber ? whatsappNumber.replace(/^51/, '').replace(/(\d{3})(?=\d)/g, "$1 ") : '916 382 742'} por whatsapp`,
     },
     {
       icon: <ShieldCheck size={40} strokeWidth={1.5} color="var(--c-indigo)" />,

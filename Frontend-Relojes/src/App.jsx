@@ -704,6 +704,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onLogout={handleCustomerLogout}
         selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}
+        whatsappNumber={whatsappConcierge}
       />
 
       {/* VISTA PRINCIPAL: Checkout, Pedido Confirmado, Producto, Preguntas Frecuentes, Términos o Catálogo General */}
@@ -753,6 +754,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
       ) : activeView === 'terminos' ? (
         <VistaTerminosCondiciones
           onBack={handleBackToCatalog}
+          whatsappNumber={whatsappConcierge}
         />
       ) : activeView === 'mis-compras' || activeView === 'cuenta' ? (
         <VistaPanelCliente
@@ -1134,7 +1136,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
       )}
 
       {/* Sección de Beneficios */}
-      {!initialCategory && <Beneficios />}
+      {!initialCategory && <Beneficios whatsappNumber={whatsappConcierge} />}
 
       {/* Sección de Opiniones */}
       {!initialCategory && <Testimonios />}
@@ -1148,6 +1150,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
         storeName={storeName}
         onNavigate={handleNavigateView}
         onSelectCategory={handleSelectCategory}
+        whatsappNumber={whatsappConcierge}
       />
 
       {/* Carrito de Compras VIP / Drawer */}
