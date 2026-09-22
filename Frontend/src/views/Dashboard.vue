@@ -104,53 +104,177 @@
       </div>
 
       <!-- Charts Section (New, beautiful SVG charts) -->
+      <!-- Charts Section (Sleek SaaS Analytics) -->
       <div class="charts-layout">
-        <!-- Daily Sales Trend (Hourly Bar Chart) -->
-        <div class="card chart-card">
-          <h2 class="section-title">📉 Ventas del Día ({{ stats.fechaDiaActual || 'Hoy' }})</h2>
-          <div v-if="!stats.ventasHorarias || stats.ventasHorarias.length === 0" class="empty-state">
-            Cargando ventas del día...
+        <!-- Daily Sales Trend (Hourly Modern Curve Chart) -->
+        <div class="card chart-card modern-sales-card">
+          <div class="chart-header-row">
+            <div class="chart-title-wrap">
+              <div class="chart-title-icon sales-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </div>
+              <div>
+                <h2 class="chart-main-title">Flujo de Ventas del Día</h2>
+                <span class="chart-sub-date">{{ stats.fechaDiaActual || 'Hoy' }} • Distribución por horario</span>
+              </div>
+            </div>
+            
+            <div class="chart-header-badges">
+              <div v-if="peakHourlyVenta && peakHourlyVenta.total > 0" class="metric-pill peak">
+                <span class="pill-dot"></span>
+                <span class="pill-label">Pico:</span>
+                <strong class="pill-val">S/. {{ peakHourlyVenta.total.toFixed(2) }} ({{ peakHourlyVenta.hora.substring(0, 5) }})</strong>
+              </div>
+              <div class="metric-pill total">
+                <span class="pill-label">Total Día:</span>
+                <strong class="pill-val">S/. {{ (stats.totalIngresos || 0).toFixed(2) }}</strong>
+              </div>
+            </div>
           </div>
-          <div v-else class="chart-wrapper" style="padding-top: 15px;">
-            <svg class="line-chart-svg" viewBox="0 0 800 250">
+
+          <div v-if="!stats.ventasHorarias || stats.ventasHorarias.length === 0" class="empty-state">
+            Cargando flujo de ventas...
+          </div>
+          <div v-else class="chart-wrapper" style="padding-top: 10px;">
+            <svg class="line-chart-svg" viewBox="0 0 800 240">
               <defs>
-                <linearGradient id="area-grad-hourly" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.5" />
-                  <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0" />
+                <!-- Area Gradient: Deep Indigo fading to crystal transparent -->
+                <linearGradient id="area-grad-hourly-pro" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.22" />
+                  <stop offset="60%" stop-color="#6366f1" stop-opacity="0.06" />
+                  <stop offset="100%" stop-color="#6366f1" stop-opacity="0.0" />
                 </linearGradient>
+
+                <!-- Line Stroke Gradient: Indigo to Electric Violet -->
+                <linearGradient id="line-grad-hourly-pro" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#4338ca" />
+                  <stop offset="50%" stop-color="#6366f1" />
+                  <stop offset="100%" stop-color="#818cf8" />
+                </linearGradient>
+
+                <!-- Soft Glow Shadow for the curve -->
+                <filter id="curve-glow" x="-10%" y="-20%" width="120%" height="150%">
+                  <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#4f46e5" flood-opacity="0.28" />
+                </filter>
+
+                <!-- Dark Tooltip Shadow -->
+                <filter id="tooltip-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.25" />
+                </filter>
+
+                <!-- Peak Badge Shadow -->
+                <filter id="badge-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#1e1b4b" flood-opacity="0.25" />
+                </filter>
               </defs>
-              <line x1="50" y1="30" x2="780" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="50" y1="110" x2="780" y2="110" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="50" y1="190" x2="780" y2="190" stroke="#e2e8f0" stroke-width="1.5" />
 
-              <text x="40" y="35" class="chart-axis-label" text-anchor="end">S/.{{ (maxHourlyVenta).toFixed(0) }}</text>
-              <text x="40" y="115" class="chart-axis-label" text-anchor="end">S/.{{ (maxHourlyVenta / 2).toFixed(0) }}</text>
-              <text x="40" y="195" class="chart-axis-label" text-anchor="end">0</text>
+              <!-- Subtle Background Grid Lines -->
+              <line x1="65" y1="35" x2="780" y2="35" stroke="#f1f5f9" stroke-dasharray="3 3" stroke-width="1.2" />
+              <line x1="65" y1="86" x2="780" y2="86" stroke="#f1f5f9" stroke-dasharray="3 3" stroke-width="1.2" />
+              <line x1="65" y1="138" x2="780" y2="138" stroke="#f1f5f9" stroke-dasharray="3 3" stroke-width="1.2" />
+              <line x1="65" y1="190" x2="780" y2="190" stroke="#e2e8f0" stroke-width="1.5" />
 
-              <path :d="hourlyAreaPath" fill="url(#area-grad-hourly)" />
-              <path :d="hourlyLinePath" fill="none" stroke="var(--primary-hover)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+              <!-- Y-Axis Labels -->
+              <text x="56" y="39" class="chart-axis-label" text-anchor="end">S/.{{ maxHourlyVenta.toFixed(0) }}</text>
+              <text x="56" y="90" class="chart-axis-label" text-anchor="end">S/.{{ (maxHourlyVenta * 0.66).toFixed(0) }}</text>
+              <text x="56" y="142" class="chart-axis-label" text-anchor="end">S/.{{ (maxHourlyVenta * 0.33).toFixed(0) }}</text>
+              <text x="56" y="194" class="chart-axis-label zero" text-anchor="end">0</text>
 
-              <g v-for="(point, idx) in hourlyChartPoints" :key="idx" class="chart-point-group">
-                <circle :cx="point.x" :cy="point.y" r="4.5" fill="#ffffff" stroke="var(--primary-hover)" stroke-width="2.5" class="chart-point" />
-                <text :x="point.x" :y="point.y - 12" class="chart-tooltip-text" text-anchor="middle">S/.{{ point.val.toFixed(0) }}</text>
-                <text :x="point.x" y="215" class="chart-axis-label" text-anchor="middle">{{ point.label }}</text>
+              <!-- Smooth Area Gradient Fill -->
+              <path :d="hourlyAreaPath" fill="url(#area-grad-hourly-pro)" />
+
+              <!-- Smooth Main Curve Line with Glow -->
+              <path :d="hourlyLinePath" fill="none" stroke="url(#line-grad-hourly-pro)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#curve-glow)" />
+
+              <!-- Peak Callouts (Visible when not actively hovering another point) -->
+              <g v-if="hoveredHourlyIndex === null">
+                <g v-for="(p, idx) in activePointsWithSales" :key="'active-point-' + idx">
+                  <!-- Outer glowing pulse ring -->
+                  <circle :cx="p.x" :cy="p.y" r="8" fill="#4f46e5" fill-opacity="0.18" />
+                  <circle :cx="p.x" :cy="p.y" r="4.5" fill="#4f46e5" stroke="#ffffff" stroke-width="2.5" />
+                  <!-- Elegant pill above the peak -->
+                  <g :transform="`translate(${p.x - 38}, ${p.y - 32})`">
+                    <rect width="76" height="22" rx="11" fill="#1e1b4b" filter="url(#badge-shadow)" />
+                    <text x="38" y="15" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle">
+                      S/. {{ p.val.toFixed(0) }}
+                    </text>
+                  </g>
+                </g>
+              </g>
+
+              <!-- X-Axis Labels -->
+              <g v-for="(point, idx) in hourlyChartPoints" :key="'axis-x-' + idx">
+                <text :x="point.x" y="212" :class="['chart-axis-label-x', { 'label-active': hoveredHourlyIndex === idx }]" text-anchor="middle">
+                  {{ point.label }}
+                </text>
+              </g>
+
+              <!-- Interactive Hover Guideline & Cursor Pin -->
+              <g v-if="hoveredHourlyPoint" pointer-events="none">
+                <!-- Vertical Guideline -->
+                <line :x1="hoveredHourlyPoint.x" y1="30" :x2="hoveredHourlyPoint.x" y2="190" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.8" />
+                
+                <!-- Pulsing Cursor Circle -->
+                <circle :cx="hoveredHourlyPoint.x" :cy="hoveredHourlyPoint.y" r="9" fill="#6366f1" fill-opacity="0.22" />
+                <circle :cx="hoveredHourlyPoint.x" :cy="hoveredHourlyPoint.y" r="4.5" fill="#ffffff" stroke="#4f46e5" stroke-width="3" />
+
+                <!-- Rich SaaS Floating Tooltip Card -->
+                <g :transform="`translate(${getTooltipX(hoveredHourlyPoint)}, ${getTooltipY(hoveredHourlyPoint)})`">
+                  <rect width="136" height="54" rx="8" fill="#0f172a" fill-opacity="0.96" stroke="#334155" stroke-width="1" filter="url(#tooltip-shadow)" />
+                  <text x="12" y="18" fill="#94a3b8" font-size="10" font-weight="600" letter-spacing="0.5">HORARIO: {{ hoveredHourlyPoint.label }}</text>
+                  <text x="12" y="34" fill="#38bdf8" font-size="13" font-weight="800">S/. {{ hoveredHourlyPoint.val.toFixed(2) }}</text>
+                  <circle :cx="16" :cy="44" r="3" :fill="hoveredHourlyPoint.val > 0 ? '#10b981' : '#64748b'" />
+                  <text x="24" y="47" :fill="hoveredHourlyPoint.val > 0 ? '#34d399' : '#94a3b8'" font-size="9" font-weight="500">
+                    {{ hoveredHourlyPoint.val > 0 ? 'Venta registrada' : 'Sin movimientos' }}
+                  </text>
+                </g>
+              </g>
+
+              <!-- Invisible full-height hover targets for silky smooth mouse tracking -->
+              <g class="hover-detector-group">
+                <rect v-for="(point, idx) in hourlyChartPoints"
+                      :key="'hover-rect-' + idx"
+                      :x="point.x - 20"
+                      y="20"
+                      width="40"
+                      height="180"
+                      fill="transparent"
+                      style="cursor: crosshair;"
+                      @mouseenter="hoveredHourlyIndex = idx"
+                      @mouseleave="hoveredHourlyIndex = null" />
               </g>
             </svg>
           </div>
         </div>
 
         <!-- Payment Methods Donut Chart -->
-        <div class="card chart-card">
-          <h2 class="section-title">▪ Formas de Pago del Día</h2>
+        <div class="card chart-card modern-donut-card">
+          <div class="chart-header-row">
+            <div class="chart-title-wrap">
+              <div class="chart-title-icon donut-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                  <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="chart-main-title">Formas de Pago</h2>
+                <span class="chart-sub-date">Distribución del día</span>
+              </div>
+            </div>
+          </div>
+
           <div v-if="!stats.metodosPagoDia || stats.metodosPagoDia.length === 0" class="empty-state">
-            Sin ventas aún...
+            Sin cobros registrados hoy...
           </div>
           <div v-else class="donut-chart-layout">
             <div class="pie-wrapper">
               <svg class="pie-chart-svg" viewBox="-10 -10 140 140">
                 <defs>
                   <filter id="pie-center-shadow-dia" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-opacity="0.15"/>
+                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.12"/>
                   </filter>
                 </defs>
                 <g v-for="(seg, idx) in pieSegmentsDia" :key="idx" 
@@ -161,10 +285,10 @@
                   <path :d="seg.d"
                         :fill="seg.color"
                         stroke="#ffffff"
-                        stroke-width="1"
+                        stroke-width="1.5"
                         stroke-linejoin="round"
                         class="pie-segment" />
-                  <text v-if="parseFloat(seg.percent) > 4"
+                  <text v-if="parseFloat(seg.percent) > 6"
                         :x="seg.tx"
                         :y="seg.ty"
                         class="pie-label"
@@ -174,7 +298,7 @@
                 </g>
                 
                 <!-- Central White Circle (Donut) -->
-                <circle cx="60" cy="60" r="23" fill="#ffffff" filter="url(#pie-center-shadow-dia)" />
+                <circle cx="60" cy="60" r="24" fill="#ffffff" filter="url(#pie-center-shadow-dia)" />
                 
                 <!-- Central Text (Hover & Total Info) -->
                 <g v-if="hoveredSegmentDia">
@@ -190,16 +314,26 @@
                 </g>
                 <g v-else>
                   <text x="60" y="52" font-size="6.5" font-weight="700" fill="#4f46e5" text-anchor="middle" style="letter-spacing: 0.2px;">
-                    PAGOS
+                    TOTAL
                   </text>
                   <text x="60" y="63" font-size="7" font-weight="800" fill="#1e1b4b" text-anchor="middle">
                     S/.{{ totalPagoDia.toFixed(2) }}
                   </text>
                   <text x="60" y="72" font-size="5" font-weight="600" fill="#94a3b8" text-anchor="middle">
-                    HOY
+                    100%
                   </text>
                 </g>
               </svg>
+            </div>
+
+            <!-- Sleek Bottom Legend -->
+            <div class="donut-legend">
+              <div v-for="(seg, idx) in pieSegmentsDia" :key="'leg-' + idx" class="legend-item" @mouseenter="hoveredSegmentDia = seg" @mouseleave="hoveredSegmentDia = null">
+                <span class="legend-bullet" :style="{ backgroundColor: seg.color }"></span>
+                <span class="legend-label">{{ seg.metodo }}:</span>
+                <span class="legend-value">S/. {{ seg.total.toFixed(2) }}</span>
+                <span class="legend-percent">({{ seg.percent }}%)</span>
+              </div>
             </div>
           </div>
         </div>
@@ -436,36 +570,118 @@ const fetchStats = async () => {
   }
 }
 
-// Hourly Chart Helpers
+// Hourly Chart Helpers (Modern SaaS Curve & Hover State)
+const hoveredHourlyIndex = ref(null)
+
 const maxHourlyVenta = computed(() => {
   if (!stats.value.ventasHorarias || stats.value.ventasHorarias.length === 0) return 100
-  const max = Math.max(...stats.value.ventasHorarias.map(h => h.total))
-  return max === 0 ? 100 : max * 1.15
+  const rawMax = Math.max(...stats.value.ventasHorarias.map(h => h.total), 0)
+  if (rawMax === 0) return 100
+  // Round up to aesthetic clean milestone for the axis (e.g., 1400 instead of 1346)
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawMax)))
+  const step = magnitude >= 100 ? 200 : 50
+  return Math.ceil((rawMax * 1.15) / step) * step
+})
+
+const peakHourlyVenta = computed(() => {
+  if (!stats.value.ventasHorarias || stats.value.ventasHorarias.length === 0) return null
+  let peak = null
+  for (const h of stats.value.ventasHorarias) {
+    if (!peak || h.total > peak.total) {
+      peak = h
+    }
+  }
+  return peak && peak.total > 0 ? peak : null
 })
 
 const hourlyChartPoints = computed(() => {
   if (!stats.value.ventasHorarias || stats.value.ventasHorarias.length === 0) return []
   const count = stats.value.ventasHorarias.length
+  const startX = 65
+  const chartWidth = 715
+  const baselineY = 190
+  const plotHeight = 155
+  const maxVal = maxHourlyVenta.value || 100
+
   return stats.value.ventasHorarias.map((v, index) => {
-    const x = 50 + index * (730 / Math.max(1, count - 1))
-    const y = 190 - (v.total / maxHourlyVenta.value) * 160
-    return { x, y, val: v.total, label: v.hora.substring(0, 5) }
+    const x = startX + index * (chartWidth / Math.max(1, count - 1))
+    const y = baselineY - (v.total / maxVal) * plotHeight
+    return {
+      x,
+      y,
+      val: v.total,
+      label: v.hora ? v.hora.substring(0, 5) : `${index}:00`
+    }
   })
 })
 
+const hoveredHourlyPoint = computed(() => {
+  if (hoveredHourlyIndex.value === null || !hourlyChartPoints.value) return null
+  return hourlyChartPoints.value[hoveredHourlyIndex.value] || null
+})
+
+const activePointsWithSales = computed(() => {
+  return hourlyChartPoints.value.filter(p => p.val > 0)
+})
+
+// Spline generator for ultra-smooth financial curve
+const generateSmoothSpline = (points) => {
+  if (!points || points.length === 0) return ""
+  if (points.length === 1) return `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`
+
+  let d = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`
+  const tension = 0.22
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = i === 0 ? points[0] : points[i - 1]
+    const p1 = points[i]
+    const p2 = points[i + 1]
+    const p3 = i + 2 < points.length ? points[i + 2] : p2
+
+    // Flat line if both points are zero sales on baseline
+    if (p1.val === 0 && p2.val === 0) {
+      d += ` L ${p2.x.toFixed(1)} 190`
+      continue
+    }
+
+    const cp1x = p1.x + (p2.x - p0.x) * tension
+    let cp1y = p1.y + (p2.y - p0.y) * tension
+    if (cp1y > 190) cp1y = 190
+
+    const cp2x = p2.x - (p3.x - p1.x) * tension
+    let cp2y = p2.y - (p3.y - p1.y) * tension
+    if (cp2y > 190) cp2y = 190
+
+    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`
+  }
+  return d
+}
+
 const hourlyLinePath = computed(() => {
-  const points = hourlyChartPoints.value
-  if (points.length === 0) return ""
-  return points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
+  return generateSmoothSpline(hourlyChartPoints.value)
 })
 
 const hourlyAreaPath = computed(() => {
   const points = hourlyChartPoints.value
   if (points.length === 0) return ""
-  const startX = points[0].x
-  const endX = points[points.length - 1].x
-  return `${points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')} L ${endX} 190 L ${startX} 190 Z`
+  const spline = generateSmoothSpline(points)
+  const startX = points[0].x.toFixed(1)
+  const endX = points[points.length - 1].x.toFixed(1)
+  return `${spline} L ${endX} 190 L ${startX} 190 Z`
 })
+
+const getTooltipX = (point) => {
+  if (!point) return 0
+  if (point.x > 670) return point.x - 142
+  if (point.x < 140) return point.x + 12
+  return point.x - 68
+}
+
+const getTooltipY = (point) => {
+  if (!point) return 0
+  const targetY = point.y - 60
+  return targetY < 25 ? 28 : targetY
+}
 
 // Pie Chart Helpers
 const pieSegmentsDia = computed(() => {
@@ -707,67 +923,151 @@ onMounted(() => {
   text-align: center;
 }
 
-/* Custom Charts Layout */
+/* Custom Charts Layout (Modern SaaS Architecture) */
 .charts-layout {
   display: grid;
-  grid-template-columns: 2.3fr 1fr;
+  grid-template-columns: 2.2fr 1fr;
   gap: 24px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .charts-layout {
     grid-template-columns: 1fr;
   }
 }
 
-/* Hourly Bar Chart styling */
-.line-chart-svg {
-  width: 100%;
-  max-height: 35vh;      /* ~320px en 900px de altura */
+.chart-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 6px;
 }
 
-.chart-axis-label {
-  font-size: 11px;
-  fill: var(--text-muted);
-  font-weight: 500;
+.chart-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.chart-tooltip-text {
-  font-size: 10px;
-  fill: var(--text-main);
-  font-weight: 500;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.chart-point {
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.chart-point-group:hover .chart-tooltip-text {
-  opacity: 1;
-}
-
-.chart-point-group:hover .chart-point {
-  r: 6.5;
-  fill: var(--primary-hover);
-}
-
-/* Pie Chart Styling */
-.donut-chart-layout {
+.chart-title-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 0;
+  background: #eef2ff;
+  color: #4f46e5;
+  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.12);
+  flex-shrink: 0;
+}
+
+.chart-title-icon.donut-icon {
+  background: #fdf2f8;
+  color: #db2777;
+}
+
+.chart-main-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.chart-sub-date {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.chart-header-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.metric-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+}
+
+.metric-pill.peak {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  color: #3730a3;
+}
+
+.metric-pill.total {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4f46e5;
+  box-shadow: 0 0 6px rgba(79, 70, 229, 0.6);
+}
+
+.pill-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.pill-val {
+  font-weight: 700;
+}
+
+/* Hourly SVG styling */
+.line-chart-svg {
+  width: 100%;
+  max-height: 33vh;
+  overflow: visible;
+}
+
+.chart-axis-label {
+  font-size: 10.5px;
+  fill: #94a3b8;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.chart-axis-label-x {
+  font-size: 9.5px;
+  fill: #94a3b8;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.chart-axis-label-x.label-active {
+  fill: #4f46e5;
+  font-weight: 700;
+  font-size: 10.5px;
+}
+
+/* Pie Chart Layout & Styling */
+.donut-chart-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 .pie-wrapper {
   position: relative;
-  width: 32vh;
-  height: 32vh;
-  min-width: 220px;
-  min-height: 220px;
+  width: 200px;
+  height: 200px;
 }
 
 .pie-chart-svg {
@@ -791,16 +1091,62 @@ onMounted(() => {
 }
 
 .pie-slice-group:hover .pie-segment {
-  filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.25));
   opacity: 0.95;
 }
 
 .pie-label {
   font-size: 7.5px;
-  font-weight: 500;
+  font-weight: 700;
   fill: #ffffff;
   pointer-events: none;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.legend-item:hover {
+  background: #f1f5f9;
+}
+
+.legend-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.legend-value {
+  margin-left: auto;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.legend-percent {
+  font-size: 0.75rem;
+  color: #64748b;
 }
 
 /* Modal Styling */
