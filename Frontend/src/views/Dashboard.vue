@@ -117,7 +117,7 @@
               </div>
               <div>
                 <h2 class="chart-main-title">Flujo de Ventas del Día</h2>
-                <span class="chart-sub-date">{{ stats.fechaDiaActual || 'Hoy' }} • Distribución por horario</span>
+                <span class="chart-sub-date">{{ stats.fechaDiaActual || 'Hoy' }} • Vista 24 horas (00:00 - 23:00)</span>
               </div>
             </div>
             
@@ -204,9 +204,10 @@
                 </g>
               </g>
 
-              <!-- X-Axis Labels -->
+              <!-- X-Axis Labels (2-hour intervals + hour ticks) -->
               <g v-for="(point, idx) in hourlyChartPoints" :key="'axis-x-' + idx">
-                <text :x="point.x" y="212" :class="['chart-axis-label-x', { 'label-active': hoveredHourlyIndex === idx }]" text-anchor="middle">
+                <line :x1="point.x" y1="190" :x2="point.x" :y2="idx % 2 === 0 ? 195 : 193" :stroke="idx % 2 === 0 ? '#94a3b8' : '#cbd5e1'" stroke-width="1" />
+                <text v-if="idx % 2 === 0 || hoveredHourlyIndex === idx" :x="point.x" y="210" :class="['chart-axis-label-x', { 'label-active': hoveredHourlyIndex === idx }]" text-anchor="middle">
                   {{ point.label }}
                 </text>
               </g>
@@ -232,13 +233,13 @@
                 </g>
               </g>
 
-              <!-- Invisible full-height hover targets for silky smooth mouse tracking -->
+              <!-- Invisible full-height hover targets for silky smooth mouse tracking across all 24 hours -->
               <g class="hover-detector-group">
                 <rect v-for="(point, idx) in hourlyChartPoints"
                       :key="'hover-rect-' + idx"
-                      :x="point.x - 20"
+                      :x="point.x - 15.5"
                       y="20"
-                      width="40"
+                      width="31"
                       height="180"
                       fill="transparent"
                       style="cursor: crosshair;"
@@ -570,23 +571,50 @@ const fetchStats = async () => {
   }
 }
 
-// Hourly Chart Helpers (Modern SaaS Curve & Hover State)
+// Hourly Chart Helpers (Modern SaaS Curve & Hover State - 24 Hours)
 const hoveredHourlyIndex = ref(null)
 
+// Asegura que siempre se muestren las 24 horas completas del día (00:00 a 23:00)
+const full24HoursData = computed(() => {
+  const backendHours = stats.value.ventasHorarias || []
+  const map = {}
+  backendHours.forEach(item => {
+    const hStr = item.hora ? item.hora.substring(0, 2) : ''
+    if (hStr) map[hStr] = item
+  })
+
+  const full = []
+  for (let h = 0; h < 24; h++) {
+    const hStr = String(h).padStart(2, '0')
+    if (map[hStr]) {
+      full.push(map[hStr])
+    } else {
+      full.push({
+        hora: `${hStr}:00`,
+        total: 0,
+        cantidad: 0
+      })
+    }
+  }
+  return full
+})
+
 const maxHourlyVenta = computed(() => {
-  if (!stats.value.ventasHorarias || stats.value.ventasHorarias.length === 0) return 100
-  const rawMax = Math.max(...stats.value.ventasHorarias.map(h => h.total), 0)
+  const hours = full24HoursData.value
+  if (!hours || hours.length === 0) return 100
+  const rawMax = Math.max(...hours.map(h => h.total), 0)
   if (rawMax === 0) return 100
-  // Round up to aesthetic clean milestone for the axis (e.g., 1400 instead of 1346)
+  // Redondear a un hito estético limpio para el eje Y
   const magnitude = Math.pow(10, Math.floor(Math.log10(rawMax)))
   const step = magnitude >= 100 ? 200 : 50
   return Math.ceil((rawMax * 1.15) / step) * step
 })
 
 const peakHourlyVenta = computed(() => {
-  if (!stats.value.ventasHorarias || stats.value.ventasHorarias.length === 0) return null
+  const hours = full24HoursData.value
+  if (!hours || hours.length === 0) return null
   let peak = null
-  for (const h of stats.value.ventasHorarias) {
+  for (const h of hours) {
     if (!peak || h.total > peak.total) {
       peak = h
     }
@@ -595,22 +623,23 @@ const peakHourlyVenta = computed(() => {
 })
 
 const hourlyChartPoints = computed(() => {
-  if (!stats.value.ventasHorarias || stats.value.ventasHorarias.length === 0) return []
-  const count = stats.value.ventasHorarias.length
+  const hours = full24HoursData.value
+  if (!hours || hours.length === 0) return []
+  const count = hours.length
   const startX = 65
   const chartWidth = 715
   const baselineY = 190
   const plotHeight = 155
   const maxVal = maxHourlyVenta.value || 100
 
-  return stats.value.ventasHorarias.map((v, index) => {
+  return hours.map((v, index) => {
     const x = startX + index * (chartWidth / Math.max(1, count - 1))
     const y = baselineY - (v.total / maxVal) * plotHeight
     return {
       x,
       y,
       val: v.total,
-      label: v.hora ? v.hora.substring(0, 5) : `${index}:00`
+      label: v.hora ? v.hora.substring(0, 5) : `${String(index).padStart(2, '0')}:00`
     }
   })
 })

@@ -137,9 +137,8 @@ public class DashboardController : ControllerBase
             .Take(5)
             .ToList();
 
-        // Distribuir las ventas del dia actual por hora (de 6am a 11pm) para la grafica horaria
-
-        var ventasHorarias = Enumerable.Range(6, 17) // Distribucion horaria para el reporte diario (6am - 10pm)
+        // Distribuir las ventas del dia actual por hora (las 24 horas del dia: 00:00 a 23:00) para la grafica horaria
+        var ventasHorarias = Enumerable.Range(0, 24)
             .Select(h => new
             {
                 Hora = $"{h:00}:00",
