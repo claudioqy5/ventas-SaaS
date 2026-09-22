@@ -4025,3 +4025,11 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
     3. **Mercado Pago** (Tarjetas de crédito/débito, saldo y cuotas)
   - Compilación verificada exitosamente en Next.js (`npm run build`).
 
+## Actualización - Mejoras de UX/UI en Tienda y Panel SaaS (22 de Septiembre)
+- **Frontend-Relojes (Tienda)**:
+  - Se cambió el botón de "PAGAR CON TARJETA" por **"COMPRAR AHORA"** en las vistas de detalle de producto (`PaginaDetalleProducto.jsx`) y en el modal del producto (`ModalProducto.jsx`).
+  - Al hacer clic en "COMPRAR AHORA", ahora el flujo redirige directamente al proceso de pago (`/checkout`), mejorando la conversión.
+- **Frontend (Administrador SaaS)**:
+  - **Arreglo del Sidebar**: Se corrigió un problema de *layout shift* (desplazamiento visual) al hacer hover sobre el menú lateral. Ahora los bloques de `.user-info` y `.nav-section-title` mantienen su altura constante mediante CSS, garantizando que los iconos no se muevan de lugar al expandir el menú.
+  - **Scroll en Modal de Producto**: Se agregó un control estricto de altura (`max-height: 90vh` y `min-height: 0`) junto con `overflow-y: auto` en las columnas del inspector de productos (`.studio-details-column`), asegurando que las listas de especificaciones muy largas no queden cortadas y puedan desplazarse verticalmente.
+  - **Línea de Tiempo para Estados de Pedidos**: Se rediseñó el modal de *Actualizar Estado del Pedido* en `OnlineOrders.vue`. Se reemplazó la lista básica de botones por una elegante **Línea de Tiempo (Timeline)** vertical. Ahora el usuario puede visualizar claramente el flujo lógico del pedido (Pendiente de Pago > En Preparación > Enviado > Entregado), con indicadores visuales de pasos completados (verde) y el paso actual (azul). El botón de Cancelar se separó visualmente como una acción secundaria.
