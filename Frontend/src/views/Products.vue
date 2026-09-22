@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -3034,6 +3034,8 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  min-height: 0;
+  max-height: 90vh;
   color: #0f172a;
 }
 

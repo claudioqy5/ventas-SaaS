@@ -365,15 +365,31 @@
             Cliente: <strong>{{ statusModal.order?.nombreCliente }}</strong>
           </p>
 
-          <div class="estado-options">
-            <button
-              v-for="opt in getValidNextStatuses(statusModal.order?.estadoOrden)"
-              :key="opt.value"
-              @click="statusModal.selected = opt.value"
-              :class="['estado-option', { active: statusModal.selected === opt.value }]"
+          <div class="timeline-container">
+            <div
+              v-for="(step, index) in timelineSteps"
+              :key="step.value"
+              :class="['timeline-step', getStepStatus(step.value), { 'is-selected': statusModal.selected === step.value }]"
+              @click="handleStepClick(step.value)"
             >
-              <span :class="['estado-badge', opt.class]">{{ opt.label }}</span>
-              <span style="font-size: 0.82rem; color: var(--text-muted); display: block; margin-top: 4px;">{{ opt.description }}</span>
+              <div class="timeline-marker">
+                <div class="timeline-dot">
+                  <svg v-if="getStepStatus(step.value) === 'completed'" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <svg v-if="getStepStatus(step.value) === 'current'" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="8"></circle></svg>
+                </div>
+                <div v-if="index < timelineSteps.length - 1" class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <span :class="['timeline-title', step.class]">{{ step.label }}</span>
+                <span class="timeline-desc">{{ step.description }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div v-if="statusModal.order?.estadoOrden !== 'CANCELADO'" style="margin-top: 16px; text-align: center;">
+            <button @click="handleStepClick('CANCELADO')" :class="['btn', statusModal.selected === 'CANCELADO' ? 'btn-danger' : 'btn-danger-outline']" style="width: 100%; border: 1px solid #ef4444; background-color: transparent; color: #ef4444;">
+              <span v-if="statusModal.selected === 'CANCELADO'" style="color: white; background: #ef4444; display: block; padding: 6px; border-radius: 4px;">✓ Cancelar Pedido Seleccionado</span>
+              <span v-else>✕ Cancelar Pedido</span>
             </button>
           </div>
 
@@ -525,6 +541,41 @@ const ALL_STATUS_OPTIONS = [
   { value: 'ENTREGADO', label: 'Entregado', class: 'estado-delivered', description: 'El cliente recibió su pedido conforme.' },
   { value: 'CANCELADO', label: 'Cancelado', class: 'estado-cancelled', description: 'Cancelar pedido y restaurar stock al inventario.' }
 ]
+
+const timelineSteps = [
+  { value: 'PENDIENTE_PAGO', label: 'Pendiente de Pago', class: 'estado-pending', description: 'El pedido ha sido creado y espera confirmación de pago.' },
+  { value: 'EN_PREPARACION', label: 'En Preparación', class: 'estado-preparing', description: 'Pago confirmado. Empezar embalaje del producto.' },
+  { value: 'ENVIADO', label: 'Enviado', class: 'estado-shipped', description: 'Entregado al courier o servicio de envío.' },
+  { value: 'ENTREGADO', label: 'Entregado', class: 'estado-delivered', description: 'El cliente recibió su pedido conforme.' }
+]
+
+const getStepStatus = (stepValue) => {
+  const currentStatus = statusModal.value.order?.estadoOrden
+  const order = { 'PENDIENTE_PAGO': 0, 'EN_PREPARACION': 1, 'ENVIADO': 2, 'ENTREGADO': 3, 'CANCELADO': 4 }
+  
+  if (currentStatus === 'CANCELADO') return 'disabled'
+  
+  const currentOrder = order[currentStatus] ?? 0
+  const stepOrder = order[stepValue] ?? 0
+  
+  if (stepOrder < currentOrder) return 'completed'
+  if (stepOrder === currentOrder) return 'current'
+  return 'future'
+}
+
+const handleStepClick = (stepValue) => {
+  const currentStatus = statusModal.value.order?.estadoOrden
+  if (currentStatus === 'CANCELADO') return
+  
+  const order = { 'PENDIENTE_PAGO': 0, 'EN_PREPARACION': 1, 'ENVIADO': 2, 'ENTREGADO': 3, 'CANCELADO': 4 }
+  const currentOrder = order[currentStatus] ?? 0
+  const stepOrder = order[stepValue] ?? 0
+  
+  // Can only select future steps or cancel
+  if (stepValue === 'CANCELADO' || stepOrder > currentOrder) {
+    statusModal.value.selected = stepValue
+  }
+}
 
 const getValidNextStatuses = (currentStatus) => {
   const order = { 'PENDIENTE_PAGO': 0, 'EN_PREPARACION': 1, 'ENVIADO': 2, 'ENTREGADO': 3, 'CANCELADO': 4 }
@@ -806,5 +857,125 @@ onMounted(() => fetchOrders())
 @media (max-width: 768px) {
   .summary-cards { grid-template-columns: 1fr 1fr; }
   .detail-grid { grid-template-columns: 1fr; }
+}
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  position: relative;
+}
+
+.timeline-step {
+  display: flex;
+  position: relative;
+  min-height: 70px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  margin-bottom: 4px;
+}
+
+.timeline-step:hover:not(.completed):not(.current):not(.disabled) {
+  background-color: #f8fafc;
+}
+
+.timeline-step.is-selected {
+  background-color: #eff6ff;
+  box-shadow: inset 0 0 0 2px #3b82f6;
+}
+
+.timeline-step.completed {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.timeline-step.current {
+  cursor: default;
+  background-color: #f8fafc;
+}
+
+.timeline-step.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.timeline-marker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 24px;
+  margin-right: 16px;
+  margin-top: 2px;
+}
+
+.timeline-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 2;
+  transition: all 0.3s;
+}
+
+.timeline-step.completed .timeline-dot {
+  background-color: #10b981;
+}
+
+.timeline-step.current .timeline-dot {
+  background-color: #3b82f6;
+  box-shadow: 0 0 0 4px #bfdbfe;
+}
+
+.timeline-step.is-selected .timeline-dot {
+  background-color: #3b82f6;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 24px;
+  bottom: -24px;
+  width: 2px;
+  background-color: #e2e8f0;
+  z-index: 1;
+}
+
+.timeline-step.completed .timeline-line {
+  background-color: #10b981;
+}
+
+.timeline-content {
+  flex: 1;
+  padding-bottom: 12px;
+}
+
+.timeline-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.timeline-title.estado-pending { color: #d97706; }
+.timeline-title.estado-preparing { color: #2563eb; }
+.timeline-title.estado-shipped { color: #7c3aed; }
+.timeline-title.estado-delivered { color: #059669; }
+
+.timeline-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  display: block;
+}
+
+.btn-danger-outline {
+  transition: all 0.2s;
+}
+.btn-danger-outline:hover {
+  background-color: #fef2f2 !important;
 }
 </style>

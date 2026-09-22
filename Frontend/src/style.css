@@ -254,21 +254,25 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
   display: block;
 }
 
-/* User Info Profile panel (auto collapses/slides up when sidebar collapses) */
 .user-info {
-  display: none;
-}
-
-.sidebar:hover .user-info {
   display: flex;
-  background: var(--bg-app);
-  padding: 16px;
-  border-radius: var(--radius-md);
-  text-align: left;
   flex-direction: column;
   gap: 4px;
   margin-bottom: 10px;
   flex-shrink: 0;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  text-align: left;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.sidebar:hover .user-info {
+  opacity: 1;
+  background: var(--bg-app);
+  pointer-events: auto;
 }
 
 .user-name {
@@ -309,21 +313,22 @@ input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:f
 
 /* Cabeceras de sección elegantes en el menú */
 .nav-section-title {
-  display: none;
+  display: block;
   font-size: 0.68rem;
   font-weight: 600;
   text-transform: uppercase;
   color: var(--text-muted);
   letter-spacing: 1.2px;
   padding: 12px 16px 4px 16px;
+  margin-top: 8px;
   user-select: none;
   white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .sidebar:hover .nav-section-title {
-  display: block;
   opacity: 0.5;
-  margin-top: 8px;
 }
 
 /* Personalizar scrollbar del nav para que sea sumamente elegante */
