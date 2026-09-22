@@ -770,6 +770,10 @@ export default function App({ initialCategory, initialProductId, initialView = '
           product={selectedProduct}
           onBack={handleBackToCatalog}
           onAddToCart={handleAddToCart}
+          onBuyNow={(prod, qty) => {
+            handleAddToCart(prod, qty);
+            handleNavigateView('checkout');
+          }}
           onWhatsAppInquiry={handleWhatsAppInquiry}
           allProducts={products}
           onSelectProduct={handleSelectProduct}

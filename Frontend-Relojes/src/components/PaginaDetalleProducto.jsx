@@ -9,7 +9,8 @@ export default function PaginaDetalleProducto({
   onAddToCart,
   onWhatsAppInquiry,
   allProducts = [],
-  onSelectProduct
+  onSelectProduct,
+  onBuyNow
 }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -65,8 +66,15 @@ export default function PaginaDetalleProducto({
     }, 2000);
   };
 
-  const handleMercadoPagoCheckout = () => {
-    onAddToCart(product, quantity);
+  const handleBuyNow = () => {
+    if (onBuyNow) {
+      onBuyNow(product, quantity);
+    } else {
+      onAddToCart(product, quantity);
+      if (typeof window !== 'undefined') {
+        window.location.href = '/checkout';
+      }
+    }
   };
 
   const nextImage = () => {
@@ -474,9 +482,9 @@ export default function PaginaDetalleProducto({
               </button>
             </div>
 
-            {/* Botón secundario Mercado Pago en Estilo de Lujo Coherente */}
+            {/* Botón Comprar Ahora */}
             <button
-              onClick={handleMercadoPagoCheckout}
+              onClick={handleBuyNow}
               style={{
                 width: '100%',
                 height: '48px',
@@ -508,7 +516,7 @@ export default function PaginaDetalleProducto({
               }}
             >
               <CreditCard size={18} />
-              PAGAR CON TARJETA (MERCADO PAGO)
+              COMPRAR AHORA
             </button>
 
             {/* Íconos Informativos de Beneficios en Paleta de Lujo */}

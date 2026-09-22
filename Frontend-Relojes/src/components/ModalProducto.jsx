@@ -8,7 +8,8 @@ export default function ModalProducto({
   onAddToCart,
   onWhatsAppInquiry,
   allProducts = [],
-  onSelectProduct
+  onSelectProduct,
+  onBuyNow
 }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -65,10 +66,16 @@ export default function ModalProducto({
     }, 1200);
   };
 
-  const handleMercadoPagoCheckout = () => {
-    onAddToCart(product, quantity);
+  const handleBuyNow = () => {
+    if (onBuyNow) {
+      onBuyNow(product, quantity);
+    } else {
+      onAddToCart(product, quantity);
+      if (typeof window !== 'undefined') {
+        window.location.href = '/checkout';
+      }
+    }
     onClose();
-    // Abrir directamente la bolsa / checkout
   };
 
   const specs = product.specs || {
@@ -437,9 +444,9 @@ export default function ModalProducto({
                 </button>
               </div>
 
-              {/* Botón Mercado Pago con Tarjeta */}
+              {/* Botón Comprar Ahora */}
               <button
-                onClick={handleMercadoPagoCheckout}
+                onClick={handleBuyNow}
                 style={{
                   width: '100%',
                   backgroundColor: '#ffffff',
@@ -469,7 +476,7 @@ export default function ModalProducto({
                 }}
               >
                 <CreditCard size={18} />
-                Pagar con Tarjeta (Mercado Pago)
+                COMPRAR AHORA
               </button>
 
               {/* Consulta por WhatsApp */}
