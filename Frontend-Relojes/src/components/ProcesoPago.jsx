@@ -87,13 +87,9 @@ export default function ProcesoPago({
 
   // PASO 4: Método de Pago
   const [isGuestMode, setIsGuestMode] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('yape'); // 'yape' | 'tarjeta' | 'transferencia' | 'mercadopago'
+  const [paymentMethod, setPaymentMethod] = useState('yape'); // 'yape' | 'transferencia' | 'mercadopago'
   const [paymentDetails, setPaymentDetails] = useState({
     codigoOperacionYape: '',
-    tarjetaNumero: '',
-    tarjetaNombre: '',
-    tarjetaExpiracion: '',
-    tarjetaCvv: '',
     bancoTransferencia: 'BCP',
     codigoOperacionTransferencia: ''
   });
@@ -177,21 +173,6 @@ export default function ProcesoPago({
     }
     if (paymentMethod === 'transferencia' && !paymentDetails.codigoOperacionTransferencia.trim()) {
       errors.codigoOperacionTransferencia = 'Ingresa el número de constancia o comprobante';
-    }
-    if (paymentMethod === 'tarjeta') {
-      const cleanNum = paymentDetails.tarjetaNumero.replace(/\s+/g, '');
-      if (!cleanNum || cleanNum.length < 15) {
-        errors.tarjetaNumero = 'Número de tarjeta incompleto (15 o 16 dígitos)';
-      }
-      if (!paymentDetails.tarjetaNombre.trim()) {
-        errors.tarjetaNombre = 'Ingresa el nombre como figura en el plástico';
-      }
-      if (!paymentDetails.tarjetaExpiracion.trim()) {
-        errors.tarjetaExpiracion = 'Indica MM/AA';
-      }
-      if (!paymentDetails.tarjetaCvv.trim() || paymentDetails.tarjetaCvv.length < 3) {
-        errors.tarjetaCvv = 'CVV inválido';
-      }
     }
     if (tipoComprobante === 'factura') {
       if (!facturaData.ruc.trim() || facturaData.ruc.length !== 11) {
@@ -905,32 +886,7 @@ export default function ProcesoPago({
                     </div>
                   </div>
 
-                  {/* Opción 2: Tarjeta */}
-                  <div 
-                    onClick={() => setPaymentMethod('tarjeta')}
-                    style={{
-                      padding: '16px 12px',
-                      borderRadius: '8px',
-                      border: paymentMethod === 'tarjeta' ? '2px solid var(--c-blush)' : '1px solid var(--border-light)',
-                      background: paymentMethod === 'tarjeta' ? '#ffffff' : '#fcfbf8',
-                      boxShadow: paymentMethod === 'tarjeta' ? '0 4px 14px rgba(212, 175, 55, 0.15)' : 'none',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      textAlign: 'center',
-                      gap: '8px',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: paymentMethod === 'tarjeta' ? 'rgba(212, 175, 55, 0.15)' : '#f0ede8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: paymentMethod === 'tarjeta' ? 'var(--c-obsidian)' : 'var(--c-taupe)' }}>
-                      <CreditCard size={18} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>Tarjeta</div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--c-taupe)' }}>Crédito / Débito</div>
-                    </div>
-                  </div>
+
 
                   {/* Opción 3: Transferencia Bancaria */}
                   <div 
@@ -1083,97 +1039,7 @@ export default function ProcesoPago({
                     </div>
                   )}
 
-                  {/* Vista 2: Tarjeta */}
-                  {paymentMethod === 'tarjeta' && (
-                    <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>Tarjetas aceptadas:</span>
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                          <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '3px 8px', background: '#1a1f71', color: '#fff', borderRadius: '4px' }}>VISA</span>
-                          <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '3px 8px', background: '#eb001b', color: '#fff', borderRadius: '4px' }}>MASTERCARD</span>
-                          <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '3px 8px', background: '#006fcf', color: '#fff', borderRadius: '4px' }}>AMEX</span>
-                        </div>
-                      </div>
 
-                      <div style={{ marginBottom: '15px' }}>
-                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Número de Tarjeta *</label>
-                        <div style={{ position: 'relative' }}>
-                          <input 
-                            type="text" 
-                            maxLength="19"
-                            value={paymentDetails.tarjetaNumero}
-                            onChange={e => {
-                              const val = e.target.value.replace(/\D/g, '').replace(/(\d{4})/g, '$1 ').trim();
-                              setPaymentDetails({...paymentDetails, tarjetaNumero: val});
-                              if (formErrors.tarjetaNumero) setFormErrors({...formErrors, tarjetaNumero: null});
-                            }}
-                            placeholder="0000 0000 0000 0000"
-                            style={{ width: '100%', padding: '12px 14px 12px 42px', border: `1px solid ${formErrors.tarjetaNumero ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '6px', fontSize: '0.9rem', outline: 'none', background: '#ffffff', fontFamily: 'monospace' }}
-                          />
-                          <CreditCard size={18} style={{ position: 'absolute', left: '14px', top: '14px', color: 'var(--c-taupe)' }} />
-                        </div>
-                        {formErrors.tarjetaNumero && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={12} /> {formErrors.tarjetaNumero}</span>}
-                      </div>
-
-                      <div style={{ marginBottom: '15px' }}>
-                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Nombre del Titular *</label>
-                        <input 
-                          type="text" 
-                          value={paymentDetails.tarjetaNombre}
-                          onChange={e => {
-                            setPaymentDetails({...paymentDetails, tarjetaNombre: e.target.value.toUpperCase()});
-                            if (formErrors.tarjetaNombre) setFormErrors({...formErrors, tarjetaNombre: null});
-                          }}
-                          placeholder="TAL CUAL FIGURA EN EL PLÁSTICO"
-                          style={{ width: '100%', padding: '12px 14px', border: `1px solid ${formErrors.tarjetaNombre ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '6px', fontSize: '0.9rem', outline: 'none', background: '#ffffff', fontFamily: 'var(--font-main)' }}
-                        />
-                        {formErrors.tarjetaNombre && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={12} /> {formErrors.tarjetaNombre}</span>}
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '15px' }}>
-                        <div>
-                          <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Expiración (MM/AA) *</label>
-                          <input 
-                            type="text" 
-                            maxLength="5"
-                            value={paymentDetails.tarjetaExpiracion}
-                            onChange={e => {
-                              let v = e.target.value.replace(/\D/g, '');
-                              if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2, 4);
-                              setPaymentDetails({...paymentDetails, tarjetaExpiracion: v});
-                              if (formErrors.tarjetaExpiracion) setFormErrors({...formErrors, tarjetaExpiracion: null});
-                            }}
-                            placeholder="MM/AA"
-                            style={{ width: '100%', padding: '12px 14px', border: `1px solid ${formErrors.tarjetaExpiracion ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '6px', fontSize: '0.9rem', outline: 'none', background: '#ffffff', fontFamily: 'monospace' }}
-                          />
-                          {formErrors.tarjetaExpiracion && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={12} /> {formErrors.tarjetaExpiracion}</span>}
-                        </div>
-                        <div>
-                          <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>CVV / CVC *</label>
-                          <div style={{ position: 'relative' }}>
-                            <input 
-                              type="password" 
-                              maxLength="4"
-                              value={paymentDetails.tarjetaCvv}
-                              onChange={e => {
-                                setPaymentDetails({...paymentDetails, tarjetaCvv: e.target.value.replace(/\D/g, '')});
-                                if (formErrors.tarjetaCvv) setFormErrors({...formErrors, tarjetaCvv: null});
-                              }}
-                              placeholder="123"
-                              style={{ width: '100%', padding: '12px 14px 12px 38px', border: `1px solid ${formErrors.tarjetaCvv ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '6px', fontSize: '0.9rem', outline: 'none', background: '#ffffff', fontFamily: 'monospace' }}
-                            />
-                            <Lock size={16} style={{ position: 'absolute', left: '12px', top: '15px', color: 'var(--c-taupe)' }} />
-                          </div>
-                          {formErrors.tarjetaCvv && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertCircle size={12} /> {formErrors.tarjetaCvv}</span>}
-                        </div>
-                      </div>
-
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: 'var(--c-taupe)' }}>
-                        <Lock size={14} color="var(--c-blush)" />
-                        <span>Transacción protegida con cifrado SSL de 256 bits y cumplimiento PCI-DSS.</span>
-                      </div>
-                    </div>
-                  )}
 
                   {/* Vista 3: Transferencia Bancaria */}
                   {paymentMethod === 'transferencia' && (

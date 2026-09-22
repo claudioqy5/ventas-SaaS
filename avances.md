@@ -4014,3 +4014,14 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
   - Reestructuración profunda del flujo de WhatsApp para dotar al bot de "Memoria de Corto Plazo".
   - Agregado de nodos: "Guardar Mensaje Cliente", "Obtener Historial", "Mapear Historial" y "Guardar Mensaje Bot".
   - Solución de errores de formato JSON (Bad control character) al enviar respuestas dinámicas de Gemini hacia el Backend usando `JSON.stringify()` directamente en las expresiones de n8n.
+
+## Actualización - Optimización de Métodos de Pago en Checkout (Frontend Relojes)
+- **Retiro de Opción "Tarjeta" Manual (`ProcesoPago.jsx`)**:
+  - Se eliminó la pestaña y el formulario manual de tarjeta de crédito/débito (número, titular, fecha y CVV).
+  - Toda la recaudación por tarjeta ahora se delega de forma segura, certificada y protegida a **Mercado Pago Checkout Pro**, evitando riesgos de seguridad o fricciones en la carga de datos.
+  - La rejilla de métodos de pago en el Paso 4 queda configurada de manera armónica en 3 métodos claros:
+    1. **Yape / Plin** (Billeteras Digitales con QR interactivo)
+    2. **Transferencia Bancaria** (BCP / Interbank con copiado de número de cuenta y CCI)
+    3. **Mercado Pago** (Tarjetas de crédito/débito, saldo y cuotas)
+  - Compilación verificada exitosamente en Next.js (`npm run build`).
+
