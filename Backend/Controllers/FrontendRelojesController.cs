@@ -38,7 +38,10 @@ public class FrontendRelojesController : ControllerBase
         return Ok(new
         {
             empresa.Id,
-            empresa.Nombre
+            empresa.Nombre,
+            empresa.BotWhatsAppActivo,
+            empresa.NumeroWhatsAppBot,
+            empresa.NumeroWhatsAppHumano
         });
     }
 

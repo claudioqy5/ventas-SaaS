@@ -33,12 +33,17 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     
-    // Traer información de la tienda (incluye configuración del bot)
+    // Traer información de la tienda (incluye configuración del bot en tiempo real)
     let storeInfo = { nombre: "L'gant", botWhatsAppActivo: false, numeroWhatsAppBot: '51955115893', numeroWhatsAppHumano: '51916382742' };
     try {
-      const storeRes = await fetch(`${apiUrl}/${empresaId}`);
+      const publicBase = apiUrl.replace(/\/api\/relojes-store\/?$/, '/api/public/store');
+      let storeRes = await fetch(`${publicBase}/${empresaId}?_t=${Date.now()}`, { cache: 'no-store' });
+      if (!storeRes.ok) {
+        storeRes = await fetch(`${apiUrl}/${empresaId}?_t=${Date.now()}`, { cache: 'no-store' });
+      }
       if (storeRes.ok) {
-        storeInfo = await storeRes.json();
+        const fetched = await storeRes.json();
+        storeInfo = { ...storeInfo, ...fetched };
       }
     } catch {
       // Si falla info básica, continuamos con los productos

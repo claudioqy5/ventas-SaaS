@@ -397,6 +397,34 @@ export default function App({ initialCategory, initialProductId, initialView = '
     loadCatalog();
   }, [empresaId, apiUrl]);
 
+  // Sincronización en tiempo real del estado del bot (al enfocar la pestaña o cada 20 segundos)
+  useEffect(() => {
+    const syncBotNumber = async () => {
+      if (!empresaId) return;
+      try {
+        const publicBase = apiUrl.replace(/\/api\/relojes-store\/?$/, '/api/public/store');
+        const res = await fetch(`${publicBase}/${empresaId}?_t=${Date.now()}`, { cache: 'no-store' });
+        if (res.ok) {
+          const info = await res.json();
+          const isBot = !!info.botWhatsAppActivo;
+          const targetNum = isBot
+            ? (info.numeroWhatsAppBot || '51955115893')
+            : (info.numeroWhatsAppHumano || '51916382742');
+          setWhatsappConcierge(targetNum);
+        }
+      } catch {}
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', syncBotNumber);
+      const interval = setInterval(syncBotNumber, 20000);
+      return () => {
+        window.removeEventListener('focus', syncBotNumber);
+        clearInterval(interval);
+      };
+    }
+  }, [empresaId, apiUrl]);
+
   useEffect(() => {
     if (initialProductId && products.length > 0) {
       const found = products.find(p => String(p.id) === String(initialProductId));
