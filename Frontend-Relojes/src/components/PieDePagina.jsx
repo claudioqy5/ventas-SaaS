@@ -212,8 +212,6 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               <FooterLink href="/categoria/novedades" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Novedades'); } }}>Nuevos Ingresos</FooterLink>
               <FooterLink href="/categoria/marcas" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Marcas'); } }}>Alta Relojería</FooterLink>
               <FooterLink href="/categoria/accesorios" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Accesorios'); } }}>Accesorios y Cajas</FooterLink>
-              <FooterLink href="/" onClick={handleLinkClick('catalog', '/')}>Nuestra Herencia</FooterLink>
-              <FooterLink href="/" onClick={handleLinkClick('catalog', '/')}>Boutiques</FooterLink>
               <FooterLink href="#" onClick={(e) => { e.preventDefault(); if (onOpenWhatsAppConcierge) onOpenWhatsAppConcierge(); }}>Contáctanos</FooterLink>
             </ul>
           </div>
@@ -275,9 +273,6 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               </FooterLink>
               <FooterLink href="/terminos-y-condiciones" onClick={handleLinkClick('terminos', '/terminos-y-condiciones')}>
                 Cambios y Devoluciones
-              </FooterLink>
-              <FooterLink href="/preguntas-frecuentes" onClick={handleLinkClick('faq', '/preguntas-frecuentes')}>
-                Servicio Técnico Autorizado
               </FooterLink>
               
               {/* Libro de reclamaciones con icono representativo SVG limpio (sin emojis) */}
@@ -366,7 +361,6 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             </div>
             <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
               <span>Relojes 100% Auténticos</span>
-              <span>Garantía Internacional</span>
             </div>
           </div>
         </div>
