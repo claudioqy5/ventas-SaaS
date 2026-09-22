@@ -1,54 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
-
-const HERO_SLIDES = [
-  {
-    id: 1,
-    image: '/hero/hero1.jpg',
-    title: 'Reloj Casio ABL-100WE-1A',
-    desc: 'Un clásico retro reimaginado. Elegancia digital atemporal en acero inoxidable.'
-  },
-  {
-    id: 2,
-    image: '/hero/hero2.jpg',
-    title: 'Reloj Casio AE-1000W-4AVDF',
-    desc: 'Deportivo y audaz. Diseño resistente con mapa mundial y correa de resina roja.'
-  },
-  {
-    id: 3,
-    image: '/hero/hero3.jpg',
-    title: 'Reloj Casio Edifice Slim EFR-S567D-2AV',
-    desc: 'Precisión ultradelgada. Esfera azul profundo con acabados de alta gama y cristal de zafiro.'
-  },
-  {
-    id: 4,
-    image: '/hero/hero4.jpg',
-    title: 'Reloj Casio MDV-107D-1A3VDF',
-    desc: 'El legendario diver. Bisel bicolor y resistencia superior para las mayores exigencias.'
-  }
-];
+import React from 'react';
+import { ArrowRight, MessageCircle } from 'lucide-react';
 
 export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Cambio automático cada 6 segundos
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % HERO_SLIDES.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % HERO_SLIDES.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-  };
-
-  const activeSlide = HERO_SLIDES[currentIndex];
-
   return (
     <section className="hero-section" style={{
       position: 'relative',
@@ -99,7 +52,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         EN CADA SEGUNDO
       </div>
 
-      {/* CARRUSEL DE RELOJES */}
+      {/* STATIC HERO CONTENT */}
       <div style={{
         position: 'relative',
         zIndex: 10,
@@ -110,7 +63,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-        {/* Textos del Reloj y Navegación */}
+        {/* Textos del Reloj y Botones */}
         <div style={{
           position: 'relative',
           textAlign: 'center',
@@ -123,40 +76,14 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
           boxShadow: '0 20px 50px rgba(0,0,0,0.05)',
           border: '1px solid rgba(0,0,0,0.05)'
         }}>
-          {/* FLECHAS FLOTANTES DE NAVEGACIÓN */}
-          <button
-            onClick={handlePrev}
-            style={{
-              position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', zIndex: 15,
-              width: '40px', height: '40px', borderRadius: '50%',
-              backgroundColor: '#fff', border: '1px solid #eaeaea',
-              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
-            }}
-          >
-            <ChevronLeft size={20} color="#000" />
-          </button>
-          
-          <button
-            onClick={handleNext}
-            style={{
-              position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', zIndex: 15,
-              width: '40px', height: '40px', borderRadius: '50%',
-              backgroundColor: '#fff', border: '1px solid #eaeaea',
-              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
-            }}
-          >
-            <ChevronRight size={20} color="#000" />
-          </button>
           <h2 style={{
             fontFamily: '"Cormorant Garamond", "Cinzel", serif',
-            fontSize: 'clamp(1.8rem, 3vw, 2.5rem)',
+            fontSize: 'clamp(1.8rem, 3vw, 2.8rem)',
             fontWeight: 700,
             color: 'var(--c-obsidian)',
             marginBottom: '10px'
           }}>
-            {activeSlide.title}
+            Boutique de Alta Relojería
           </h2>
           <p style={{
             fontFamily: 'var(--font-sans)',
@@ -165,7 +92,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             lineHeight: 1.6,
             marginBottom: '30px'
           }}>
-            {activeSlide.desc}
+            Descubre nuestra colección exclusiva. Precisión, elegancia y diseño en cada segundo de tu vida.
           </p>
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
@@ -178,7 +105,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
                 display: 'inline-flex', alignItems: 'center', gap: '10px', transition: 'all 0.3s ease'
               }}
             >
-              Explorar <ArrowRight size={16} />
+              Explorar Colección <ArrowRight size={16} />
             </button>
             <button
               onClick={onOpenWhatsAppConcierge}
@@ -189,7 +116,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
                 display: 'inline-flex', alignItems: 'center', gap: '10px', transition: 'all 0.3s ease'
               }}
             >
-              <MessageCircle size={16} /> Contactar
+              <MessageCircle size={16} /> Asesoría Personalizada
             </button>
           </div>
         </div>
