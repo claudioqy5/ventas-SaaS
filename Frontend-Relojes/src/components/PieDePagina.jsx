@@ -319,13 +319,13 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff', textTransform: 'uppercase' }}>Síguenos:</span>
               <div style={{ display: 'flex', gap: '14px' }}>
-                <a href="#" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
+                <a href="https://www.tiktok.com/@lgante2074?_r=1&_t=ZS-99wss0k9ws0" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
                   <FacebookIcon size={20} />
                 </a>
-                <a href="#" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
+                <a href="https://www.tiktok.com/@lgante2074?_r=1&_t=ZS-99wss0k9ws0" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
                   <InstagramIcon size={20} />
                 </a>
-                <a href="#" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
+                <a href="https://www.tiktok.com/@lgante2074?_r=1&_t=ZS-99wss0k9ws0" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
                   <TikTokIcon size={20} />
                 </a>
               </div>
