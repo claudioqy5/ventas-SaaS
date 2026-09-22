@@ -181,7 +181,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
                 <MapPin size={22} color="var(--c-gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ fontSize: '0.85rem' }}>
                   <p style={{ margin: '0 0 4px 0', color: '#ffffff', fontWeight: 600 }}>Boutique Principal:</p>
-                  <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.75)' }}>Av. Camino Real 1225,<br/>San Isidro, Lima - Perú</p>
+                  <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.75)' }}>Av. Echandia 182 Mza. C Lote 13,<br/>San Luis, Lima - Perú</p>
                 </div>
               </div>
             </div>

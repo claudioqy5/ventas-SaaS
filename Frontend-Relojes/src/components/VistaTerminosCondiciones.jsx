@@ -232,9 +232,9 @@ export default function VistaTerminosCondiciones({ onBack, whatsappNumber }) {
               El presente sitio web y plataforma de comercio electrónico opera bajo la marca comercial <strong>L'GANT BOUTIQUE</strong>, debidamente constituida conforme a las leyes de la República del Perú.
             </p>
             <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(26, 27, 31, 0.85)', paddingLeft: '20px', margin: 0 }}>
-              <li><strong>Razón Social:</strong> L'GANT S.A.C.</li>
-              <li><strong>RUC:</strong> 20608945123</li>
-              <li><strong>Domicilio Fiscal:</strong> Av. Camino Real 1225, San Isidro, Lima - Perú</li>
+              <li><strong>Razón Social:</strong> GRUPO SERCAL S.A.C.</li>
+              <li><strong>RUC:</strong> 20614266750</li>
+              <li><strong>Domicilio Fiscal:</strong> Av. Echandia 182 Mza. C Lote 13 Urb. San Pablo 2da Etapa, San Luis, Lima - Perú</li>
               <li><strong>Canal Oficial de Atención:</strong> concierge@lgant.pe | {whatsappNumber ? '+51 ' + whatsappNumber.replace(/^51/, '').replace(/(\d{3})(?=\d)/g, "$1 ") : '+51 916 382 742'}</li>
             </ul>
           </section>
@@ -313,8 +313,8 @@ export default function VistaTerminosCondiciones({ onBack, whatsappNumber }) {
               Realizamos envíos a toda la República del Perú asegurando la integridad física de cada reloj mediante embalajes de alta resistencia y precintos inviolables:
             </p>
             <ul style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'rgba(26, 27, 31, 0.85)', paddingLeft: '20px', margin: 0 }}>
-              <li><strong>Lima Metropolitana y Callao:</strong> Entrega entre 24 y 48 horas hábiles siguientes a la validación de la orden.</li>
-              <li><strong>Provincias del Perú:</strong> Entrega entre 48 y 72 horas hábiles a través de couriers certificados (Olva Courier, Shalom).</li>
+              <li><strong>Lima Metropolitana y Callao:</strong> Entrega entre 1 a 3 días hábiles posteriores a la validación de la orden.</li>
+              <li><strong>Provincias del Perú:</strong> Entrega entre 3 a 7 días hábiles a través de couriers certificados (Olva Courier, Shalom), dependiendo del destino.</li>
               <li><strong>Recepción del Paquete:</strong> Toda entrega requiere la firma y DNI del titular o persona debidamente autorizada en la dirección de entrega.</li>
             </ul>
           </section>

@@ -92,7 +92,7 @@ const FAQ_DATA = [
     categoria: 'Envíos y Entregas',
     icon: TruckIcon,
     pregunta: '¿Hacen envíos a todo el Perú y cuál es el tiempo de entrega?',
-    respuesta: 'Sí, realizamos envíos a nivel nacional con altos estándares de seguridad:\n• Lima Metropolitana y Callao: Despacho prioritario en 24 a 48 horas hábiles mediante personal propio de seguridad o courier exprés.\n• Provincias: Entregas en 48 a 72 horas hábiles a través de Olva Courier o Shalom con guía de transporte certificada y valor declarado asegurado.'
+    respuesta: 'Sí, realizamos envíos a nivel nacional con altos estándares de seguridad:\n• Lima Metropolitana y Callao: Despacho en 1 a 3 días hábiles mediante personal propio de seguridad o courier exprés.\n• Provincias: Entregas en 3 a 7 días hábiles a través de Olva Courier o Shalom con guía de transporte certificada y valor declarado asegurado, dependiendo del destino.'
   },
   {
     id: 'env-2',
@@ -134,7 +134,7 @@ const FAQ_DATA = [
     categoria: 'Boutique y Asesoría',
     icon: ShieldCheckIcon,
     pregunta: '¿Tienen tienda física o showroom donde pueda ver los relojes?',
-    respuesta: 'Nuestra boutique y showroom principal se encuentra ubicada en San Isidro, Lima (Av. Camino Real 1225). Atendemos tanto al público en general como bajo cita previa para quienes deseen una sesión privada de apreciación y asesoramiento con nuestro Concierge de relojería.'
+    respuesta: 'Nuestra boutique y showroom principal se encuentra ubicada en San Luis, Lima (Av. Echandia 182 Mza. C Lote 13). Atendemos tanto al público en general como bajo cita previa para quienes deseen una sesión privada de apreciación y asesoramiento con nuestro Concierge de relojería.'
   }
 ];
 
