@@ -159,6 +159,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [advancedFilters, setAdvancedFilters] = useState({
     priceRange: { min: '', max: '' },
     inStockOnly: false,
+    gender: [], // New!
     dynamic: {} // Store selected attributes like { "Color": ["Negro"], "Correa": ["Goma"] }
   });
 
@@ -593,6 +594,15 @@ export default function App({ initialCategory, initialProductId, initialView = '
         const matchesMaxPrice = advancedFilters.priceRange.max === '' || pPrice <= Number(advancedFilters.priceRange.max);
         const matchesStock = !advancedFilters.inStockOnly || p.stock > 0;
         
+        let matchesGender = true;
+        if (advancedFilters.gender && advancedFilters.gender.length > 0) {
+          matchesGender = advancedFilters.gender.some(g => {
+            const gLower = g.toLowerCase();
+            return (p.categoria && p.categoria.toLowerCase().includes(gLower)) || 
+                   p.atributos?.some(a => a.valor?.toLowerCase().includes(gLower));
+          });
+        }
+        
         let matchesDynamic = true;
         if (advancedFilters.dynamic && Object.keys(advancedFilters.dynamic).length > 0) {
           for (const [attrName, selectedValues] of Object.entries(advancedFilters.dynamic)) {
@@ -613,7 +623,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
           }
         }
 
-        return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice && matchesStock && matchesDynamic;
+        return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice && matchesStock && matchesGender && matchesDynamic;
       })
       .sort((a, b) => {
         // En búsqueda activa con orden por defecto 'featured', priorizar mayor score de relevancia

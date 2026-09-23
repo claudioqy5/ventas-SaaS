@@ -64,19 +64,7 @@ export default function BarraNavegacion({
   }, [isUserMenuOpen]);
 
   // Cerrar búsqueda al hacer click fuera
-  useEffect(() => {
-    const handleClickOutsideSearch = (event) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
-        setShowSearch(false);
-      }
-    };
-    if (showSearch) {
-      document.addEventListener('mousedown', handleClickOutsideSearch);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutsideSearch);
-    };
-  }, [showSearch]);
+  // Eliminado el useEffect redundante para evitar doble registro y cierre inmediato
 
   useEffect(() => {
     setIsMounted(true);
@@ -568,7 +556,6 @@ export default function BarraNavegacion({
                 if (!showSearch) e.currentTarget.style.borderColor = 'var(--border-light)';
               }}
             >
-              {/* Ícono de búsqueda */}
               <button
                 type="button"
                 onClick={(e) => {
@@ -577,7 +564,7 @@ export default function BarraNavegacion({
                     setShowSearch(true);
                   } else if (searchQuery && searchQuery.trim()) {
                     if (onSearchSubmit) onSearchSubmit(searchQuery);
-                    setShowSearch(false);
+                    // No ocultar si hay texto buscado
                   } else {
                     setShowSearch(false);
                   }
@@ -613,7 +600,7 @@ export default function BarraNavegacion({
                     e.preventDefault();
                     if (onSearchSubmit && searchQuery.trim()) {
                       onSearchSubmit(searchQuery);
-                      setShowSearch(false);
+                      // No ocultar si hay texto buscado
                     }
                   } else if (e.key === 'Escape') {
                     setShowSearch(false);

@@ -6,6 +6,7 @@ import 'rc-slider/assets/index.css';
 export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap, isMobileOpen, onCloseMobile, maxPossiblePrice = 10000 }) {
   const [openSections, setOpenSections] = useState({
     precio: true,
+    genero: true,
   });
 
   const toggleSection = (section) => {
@@ -55,6 +56,7 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
   };
 
   const activeCount = (filters.priceRange.min !== '' || filters.priceRange.max !== '' ? 1 : 0) +
+                      (filters.gender && filters.gender.length > 0 ? filters.gender.length : 0) +
                       (filters.dynamic ? Object.values(filters.dynamic).reduce((acc, val) => acc + (val ? val.length : 0), 0) : 0);
 
   const SectionHeader = ({ title, section }) => {
@@ -92,7 +94,7 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
         </div>
         {activeCount > 0 && (
           <button
-            onClick={() => setFilters({ priceRange: { min: '', max: '' }, dynamic: {} })}
+            onClick={() => setFilters({ priceRange: { min: '', max: '' }, gender: [], dynamic: {} })}
             style={{
               background: 'none',
               border: 'none',
@@ -135,6 +137,12 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
               <X size={12} style={{ cursor: 'pointer' }} onClick={removePriceFilter} />
             </span>
           )}
+          {filters.gender && filters.gender.map(g => (
+            <span key={`gender-${g}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#f0ede8', border: '1px solid var(--border-light)', borderRadius: '16px', padding: '3px 9px', fontSize: '0.72rem', color: 'var(--c-obsidian)', fontWeight: 600 }}>
+              {g}
+              <X size={12} style={{ cursor: 'pointer' }} onClick={() => setFilters(prev => ({ ...prev, gender: prev.gender.filter(v => v !== g) }))} />
+            </span>
+          ))}
           {filters.dynamic && Object.entries(filters.dynamic).flatMap(([attrName, vals]) => 
             (vals || []).map(val => (
               <span key={`${attrName}-${val}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#f0ede8', border: '1px solid var(--border-light)', borderRadius: '16px', padding: '3px 9px', fontSize: '0.72rem', color: 'var(--c-obsidian)', fontWeight: 600 }}>
@@ -176,6 +184,33 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
             <span>S/ {filters.priceRange.min === '' ? 0 : filters.priceRange.min}</span>
             <span>S/ {filters.priceRange.max === '' ? maxPossiblePrice : filters.priceRange.max}</span>
           </div>
+        </div>
+      )}
+
+      {/* Género */}
+      <SectionHeader title="Género" section="genero" />
+      {openSections.genero !== false && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '4px', marginBottom: '16px' }}>
+          {['Hombre', 'Mujer', 'Unisex'].map(val => {
+            const isChecked = (filters.gender || []).includes(val);
+            return (
+              <label key={val} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: isChecked ? 'var(--c-obsidian)' : 'var(--c-taupe)', fontWeight: isChecked ? 600 : 400, textTransform: 'capitalize', width: '100%' }}>
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => {
+                    setFilters(prev => {
+                      const current = prev.gender || [];
+                      const updated = isChecked ? current.filter(v => v !== val) : [...current, val];
+                      return { ...prev, gender: updated };
+                    });
+                  }}
+                  style={{ accentColor: 'var(--c-obsidian)', width: '16px', height: '16px', flexShrink: 0, marginTop: '2px', cursor: 'pointer' }}
+                />
+                <span style={{ flex: 1, lineHeight: 1.4, wordBreak: 'break-word' }}>{val}</span>
+              </label>
+            );
+          })}
         </div>
       )}
 
