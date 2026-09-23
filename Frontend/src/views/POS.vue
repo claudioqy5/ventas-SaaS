@@ -64,6 +64,76 @@
                 <option value="">Todas las Categorías</option>
                 <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
               </select>
+
+              <!-- Filtro de Especificaciones (Multi-select) -->
+              <div style="position: relative;" ref="attributeFilterDropdownRef" class="category-select select-attribute">
+                <div 
+                  @click="showAttributeFilterDropdown = !showAttributeFilterDropdown"
+                  class="multiselect-trigger"
+                  :class="{ 'active': showAttributeFilterDropdown }"
+                  style="border: none; padding: 0; background: transparent; display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%; cursor: pointer;"
+                >
+                  <div class="multiselect-selected-text" style="display: flex; align-items: center;">
+                    <template v-if="!selectedAttributes || selectedAttributes.length === 0">
+                      <span style="color: var(--text-main);">Especificaciones</span>
+                    </template>
+                    <template v-else-if="selectedAttributes.length === 1">
+                      <span class="selected-single" style="font-size: 0.88rem; font-weight: 500;">{{ selectedAttributes[0].split(': ')[1] }}</span>
+                    </template>
+                    <template v-else>
+                      <span class="selected-single" style="font-size: 0.88rem; font-weight: 500;">{{ selectedAttributes[0].split(': ')[1] }}</span>
+                      <span class="badge-count" style="margin-left: 6px; background-color: #3b82f6; color: white; padding: 2px 6px; border-radius: 12px; font-size: 0.75rem;">+{{ selectedAttributes.length - 1 }}</span>
+                    </template>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon" :style="{ transform: showAttributeFilterDropdown ? 'rotate(180deg)' : 'rotate(0)', marginLeft: '8px' }">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+
+                <div v-if="showAttributeFilterDropdown" class="multiselect-dropdown-panel" @click.stop style="position: absolute; top: 100%; left: 0; min-width: 260px; z-index: 100; background: white; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 4px;">
+                  <div class="multiselect-dropdown-header" style="display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--border-color);">
+                    <span style="font-weight: 600;">Especificaciones</span>
+                    <button 
+                      v-if="selectedAttributes && selectedAttributes.length > 0"
+                      type="button" 
+                      style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.8rem;"
+                      @click.stop="selectedAttributes = []"
+                    >
+                      Limpiar
+                    </button>
+                  </div>
+                  <div class="multiselect-dropdown-list" style="max-height: 250px; overflow-y: auto;">
+                    <template v-for="(vals, groupName) in groupedAttributes" :key="groupName">
+                      <div style="padding: 6px 12px; font-weight: 600; font-size: 0.75rem; background: #f1f5f9; color: #475569; text-transform: uppercase;">
+                        {{ groupName }}
+                      </div>
+                      <div 
+                        v-for="val in vals" 
+                        :key="`${groupName}: ${val}`" 
+                        class="multiselect-item"
+                        :class="{ 'selected': selectedAttributes.includes(`${groupName}: ${val}`) }"
+                        @click.stop="toggleAttributeFilter(`${groupName}: ${val}`)"
+                        style="padding: 6px 16px; cursor: pointer; display: flex; align-items: center;"
+                        onmouseover="this.style.backgroundColor='#f8fafc'"
+                        onmouseout="this.style.backgroundColor='transparent'"
+                      >
+                        <input 
+                          type="checkbox" 
+                          :checked="selectedAttributes.includes(`${groupName}: ${val}`)" 
+                          tabindex="-1"
+                          style="pointer-events: none; margin-right: 8px;"
+                        />
+                        <span style="flex: 1; user-select: none; font-size: 0.85rem;">{{ val }}</span>
+                      </div>
+                    </template>
+                  </div>
+                  <div class="multiselect-dropdown-footer" style="padding: 8px; border-top: 1px solid var(--border-color);">
+                    <button type="button" style="width: 100%; padding: 6px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;" @click.stop="showAttributeFilterDropdown = false">
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- Indicador de modo lector de código de barra -->
             <div v-if="barcodeBuffer" class="barcode-indicator">
@@ -785,13 +855,79 @@ const fetchClients = async () => {
   }
 }
 
+const selectedAttributes = ref([])
+const showAttributeFilterDropdown = ref(false)
+const attributeFilterDropdownRef = ref(null)
+
+const toggleAttributeFilter = (attrKey) => {
+  if (selectedAttributes.value.includes(attrKey)) {
+    selectedAttributes.value = selectedAttributes.value.filter(a => a !== attrKey)
+  } else {
+    selectedAttributes.value.push(attrKey)
+  }
+}
+
+const groupedAttributes = computed(() => {
+  const groups = {}
+  products.value.forEach(p => {
+    if (p.atributos && Array.isArray(p.atributos)) {
+      p.atributos.forEach(a => {
+        const rawName = a.nombre || a.Nombre
+        const rawVal = a.valor || a.Valor
+        if (rawName && rawVal && rawVal !== 'No aplica' && rawVal !== '-') {
+          const groupName = rawName.trim()
+          const valName = rawVal.trim()
+          if (!groups[groupName]) {
+            groups[groupName] = new Set()
+          }
+          groups[groupName].add(valName)
+        }
+      })
+    }
+  })
+  const sorted = {}
+  Object.keys(groups).sort((a, b) => a.localeCompare(b)).forEach(key => {
+    sorted[key] = Array.from(groups[key]).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+  })
+  return sorted
+})
+
 const filteredProducts = computed(() => {
   const q = searchQuery.value.toLowerCase()
   return products.value.filter(p => {
     const matchesSearch = (p.nombre && p.nombre.toLowerCase().includes(q)) || 
                           (p.codigoBarras && p.codigoBarras.includes(q))
     const matchesCategory = !selectedCategory.value || p.categoriaId === selectedCategory.value
-    return matchesSearch && matchesCategory
+    
+    let matchesAttribute = true
+    if (selectedAttributes.value && selectedAttributes.value.length > 0) {
+      let productMatchesAnySelectedAttr = false;
+
+      for (const attrKey of selectedAttributes.value) {
+        const idx = attrKey.indexOf(': ')
+        if (idx !== -1) {
+          const attrName = attrKey.substring(0, idx).trim().toLowerCase()
+          const attrVal = attrKey.substring(idx + 2).trim().toLowerCase()
+          
+          const hasMatch = p.atributos && p.atributos.some(a => {
+            return a && 
+              (a.nombre || a.Nombre || '').toLowerCase() === attrName && 
+              (a.valor || a.Valor || '').toLowerCase() === attrVal
+          })
+          
+          if (hasMatch) {
+            productMatchesAnySelectedAttr = true
+            break
+          }
+        }
+      }
+
+      if (!productMatchesAnySelectedAttr) {
+        matchesAttribute = false
+      }
+    }
+
+    return matchesSearch && matchesCategory && matchesAttribute
   })
 })
 
@@ -1371,6 +1507,12 @@ const handleLogout = () => {
   router.push('/login')
 }
 
+const handleClickOutsideAttributeFilter = (e) => {
+  if (attributeFilterDropdownRef.value && !attributeFilterDropdownRef.value.contains(e.target)) {
+    showAttributeFilterDropdown.value = false
+  }
+}
+
 onMounted(() => {
   fetchProducts()
   fetchProximoCorrelativo()
@@ -1379,10 +1521,12 @@ onMounted(() => {
   fetchPaymentMethods()
   fetchSalesHistory()
   document.addEventListener('keypress', handleBarcodeKeypress)
+  document.addEventListener('click', handleClickOutsideAttributeFilter)
 })
 
 onUnmounted(() => {
   document.removeEventListener('keypress', handleBarcodeKeypress)
+  document.removeEventListener('click', handleClickOutsideAttributeFilter)
   clearTimeout(barcodeTimer)
 })
 </script>

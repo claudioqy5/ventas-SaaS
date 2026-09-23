@@ -61,15 +61,29 @@
 
 
       <div v-else class="card font-card">
-        <!-- Barra de busqueda y filtros -->
         <div class="filters-container">
           <input v-model="searchQuery" type="text" placeholder="Buscar por cliente o cajero..." class="filter-input" />
-          <input v-model="filterDate" type="date" class="filter-select" title="Filtrar por fecha" />
-          <select v-model="filterPayment" class="filter-select">
+          
+          <!-- Filtro de Tipo de Comprobante -->
+          <select v-model="filterVoucherType" class="filter-select" title="Filtrar por comprobante">
+            <option value="">Todos los Comprobantes</option>
+            <option value="Boleta">Boleta de Venta</option>
+            <option value="Factura">Factura</option>
+            <option value="Nota de Venta">Nota de Venta</option>
+          </select>
+
+          <!-- Filtro de Fecha Desde - Hasta -->
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Desde:</span>
+            <input v-model="filterDateFrom" type="date" class="filter-select" style="width: 140px;" />
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Hasta:</span>
+            <input v-model="filterDateTo" type="date" class="filter-select" style="width: 140px;" />
+          </div>
+
+          <!-- Filtro de Método de Pago Dinámico -->
+          <select v-model="filterPayment" class="filter-select" title="Filtrar por método de pago">
             <option value="">Todos los Métodos</option>
-            <option value="Efectivo">Efectivo</option>
-            <option value="Tarjeta">Tarjeta</option>
-            <option value="Transferencia">Transferencia</option>
+            <option v-for="pm in activePaymentMethods" :key="pm.id" :value="pm.nombre">{{ pm.nombre }}</option>
           </select>
         </div>
 <div v-else-if="filteredSales.length === 0" class="empty-state">
@@ -286,6 +300,9 @@ const sales = ref([])
 const loading = ref(false)
 const searchQuery = ref('')
 const filterPayment = ref('')
+const filterVoucherType = ref('')
+const paymentMethodsList = ref([])
+
 const getTodayDateString = () => {
   const d = new Date()
   const year = d.getFullYear()
@@ -294,8 +311,24 @@ const getTodayDateString = () => {
   return `${year}-${month}-${day}`
 }
 
-const filterDate = ref(getTodayDateString())
+const filterDateFrom = ref(getTodayDateString())
+const filterDateTo = ref(getTodayDateString())
 const selectedSale = ref(null)
+
+const activePaymentMethods = computed(() => paymentMethodsList.value.filter(m => m.activo))
+
+const fetchPaymentMethods = async () => {
+  try {
+    const res = await fetch(`${API_URL}/api/payment-methods`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (res.ok) {
+      paymentMethodsList.value = await res.json()
+    }
+  } catch (err) {
+    console.error('Error fetching payment methods:', err)
+  }
+}
 
 const getVoucherBadgeClass = (tipo) => {
   if (!tipo) return 'voucher-nota'
@@ -446,19 +479,27 @@ const filteredSales = computed(() => {
       (s.id && s.id.toLowerCase().includes(q))
     
     const matchesPayment = !filterPayment.value || s.metodoPago === filterPayment.value
+    
+    const matchesVoucher = !filterVoucherType.value || (s.tipoComprobante && s.tipoComprobante.toLowerCase().includes(filterVoucherType.value.toLowerCase()))
 
     let matchesDate = true
-    if (filterDate.value) {
-      // Extraer fecha local (AAAA-MM-DD) para comparar sin problemas de zona horaria
+    if (filterDateFrom.value || filterDateTo.value) {
       const localDate = new Date(s.fechaCreacion)
       const year = localDate.getFullYear()
       const month = String(localDate.getMonth() + 1).padStart(2, '0')
       const day = String(localDate.getDate()).padStart(2, '0')
       const localDateStr = `${year}-${month}-${day}`
-      matchesDate = localDateStr === filterDate.value
+      
+      if (filterDateFrom.value && filterDateTo.value) {
+        matchesDate = localDateStr >= filterDateFrom.value && localDateStr <= filterDateTo.value
+      } else if (filterDateFrom.value) {
+        matchesDate = localDateStr >= filterDateFrom.value
+      } else if (filterDateTo.value) {
+        matchesDate = localDateStr <= filterDateTo.value
+      }
     }
 
-    return matchesSearch && matchesPayment && matchesDate
+    return matchesSearch && matchesPayment && matchesVoucher && matchesDate
   })
 })
 
@@ -506,6 +547,7 @@ const whatsappSaleUrl = computed(() => {
 
 onMounted(() => {
   fetchSales()
+  fetchPaymentMethods()
 })
 </script>
 

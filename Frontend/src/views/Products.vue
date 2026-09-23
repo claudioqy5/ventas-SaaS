@@ -220,12 +220,73 @@
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
         </select>
 
-        <select v-model="selectedAttribute" class="filter-select select-attribute" title="Filtrar por especificación">
-          <option value="">Especificaciones</option>
-          <optgroup v-for="(vals, groupName) in groupedAttributes" :key="groupName" :label="groupName">
-            <option v-for="val in vals" :key="val" :value="`${groupName}: ${val}`">{{ val }}</option>
-          </optgroup>
-        </select>
+        <!-- Filtro de Especificaciones (Multi-select) -->
+        <div style="position: relative;" ref="attributeFilterDropdownRef" class="filter-select select-attribute">
+          <div 
+            @click="showAttributeFilterDropdown = !showAttributeFilterDropdown"
+            class="multiselect-trigger"
+            :class="{ 'active': showAttributeFilterDropdown }"
+            style="border: none; padding: 0; background: transparent;"
+          >
+            <div class="multiselect-selected-text">
+              <template v-if="!selectedAttributes || selectedAttributes.length === 0">
+                <span style="color: var(--text-main);">Especificaciones</span>
+              </template>
+              <template v-else-if="selectedAttributes.length === 1">
+                <span class="selected-single" style="font-size: 0.88rem; font-weight: 500;">{{ selectedAttributes[0].split(': ')[1] }}</span>
+              </template>
+              <template v-else>
+                <span class="selected-single" style="font-size: 0.88rem; font-weight: 500;">{{ selectedAttributes[0].split(': ')[1] }}</span>
+                <span class="badge-count" style="margin-left: 6px; background-color: #3b82f6; color: white; padding: 2px 6px; border-radius: 12px; font-size: 0.75rem;">+{{ selectedAttributes.length - 1 }}</span>
+              </template>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon" :style="{ transform: showAttributeFilterDropdown ? 'rotate(180deg)' : 'rotate(0)' }">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+
+          <div v-if="showAttributeFilterDropdown" class="multiselect-dropdown-panel" @click.stop style="top: 100%; left: 0; min-width: 260px; z-index: 100;">
+            <div class="multiselect-dropdown-header">
+              <span>Especificaciones</span>
+              <button 
+                v-if="selectedAttributes && selectedAttributes.length > 0"
+                type="button" 
+                class="btn-clear-categories" 
+                @click.stop="selectedAttributes = []"
+              >
+                Limpiar
+              </button>
+            </div>
+            <div class="multiselect-dropdown-list" style="max-height: 250px; overflow-y: auto;">
+              <template v-for="(vals, groupName) in groupedAttributes" :key="groupName">
+                <div style="padding: 6px 12px; font-weight: 600; font-size: 0.75rem; background: #f1f5f9; color: #475569; text-transform: uppercase;">
+                  {{ groupName }}
+                </div>
+                <div 
+                  v-for="val in vals" 
+                  :key="`${groupName}: ${val}`" 
+                  class="multiselect-item"
+                  :class="{ 'selected': selectedAttributes.includes(`${groupName}: ${val}`) }"
+                  @click.stop="toggleAttributeFilter(`${groupName}: ${val}`)"
+                  style="padding-left: 16px;"
+                >
+                  <input 
+                    type="checkbox" 
+                    :checked="selectedAttributes.includes(`${groupName}: ${val}`)" 
+                    tabindex="-1"
+                    style="pointer-events: none; margin-right: 8px;"
+                  />
+                  <span style="flex: 1; user-select: none; font-size: 0.85rem;">{{ val }}</span>
+                </div>
+              </template>
+            </div>
+            <div class="multiselect-dropdown-footer">
+              <button type="button" class="btn-done-categories" @click.stop="showAttributeFilterDropdown = false">
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
 
         <select v-model="sortMode" class="filter-select select-sort" title="Ordenar lista">
           <option value="newest">Más recientes</option>
@@ -1260,6 +1321,9 @@ const handleClickOutsideCategoryDropdown = (e) => {
   if (categoryDropdownRef.value && !categoryDropdownRef.value.contains(e.target)) {
     showCategoryDropdown.value = false;
   }
+  if (attributeFilterDropdownRef.value && !attributeFilterDropdownRef.value.contains(e.target)) {
+    showAttributeFilterDropdown.value = false;
+  }
 };
 
 watch(showModal, (newVal) => {
@@ -1395,7 +1459,17 @@ const currentProductId = ref(null)
 
 const searchQuery = ref('')
 const selectedCategory = ref('')
-const selectedAttribute = ref('')
+const selectedAttributes = ref([])
+const showAttributeFilterDropdown = ref(false)
+const attributeFilterDropdownRef = ref(null)
+
+const toggleAttributeFilter = (attrKey) => {
+  if (selectedAttributes.value.includes(attrKey)) {
+    selectedAttributes.value = selectedAttributes.value.filter(a => a !== attrKey)
+  } else {
+    selectedAttributes.value.push(attrKey)
+  }
+}
 const sortMode = ref('newest')
 const productAnalysis = ref({})
 
@@ -1491,19 +1565,40 @@ const filteredProducts = computed(() => {
                             (p.categoriaIds && p.categoriaIds.includes(selectedCategory.value))
     
     let matchesAttribute = true
-    if (selectedAttribute.value) {
-      const idx = selectedAttribute.value.indexOf(': ')
-      if (idx !== -1) {
-        const attrName = selectedAttribute.value.substring(0, idx).trim().toLowerCase()
-        const attrVal = selectedAttribute.value.substring(idx + 2).trim().toLowerCase()
-        matchesAttribute = p.atributos && p.atributos.some(a => 
-          (a.nombre || a.Nombre || '').trim().toLowerCase() === attrName && 
-          (a.valor || a.Valor || '').trim().toLowerCase() === attrVal
-        )
-      } else {
-        matchesAttribute = p.atributos && p.atributos.some(a => 
-          `${a.nombre || a.Nombre}: ${a.valor || a.Valor}`.toLowerCase() === selectedAttribute.value.toLowerCase()
-        )
+    if (selectedAttributes.value && selectedAttributes.value.length > 0) {
+      let productMatchesAnySelectedAttr = false;
+
+      for (const attrKey of selectedAttributes.value) {
+        const idx = attrKey.indexOf(': ')
+        if (idx !== -1) {
+          const attrName = attrKey.substring(0, idx).trim().toLowerCase()
+          const attrVal = attrKey.substring(idx + 2).trim().toLowerCase()
+
+          // Para busqueda global de items (si p.items existe en modo grupo o no)
+          const itemsToCheck = p.isGroup ? p.items : [p]
+          
+          for (const item of itemsToCheck) {
+            const hasMatch = item.atributos && item.atributos.some(a => {
+              return a && 
+                (a.nombre || a.Nombre || '').toLowerCase() === attrName && 
+                (a.valor || a.Valor || '').toLowerCase() === attrVal
+            })
+            
+            // Fallback for color legacy
+            const hasColorMatch = (attrName === 'color' || attrName === 'color / variante') && 
+                                getProductColor(item).toLowerCase() === attrVal
+            
+            if (hasMatch || hasColorMatch) {
+              productMatchesAnySelectedAttr = true
+              break
+            }
+          }
+          if (productMatchesAnySelectedAttr) break
+        }
+      }
+
+      if (!productMatchesAnySelectedAttr) {
+        matchesAttribute = false
       }
     }
 
