@@ -163,15 +163,53 @@ public class MercadoPagoController : ControllerBase
             // Actualizar el estado de la orden en MongoDB según el estado del pago
             if (payment.Status == "approved")
             {
-                var update = Builders<Sale>.Update
-                    .Set(s => s.EstadoPago, "Pagado")
-                    .Set(s => s.EstadoOrden, "EN_PREPARACION")
-                    .Set(s => s.CodigoOperacionPago, notificationId); // Guardamos el ID del pago de MP
+                var sale = await _context.Sales.Find(s => s.Id == orderId && s.EmpresaId == empresaId).FirstOrDefaultAsync();
+                if (sale != null && sale.EstadoOrden == "PENDIENTE_PAGO")
+                {
+                    // Descontar stock
+                    foreach (var item in sale.Detalles)
+                    {
+                        var productFilter = Builders<Product>.Filter.And(
+                            Builders<Product>.Filter.Eq(p => p.Id, item.ProductoId),
+                            Builders<Product>.Filter.Eq(p => p.EmpresaId, empresaId)
+                        );
+                        var product = await _context.Products.Find(productFilter).FirstOrDefaultAsync();
+                        if (product != null)
+                        {
+                            var previousStock = product.Stock;
+                            var newStock = previousStock - item.Cantidad;
+                            await _context.Products.UpdateOneAsync(productFilter,
+                                Builders<Product>.Update.Set(p => p.Stock, newStock));
 
-                await _context.Sales.UpdateOneAsync(
-                    s => s.Id == orderId && s.EmpresaId == empresaId,
-                    update
-                );
+                            var movement = new StockMovement
+                            {
+                                EmpresaId = empresaId,
+                                ProductoId = product.Id,
+                                NombreProducto = product.Nombre,
+                                Tipo = "Confirmación Pedido Web",
+                                Cantidad = item.Cantidad,
+                                StockAnterior = previousStock,
+                                StockNuevo = newStock,
+                                Motivo = $"Pago Mercado Pago confirmado (ID: {sale.Id})",
+                                CreadoPor = "SISTEMA",
+                                CreadoPorNombre = "Mercado Pago Webhook",
+                                FechaCreacion = DateTime.UtcNow
+                            };
+                            await _context.StockMovements.InsertOneAsync(movement);
+                        }
+                    }
+
+                    var update = Builders<Sale>.Update
+                        .Set(s => s.EstadoPago, "Pagado")
+                        .Set(s => s.EstadoOrden, "EN_PREPARACION")
+                        .Set(s => s.CodigoOperacionPago, notificationId) // Guardamos el ID del pago de MP
+                        .Set(s => s.FechaConfirmacionPago, DateTime.UtcNow);
+
+                    await _context.Sales.UpdateOneAsync(
+                        s => s.Id == orderId && s.EmpresaId == empresaId,
+                        update
+                    );
+                }
             }
             else if (payment.Status == "rejected" || payment.Status == "cancelled")
             {
