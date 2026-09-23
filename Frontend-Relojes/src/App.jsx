@@ -491,6 +491,16 @@ export default function App({ initialCategory, initialProductId, initialView = '
     return result;
   }, [products]);
 
+  const maxPossiblePrice = useMemo(() => {
+    if (!products || products.length === 0) return 10000;
+    const maxPrice = Math.max(...products.map(p => {
+      const price = p.precioOferta > 0 ? p.precioOferta : p.precio;
+      return typeof price === 'number' && !isNaN(price) ? price : 0;
+    }));
+    // Redondear hacia arriba al múltiplo de 100 más cercano (ej. 1450 -> 1500)
+    return Math.ceil(maxPrice / 100) * 100;
+  }, [products]);
+
   // Categorías
   const categories = useMemo(() => {
     const list = new Set(['Todos']);
@@ -943,6 +953,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                   dynamicAttributesMap={dynamicAttributesMap}
                   isMobileOpen={isMobileFilterOpen}
                   onCloseMobile={() => setIsMobileFilterOpen(false)}
+                  maxPossiblePrice={maxPossiblePrice}
                 />
               )}
 

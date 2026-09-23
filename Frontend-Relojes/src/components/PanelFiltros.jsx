@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp, X, SlidersHorizontal } from 'lucide-react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap, isMobileOpen, onCloseMobile }) {
+export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap, isMobileOpen, onCloseMobile, maxPossiblePrice = 10000 }) {
   const [openSections, setOpenSections] = useState({
     precio: true,
   });
@@ -153,11 +153,11 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
           <Slider
             range
             min={0}
-            max={10000}
+            max={maxPossiblePrice}
             step={50}
             value={[
               filters.priceRange.min === '' ? 0 : Number(filters.priceRange.min),
-              filters.priceRange.max === '' ? 10000 : Number(filters.priceRange.max)
+              filters.priceRange.max === '' ? maxPossiblePrice : Number(filters.priceRange.max)
             ]}
             onChange={(val) => {
               setFilters(prev => ({
@@ -174,7 +174,7 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 600 }}>
             <span>S/ {filters.priceRange.min === '' ? 0 : filters.priceRange.min}</span>
-            <span>S/ {filters.priceRange.max === '' ? 10000 : filters.priceRange.max}</span>
+            <span>S/ {filters.priceRange.max === '' ? maxPossiblePrice : filters.priceRange.max}</span>
           </div>
         </div>
       )}
