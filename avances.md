@@ -4055,3 +4055,14 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
 - **Canal de Asistencia Humana / Concierge**: `916 382 742` (WhatsApp oficial de soporte, NO para recibir yapeos).
 
 
+
+## Actualización - Integración de Mercado Pago y Generación de Tickets POS (22 de Septiembre)
+- **Backend (C# .NET)**:
+  - Implementación del endpoint /api/sales/generate-ticket en SalesController para permitir al vendedor generar un link de pago rápido directamente desde el POS sin necesidad de procesar la venta al instante.
+  - El sistema registra la orden en MongoDB con estado PENDIENTE_PAGO y OrigenPedido = "POS_TICKET", reservando la intención de venta y tipo de comprobante (Boleta/Factura), pero **sin descontar stock** y **sin generar el correlativo de SUNAT** para evitar comprobantes vacíos si el cliente no paga.
+  - Corrección en el Webhook de Mercado Pago (MercadoPagoController.cs): Se solucionó un bug silencioso donde el pago online cambiaba el estado a Pagado y EN_PREPARACION pero no descontaba el stock. Ahora, el Webhook **descuenta el inventario automáticamente** y genera el registro en StockMovements en el momento en que Mercado Pago aprueba el pago, garantizando la exactitud del inventario a cualquier hora.
+  - Configuración de AllowAnonymous en los métodos de Mercado Pago para procesar ventas de invitados enviando email: null en el request de preferencias.
+- **Frontend (Vue.js & Next.js)**:
+  - **POS.vue**: Agregado del botón **"Generar Link de Pago"** en el carrito de compras. Al presionarlo, se invoca a Mercado Pago, se despliega el *Success Modal* adaptado mostrando el estado "TICKET PENDIENTE" y se brinda un recuadro azul claro destacado con el enlace y un botón nativo de "Copiar" para enviárselo rápidamente al cliente vía WhatsApp.
+  - **Tienda Virtual (PanelFiltros.jsx)**: Se mejoró la UX colapsando (cerrando) todos los acordeones de filtros por defecto al cargar la página para dar un aspecto más limpio.
+  - **Tienda Virtual (index.css & Componentes)**: Se mejoró el aspecto visual aplicando fondo blanco y texto centrado a las secciones principales del Home ("Eternidad en cada segundo", "Los más Vendidos", "Nuevos Ingresos").
