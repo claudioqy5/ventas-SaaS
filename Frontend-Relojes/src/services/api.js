@@ -290,12 +290,14 @@ export async function createMercadoPagoPreference(token, { orderId, items }) {
   const serverBaseUrl = baseApiUrl; // URL base del backend (sin /api/...)
   const backUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${baseApiUrl}/api/mercadopago/${empresaId}/preference`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
+    headers,
     body: JSON.stringify({
       orderId,
       items: items.map(item => ({

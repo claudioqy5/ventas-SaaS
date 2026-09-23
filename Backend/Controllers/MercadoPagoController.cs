@@ -32,15 +32,18 @@ public class MercadoPagoController : ControllerBase
     // POST api/mercadopago/{empresaId}/preference
     // Crea una preferencia de Checkout Pro de Mercado Pago para una orden existente o nueva.
     // Requiere autenticación de cliente (JWT de la tienda virtual).
-    [Authorize]
+    // [Authorize] -> Permitimos acceso anónimo para "Modo Invitado"
+    [AllowAnonymous]
     [HttpPost("{empresaId}/preference")]
     public async Task<IActionResult> CreatePreference(string empresaId, [FromBody] MpPreferenceRequest request)
     {
         var clientId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
-        if (string.IsNullOrEmpty(clientId)) return Unauthorized();
+        Client? client = null;
 
-        var client = await _context.Clients.Find(c => c.Id == clientId && c.EmpresaId == empresaId).FirstOrDefaultAsync();
-        if (client == null) return Unauthorized();
+        if (!string.IsNullOrEmpty(clientId))
+        {
+            client = await _context.Clients.Find(c => c.Id == clientId && c.EmpresaId == empresaId).FirstOrDefaultAsync();
+        }
 
         // Configurar el SDK con el Access Token desde appsettings.json
         var accessToken = _configuration["MercadoPago:AccessToken"];
@@ -66,9 +69,9 @@ public class MercadoPagoController : ControllerBase
             Items = mpItems,
             Payer = new PreferencePayerRequest
             {
-                Name    = client.Nombres ?? client.Nombre,
-                Surname = client.Apellidos ?? string.Empty,
-                Email   = client.Correo
+                Name    = client?.Nombres ?? client?.Nombre ?? "Invitado",
+                Surname = client?.Apellidos ?? "",
+                Email   = client?.Correo ?? "invitado@gruposercal.com"
             },
             BackUrls = new PreferenceBackUrlsRequest
             {
