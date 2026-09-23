@@ -779,3 +779,11 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
   - **POS.vue**: Agregado del bot�n **"Generar Link de Pago"** en el carrito de compras. Al presionarlo, se invoca a Mercado Pago, se despliega el *Success Modal* adaptado mostrando el estado "TICKET PENDIENTE" y se brinda un recuadro azul claro destacado con el enlace y un bot�n nativo de "Copiar" para envi�rselo r�pidamente al cliente v�a WhatsApp.
   - **Tienda Virtual (PanelFiltros.jsx)**: Se mejor� la UX colapsando (cerrando) todos los acordeones de filtros por defecto al cargar la p�gina para dar un aspecto m�s limpio.
   - **Tienda Virtual (index.css & Componentes)**: Se mejor� el aspecto visual aplicando fondo blanco y texto centrado a las secciones principales del Home ("Eternidad en cada segundo", "Los m�s Vendidos", "Nuevos Ingresos").
+
+## Actualización - 23 de Septiembre
+- **Correcciones y Optimizaciones UI Frontend**:
+  - **Filtros Multi-select en POS e Inventario:** Se implementó y corrigió el funcionamiento del filtro de Especificaciones por selección múltiple (Products.vue y POS.vue). Se ajustó la propagación del evento click y el ancho del menú desplegable para que no recorte el texto.
+  - **Filtros en Historial de Ventas (SalesHistory.vue)**: Implementación completa de filtros por "Tipo de Comprobante", "Rango de Fecha Desde-Hasta" y despliegue dinámico de "Métodos de Pago" sincronizado con la base de datos.
+  - **Identidad Visual de Comprobantes**: Incorporación de iconos SVG formales en el listado de ventas para diferenciar de un solo vistazo Boletas, Facturas y Notas de Venta (evitando el uso de emojis informales).
+  - **Soporte XML y CDR para Sunat Beta**: Se habilitaron los botones de "Descargar XML" y "Descargar CDR" directamente en el modal de detalles de venta. Los documentos de prueba autogenerados por APIs Perú pueden descargarse libremente para revisar la estructura en Beta antes de pasar a producción oficial.
+  - **Layout del Dashboard y Emojis**: Refactorización del dashboard de KPI para mostrar las tarjetas en una línea horizontal (sin deformar el menú lateral) e integración correcta del Loader encapsulado solo en los contenedores de carga. Reemplazo general de emojis informales por iconos SVG nativos.

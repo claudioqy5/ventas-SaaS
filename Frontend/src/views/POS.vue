@@ -68,7 +68,7 @@
               <!-- Filtro de Especificaciones (Multi-select) -->
               <div style="position: relative;" ref="attributeFilterDropdownRef" class="category-select select-attribute">
                 <div 
-                  @click="showAttributeFilterDropdown = !showAttributeFilterDropdown"
+                  @click.stop="showAttributeFilterDropdown = !showAttributeFilterDropdown"
                   class="multiselect-trigger"
                   :class="{ 'active': showAttributeFilterDropdown }"
                   style="border: none; padding: 0; background: transparent; display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%; cursor: pointer;"

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
 <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -221,12 +221,12 @@
         </select>
 
         <!-- Filtro de Especificaciones (Multi-select) -->
-        <div style="position: relative;" ref="attributeFilterDropdownRef" class="filter-select select-attribute">
+        <div style="position: relative; padding: 0;" ref="attributeFilterDropdownRef" class="filter-select select-attribute">
           <div 
-            @click="showAttributeFilterDropdown = !showAttributeFilterDropdown"
+            @click.stop="showAttributeFilterDropdown = !showAttributeFilterDropdown"
             class="multiselect-trigger"
             :class="{ 'active': showAttributeFilterDropdown }"
-            style="border: none; padding: 0; background: transparent;"
+            style="border: none; padding: 0; background: transparent; display: flex; width: 100%; justify-content: space-between; cursor: pointer;"
           >
             <div class="multiselect-selected-text">
               <template v-if="!selectedAttributes || selectedAttributes.length === 0">
