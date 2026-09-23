@@ -113,7 +113,7 @@ public class Sale
     public string? CodigoOperacionPago { get; set; }
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string CreadoPor { get; set; } = string.Empty; // ID del usuario responsable
+    public string? CreadoPor { get; set; } // ID del usuario responsable (null si es pedido online o bot)
     public string CreadoPorNombre { get; set; } = string.Empty;
 
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;

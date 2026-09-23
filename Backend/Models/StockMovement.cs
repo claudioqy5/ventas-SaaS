@@ -36,7 +36,7 @@ public class StockMovement
     public string Motivo { get; set; } = string.Empty;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string CreadoPor { get; set; } = string.Empty; // ID del usuario responsable
+    public string? CreadoPor { get; set; } // ID del usuario responsable
     public string CreadoPorNombre { get; set; } = string.Empty;
 
     public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;

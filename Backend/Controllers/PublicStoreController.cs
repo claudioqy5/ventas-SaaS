@@ -315,7 +315,7 @@ public class PublicStoreController : ControllerBase
             MetodoPago = request.MetodoPago,
             EstadoPago = "Pendiente",
             EstadoOrden = "PENDIENTE_PAGO",
-            CreadoPor = client?.Id ?? "INVITADO",
+            CreadoPor = client?.Id,
             CreadoPorNombre = client != null ? "Tienda Virtual" : "Tienda Virtual (Invitado)",
             FechaCreacion = DateTime.UtcNow,
             Detalles = new List<SaleItem>(),
@@ -496,10 +496,12 @@ public class PublicStoreController : ControllerBase
                 EstadoOrden = "PENDIENTE_PAGO",
                 OrigenPedido = "WhatsAppBot",
                 WhatsAppCliente = request.WhatsAppCliente,
-                CreadoPor = "WhatsAppBot",
+                CreadoPor = null,
                 CreadoPorNombre = "Bot WhatsApp",
                 FechaCreacion = DateTime.UtcNow,
-                DireccionEntrega = !string.IsNullOrWhiteSpace(request.DireccionEntrega) ? request.DireccionEntrega : "Coordinación por WhatsApp",
+                DireccionEntrega = !string.IsNullOrWhiteSpace(request.DireccionEntrega) 
+                    ? request.DireccionEntrega 
+                    : (!string.IsNullOrWhiteSpace(request.DirecionEntrega) ? request.DirecionEntrega : "Coordinación por WhatsApp"),
                 NotasEntrega = request.NotasEntrega,
                 TipoComprobante = "Nota de Venta",
                 CodigoTipoComprobanteSunat = "00",
@@ -634,7 +636,8 @@ public record BotOrderRequest(
     string? MetodoPago,
     string? DireccionEntrega,
     string? NotasEntrega,
-    List<BotOrderItem> Items
+    List<BotOrderItem> Items,
+    string? DirecionEntrega = null
 );
 
 public record BotOrderItem(string ProductoId, string NombreProducto, decimal Cantidad, decimal PrecioUnitario);
