@@ -307,7 +307,7 @@ public class PublicStoreController : ControllerBase
         var newSale = new Sale
         {
             EmpresaId = empresaId,
-            ClienteId = client?.Id ?? "INVITADO",
+            ClienteId = client?.Id,
             NombreCliente = nombreClienteFinal,
             Subtotal = request.Subtotal,
             Impuesto = request.Impuesto,
@@ -436,64 +436,85 @@ public class PublicStoreController : ControllerBase
     [HttpPost("{empresaId}/bot/orders")]
     public async Task<IActionResult> SubmitBotOrder(string empresaId, [FromBody] BotOrderRequest request)
     {
-        if (request == null || request.Items == null || !request.Items.Any())
-            return BadRequest(new { message = "El pedido no tiene productos." });
-
-        var detalles = new List<SaleItem>();
-        decimal total = 0;
-
-        foreach (var item in request.Items)
+        try
         {
-            var product = await _context.Products
-                .Find(p => p.Id == item.ProductoId && p.EmpresaId == empresaId)
-                .FirstOrDefaultAsync();
+            if (request == null || request.Items == null || !request.Items.Any())
+                return BadRequest(new { message = "El pedido no tiene productos." });
 
-            if (product == null)
-                return BadRequest(new { message = $"El producto '{item.NombreProducto}' no existe." });
+            var detalles = new List<SaleItem>();
+            decimal total = 0;
 
-            detalles.Add(new SaleItem
+            foreach (var item in request.Items)
             {
-                ProductoId = product.Id,
-                NombreProducto = product.Nombre,
-                Cantidad = item.Cantidad,
-                PrecioUnitario = item.PrecioUnitario,
-                UnidadMedida = product.UnidadMedida,
-                CantidadPresentacion = 1,
-                PrecioPresentacion = item.PrecioUnitario,
-                Presentacion = "Unidad"
-            });
+                var product = await _context.Products
+                    .Find(p => p.Id == item.ProductoId && p.EmpresaId == empresaId)
+                    .FirstOrDefaultAsync();
 
-            total += item.Cantidad * item.PrecioUnitario;
+                if (product == null)
+                    return BadRequest(new { message = $"El producto '{item.NombreProducto}' no existe o no pertenece a esta tienda." });
+
+                detalles.Add(new SaleItem
+                {
+                    ProductoId = product.Id,
+                    NombreProducto = product.Nombre,
+                    Cantidad = item.Cantidad,
+                    PrecioUnitario = item.PrecioUnitario,
+                    UnidadMedida = product.UnidadMedida,
+                    CantidadPresentacion = 1,
+                    PrecioPresentacion = item.PrecioUnitario,
+                    Presentacion = "Unidad"
+                });
+
+                total += item.Cantidad * item.PrecioUnitario;
+            }
+
+            // Si el cliente de WhatsApp ya tiene registro en el sistema por su número, vincular su ObjectId
+            string? clienteId = null;
+            if (!string.IsNullOrWhiteSpace(request.WhatsAppCliente))
+            {
+                var digits = new string(request.WhatsAppCliente.Where(char.IsDigit).ToArray());
+                var existingClient = await _context.Clients
+                    .Find(c => c.EmpresaId == empresaId && (c.Telefono == request.WhatsAppCliente || (digits.Length >= 9 && c.Telefono.EndsWith(digits.Substring(digits.Length - 9)))))
+                    .FirstOrDefaultAsync();
+                if (existingClient != null)
+                {
+                    clienteId = existingClient.Id;
+                }
+            }
+
+            var newSale = new Sale
+            {
+                EmpresaId = empresaId,
+                ClienteId = clienteId, // null o ObjectId válido; NUNCA "WHATSAPP_BOT" porque ClienteId requiere formato ObjectId
+                NombreCliente = !string.IsNullOrWhiteSpace(request.NombreCliente) ? request.NombreCliente : "Cliente WhatsApp",
+                Detalles = detalles,
+                Subtotal = total,
+                Impuesto = 0,
+                Total = total,
+                MetodoPago = request.MetodoPago ?? "Yape",
+                EstadoPago = "Pendiente",
+                EstadoOrden = "PENDIENTE_PAGO",
+                OrigenPedido = "WhatsAppBot",
+                WhatsAppCliente = request.WhatsAppCliente,
+                CreadoPor = "WhatsAppBot",
+                CreadoPorNombre = "Bot WhatsApp",
+                FechaCreacion = DateTime.UtcNow,
+                DireccionEntrega = !string.IsNullOrWhiteSpace(request.DireccionEntrega) ? request.DireccionEntrega : "Coordinación por WhatsApp",
+                NotasEntrega = request.NotasEntrega,
+                TipoComprobante = "Nota de Venta",
+                CodigoTipoComprobanteSunat = "00",
+                Serie = "NV01",
+                ClienteTipoDocumento = "-"
+            };
+
+            await _context.Sales.InsertOneAsync(newSale);
+
+            return Ok(new { message = "Pedido registrado exitosamente", orderId = newSale.Id });
         }
-
-        var newSale = new Sale
+        catch (Exception ex)
         {
-            EmpresaId = empresaId,
-            ClienteId = "WHATSAPP_BOT",
-            NombreCliente = request.NombreCliente ?? "Cliente WhatsApp",
-            Detalles = detalles,
-            Subtotal = total,
-            Impuesto = 0,
-            Total = total,
-            MetodoPago = request.MetodoPago ?? "Yape/Plin",
-            EstadoPago = "Pendiente",
-            EstadoOrden = "PENDIENTE_PAGO",
-            OrigenPedido = "WhatsAppBot",
-            WhatsAppCliente = request.WhatsAppCliente,
-            CreadoPor = "WhatsAppBot",
-            CreadoPorNombre = "Bot WhatsApp",
-            FechaCreacion = DateTime.UtcNow,
-            DireccionEntrega = request.DireccionEntrega ?? "Coordinación por WhatsApp",
-            NotasEntrega = request.NotasEntrega,
-            TipoComprobante = "Nota de Venta",
-            CodigoTipoComprobanteSunat = "00",
-            Serie = "NV01",
-            ClienteTipoDocumento = "-"
-        };
-
-        await _context.Sales.InsertOneAsync(newSale);
-
-        return Ok(new { message = "Pedido registrado exitosamente", orderId = newSale.Id });
+            return StatusCode(500, new { message = "Error al registrar pedido del bot.", error = ex.Message });
+        }
     }
 
     // POST api/public/store/bot/upload-image

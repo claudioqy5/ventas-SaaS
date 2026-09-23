@@ -4033,3 +4033,25 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
   - **Arreglo del Sidebar**: Se corrigió un problema de *layout shift* (desplazamiento visual) al hacer hover sobre el menú lateral. Ahora los bloques de `.user-info` y `.nav-section-title` mantienen su altura constante mediante CSS, garantizando que los iconos no se muevan de lugar al expandir el menú.
   - **Scroll en Modal de Producto**: Se agregó un control estricto de altura (`max-height: 90vh` y `min-height: 0`) junto con `overflow-y: auto` en las columnas del inspector de productos (`.studio-details-column`), asegurando que las listas de especificaciones muy largas no queden cortadas y puedan desplazarse verticalmente.
   - **Línea de Tiempo para Estados de Pedidos**: Se rediseñó el modal de *Actualizar Estado del Pedido* en `OnlineOrders.vue`. Se reemplazó la lista básica de botones por una elegante **Línea de Tiempo (Timeline)** vertical. Ahora el usuario puede visualizar claramente el flujo lógico del pedido (Pendiente de Pago > En Preparación > Enviado > Entregado), con indicadores visuales de pasos completados (verde) y el paso actual (azul). El botón de Cancelar se separó visualmente como una acción secundaria.
+
+## Corrección Crítica - Error 500 en Creación de Pedidos desde Bot WhatsApp (n8n)
+- **Causa Raíz**: En `PublicStoreController.cs` (`SubmitBotOrder`), se estaba asignando `ClienteId = "WHATSAPP_BOT"`. Dado que el modelo `Sale.cs` define `ClienteId` con el atributo `[BsonRepresentation(BsonType.ObjectId)]`, MongoDB rechazaba la inserción arrojando `FormatException: 'WHATSAPP_BOT' is not a valid 24 digit hex string`, resultando en un error HTTP 500 hacia n8n.
+- **Solución Implementada**:
+  - Se modificó `ClienteId` para que sea `null` (o el `ObjectId` del cliente si su número telefónico ya existe en la colección `Clients`).
+  - Se corrigió de igual modo en `SubmitOrder` para compras como invitado (`client?.Id` en lugar de `"INVITADO"`).
+  - Se envolvió el método en un bloque `try/catch` con logging detallado para prevenir caídas silenciosas.
+  - Compilación validada en .NET 9 sin errores.
+
+## Definición Oficial - Métodos de Pago Exclusivos para Cobro del Bot WhatsApp
+- **Yape (Únicamente Yape, NO Plin)**:
+  - Número: **997 099 683**
+  - Titular: **GRUPO SERCAL S.A.C.**
+  - Solicitud: Captura del comprobante (foto) O número de operación de Yape.
+- **Transferencia Bancaria (Cuentas Corrientes)**:
+  - Titular: **GRUPO SERCAL S.A.C.**
+  - **BCP**: Cta. Corriente Soles `355-7216688-0-94` | CCI `002 355 007216688094 67`
+  - **Interbank**: Cta. Corriente Soles `500-3007303149` | CCI `003-500-003007303149-61`
+  - Solicitud: Captura de pantalla O número de constancia/operación.
+- **Canal de Asistencia Humana / Concierge**: `916 382 742` (WhatsApp oficial de soporte, NO para recibir yapeos).
+
+
