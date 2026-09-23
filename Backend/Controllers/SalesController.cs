@@ -314,7 +314,7 @@ public class SalesController : ControllerBase
         sale.SunatEstado = "No Aplica"; // Hasta que se pague
 
         // Campos clave para identificar que es un ticket pendiente
-        sale.Origen = "POS_TICKET";
+        sale.OrigenPedido = "POS_TICKET";
         sale.EstadoOrden = "PENDIENTE_PAGO";
         sale.EstadoPago = "Pendiente";
         sale.MetodoPago = "Mercado Pago (Link)";
