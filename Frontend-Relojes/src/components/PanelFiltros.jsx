@@ -4,15 +4,13 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap, isMobileOpen, onCloseMobile, maxPossiblePrice = 10000 }) {
-  const [openSections, setOpenSections] = useState({
-    precio: true,
-    genero: true,
-  });
+  // Por defecto, todos los filtros están cerrados (objeto vacío)
+  const [openSections, setOpenSections] = useState({});
 
   const toggleSection = (section) => {
     setOpenSections((prev) => ({ 
       ...prev, 
-      [section]: prev[section] === undefined ? false : !prev[section] 
+      [section]: prev[section] === true ? false : true 
     }));
   };
 
@@ -60,7 +58,7 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
                       (filters.dynamic ? Object.values(filters.dynamic).reduce((acc, val) => acc + (val ? val.length : 0), 0) : 0);
 
   const SectionHeader = ({ title, section }) => {
-    const isOpen = openSections[section] !== false;
+    const isOpen = openSections[section] === true;
     return (
       <div
         onClick={() => toggleSection(section)}
@@ -156,7 +154,7 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
 
       {/* Rango de Precios */}
       <SectionHeader title="Precio" section="precio" />
-      {openSections.precio !== false && (
+      {openSections.precio === true && (
         <div style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '12px', paddingX: '4px' }}>
           <Slider
             range
@@ -189,7 +187,7 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
 
       {/* Género */}
       <SectionHeader title="Género" section="genero" />
-      {openSections.genero !== false && (
+      {openSections.genero === true && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '4px', marginBottom: '16px' }}>
           {['Hombre', 'Mujer', 'Unisex'].map(val => {
             const isChecked = (filters.gender || []).includes(val);
@@ -216,7 +214,7 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
 
       {/* FILTROS DINÁMICOS (Estilo, Colección, Material, etc.) */}
       {dynamicAttributesMap && Object.entries(dynamicAttributesMap).map(([attrName, options]) => {
-        const isOpen = openSections[attrName] !== false;
+        const isOpen = openSections[attrName] === true;
         return options.length > 0 && (
           <div key={attrName} style={{ padding: '4px 0', borderBottom: '1px solid #f0f0f0' }}>
             <SectionHeader title={attrName} section={attrName} />
