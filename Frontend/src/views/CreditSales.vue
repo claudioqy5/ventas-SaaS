@@ -1,5 +1,8 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
+    <!-- Loader -->
+    <HamsterLoader v-if="loading" label="Cargando cuentas por cobrar..." />
+
     <!-- Barra lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5"/></svg><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
@@ -7,7 +10,7 @@
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
-            <nav class="nav-links">
+      <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg> <span class="sidebar-text">Dashboard</span></router-link>
@@ -51,7 +54,7 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">▫ Cuentas por Cobrar (Fiados)</h1>
+            <h1 class="text-title">Cuentas por Cobrar (Fiados)</h1>
             <p class="text-subtitle">Gestiona las deudas de tus clientes y registra los pagos</p>
           </div>
           <div v-if="metrics" class="credit-stats-card">
@@ -70,15 +73,21 @@
 
       <!-- Pestañas -->
       <div class="tabs-nav">
-        <button :class="['tab-btn', activeTab === 'pendientes' ? 'active' : '']" @click="activeTab = 'pendientes'">⏳ Deudas Pendientes</button>
-        <button :class="['tab-btn', activeTab === 'historico' ? 'active' : '']" @click="switchToHistory">✓ Histórico de Pagados</button>
+        <button :class="['tab-btn', activeTab === 'pendientes' ? 'active' : '']" @click="activeTab = 'pendientes'">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Deudas Pendientes
+        </button>
+        <button :class="['tab-btn', activeTab === 'historico' ? 'active' : '']" @click="switchToHistory">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><polyline points="20 6 9 17 4 12"/></svg>
+          Histórico de Pagados
+        </button>
       </div>
 
       <!-- TAB: Pendientes -->
       <template v-if="activeTab === 'pendientes'">
         <div class="card font-card">
           <div v-if="pendingSales.length === 0" class="empty-state">
-            🎉 ¡Excelente! No tienes cuentas por cobrar pendientes.
+            No tienes cuentas por cobrar pendientes en este momento.
           </div>
           <table v-else class="data-table">
             <thead>
@@ -97,7 +106,10 @@
                 <td>{{ sale.creadoPorNombre }}</td>
                 <td class="total-cell">S/. {{ sale.total.toFixed(2) }}</td>
                 <td>
-                  <button @click="openPayModal(sale)" class="btn btn-primary btn-sm">💰 Registrar Pago</button>
+                  <button @click="openPayModal(sale)" class="btn btn-primary btn-sm flex-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+                    <span>Registrar Pago</span>
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -137,7 +149,10 @@
       <!-- Modal para registrar pago -->
       <div v-if="showPayModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title">💰 Registrar Pago de Fiado</h2>
+          <h2 class="modal-title flex-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+            <span>Registrar Pago de Fiado</span>
+          </h2>
           <p class="modal-desc">Cliente: <strong>{{ currentSale?.nombreCliente }}</strong><br>Monto a cobrar: <strong>S/. {{ currentSale?.total.toFixed(2) }}</strong></p>
           
           <form @submit.prevent="submitPayment">
@@ -151,7 +166,10 @@
             
             <div class="modal-actions">
               <button type="button" @click="showPayModal = false" class="btn btn-secondary">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Confirmar Pago</button>
+              <button type="submit" class="btn btn-primary flex-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Confirmar Pago</span>
+              </button>
             </div>
           </form>
         </div>
@@ -165,10 +183,12 @@ import { API_URL } from '../config'
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import HamsterLoader from '../components/HamsterLoader.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
+const loading = ref(false)
 const activeTab = ref('pendientes')
 const pendingSales = ref([])
 const historySales = ref([])
@@ -191,17 +211,23 @@ const fetchMetrics = async () => {
 }
 
 const fetchPending = async () => {
+  loading.value = true
   try {
     const res = await fetch(`${API_URL}/api/creditsales/pending`, { headers: { 'Authorization': `Bearer ${authStore.token}` }})
     if (res.ok) pendingSales.value = await res.json()
-  } catch(e) {}
+  } catch(e) {} finally {
+    loading.value = false
+  }
 }
 
 const fetchHistory = async () => {
+  loading.value = true
   try {
     const res = await fetch(`${API_URL}/api/creditsales/history`, { headers: { 'Authorization': `Bearer ${authStore.token}` }})
     if (res.ok) historySales.value = await res.json()
-  } catch(e) {}
+  } catch(e) {} finally {
+    loading.value = false
+  }
 }
 
 const fetchPaymentMethods = async () => {

@@ -1,5 +1,8 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
+    <!-- Loader -->
+    <HamsterLoader v-if="loading" label="Cargando abastecimiento y compras..." />
+
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5"/></svg><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
@@ -7,7 +10,7 @@
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
-            <nav class="nav-links">
+      <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg> <span class="sidebar-text">Dashboard</span></router-link>
@@ -51,12 +54,14 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">✧ Abastecimiento y Compras</h1>
+            <h1 class="text-title">Abastecimiento y Compras</h1>
             <p class="text-subtitle">Registra compras a tus proveedores y consulta tu historial de costos</p>
           </div>
           <div class="header-actions">
-            <button @click="showRegisterForm = !showRegisterForm" class="btn btn-primary">
-              {{ showRegisterForm ? '≡ Ver Historial' : '➕ Registrar Compra' }}
+            <button @click="showRegisterForm = !showRegisterForm" class="btn btn-primary inline-flex items-center gap-2">
+              <svg v-if="!showRegisterForm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              <span>{{ showRegisterForm ? 'Ver Historial' : 'Registrar Compra' }}</span>
             </button>
           </div>
         </div>
@@ -182,6 +187,7 @@ import { API_URL } from '../config'
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import HamsterLoader from '../components/HamsterLoader.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -252,6 +258,7 @@ const grandTotal = computed(() => {
 })
 
 const fetchPurchases = async () => {
+  loading.value = true
   try {
     const res = await fetch(`${API_URL}/api/purchases`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
@@ -260,6 +267,8 @@ const fetchPurchases = async () => {
     purchases.value = await res.json()
   } catch (err) {
     console.error('Error fetching purchases history')
+  } finally {
+    loading.value = false
   }
 }
 

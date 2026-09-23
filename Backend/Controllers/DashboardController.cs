@@ -70,10 +70,43 @@ public class DashboardController : ControllerBase
         ).ToListAsync();
         var todaySales = sales.Where(s => s.FechaCreacion.AddHours(-5).Date == targetDate.Date).ToList();
         var totalIngresos = todaySales.Sum(s => (double)s.Total);
-        var totalNetoDia = todaySales.Sum(s => (double)s.Subtotal);
         var totalVentasCount = todaySales.Count;
 
-        // Mapear costos de productos para calcular la ganancia bruta
+        // Clasificación de ventas por tipo de comprobante del día
+        var notasVentaToday = todaySales.Where(s => string.IsNullOrEmpty(s.TipoComprobante) || s.TipoComprobante == "Nota de Venta").ToList();
+        double totalNotasVentaHoy = notasVentaToday.Sum(s => (double)s.Total);
+        int countNotasVentaHoy = notasVentaToday.Count;
+
+        var boletasToday = todaySales.Where(s => s.TipoComprobante == "Boleta").ToList();
+        double totalBoletasHoy = boletasToday.Sum(s => (double)s.Total);
+        int countBoletasHoy = boletasToday.Count;
+
+        var facturasToday = todaySales.Where(s => s.TipoComprobante == "Factura").ToList();
+        double totalFacturasHoy = facturasToday.Sum(s => (double)s.Total);
+        int countFacturasHoy = facturasToday.Count;
+
+        // Desglose tributario SUNAT (Boletas y Facturas llevan IGV 18%, Notas de Venta 0%)
+        double totalNetoIngresosHoy = 0;
+        double totalIgvHoy = 0;
+
+        foreach (var s in todaySales)
+        {
+            var tipo = s.TipoComprobante ?? "Nota de Venta";
+            double totalVal = (double)s.Total;
+            if (tipo == "Boleta" || tipo == "Factura")
+            {
+                double neto = Math.Round(totalVal / 1.18, 2);
+                double igv = Math.Round(totalVal - neto, 2);
+                totalNetoIngresosHoy += neto;
+                totalIgvHoy += igv;
+            }
+            else
+            {
+                totalNetoIngresosHoy += totalVal;
+            }
+        }
+
+        // Mapear costos de productos para calcular el costo total y la ganancia real post-impuestos
         var productCostMap = products.ToDictionary(p => p.Id, p => p.PrecioCosto);
         double totalCostoHoy = 0;
         foreach (var s in todaySales)
@@ -86,7 +119,7 @@ public class DashboardController : ControllerBase
                 }
             }
         }
-        double gananciaBrutaHoy = totalIngresos - totalCostoHoy;
+        double gananciaRealHoy = totalNetoIngresosHoy - totalCostoHoy;
 
         // Calcular el total gastado en compras (solo si el usuario tiene permiso para verlo)
         double totalGastosCompras = 0;
@@ -179,8 +212,16 @@ public class DashboardController : ControllerBase
             TotalProductos = totalProductos,
             TotalVentas = totalVentasCount,
             TotalIngresos = totalIngresos,
-            TotalNetoDia = totalNetoDia,
-            GananciaBruta = gananciaBrutaHoy,
+            TotalNetoDia = totalNetoIngresosHoy,
+            TotalIgv = totalIgvHoy,
+            GananciaReal = gananciaRealHoy,
+            GananciaBruta = gananciaRealHoy,
+            TotalNotasVenta = totalNotasVentaHoy,
+            CountNotasVenta = countNotasVentaHoy,
+            TotalBoletas = totalBoletasHoy,
+            CountBoletas = countBoletasHoy,
+            TotalFacturas = totalFacturasHoy,
+            CountFacturas = countFacturasHoy,
             TotalGastosCompras = totalGastosCompras,
             ProductosBajoStockCount = productosBajoStock.Count,
             ProductosBajoStock = productosBajoStock.Take(5),

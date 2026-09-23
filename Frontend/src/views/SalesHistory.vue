@@ -92,8 +92,10 @@
             <tr v-for="(sale, index) in filteredSales" :key="sale.id">
               <td><strong>{{ index + 1 }}</strong></td>
               <td>
-                <span class="badge" style="font-weight: 700; font-size: 0.78rem; background: #f8fafc; color: #334155; padding: 4px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 6px;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span class="badge" :class="getVoucherBadgeClass(sale.tipoComprobante)">
+                  <svg v-if="sale.tipoComprobante && sale.tipoComprobante.toLowerCase().includes('factura')" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  <svg v-else-if="sale.tipoComprobante && sale.tipoComprobante.toLowerCase().includes('boleta')" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="10" cy="13" r="2"/><line x1="14" y1="13" x2="16" y2="13"/><line x1="14" y1="17" x2="16" y2="17"/></svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                   {{ sale.numeroComprobante || (sale.tipoComprobante || 'VTA') }}
                 </span>
               </td>
@@ -228,11 +230,33 @@
 
             <button 
               @click="printSaleTicket(selectedSale)" 
-              class="btn btn-primary"
-              style="background-color: #10b981; border: none; font-size: 0.95rem; font-weight: 500; padding: 12px 20px; border-radius: var(--radius-sm); color: white; display: flex; align-items: center; justify-content: center; gap: 8px;"
+              class="btn btn-primary btn-ticket"
             >
-              🖨️ Descargar Boleta (PDF)
+              🖨️ Descargar {{ selectedSale?.tipoComprobante || 'Comprobante' }} (PDF)
             </button>
+
+            <div v-if="selectedSale?.sunatXmlUrl || selectedSale?.sunatCdrUrl" style="display: flex; gap: 10px;">
+              <a 
+                v-if="selectedSale?.sunatXmlUrl" 
+                :href="API_URL + selectedSale.sunatXmlUrl" 
+                target="_blank" 
+                class="btn btn-outline" 
+                style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #e2e8f0; padding: 10px; border-radius: var(--radius-sm); color: #334155; text-decoration: none; font-weight: 500;"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="16 13 8 13"/><polyline points="16 17 8 17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Descargar XML
+              </a>
+              <a 
+                v-if="selectedSale?.sunatCdrUrl" 
+                :href="API_URL + selectedSale.sunatCdrUrl" 
+                target="_blank" 
+                class="btn btn-outline" 
+                style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #e2e8f0; padding: 10px; border-radius: var(--radius-sm); color: #334155; text-decoration: none; font-weight: 500;"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Descargar CDR
+              </a>
+            </div>
             
             <div v-if="selectedSale?.revertida" style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); text-align: center; color: #b91c1c; font-weight: 500; font-size: 0.9rem;">
               🚫 Esta venta fue revertida por {{ selectedSale.revertidaPorNombre || 'el sistema' }} el {{ formatDateTime(selectedSale.fechaReversion) }}
@@ -270,6 +294,14 @@ const getTodayDateString = () => {
 
 const filterDate = ref(getTodayDateString())
 const selectedSale = ref(null)
+
+const getVoucherBadgeClass = (tipo) => {
+  if (!tipo) return 'voucher-nota'
+  const t = tipo.toLowerCase()
+  if (t.includes('factura')) return 'voucher-factura'
+  if (t.includes('boleta')) return 'voucher-boleta'
+  return 'voucher-nota'
+}
 
 const fetchSales = async () => {
   loading.value = true
@@ -780,5 +812,52 @@ onMounted(() => {
 .btn-action-pill.danger:hover {
   background: #fee2e2;
   transform: translateY(-1px);
+}
+
+.badge {
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.voucher-factura {
+  background: #f3e8ff;
+  color: #7e22ce;
+  border-color: #d8b4fe;
+}
+.voucher-boleta {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #bae6fd;
+}
+.voucher-nota {
+  background: #f8fafc;
+  color: #334155;
+  border-color: #e2e8f0;
+}
+
+.btn-ticket {
+  background-color: #10b981; 
+  border: none; 
+  font-size: 0.95rem; 
+  font-weight: 500; 
+  padding: 12px 20px; 
+  border-radius: var(--radius-sm); 
+  color: white; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 8px;
+  transition: all 0.2s;
+}
+.btn-ticket:hover {
+  background-color: #059669;
+}
+.btn-outline:hover {
+  background-color: #f8fafc;
 }
 </style>

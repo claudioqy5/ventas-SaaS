@@ -1,5 +1,8 @@
 <template>
   <div class="dashboard-layout">
+    <!-- Loader -->
+    <HamsterLoader v-if="loading" label="Cargando estadísticas del dashboard..." />
+
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5"/></svg><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
@@ -7,7 +10,7 @@
         <p class="user-name">Hola, {{ authStore.user?.nombre }}</p>
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
-            <nav class="nav-links">
+      <nav class="nav-links">
         <!-- SECCIÓN: ANÁLISIS -->
         <div class="nav-section-title">Análisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg> <span class="sidebar-text">Dashboard</span></router-link>
@@ -50,7 +53,7 @@
     <main class="main-content">
       <header class="content-header" style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <h1 class="text-title">◫ Resumen del Negocio</h1>
+          <h1 class="text-title">Resumen del Negocio</h1>
           <p class="text-subtitle">Monitorea tus ventas, inventario y alertas</p>
         </div>
         <div style="display: flex; gap: 20px; align-items: center;">
@@ -80,26 +83,69 @@
         </div>
       </header>
 
-      <!-- Metric Grid -->
-      <div class="grid grid-4 metrics-container">
-        <div class="kpi-total-card bruto" style="background: #eef2ff; border: 1px solid #c7d2fe; padding: 20px 24px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center; cursor: pointer;">
-          <div style="font-size: 0.75rem; font-weight: 500; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px;">Venta Total (Con IGV)</div>
-          <div style="font-size: 1.8rem; font-weight: 500; color: #1e1b4b; margin-top: 4px;">S/. {{ (stats.totalIngresos || 0).toFixed(2) }}</div>
+      <!-- Main Financial KPI Summary Cards -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px;">
+        <!-- Venta Total Cobrada -->
+        <div class="kpi-total-card bruto" style="background: linear-gradient(135deg, #eef2ff, #e0e7ff); border: 1px solid #c7d2fe; padding: 18px 20px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm);">
+          <div style="font-size: 0.75rem; font-weight: 700; color: #4338ca; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Venta Total (Ingreso Bruto)
+          </div>
+          <div style="font-size: 1.7rem; font-weight: 700; color: #1e1b4b; margin-top: 6px;">S/. {{ (stats.totalIngresos || 0).toFixed(2) }}</div>
+          <div style="font-size: 0.75rem; color: #6366f1; margin-top: 2px;">{{ stats.totalVentas || 0 }} ventas registradas hoy</div>
         </div>
 
-        <div class="kpi-total-card neto" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px 24px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center; cursor: pointer;">
-          <div style="font-size: 0.75rem; font-weight: 500; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">Ganancia Bruta (Pre-Impuesto)</div>
-          <div style="font-size: 1.8rem; font-weight: 500; color: #14532d; margin-top: 4px;">S/. {{ (stats.gananciaBruta || 0).toFixed(2) }}</div>
+        <!-- Ganancia Real (Post-Impuestos y Costos) -->
+        <div class="kpi-total-card neto" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #86efac; padding: 18px 20px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm);">
+          <div style="font-size: 0.75rem; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            Ganancia Real Neta
+          </div>
+          <div style="font-size: 1.7rem; font-weight: 700; color: #14532d; margin-top: 6px;">S/. {{ (stats.gananciaReal || stats.gananciaBruta || 0).toFixed(2) }}</div>
+          <div style="font-size: 0.75rem; color: #16a34a; margin-top: 2px;">Descontado IGV (18%) y Costos de Producto</div>
         </div>
 
-        <div class="kpi-total-card realizadas" style="background: #fff0f6; border: 1px solid #ffd8e8; padding: 20px 24px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center; cursor: pointer;">
-          <div style="font-size: 0.75rem; font-weight: 500; color: #d01c68; text-transform: uppercase; letter-spacing: 0.5px;">Ventas Realizadas</div>
-          <div style="font-size: 1.8rem; font-weight: 500; color: #500e2e; margin-top: 4px;">{{ stats.totalVentas || 0 }}</div>
+        <!-- Impuesto IGV acumulado para SUNAT -->
+        <div class="kpi-total-card igv" style="background: linear-gradient(135deg, #fef3c7, #fde68a); border: 1px solid #fcd34d; padding: 18px 20px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm);">
+          <div style="font-size: 0.75rem; font-weight: 700; color: #b45309; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Impuesto IGV (18% SUNAT)
+          </div>
+          <div style="font-size: 1.7rem; font-weight: 700; color: #78350f; margin-top: 6px;">S/. {{ (stats.totalIgv || 0).toFixed(2) }}</div>
+          <div style="font-size: 0.75rem; color: #d97706; margin-top: 2px;">Generado por Boletas y Facturas</div>
+        </div>
+      </div>
+
+      <!-- Breakdown by Voucher Type (Notas de Venta, Boletas, Facturas) -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <!-- Card: Notas de Venta -->
+        <div class="kpi-total-card nv" style="background: white; border: 1px solid #e2e8f0; border-left: 4px solid #64748b; padding: 16px 20px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.78rem; font-weight: 700; color: #475569; text-transform: uppercase;">Notas de Venta</span>
+            <span style="background: #f1f5f9; color: #475569; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px;">{{ stats.countNotasVenta || 0 }} emitidas</span>
+          </div>
+          <div style="font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-top: 6px;">S/. {{ (stats.totalNotasVenta || 0).toFixed(2) }}</div>
+          <div style="font-size: 0.73rem; color: #94a3b8; margin-top: 2px;">Comprobante interno (Sin IGV)</div>
         </div>
 
-        <div class="kpi-total-card activas" style="background: #fffbeb; border: 1px solid #fef3c7; padding: 20px 24px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: center; cursor: pointer;">
-          <div style="font-size: 0.75rem; font-weight: 500; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px;">Productos Activos</div>
-          <div style="font-size: 1.8rem; font-weight: 500; color: #451a03; margin-top: 4px;">{{ stats.totalProductos || 0 }}</div>
+        <!-- Card: Boletas de Venta -->
+        <div class="kpi-total-card boletas" style="background: white; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.78rem; font-weight: 700; color: #1d4ed8; text-transform: uppercase;">Boletas de Venta</span>
+            <span style="background: #dbeafe; color: #1e40af; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px;">{{ stats.countBoletas || 0 }} emitidas</span>
+          </div>
+          <div style="font-size: 1.5rem; font-weight: 700; color: #1e3a8a; margin-top: 6px;">S/. {{ (stats.totalBoletas || 0).toFixed(2) }}</div>
+          <div style="font-size: 0.73rem; color: #3b82f6; margin-top: 2px;">Facturación Electrónica (18% IGV)</div>
+        </div>
+
+        <!-- Card: Facturas -->
+        <div class="kpi-total-card facturas" style="background: white; border: 1px solid #e2e8f0; border-left: 4px solid #7c3aed; padding: 16px 20px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.78rem; font-weight: 700; color: #6d28d9; text-transform: uppercase;">Facturas</span>
+            <span style="background: #f3e8ff; color: #6b21a8; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px;">{{ stats.countFacturas || 0 }} emitidas</span>
+          </div>
+          <div style="font-size: 1.5rem; font-weight: 700; color: #4c1d95; margin-top: 6px;">S/. {{ (stats.totalFacturas || 0).toFixed(2) }}</div>
+          <div style="font-size: 0.73rem; color: #8b5cf6; margin-top: 2px;">Facturación Electrónica (18% IGV)</div>
         </div>
       </div>
 
@@ -404,16 +450,27 @@ import { API_URL } from '../config'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import HamsterLoader from '../components/HamsterLoader.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
+
+const loading = ref(false)
 
 const stats = ref({
   totalProductos: 0,
   totalVentas: 0,
   totalIngresos: 0,
   totalNetoDia: 0,
+  totalIgv: 0,
+  gananciaReal: 0,
   gananciaBruta: 0,
+  totalNotasVenta: 0,
+  countNotasVenta: 0,
+  totalBoletas: 0,
+  countBoletas: 0,
+  totalFacturas: 0,
+  countFacturas: 0,
   totalGastosCompras: 0,
   productosBajoStockCount: 0,
   productosBajoStock: [],
@@ -538,6 +595,7 @@ const getTodayFormatted = () => {
 const selectedDate = ref(getTodayFormatted())
 
 const fetchStats = async () => {
+  loading.value = true
   try {
     const res = await fetch(`${API_URL}/api/dashboard?fecha=${selectedDate.value}`, {
       headers: {
@@ -568,6 +626,8 @@ const fetchStats = async () => {
     }
   } catch (err) {
     console.error('Error fetching dashboard stats', err)
+  } finally {
+    loading.value = false
   }
 }
 

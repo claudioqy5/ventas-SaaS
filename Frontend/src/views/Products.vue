@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard-layout">
+    <HamsterLoader v-if="loading" label="Cargando inventario..." />
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand">
@@ -1201,10 +1202,12 @@ import { API_URL } from '../config'
 import { ref, reactive, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import HamsterLoader from '../components/HamsterLoader.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
+const loading = ref(false)
 const products = ref([])
 const categories = ref([])
 const showModal = ref(false);
@@ -1717,6 +1720,7 @@ const initializeAttributes = (existingAttributes = []) => {
 };
 
 const fetchProducts = async () => {
+  loading.value = true
   try {
     const res = await fetch(`${API_URL}/api/products`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
@@ -1726,6 +1730,8 @@ const fetchProducts = async () => {
     computeStockAnalysis()
   } catch (err) {
     console.error('Error fetching inventory products')
+  } finally {
+    loading.value = false
   }
 }
 

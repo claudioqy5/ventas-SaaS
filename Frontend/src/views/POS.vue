@@ -1,5 +1,8 @@
 <template>
   <div class="dashboard-layout">
+    <!-- Loader -->
+    <HamsterLoader v-if="loading" label="Cargando punto de venta..." />
+
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar" @mouseenter="isSidebarHovered = true" @mouseleave="isSidebarHovered = false">
       <div class="sidebar-brand"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5"/></svg><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
@@ -563,6 +566,7 @@ import { API_URL } from '../config'
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import HamsterLoader from '../components/HamsterLoader.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -704,6 +708,7 @@ watch(facturaRuc, (newRuc) => {
 })
 
 const fetchProducts = async () => {
+  loading.value = true
   try {
     const res = await fetch(`${API_URL}/api/products`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
@@ -736,6 +741,8 @@ const fetchProducts = async () => {
     products.value = fetched
   } catch (err) {
     console.error('Error fetching products for POS', err)
+  } finally {
+    loading.value = false
   }
 }
 

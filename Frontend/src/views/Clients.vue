@@ -1,5 +1,8 @@
 <template>
   <div class="dashboard-layout">
+    <!-- Loader -->
+    <HamsterLoader v-if="loading" label="Cargando clientes..." />
+
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5"/></svg><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
@@ -543,7 +546,10 @@
             </div>
           </div>
           <div class="modal-actions" style="display: flex; justify-content: space-between;">
-            <button v-if="selectedProfile.esUsuarioEcommerce && !selectedProfile.correoVerificado" @click="verifyClient(selectedProfile.id)" class="btn btn-primary" style="background-color: #10b981; border: none;">✅ Activar Cuenta (Forzar Verificación)</button>
+            <button v-if="selectedProfile.esUsuarioEcommerce && !selectedProfile.correoVerificado" @click="verifyClient(selectedProfile.id)" class="btn btn-primary" style="background-color: #10b981; border: none; display: inline-flex; align-items: center; gap: 4px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Activar Cuenta (Forzar Verificación)</span>
+            </button>
             <div style="flex-grow: 1;"></div>
             <button @click="showProfileModal = false" class="btn btn-secondary">Cerrar</button>
           </div>
@@ -558,6 +564,7 @@ import { API_URL } from '../config'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import HamsterLoader from '../components/HamsterLoader.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -599,7 +606,10 @@ const form = reactive({
   referencia: ''
 })
 
+const loading = ref(false)
+
 const fetchClients = async () => {
+  loading.value = true
   try {
     const res = await fetch(`${API_URL}/api/clients`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
@@ -608,6 +618,8 @@ const fetchClients = async () => {
     clients.value = await res.json()
   } catch (err) {
     console.error('Error fetching clients')
+  } finally {
+    loading.value = false
   }
 }
 
