@@ -8,12 +8,12 @@
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
             <nav class="nav-links">
-        <!-- SECCIÓN: ANÁLISIS -->
-        <div class="nav-section-title">Análisis</div>
+        <!-- SECCIÃ“N: ANÃLISIS -->
+        <div class="nav-section-title">AnÃ¡lisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg> <span class="sidebar-text">Dashboard</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> <span class="sidebar-text">Historial de Negocio</span></router-link>
 
-        <!-- SECCIÓN: VENTAS -->
+        <!-- SECCIÃ“N: VENTAS -->
         <div class="nav-section-title">Ventas</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18 M16 10a4 4 0 0 1-8 0"/></svg> <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg> <span class="sidebar-text">Historial Ventas</span></router-link>
@@ -26,24 +26,24 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v2 M3 5v14a2 2 0 0 0 2 2h16v-5 M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg> <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4 M2 13v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4 M2 9h20 M2 13h20"/></svg> <span class="sidebar-text">Formas de Pago</span></router-link>
 
-        <!-- SECCIÓN: LOGÍSTICA -->
-        <div class="nav-section-title">Logística</div>
+        <!-- SECCIÃ“N: LOGÃSTICA -->
+        <div class="nav-section-title">LogÃ­stica</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">CategorÃ­as</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 2v6h-6 M3 12a9 9 0 0 1 15-6.7L21 8 M3 22v-6h6 M21 12a9 9 0 0 1-15 6.7L3 16"/></svg> <span class="sidebar-text">Movimientos</span></router-link>
 
-        <!-- SECCIÓN: COMPRAS -->
+        <!-- SECCIÃ“N: COMPRAS -->
         <div class="nav-section-title">Compras</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18"/></svg> <span class="sidebar-text">Compras</span></router-link>
 
-        <!-- SECCIÓN: GESTIÓN -->
-        <div class="nav-section-title">Gestión</div>
+        <!-- SECCIÃ“N: GESTIÃ“N -->
+        <div class="nav-section-title">GestiÃ³n</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg> <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span class="sidebar-text">Recordatorios</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar SesiÃ³n</span></button>
     </aside>
 
     <!-- Main Content -->
@@ -77,16 +77,16 @@
       </div>
 
       <!-- Table Section -->
-      <div v-else class="card font-card">
-<div v-else-if="reminders.length === 0" class="empty-state">
-          No tienes recordatorios o cuentas registradas. ¡Haz clic en "Agregar Cuenta / Recordatorio" para registrar uno!
+      <div v-if="!loading" class="card font-card">
+        <div v-if="reminders.length === 0" class="empty-state">
+          No tienes recordatorios o cuentas registradas. Â¡Haz clic en "Agregar Cuenta / Recordatorio" para registrar uno!
         </div>
         <div v-else class="table-responsive">
           <table class="data-table">
             <thead>
               <tr>
-                <th>Título</th>
-                <th>Descripción</th>
+                <th>TÃ­tulo</th>
+                <th>DescripciÃ³n</th>
                 <th>Monto (S/.)</th>
                 <th>Fecha de Vencimiento</th>
                 <th>Estado</th>
@@ -98,7 +98,7 @@
                 <td>
                   <div style="display: flex; align-items: center; gap: 6px;">
                     <strong>{{ rem.titulo }}</strong>
-                    <span v-if="rem.recurrente" title="Repetir mensualmente" style="font-size: 0.85rem; cursor: help;">🔁</span>
+                    <span v-if="rem.recurrente" title="Repetir mensualmente" style="font-size: 0.85rem; cursor: help;">ðŸ”</span>
                   </div>
                 </td>
                 <td style="color: var(--text-muted);">{{ rem.descripcion || '-' }}</td>
@@ -118,7 +118,9 @@
                 </td>
                 <td>
                   <div class="actions-cell">
-                    <button v-if="rem.estado === 'Pendiente'" @click="markAsPaid(rem)" class="btn-action check" title="Marcar como Pagado" style="color: #16a34a; font-size: 1.1rem; font-weight: 500;">✓</button>
+                    <button v-if="rem.estado === 'Pendiente'" @click="markAsPaid(rem)" class="btn-action check" title="Marcar como Pagado">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                    </button>
                     <button @click="openEditModal(rem)" class="btn-action edit" title="Editar">
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
@@ -145,12 +147,12 @@
         <form @submit.prevent="saveReminder">
           <div class="modal-body" style="text-align: left; display: flex; flex-direction: column; gap: 16px; padding: 20px 0;">
             <div class="form-group">
-              <label for="titulo" class="font-bold">Título / Nombre de la Cuenta *</label>
+              <label for="titulo" class="font-bold">TÃ­tulo / Nombre de la Cuenta *</label>
               <input type="text" id="titulo" v-model="form.titulo" required placeholder="Ej: Pago de Alquiler de Local" class="form-input w-full" style="padding: 10px; margin-top: 6px; border: 1px solid var(--border-color); border-radius: var(--radius-sm);" />
             </div>
 
             <div class="form-group">
-              <label for="descripcion" class="font-bold">Descripción (Detalles de pago)</label>
+              <label for="descripcion" class="font-bold">DescripciÃ³n (Detalles de pago)</label>
               <textarea id="descripcion" v-model="form.descripcion" placeholder="Ej: Depositar a la cuenta corriente del arrendador BCP 191..." class="form-input w-full" style="padding: 10px; margin-top: 6px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); min-height: 80px;"></textarea>
             </div>
 
@@ -169,15 +171,15 @@
             <div class="form-group">
               <label for="estado" class="font-bold">Estado</label>
               <select id="estado" v-model="form.estado" class="form-input w-full" style="padding: 10px; margin-top: 6px; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
-                <option value="Pendiente">⏳ Pendiente</option>
-                <option value="Pagado">✧ Pagado</option>
-                <option value="Completado">✓ Completado</option>
+                <option value="Pendiente">â³ Pendiente</option>
+                <option value="Pagado">âœ§ Pagado</option>
+                <option value="Completado">âœ“ Completado</option>
               </select>
             </div>
 
             <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 6px;">
               <input type="checkbox" id="recurrente" v-model="form.recurrente" style="width: 18px; height: 18px; cursor: pointer;" />
-              <label for="recurrente" class="font-bold" style="cursor: pointer; user-select: none;">🔁 Repetir mensualmente automáticamente</label>
+              <label for="recurrente" class="font-bold" style="cursor: pointer; user-select: none;">ðŸ” Repetir mensualmente automÃ¡ticamente</label>
             </div>
           </div>
           <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px;">
@@ -243,10 +245,10 @@ const getDaysRemainingText = (rem) => {
   if (rem.estado !== 'Pendiente') return 'Solventado'
   const diffTime = new Date(rem.fechaVencimiento) - new Date()
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  if (diffDays < 0) return `Vencido hace ${Math.abs(diffDays)} días`
+  if (diffDays < 0) return `Vencido hace ${Math.abs(diffDays)} dÃ­as`
   if (diffDays === 0) return 'Vence hoy'
-  if (diffDays === 1) return 'Vence mañana'
-  return `Vence en ${diffDays} días`
+  if (diffDays === 1) return 'Vence maÃ±ana'
+  return `Vence en ${diffDays} dÃ­as`
 }
 
 const formatDate = (dateStr) => {
@@ -359,7 +361,7 @@ const markAsPaid = async (rem) => {
 }
 
 const deleteReminder = async (id) => {
-  if (!confirm('¿Estás seguro de eliminar este recordatorio?')) return
+  if (!confirm('Â¿EstÃ¡s seguro de eliminar este recordatorio?')) return
   try {
     const res = await fetch(`${API_URL}/api/reminders/${id}`, {
       method: 'DELETE',

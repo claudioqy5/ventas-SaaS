@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -61,7 +61,7 @@
 
 
       <!-- Tabla de datos principal -->
-      <div v-else class="card font-card">
+      <div v-if="!loading" class="card font-card">
         <!-- Seccion de filtros de busqueda -->
         <div class="table-filters" style="margin-bottom: 20px;">
           <input v-model="searchQuery" @input="debouncedFetch" type="text" placeholder="🔍 Buscar por producto..." class="filter-input" />
@@ -72,11 +72,11 @@
             <input v-model="endDate" @change="fetchMovements" type="date" class="filter-date" />
           </div>
         </div>
-<div v-else-if="movements.length === 0" class="empty-state">
+        <div v-if="!loading && movements.length === 0" class="empty-state">
           No se encontraron movimientos registrados en este rango de fechas.
         </div>
 
-        <div v-else class="table-responsive">
+        <div v-if="!loading && movements.length > 0" class="table-responsive">
           <table class="data-table">
             <thead>
               <tr>

@@ -93,11 +93,11 @@
       </div>
 
       <!-- Lista de Datos (Dinámica según Tab) -->
-      <div v-else class="card font-card">
-        <div v-if="filteredItems.length === 0" class="empty-state">
+      <div v-if="!loading" class="card font-card">
+        <div v-if="!loading && filteredItems.length === 0" class="empty-state">
           No se encontraron {{ activeTabLabel }} que coincidan.
         </div>
-        <table v-else class="data-table">
+        <table v-if="!loading && filteredItems.length > 0" class="data-table">
           <thead>
             <tr>
               <th style="width: 50px;">N°</th>

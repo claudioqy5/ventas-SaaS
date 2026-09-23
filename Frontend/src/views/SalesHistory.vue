@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -8,12 +8,12 @@
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
             <nav class="nav-links">
-        <!-- SECCIÓN: ANÁLISIS -->
-        <div class="nav-section-title">Análisis</div>
+        <!-- SECCIÃ“N: ANÃLISIS -->
+        <div class="nav-section-title">AnÃ¡lisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg> <span class="sidebar-text">Dashboard</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> <span class="sidebar-text">Historial de Negocio</span></router-link>
 
-        <!-- SECCIÓN: VENTAS -->
+        <!-- SECCIÃ“N: VENTAS -->
         <div class="nav-section-title">Ventas</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18 M16 10a4 4 0 0 1-8 0"/></svg> <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg> <span class="sidebar-text">Historial Ventas</span></router-link>
@@ -26,24 +26,24 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v2 M3 5v14a2 2 0 0 0 2 2h16v-5 M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg> <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4 M2 13v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4 M2 9h20 M2 13h20"/></svg> <span class="sidebar-text">Formas de Pago</span></router-link>
 
-        <!-- SECCIÓN: LOGÍSTICA -->
-        <div class="nav-section-title">Logística</div>
+        <!-- SECCIÃ“N: LOGÃSTICA -->
+        <div class="nav-section-title">LogÃ­stica</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">CategorÃ­as</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 2v6h-6 M3 12a9 9 0 0 1 15-6.7L21 8 M3 22v-6h6 M21 12a9 9 0 0 1-15 6.7L3 16"/></svg> <span class="sidebar-text">Movimientos</span></router-link>
 
-        <!-- SECCIÓN: COMPRAS -->
+        <!-- SECCIÃ“N: COMPRAS -->
         <div class="nav-section-title">Compras</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18"/></svg> <span class="sidebar-text">Compras</span></router-link>
 
-        <!-- SECCIÓN: GESTIÓN -->
-        <div class="nav-section-title">Gestión</div>
+        <!-- SECCIÃ“N: GESTIÃ“N -->
+        <div class="nav-section-title">GestiÃ³n</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg> <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span class="sidebar-text">Recordatorios</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar SesiÃ³n</span></button>
     </aside>
 
     <!-- Area de contenido principal -->
@@ -60,7 +60,7 @@
       </div>
 
 
-      <div v-else class="card font-card">
+      <div v-if="!loading" class="card font-card">
         <div class="filters-container">
           <input v-model="searchQuery" type="text" placeholder="Buscar por cliente o cajero..." class="filter-input" />
           
@@ -80,26 +80,26 @@
             <input v-model="filterDateTo" type="date" class="filter-select" style="width: 140px;" />
           </div>
 
-          <!-- Filtro de Método de Pago Dinámico -->
-          <select v-model="filterPayment" class="filter-select" title="Filtrar por método de pago">
-            <option value="">Todos los Métodos</option>
+          <!-- Filtro de MÃ©todo de Pago DinÃ¡mico -->
+          <select v-model="filterPayment" class="filter-select" title="Filtrar por mÃ©todo de pago">
+            <option value="">Todos los MÃ©todos</option>
             <option v-for="pm in activePaymentMethods" :key="pm.id" :value="pm.nombre">{{ pm.nombre }}</option>
           </select>
         </div>
-<div v-else-if="filteredSales.length === 0" class="empty-state">
+<div v-if="!loading && filteredSales.length === 0" class="empty-state">
           No se encontraron ventas registradas que coincidan con los filtros.
         </div>
 
         <!-- Registro de ventas del historial -->
-        <table v-else class="data-table">
+        <table v-if="!loading && filteredSales.length > 0" class="data-table">
           <thead>
             <tr>
-              <th style="width: 50px;">N°</th>
+              <th style="width: 50px;">NÂ°</th>
               <th>Comprobante</th>
               <th>Fecha y Hora</th>
               <th>Cliente</th>
               <th>Cajero / Responsable</th>
-              <th>Método de Pago</th>
+              <th>MÃ©todo de Pago</th>
               <th>Total</th>
               <th style="text-align: center;">Acciones</th>
             </tr>
@@ -163,7 +163,7 @@
         <div class="modal-content card max-width-600">
           <header class="modal-header">
             <h3>Detalles de la Venta</h3>
-            <button @click="selectedSale = null" class="close-btn">×</button>
+            <button @click="selectedSale = null" class="close-btn">Ã—</button>
           </header>
 
           <div class="sale-meta-grid">
@@ -186,7 +186,7 @@
               <span class="meta-val">{{ formatCreatorName(selectedSale.creadoPorNombre) }}</span>
             </div>
             <div class="meta-item">
-              <span class="meta-label">Método de Pago:</span>
+              <span class="meta-label">MÃ©todo de Pago:</span>
               <span class="meta-val">{{ selectedSale.metodoPago }}</span>
             </div>
             <div v-if="selectedSale.clienteNumeroDocumento || selectedSale.rucFactura" class="meta-item">
@@ -199,7 +199,7 @@
             <table class="modal-details-table">
               <thead>
                 <tr>
-                  <th style="width: 40px;">N°</th>
+                  <th style="width: 40px;">NÂ°</th>
                   <th>Producto</th>
                   <th style="text-align: center;">Cant.</th>
                   <th style="text-align: right;">Unit.</th>
@@ -241,14 +241,14 @@
               rel="noopener noreferrer"
               class="btn btn-whatsapp"
             >
-              📱 Enviar Comprobante por WhatsApp
+              ðŸ“± Enviar Comprobante por WhatsApp
             </a>
 
             <button 
               @click="printSaleTicket(selectedSale)" 
               class="btn btn-primary btn-ticket"
             >
-              🖨️ Descargar {{ selectedSale?.tipoComprobante || 'Comprobante' }} (PDF)
+              ðŸ–¨ï¸ Descargar {{ selectedSale?.tipoComprobante || 'Comprobante' }} (PDF)
             </button>
 
             <div v-if="selectedSale?.sunatXmlUrl || selectedSale?.sunatCdrUrl" style="display: flex; gap: 10px;">
@@ -275,7 +275,7 @@
             </div>
             
             <div v-if="selectedSale?.revertida" style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); text-align: center; color: #b91c1c; font-weight: 500; font-size: 0.9rem;">
-              🚫 Esta venta fue revertida por {{ selectedSale.revertidaPorNombre || 'el sistema' }} el {{ formatDateTime(selectedSale.fechaReversion) }}
+              ðŸš« Esta venta fue revertida por {{ selectedSale.revertidaPorNombre || 'el sistema' }} el {{ formatDateTime(selectedSale.fechaReversion) }}
             </div>
             
             <button @click="selectedSale = null" class="btn btn-secondary w-full">Cerrar</button>
@@ -354,7 +354,7 @@ const fetchSales = async () => {
 }
 
 const confirmRevertSale = async (sale) => {
-  const confirmMsg = `¿Estás seguro de que deseas revertir esta venta?\n\n- Se devolverá el stock de los productos al inventario.\n- Se restará este ingreso de las estadísticas del negocio.\n\nEsta acción no se puede deshacer.`
+  const confirmMsg = `Â¿EstÃ¡s seguro de que deseas revertir esta venta?\n\n- Se devolverÃ¡ el stock de los productos al inventario.\n- Se restarÃ¡ este ingreso de las estadÃ­sticas del negocio.\n\nEsta acciÃ³n no se puede deshacer.`
   if (!confirm(confirmMsg)) return
 
   loading.value = true
@@ -376,7 +376,7 @@ const confirmRevertSale = async (sale) => {
     await fetchSales()
   } catch (err) {
     console.error('Error reverting sale:', err)
-    alert('Ocurrió un error al intentar revertir la venta.')
+    alert('OcurriÃ³ un error al intentar revertir la venta.')
   } finally {
     loading.value = false
   }
@@ -385,8 +385,8 @@ const confirmRevertSale = async (sale) => {
 const printSaleTicket = (sale) => {
   const printWindow = window.open('', '_blank', 'width=450,height=600')
   const voucherTitle = sale.tipoComprobante === 'Factura' 
-    ? 'FACTURA ELECTRÓNICA' 
-    : (sale.tipoComprobante === 'Nota de Venta' ? 'NOTA DE VENTA' : 'BOLETA DE VENTA ELECTRÓNICA')
+    ? 'FACTURA ELECTRÃ“NICA' 
+    : (sale.tipoComprobante === 'Nota de Venta' ? 'NOTA DE VENTA' : 'BOLETA DE VENTA ELECTRÃ“NICA')
   const docLabel = sale.tipoComprobante === 'Factura' ? 'RUC' : 'DNI/Doc'
   const docValue = sale.clienteNumeroDocumento || sale.rucFactura || ''
 
@@ -407,7 +407,7 @@ const printSaleTicket = (sale) => {
       </head>
       <body>
         <div class="text-center">
-          <h2 style="margin: 0; font-size: 16px;">◈ ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
+          <h2 style="margin: 0; font-size: 16px;">â—ˆ ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
           <p style="margin: 2px 0; font-size: 11px;">R.U.C. 20609876543</p>
           <div class="divider"></div>
           <p class="bold" style="margin: 4px 0; font-size: 13px;">${voucherTitle}</p>
@@ -418,13 +418,13 @@ const printSaleTicket = (sale) => {
         <p style="margin: 2px 0;"><strong>Cliente:</strong> ${sale.nombreCliente || 'Cliente General'}</p>
         ${docValue ? `<p style="margin: 2px 0;"><strong>${docLabel}:</strong> ${docValue}</p>` : ''}
         <p style="margin: 2px 0;"><strong>Vendedor:</strong> ${formatCreatorName(sale.creadoPorNombre)}</p>
-        <p style="margin: 2px 0;"><strong>Método de Pago:</strong> ${sale.metodoPago}</p>
+        <p style="margin: 2px 0;"><strong>MÃ©todo de Pago:</strong> ${sale.metodoPago}</p>
         <div class="divider"></div>
         <table>
           <thead>
             <tr>
               <th align="left">Cant.</th>
-              <th align="left">Descripción</th>
+              <th align="left">DescripciÃ³n</th>
               <th align="right">Total</th>
             </tr>
           </thead>
@@ -455,8 +455,8 @@ const printSaleTicket = (sale) => {
         </table>
         <div class="divider"></div>
         <div class="text-center" style="margin-top: 10px; font-size: 10px;">
-          ${sale.tipoComprobante !== 'Nota de Venta' ? '<p>Representación impresa del Comprobante Electrónico</p>' : '<p>Comprobante de Control Interno</p>'}
-          <p>¡Gracias por su preferencia!</p>
+          ${sale.tipoComprobante !== 'Nota de Venta' ? '<p>RepresentaciÃ³n impresa del Comprobante ElectrÃ³nico</p>' : '<p>Comprobante de Control Interno</p>'}
+          <p>Â¡Gracias por su preferencia!</p>
         </div>
         <${'script'}>
           window.onload = function() {
@@ -539,8 +539,8 @@ const whatsappSaleUrl = computed(() => {
   if (!selectedSale.value?.clienteTelefono) return '#'
   const sale = selectedSale.value
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
-  const items = (sale.detalles || []).map(i => `  • ${i.nombreProducto} x${i.cantidad} = S/. ${(i.cantidad * i.precioUnitario).toFixed(2)}`).join('%0A')
-  const msg = `¡Hola! Gracias por tu compra en *${store}* ❖%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE', { timeZone: 'America/Lima' })}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
+  const items = (sale.detalles || []).map(i => `  â€¢ ${i.nombreProducto} x${i.cantidad} = S/. ${(i.cantidad * i.precioUnitario).toFixed(2)}`).join('%0A')
+  const msg = `Â¡Hola! Gracias por tu compra en *${store}* â–%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE', { timeZone: 'America/Lima' })}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0AÂ¡Vuelve pronto! ðŸ˜Š`
   const phone = sale.clienteTelefono.replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${msg}`
 })
@@ -788,7 +788,7 @@ onMounted(() => {
   gap: 10px;
 }
 
-/* ── WhatsApp button ── */
+/* â”€â”€ WhatsApp button â”€â”€ */
 .btn-whatsapp {
   display: flex;
   align-items: center;

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="dashboard-layout">
 <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -8,12 +8,12 @@
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
             <nav class="nav-links">
-        <!-- SECCIÓN: ANÁLISIS -->
-        <div class="nav-section-title">Análisis</div>
+        <!-- SECCIÃ“N: ANÃLISIS -->
+        <div class="nav-section-title">AnÃ¡lisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg> <span class="sidebar-text">Dashboard</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> <span class="sidebar-text">Historial de Negocio</span></router-link>
 
-        <!-- SECCIÓN: VENTAS -->
+        <!-- SECCIÃ“N: VENTAS -->
         <div class="nav-section-title">Ventas</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18 M16 10a4 4 0 0 1-8 0"/></svg> <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg> <span class="sidebar-text">Historial Ventas</span></router-link>
@@ -26,24 +26,24 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v2 M3 5v14a2 2 0 0 0 2 2h16v-5 M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg> <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4 M2 13v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4 M2 9h20 M2 13h20"/></svg> <span class="sidebar-text">Formas de Pago</span></router-link>
 
-        <!-- SECCIÓN: LOGÍSTICA -->
-        <div class="nav-section-title">Logística</div>
+        <!-- SECCIÃ“N: LOGÃSTICA -->
+        <div class="nav-section-title">LogÃ­stica</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">Categorías</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">CategorÃ­as</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 2v6h-6 M3 12a9 9 0 0 1 15-6.7L21 8 M3 22v-6h6 M21 12a9 9 0 0 1-15 6.7L3 16"/></svg> <span class="sidebar-text">Movimientos</span></router-link>
 
-        <!-- SECCIÓN: COMPRAS -->
+        <!-- SECCIÃ“N: COMPRAS -->
         <div class="nav-section-title">Compras</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18"/></svg> <span class="sidebar-text">Compras</span></router-link>
 
-        <!-- SECCIÓN: GESTIÓN -->
-        <div class="nav-section-title">Gestión</div>
+        <!-- SECCIÃ“N: GESTIÃ“N -->
+        <div class="nav-section-title">GestiÃ³n</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg> <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span class="sidebar-text">Recordatorios</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar Sesión</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar SesiÃ³n</span></button>
     </aside>
 
     <!-- Area de contenido principal -->
@@ -75,19 +75,19 @@
 
       <!-- TAB 1: Colaboradores -->
       <template v-if="activeTab === 'colaboradores'">
-        <div v-else class="card font-card">
-          <div v-if="users.length === 0" class="empty-state">
-            No tienes trabajadores registrados todavía.
+        <div v-if="!loading" class="card font-card">
+          <div v-if="!loading && users.length === 0" class="empty-state">
+            No tienes trabajadores registrados todavÃ­a.
           </div>
-          <table v-else class="data-table">
+          <table v-if="!loading && users.length > 0" class="data-table">
             <thead>
               <tr>
-                <th style="width: 50px;">N°</th>
+                <th style="width: 50px;">NÂ°</th>
                 <th>Nombre</th>
                 <th v-if="authStore.isSuperadmin">Tienda / Negocio</th>
-                <th>Correo Electrónico</th>
+                <th>Correo ElectrÃ³nico</th>
                 <th>Rol</th>
-                <th>Módulos Permitidos</th>
+                <th>MÃ³dulos Permitidos</th>
                 <th>Estado</th>
                 <th>Acciones</th>
               </tr>
@@ -102,7 +102,7 @@
                 <td>{{ user.correo }}</td>
                 <td>
                   <span :class="['role-badge', user.rol === 'Superadmin' ? 'superadmin' : (user.rol === 'EmpresaOwner' ? 'owner' : 'employee')]">
-                    {{ user.rol === 'Superadmin' ? 'Súper Administrador' : (user.rol === 'EmpresaOwner' ? 'Administrador' : 'Empleado') }}
+                    {{ user.rol === 'Superadmin' ? 'SÃºper Administrador' : (user.rol === 'EmpresaOwner' ? 'Administrador' : 'Empleado') }}
                   </span>
                 </td>
                 <td>
@@ -137,14 +137,14 @@
       <!-- TAB 2: Solicitudes de Registro (Solo Superadmin) -->
       <template v-else-if="activeTab === 'solicitudes' && authStore.isSuperadmin">
         <div class="card font-card">
-          <div v-if="loadingRequests" class="empty-state">Cargando solicitudes…</div>
-          <div v-else-if="registerRequests.length === 0" class="empty-state">
+          <div v-if="loadingRequests" class="empty-state">Cargando solicitudesâ€¦</div>
+          <div v-if="!loading && registerRequests.length === 0" class="empty-state">
             No hay solicitudes de registro recibidas.
           </div>
-          <table v-else class="data-table">
+          <table v-if="!loading && registerRequests.length > 0" class="data-table">
             <thead>
               <tr>
-                <th style="width: 50px;">N°</th>
+                <th style="width: 50px;">NÂ°</th>
                 <th>Fecha</th>
                 <th>Empresa Solicitada</th>
                 <th>Propietario</th>
@@ -162,8 +162,8 @@
                 <td><strong>{{ req.nombrePropietario }}</strong></td>
                 <td>
                   <div style="font-size: 0.85rem; line-height: 1.4;">
-                    📞 {{ req.telefono }}<br>
-                    ✉️ {{ req.correoPropietario }}
+                    ðŸ“ž {{ req.telefono }}<br>
+                    âœ‰ï¸ {{ req.correoPropietario }}
                   </div>
                 </td>
                 <td>
@@ -200,15 +200,15 @@
                 <input v-model="form.nombre" type="text" placeholder="Ej. Carlos Mendoza" required :disabled="!authStore.isSuperadmin && isEdit && form.rol === 'EmpresaOwner'" />
               </div>
               <div class="field">
-                <label>Correo Electrónico</label>
+                <label>Correo ElectrÃ³nico</label>
                 <input v-model="form.correo" type="email" placeholder="carlos@mitienda.com" required :disabled="!authStore.isSuperadmin && isEdit && form.rol === 'EmpresaOwner'" />
               </div>
             </div>
 
             <div class="grid grid-2">
               <div class="field">
-                <label>{{ isEdit ? 'Nueva Contraseña (Opcional)' : 'Contraseña Temporal' }}</label>
-                <input v-model="form.clave" type="password" placeholder="••••••••" :required="!isEdit" />
+                <label>{{ isEdit ? 'Nueva ContraseÃ±a (Opcional)' : 'ContraseÃ±a Temporal' }}</label>
+                <input v-model="form.clave" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" :required="!isEdit" />
               </div>
               <div class="field">
                 <label>Rol del Usuario</label>
@@ -252,77 +252,77 @@
 
             <!-- Selector de permisos dinamicos segun el rol de empleado -->
             <div class="permissions-selector">
-              <h3>🔒 Asignar Permisos</h3>
-              <p class="text-subtitle">Selecciona los módulos a los que este usuario tendrá acceso:</p>
+              <h3>ðŸ”’ Asignar Permisos</h3>
+              <p class="text-subtitle">Selecciona los mÃ³dulos a los que este usuario tendrÃ¡ acceso:</p>
               
               <div class="checkbox-grid">
                 <label class="checkbox-card">
                   <input type="checkbox" value="ventas" v-model="form.permisos" />
-                  <span>❖ Ventas (POS)</span>
+                  <span>â– Ventas (POS)</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="productos" v-model="form.permisos" />
-                  <span>⬦ Productos e Inventario</span>
+                  <span>â¬¦ Productos e Inventario</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="dashboard" v-model="form.permisos" />
-                  <span>◫ Dashboard Estadísticas</span>
+                  <span>â—« Dashboard EstadÃ­sticas</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="historial_negocio" v-model="form.permisos" />
-                  <span>▸ Historial de Negocio</span>
+                  <span>â–¸ Historial de Negocio</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="clientes" v-model="form.permisos" />
-                  <span>👤 Clientes</span>
+                  <span>ðŸ‘¤ Clientes</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="proveedores" v-model="form.permisos" />
-                  <span>⌂ Proveedores</span>
+                  <span>âŒ‚ Proveedores</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="compras" v-model="form.permisos" />
-                  <span>✧ Compras (Sensible)</span>
+                  <span>âœ§ Compras (Sensible)</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="categorias" v-model="form.permisos" />
-                  <span>Categorías</span>
+                  <span>CategorÃ­as</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="modificar_productos" v-model="form.permisos" />
-                  <span>✏️ Editar/Eliminar Productos</span>
+                  <span>âœï¸ Editar/Eliminar Productos</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="historial_ventas" v-model="form.permisos" />
-                  <span>≡ Historial de Ventas</span>
+                  <span>â‰¡ Historial de Ventas</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="pedidos_web" v-model="form.permisos" />
-                  <span>📦 Pedidos</span>
+                  <span>ðŸ“¦ Pedidos</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="chats_bot" v-model="form.permisos" />
-                  <span>💬 Chats IA</span>
+                  <span>ðŸ’¬ Chats IA</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="reminders" v-model="form.permisos" />
-                  <span>◦ Recordatorios</span>
+                  <span>â—¦ Recordatorios</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="movimientos" v-model="form.permisos" />
-                  <span>⟳ Movimientos de Inventario</span>
+                  <span>âŸ³ Movimientos de Inventario</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="cuentas_cobrar" v-model="form.permisos" />
-                  <span>▫ Cuentas por Cobrar</span>
+                  <span>â–« Cuentas por Cobrar</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="formas_pago" v-model="form.permisos" />
-                  <span>▪ Formas de Pago</span>
+                  <span>â–ª Formas de Pago</span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="colaboradores" v-model="form.permisos" />
-                  <span>⚇ Colaboradores</span>
+                  <span>âš‡ Colaboradores</span>
                 </label>
               </div>
             </div>
@@ -398,7 +398,7 @@ const updateRequestStatus = async (requestId, newStatus) => {
 }
 
 const approveAndPreFill = async (req) => {
-  if (confirm(`¿Estás seguro de que deseas APROBAR la solicitud de ${req.nombreEmpresa}? Esto cambiará su estado a Aprobado.`)) {
+  if (confirm(`Â¿EstÃ¡s seguro de que deseas APROBAR la solicitud de ${req.nombreEmpresa}? Esto cambiarÃ¡ su estado a Aprobado.`)) {
     await updateRequestStatus(req.id, 'Aprobado')
     openCreateModal()
     form.nombreTienda = req.nombreEmpresa
@@ -472,23 +472,23 @@ const openEditModal = (user) => {
 
 const formatPermissionName = (perm) => {
   const mapping = {
-    'dashboard': '◫ Dashboard',
-    'historial_negocio': '▸ Historial Negocio',
-    'ventas': '❖ POS Ventas',
-    'productos': '⬦ Productos',
-    'categorias': 'Categorías',
-    'clientes': '⚇ Clientes',
-    'proveedores': '⌂ Proveedores',
-    'compras': '✧ Compras',
-    'reminders': '◦ Recordatorios',
-    'movimientos': '⟳ Movimientos',
-    'modificar_productos': '✏️ Editar Prod.',
-    'historial_ventas': '≡ Historial Ventas',
-    'pedidos_web': '📦 Pedidos',
-    'chats_bot': '💬 Chats IA',
-    'cuentas_cobrar': '▫ Cuentas por Cobrar',
-    'formas_pago': '▪ Formas de Pago',
-    'colaboradores': '⚇ Colaboradores'
+    'dashboard': 'â—« Dashboard',
+    'historial_negocio': 'â–¸ Historial Negocio',
+    'ventas': 'â– POS Ventas',
+    'productos': 'â¬¦ Productos',
+    'categorias': 'CategorÃ­as',
+    'clientes': 'âš‡ Clientes',
+    'proveedores': 'âŒ‚ Proveedores',
+    'compras': 'âœ§ Compras',
+    'reminders': 'â—¦ Recordatorios',
+    'movimientos': 'âŸ³ Movimientos',
+    'modificar_productos': 'âœï¸ Editar Prod.',
+    'historial_ventas': 'â‰¡ Historial Ventas',
+    'pedidos_web': 'ðŸ“¦ Pedidos',
+    'chats_bot': 'ðŸ’¬ Chats IA',
+    'cuentas_cobrar': 'â–« Cuentas por Cobrar',
+    'formas_pago': 'â–ª Formas de Pago',
+    'colaboradores': 'âš‡ Colaboradores'
   }
   return mapping[perm] || perm
 }
@@ -523,11 +523,11 @@ const saveUser = async () => {
 
     if (!res.ok) {
       const err = await res.json()
-      throw new Error(err.message || 'Error al procesar la operación.')
+      throw new Error(err.message || 'Error al procesar la operaciÃ³n.')
     }
 
     showModal.value = false
-    alert(isEdit.value ? '¡Colaborador actualizado con éxito!' : '¡Colaborador registrado con éxito!')
+    alert(isEdit.value ? 'Â¡Colaborador actualizado con Ã©xito!' : 'Â¡Colaborador registrado con Ã©xito!')
     fetchUsers()
   } catch (err) {
     alert(err.message)
@@ -540,7 +540,7 @@ const confirmDelete = async (id) => {
     return
   }
 
-  if (!confirm('¿Estás seguro de que deseas eliminar este colaborador permanentemente?')) return
+  if (!confirm('Â¿EstÃ¡s seguro de que deseas eliminar este colaborador permanentemente?')) return
 
   try {
     const res = await fetch(`${API_URL}/api/auth/users/${id}`, {
@@ -555,7 +555,7 @@ const confirmDelete = async (id) => {
       throw new Error(err.message || 'Error al eliminar el colaborador.')
     }
 
-    alert('¡Colaborador eliminado con éxito!')
+    alert('Â¡Colaborador eliminado con Ã©xito!')
     fetchUsers()
   } catch (err) {
     alert(err.message)

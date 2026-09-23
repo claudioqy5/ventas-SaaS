@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -139,7 +139,7 @@
         <!-- Charts Section (Aligned layout like daily dashboard) -->
         <div class="charts-layout charts-container">
           <!-- Periodic Sales Trend (Bar Chart - Enlarged) -->
-          <div v-else class="card chart-card">
+          <div class="card chart-card">
             <h2 class="section-title">
               ◫ Tendencia de Ventas ({{ selectedPeriodText }})
             </h2>
