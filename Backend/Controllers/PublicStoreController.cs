@@ -585,6 +585,33 @@ public class PublicStoreController : ControllerBase
 
         return Ok(new { message = "Comprobante adjuntado al pedido." });
     }
+
+    // POST api/public/store/{empresaId}/bot/orders/{orderId}/operation-code
+    // n8n llama a este endpoint para adjuntar el código de operación de pago enviado por texto al pedido.
+    [AllowAnonymous]
+    [HttpPost("{empresaId}/bot/orders/{orderId}/operation-code")]
+    public async Task<IActionResult> AddOperationCodeToOrder(string empresaId, string orderId, [FromBody] BotOperationCodeRequest request)
+    {
+        if (string.IsNullOrEmpty(request?.CodigoOperacion))
+            return BadRequest(new { message = "Se requiere el código de operación." });
+
+        var order = await _context.Sales
+            .Find(s => s.Id == orderId && s.EmpresaId == empresaId)
+            .FirstOrDefaultAsync();
+
+        if (order == null)
+            return NotFound(new { message = "Pedido no encontrado." });
+
+        var update = Builders<Sale>.Update
+            .Set(s => s.CodigoOperacionPago, request.CodigoOperacion);
+
+        await _context.Sales.UpdateOneAsync(
+            s => s.Id == orderId && s.EmpresaId == empresaId,
+            update
+        );
+
+        return Ok(new { message = "Código de operación adjuntado al pedido." });
+    }
 }
 
 
@@ -647,3 +674,6 @@ public record BotImageUploadRequest(string Base64Image, string? Extension);
 
 /// <summary>Solicitud para adjuntar URL de comprobante de pago a un pedido.</summary>
 public record BotVoucherRequest(string ImageUrl);
+
+/// <summary>Solicitud para adjuntar código de operación de pago enviado por texto.</summary>
+public record BotOperationCodeRequest(string CodigoOperacion);
