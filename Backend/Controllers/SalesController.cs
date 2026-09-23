@@ -25,13 +25,15 @@ public class SalesController : ControllerBase
     private readonly MongoDbContext _context;
     private readonly IUserContext _userContext;
     private readonly IConfiguration _configuration;
+    private readonly IApisPeruService _apisPeruService;
 
     // Constructor: inyecta la BD y el contexto del usuario actual
-    public SalesController(MongoDbContext context, IUserContext userContext, IConfiguration configuration)
+    public SalesController(MongoDbContext context, IUserContext userContext, IConfiguration configuration, IApisPeruService apisPeruService)
     {
         _context = context;
         _userContext = userContext;
         _configuration = configuration;
+        _apisPeruService = apisPeruService;
     }
 
     // GET api/sales — devuelve el historial de ventas de la empresa, del mas reciente al mas antiguo
@@ -265,6 +267,20 @@ public class SalesController : ControllerBase
             sale.MetodoPago = "Ninguno (Pendiente)";
         }
 
+        // Emitir facturación electrónica si aplica y la empresa está configurada (POS)
+        var empresa = await _context.Empresas.Find(e => e.Id == empresaId).FirstOrDefaultAsync();
+        if (empresa != null && empresa.EmisionElectronicaActiva && (sale.TipoComprobante == "Boleta" || sale.TipoComprobante == "Factura"))
+        {
+            var sunatResult = await _apisPeruService.EmitirComprobanteAsync(sale, empresa);
+            
+            sale.SunatEstado = sunatResult.SunatStatus ?? (sunatResult.Success ? "ACEPTADO" : "ERROR");
+            sale.SunatMensajeRespuesta = sunatResult.Message;
+            sale.SunatXmlUrl = sunatResult.XmlUrl;
+            sale.SunatPdfUrl = sunatResult.PdfUrl;
+            sale.SunatCdrUrl = sunatResult.CdrUrl;
+            sale.SunatHash = sunatResult.Hash;
+        }
+
         await _context.Sales.InsertOneAsync(sale);
         return CreatedAtAction(nameof(GetAll), new { id = sale.Id }, sale);
     }
@@ -467,6 +483,71 @@ public class SalesController : ControllerBase
             update = update
                 .Set(s => s.EstadoPago, "Pagado")
                 .Set(s => s.FechaConfirmacionPago, DateTime.UtcNow);
+            
+            // Asignar el tipo de comprobante seleccionado y los datos del cliente
+            var tipoComprobante = request.TipoComprobante ?? "Nota de Venta";
+            update = update
+                .Set(s => s.TipoComprobante, tipoComprobante)
+                .Set(s => s.CodigoTipoComprobanteSunat, tipoComprobante.ToLower() == "factura" ? "01" : (tipoComprobante.ToLower() == "boleta" ? "03" : "00"))
+                .Set(s => s.Serie, tipoComprobante.ToLower() == "factura" ? "F001" : (tipoComprobante.ToLower() == "boleta" ? "B001" : "NV01"))
+                .Set(s => s.ClienteTipoDocumento, request.ClienteTipoDocumento)
+                .Set(s => s.ClienteNumeroDocumento, request.ClienteNumeroDocumento)
+                .Set(s => s.ClienteRazonSocial, request.ClienteRazonSocial)
+                .Set(s => s.ClienteDireccion, request.ClienteDireccion);
+            
+            // Actualizar el modelo cargado para pasarlo a ApisPeruService
+            sale.TipoComprobante = tipoComprobante;
+            sale.CodigoTipoComprobanteSunat = tipoComprobante.ToLower() == "factura" ? "01" : (tipoComprobante.ToLower() == "boleta" ? "03" : "00");
+            sale.Serie = tipoComprobante.ToLower() == "factura" ? "F001" : (tipoComprobante.ToLower() == "boleta" ? "B001" : "NV01");
+            sale.ClienteTipoDocumento = request.ClienteTipoDocumento;
+            sale.ClienteNumeroDocumento = request.ClienteNumeroDocumento;
+            sale.ClienteRazonSocial = request.ClienteRazonSocial;
+            sale.ClienteDireccion = request.ClienteDireccion;
+
+            // Generar correlativo atómico en MongoDB
+            var seriesFilter = Builders<VoucherSeries>.Filter.And(
+                Builders<VoucherSeries>.Filter.Eq(s => s.EmpresaId, empresaId),
+                Builders<VoucherSeries>.Filter.Eq(s => s.TipoComprobante, sale.TipoComprobante),
+                Builders<VoucherSeries>.Filter.Eq(s => s.Serie, sale.Serie)
+            );
+
+            var seriesUpdate = Builders<VoucherSeries>.Update
+                .Inc(s => s.UltimoNumero, 1)
+                .Set(s => s.FechaActualizacion, DateTime.UtcNow)
+                .SetOnInsert(s => s.EmpresaId, empresaId)
+                .SetOnInsert(s => s.TipoComprobante, sale.TipoComprobante)
+                .SetOnInsert(s => s.CodigoSunat, sale.CodigoTipoComprobanteSunat)
+                .SetOnInsert(s => s.Serie, sale.Serie)
+                .SetOnInsert(s => s.Activa, true);
+
+            var seriesOptions = new FindOneAndUpdateOptions<VoucherSeries>
+            {
+                IsUpsert = true,
+                ReturnDocument = ReturnDocument.After
+            };
+
+            var updatedSeries = await _context.VoucherSeries.FindOneAndUpdateAsync(seriesFilter, seriesUpdate, seriesOptions);
+            sale.NumeroCorrelativo = updatedSeries.UltimoNumero;
+            sale.NumeroComprobante = $"{sale.Serie}-{sale.NumeroCorrelativo:D8}";
+
+            update = update
+                .Set(s => s.NumeroCorrelativo, sale.NumeroCorrelativo)
+                .Set(s => s.NumeroComprobante, sale.NumeroComprobante);
+            
+            // Emitir facturación electrónica si aplica y la empresa está configurada
+            var empresa = await _context.Empresas.Find(e => e.Id == empresaId).FirstOrDefaultAsync();
+            if (empresa != null && empresa.EmisionElectronicaActiva && (sale.TipoComprobante == "Boleta" || sale.TipoComprobante == "Factura"))
+            {
+                var sunatResult = await _apisPeruService.EmitirComprobanteAsync(sale, empresa);
+                
+                update = update
+                    .Set(s => s.SunatEstado, sunatResult.SunatStatus ?? (sunatResult.Success ? "ACEPTADO" : "ERROR"))
+                    .Set(s => s.SunatMensajeRespuesta, sunatResult.Message)
+                    .Set(s => s.SunatXmlUrl, sunatResult.XmlUrl)
+                    .Set(s => s.SunatPdfUrl, sunatResult.PdfUrl)
+                    .Set(s => s.SunatCdrUrl, sunatResult.CdrUrl)
+                    .Set(s => s.SunatHash, sunatResult.Hash);
+            }
         }
 
         // Al enviar: guardar número de seguimiento si se proporcionó
@@ -631,4 +712,11 @@ public class UpdateOrderStatusRequest
 {
     public string NuevoEstado { get; set; } = string.Empty;
     public string? NumeroSeguimiento { get; set; }
+    
+    // Campos para Facturación Electrónica al pasar a EN_PREPARACION
+    public string? TipoComprobante { get; set; } // "Boleta", "Factura", "Nota de Venta"
+    public string? ClienteTipoDocumento { get; set; }
+    public string? ClienteNumeroDocumento { get; set; }
+    public string? ClienteRazonSocial { get; set; }
+    public string? ClienteDireccion { get; set; }
 }

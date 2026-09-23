@@ -406,6 +406,43 @@
 
           <div v-if="statusModal.selected === 'EN_PREPARACION'" style="margin-top: 16px; background: #f0fdf4; border: 1px solid #86efac; padding: 12px; border-radius: 8px; font-size: 0.88rem; color: #15803d;">
             <strong>Confirmación de pago:</strong> Al pasar a "En Preparación", el pedido se registrará como venta confirmada y sumará en el Dashboard e Historial de Ventas.
+            
+            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #bbf7d0;">
+              <strong style="display:block; margin-bottom:8px; font-size:0.95rem; color:#166534;">Facturación Electrónica</strong>
+              <label style="font-weight:600; font-size:0.85rem; color:#166534;">Comprobante a emitir:</label>
+              <select v-model="statusModal.tipoComprobante" class="filter-input" style="width: 100%; margin-top: 4px; margin-bottom: 12px; background: white;">
+                <option value="Nota de Venta">Nota de Venta (Interno)</option>
+                <option value="Boleta">Boleta de Venta</option>
+                <option value="Factura">Factura</option>
+              </select>
+              
+              <div v-if="statusModal.tipoComprobante === 'Boleta' || statusModal.tipoComprobante === 'Factura'">
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                  <div style="flex:1;">
+                    <label style="font-weight:600; font-size:0.8rem; color:#166534;">Tipo Doc.</label>
+                    <select v-model="statusModal.clienteTipoDocumento" class="filter-input" style="width:100%; margin-top:4px; background: white;">
+                      <option value="-">Sin Documento</option>
+                      <option value="1">DNI</option>
+                      <option value="6">RUC</option>
+                    </select>
+                  </div>
+                  <div style="flex:2;">
+                    <label style="font-weight:600; font-size:0.8rem; color:#166534;">Número</label>
+                    <input v-model="statusModal.clienteNumeroDocumento" type="text" class="filter-input" style="width:100%; margin-top:4px; background: white;" />
+                  </div>
+                </div>
+
+                <div style="margin-bottom:10px;">
+                  <label style="font-weight:600; font-size:0.8rem; color:#166534;">Nombre / Razón Social</label>
+                  <input v-model="statusModal.clienteRazonSocial" type="text" class="filter-input" style="width:100%; margin-top:4px; background: white;" />
+                </div>
+
+                <div style="margin-bottom:4px;">
+                  <label style="font-weight:600; font-size:0.8rem; color:#166534;">Dirección (Opcional)</label>
+                  <input v-model="statusModal.clienteDireccion" type="text" class="filter-input" style="width:100%; margin-top:4px; background: white;" />
+                </div>
+              </div>
+            </div>
           </div>
           <div v-if="statusModal.selected === 'CANCELADO'" style="margin-top: 16px; background: #fef2f2; border: 1px solid #fca5a5; padding: 12px; border-radius: 8px; font-size: 0.88rem; color: #b91c1c;">
             <strong>Advertencia:</strong> Al cancelar, el stock de los productos será restaurado automáticamente al inventario.
@@ -464,7 +501,12 @@ const statusModal = ref({
   visible: false,
   order: null,
   selected: '',
-  numeroSeguimiento: ''
+  numeroSeguimiento: '',
+  tipoComprobante: 'Nota de Venta',
+  clienteTipoDocumento: '-',
+  clienteNumeroDocumento: '',
+  clienteRazonSocial: '',
+  clienteDireccion: ''
 })
 
 const fetchOrders = async () => {
@@ -592,7 +634,17 @@ const openDetail = (order) => {
 }
 
 const openStatusModal = (order) => {
-  statusModal.value = { visible: true, order, selected: '', numeroSeguimiento: '' }
+  statusModal.value = { 
+    visible: true, 
+    order, 
+    selected: '', 
+    numeroSeguimiento: '',
+    tipoComprobante: 'Nota de Venta',
+    clienteTipoDocumento: order.dniReceptor ? (order.dniReceptor.length === 11 ? '6' : '1') : '-',
+    clienteNumeroDocumento: order.dniReceptor || '',
+    clienteRazonSocial: order.nombreCliente || '',
+    clienteDireccion: order.direccionEntrega || ''
+  }
 }
 
 const confirmStatusUpdate = async () => {
@@ -607,7 +659,12 @@ const confirmStatusUpdate = async () => {
       },
       body: JSON.stringify({
         nuevoEstado: statusModal.value.selected,
-        numeroSeguimiento: statusModal.value.numeroSeguimiento || null
+        numeroSeguimiento: statusModal.value.numeroSeguimiento || null,
+        tipoComprobante: statusModal.value.selected === 'EN_PREPARACION' ? statusModal.value.tipoComprobante : null,
+        clienteTipoDocumento: statusModal.value.selected === 'EN_PREPARACION' ? statusModal.value.clienteTipoDocumento : null,
+        clienteNumeroDocumento: statusModal.value.selected === 'EN_PREPARACION' ? statusModal.value.clienteNumeroDocumento : null,
+        clienteRazonSocial: statusModal.value.selected === 'EN_PREPARACION' ? statusModal.value.clienteRazonSocial : null,
+        clienteDireccion: statusModal.value.selected === 'EN_PREPARACION' ? statusModal.value.clienteDireccion : null
       })
     })
     const data = await res.json()

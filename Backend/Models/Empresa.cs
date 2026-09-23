@@ -25,4 +25,12 @@ public class Empresa
     public bool BotWhatsAppActivo { get; set; } = false;
     public string NumeroWhatsAppBot { get; set; } = "51955115893";
     public string NumeroWhatsAppHumano { get; set; } = "51916382742";
+
+    // --- Configuraciones de Facturacin Electrnica (SUNAT / ApisPeru) ---
+    public bool EmisionElectronicaActiva { get; set; } = false;
+    public string? Ruc { get; set; }
+    public string? RazonSocial { get; set; }
+    public string? DireccionFiscal { get; set; }
+    public string? Ubigeo { get; set; }
+    public string? ApisPeruToken { get; set; }
 }

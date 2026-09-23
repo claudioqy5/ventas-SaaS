@@ -57,6 +57,7 @@ builder.Services.AddSingleton<IJwtProvider, JwtProvider>();
 builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
+builder.Services.AddHttpClient<IApisPeruService, ApisPeruService>();
 
 // Configurar herramientas de Swagger para documentacion de API
 builder.Services.AddEndpointsApiExplorer();
