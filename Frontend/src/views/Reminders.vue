@@ -59,6 +59,11 @@
         </button>
       </header>
 
+      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
+        <HamsterLoader v-if="loading" label="Cargando recordatorios..." />
+      </div>
+
+
       <!-- KPI Summary -->
       <div class="summary-kpis-container" style="display: flex; gap: 20px; margin-bottom: 24px; flex-wrap: wrap;">
         <div class="kpi-total-card pending" style="background: #fffbeb; border: 1px solid #fef3c7; padding: 12px 20px; border-radius: var(--radius-md); text-align: left; min-width: 200px; box-shadow: var(--shadow-sm);">
@@ -72,9 +77,8 @@
       </div>
 
       <!-- Table Section -->
-      <div class="card font-card">
-        <HamsterLoader v-if="loading" label="Cargando recordatorios..." />
-        <div v-else-if="reminders.length === 0" class="empty-state">
+      <div v-else class="card font-card">
+<div v-else-if="reminders.length === 0" class="empty-state">
           No tienes recordatorios o cuentas registradas. ¡Haz clic en "Agregar Cuenta / Recordatorio" para registrar uno!
         </div>
         <div v-else class="table-responsive">

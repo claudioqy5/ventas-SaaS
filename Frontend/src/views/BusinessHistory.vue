@@ -129,14 +129,17 @@
         </div>
       </header>
 
-      <!-- Loading state -->
-      <HamsterLoader v-if="loading" label="Analizando datos del historial..." />
+      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
+        <HamsterLoader v-if="loading" label="Analizando datos del historial..." />
+      </div>
 
-      <template v-else>
+
+      <!-- Loading state -->
+<template v-else>
         <!-- Charts Section (Aligned layout like daily dashboard) -->
         <div class="charts-layout charts-container">
           <!-- Periodic Sales Trend (Bar Chart - Enlarged) -->
-          <div class="card chart-card">
+          <div v-else class="card chart-card">
             <h2 class="section-title">
               ◫ Tendencia de Ventas ({{ selectedPeriodText }})
             </h2>

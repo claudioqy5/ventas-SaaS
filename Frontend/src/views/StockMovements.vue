@@ -55,8 +55,13 @@
         </div>
       </header>
 
+      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
+        <HamsterLoader v-if="loading" label="Cargando historial de movimientos..." />
+      </div>
+
+
       <!-- Tabla de datos principal -->
-      <div class="card font-card">
+      <div v-else class="card font-card">
         <!-- Seccion de filtros de busqueda -->
         <div class="table-filters" style="margin-bottom: 20px;">
           <input v-model="searchQuery" @input="debouncedFetch" type="text" placeholder="🔍 Buscar por producto..." class="filter-input" />
@@ -67,10 +72,7 @@
             <input v-model="endDate" @change="fetchMovements" type="date" class="filter-date" />
           </div>
         </div>
-
-        <HamsterLoader v-if="loading" label="Cargando historial de movimientos..." />
-
-        <div v-else-if="movements.length === 0" class="empty-state">
+<div v-else-if="movements.length === 0" class="empty-state">
           No se encontraron movimientos registrados en este rango de fechas.
         </div>
 

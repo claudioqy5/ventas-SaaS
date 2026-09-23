@@ -1,7 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    <HamsterLoader v-if="loading" label="Cargando inventario..." />
-    <!-- Barra de navegacion lateral -->
+<!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon">
@@ -201,6 +200,11 @@
         </div>
       </header>
 
+      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
+        <HamsterLoader v-if="loading" label="Cargando inventario..." />
+      </div>
+
+
       <!-- Seccion de filtros de busqueda -->
       <div class="table-filters card">
         <div class="filter-input-wrap">
@@ -278,7 +282,7 @@
       </div>
 
       <!-- Tabla de inventario de productos -->
-      <div class="card font-card">
+      <div v-else class="card font-card">
         <div v-if="filteredProducts.length === 0" class="empty-state">
           No hay productos que coincidan con la búsqueda.
         </div>

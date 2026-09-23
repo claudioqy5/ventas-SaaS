@@ -1,8 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    <!-- Loader -->
-    <HamsterLoader v-if="loading" label="Cargando colaboradores..." />
-    <!-- Barra de navegacion lateral -->
+<!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5"/></svg><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
@@ -63,6 +61,12 @@
         </div>
       </header>
 
+      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
+        <!-- Loader -->
+    <HamsterLoader v-if="loading" label="Cargando colaboradores..." />
+      </div>
+
+
       <!-- Sistema de Tabs (Solo visible para Superadmin) -->
       <div v-if="authStore.isSuperadmin" class="tabs-nav" style="display: flex; gap: 6px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color);">
         <button :class="['tab-btn', activeTab === 'colaboradores' ? 'active' : '']" @click="activeTab = 'colaboradores'" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: var(--transition);">Cuentas y Colaboradores</button>
@@ -71,7 +75,7 @@
 
       <!-- TAB 1: Colaboradores -->
       <template v-if="activeTab === 'colaboradores'">
-        <div class="card font-card">
+        <div v-else class="card font-card">
           <div v-if="users.length === 0" class="empty-state">
             No tienes trabajadores registrados todavía.
           </div>

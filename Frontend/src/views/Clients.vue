@@ -1,9 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    <!-- Loader -->
-    <HamsterLoader v-if="loading" label="Cargando clientes..." />
-
-    <!-- Barra de navegacion lateral -->
+<!-- Barra de navegacion lateral -->
     <aside class="sidebar">
       <div class="sidebar-brand"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5"/></svg><span class="sidebar-brand-name">{{ authStore.user?.nombreEmpresa || 'VentasSaaS' }}</span></div>
       <div class="user-info">
@@ -64,6 +61,12 @@
         </div>
       </header>
 
+      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
+        <!-- Loader -->
+    <HamsterLoader v-if="loading" label="Cargando clientes..." />
+      </div>
+
+
       <!-- Sistema de Tabs -->
       <div class="tabs-nav">
         <button :class="['tab-btn', activeTab === 'directorio' ? 'active' : '']" @click="activeTab = 'directorio'">Directorio</button>
@@ -78,7 +81,7 @@
         </div>
 
         <!-- Tabla de datos principal -->
-        <div class="card font-card">
+        <div v-else class="card font-card">
           <div v-if="filteredClients.length === 0" class="empty-state">
             No se encontraron clientes que coincidan con la búsqueda.
           </div>

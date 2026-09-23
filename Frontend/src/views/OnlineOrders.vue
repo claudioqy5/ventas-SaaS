@@ -58,6 +58,11 @@
         </div>
       </header>
 
+      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
+        <HamsterLoader v-if="loading" label="Cargando pedidos..." />
+      </div>
+
+
       <!-- Tarjetas de resumen interactivas para filtrado rápido -->
       <div class="summary-cards">
         <div
@@ -126,7 +131,7 @@
       </div>
 
       <!-- Filtros -->
-      <div class="card font-card">
+      <div v-else class="card font-card">
         <div class="filters-container">
           <input v-model="searchQuery" type="text" placeholder="Buscar por cliente, ID o WhatsApp..." class="filter-input search-input" />
           <select v-model="filterOrigen" class="filter-input" style="width: auto; min-width: 160px;" title="Filtrar por origen del pedido">
@@ -142,10 +147,7 @@
             <button @click="clearDateFilter" class="btn btn-secondary btn-sm" title="Mostrar todos los tiempos">Mostrar todo</button>
           </div>
         </div>
-
-        <HamsterLoader v-if="loading" label="Cargando pedidos..." />
-
-        <div v-else-if="filteredOrders.length === 0" class="empty-state">
+<div v-else-if="filteredOrders.length === 0" class="empty-state">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 12px; opacity: 0.3;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
           <p>No hay pedidos que coincidan con los filtros.</p>
         </div>

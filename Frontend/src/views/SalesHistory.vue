@@ -55,7 +55,12 @@
         </div>
       </header>
 
-      <div class="card font-card">
+      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
+        <HamsterLoader v-if="loading" label="Cargando historial de ventas..." />
+      </div>
+
+
+      <div v-else class="card font-card">
         <!-- Barra de busqueda y filtros -->
         <div class="filters-container">
           <input v-model="searchQuery" type="text" placeholder="Buscar por cliente o cajero..." class="filter-input" />
@@ -67,10 +72,7 @@
             <option value="Transferencia">Transferencia</option>
           </select>
         </div>
-
-        <HamsterLoader v-if="loading" label="Cargando historial de ventas..." />
-
-        <div v-else-if="filteredSales.length === 0" class="empty-state">
+<div v-else-if="filteredSales.length === 0" class="empty-state">
           No se encontraron ventas registradas que coincidan con los filtros.
         </div>
 
