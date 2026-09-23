@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, X, SlidersHorizontal } from 'lucide-react';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap, isMobileOpen, onCloseMobile }) {
   const [openSections, setOpenSections] = useState({
     precio: true,
-    disponibilidad: true,
   });
 
   const toggleSection = (section) => {
@@ -54,7 +55,6 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
   };
 
   const activeCount = (filters.priceRange.min !== '' || filters.priceRange.max !== '' ? 1 : 0) +
-                      (filters.inStockOnly ? 1 : 0) +
                       (filters.dynamic ? Object.values(filters.dynamic).reduce((acc, val) => acc + (val ? val.length : 0), 0) : 0);
 
   const SectionHeader = ({ title, section }) => {
@@ -92,7 +92,7 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
         </div>
         {activeCount > 0 && (
           <button
-            onClick={() => setFilters({ priceRange: { min: '', max: '' }, inStockOnly: false, dynamic: {} })}
+            onClick={() => setFilters({ priceRange: { min: '', max: '' }, dynamic: {} })}
             style={{
               background: 'none',
               border: 'none',
@@ -135,12 +135,6 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
               <X size={12} style={{ cursor: 'pointer' }} onClick={removePriceFilter} />
             </span>
           )}
-          {filters.inStockOnly && (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'rgba(212, 175, 55, 0.15)', border: '1px solid var(--c-blush)', borderRadius: '16px', padding: '3px 9px', fontSize: '0.72rem', color: 'var(--c-obsidian)', fontWeight: 600 }}>
-              En stock
-              <X size={12} style={{ cursor: 'pointer' }} onClick={() => setFilters(prev => ({ ...prev, inStockOnly: false }))} />
-            </span>
-          )}
           {filters.dynamic && Object.entries(filters.dynamic).flatMap(([attrName, vals]) => 
             (vals || []).map(val => (
               <span key={`${attrName}-${val}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#f0ede8', border: '1px solid var(--border-light)', borderRadius: '16px', padding: '3px 9px', fontSize: '0.72rem', color: 'var(--c-obsidian)', fontWeight: 600 }}>
@@ -155,50 +149,33 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
       {/* Rango de Precios */}
       <SectionHeader title="Precio" section="precio" />
       {openSections.precio !== false && (
-        <div style={{ paddingBottom: '16px', display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <div style={{ flex: 1 }}>
-            <label style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', fontWeight: 500 }}>Desde (S/)</label>
-            <input
-              type="number"
-              placeholder="0"
-              value={filters.priceRange.min}
-              onChange={(e) => handlePriceChange(e, 'min')}
-              style={{
-                width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid var(--border-light)', fontSize: '0.85rem',
-                outline: 'none', marginTop: '4px', background: '#fcfbf8', fontFamily: 'var(--font-main)'
-              }}
-            />
+        <div style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '12px', paddingX: '4px' }}>
+          <Slider
+            range
+            min={0}
+            max={10000}
+            step={50}
+            value={[
+              filters.priceRange.min === '' ? 0 : Number(filters.priceRange.min),
+              filters.priceRange.max === '' ? 10000 : Number(filters.priceRange.max)
+            ]}
+            onChange={(val) => {
+              setFilters(prev => ({
+                ...prev,
+                priceRange: { min: val[0], max: val[1] }
+              }));
+            }}
+            trackStyle={[{ backgroundColor: 'var(--c-obsidian)' }]}
+            handleStyle={[
+              { borderColor: 'var(--c-obsidian)', backgroundColor: '#fff', opacity: 1, boxShadow: 'none', cursor: 'grab' },
+              { borderColor: 'var(--c-obsidian)', backgroundColor: '#fff', opacity: 1, boxShadow: 'none', cursor: 'grab' }
+            ]}
+            railStyle={{ backgroundColor: '#e5e7eb' }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 600 }}>
+            <span>S/ {filters.priceRange.min === '' ? 0 : filters.priceRange.min}</span>
+            <span>S/ {filters.priceRange.max === '' ? 10000 : filters.priceRange.max}</span>
           </div>
-          <span style={{ color: 'var(--c-taupe)', marginTop: '20px' }}>-</span>
-          <div style={{ flex: 1 }}>
-            <label style={{ fontSize: '0.72rem', color: 'var(--c-taupe)', fontWeight: 500 }}>Hasta (S/)</label>
-            <input
-              type="number"
-              placeholder="Max"
-              value={filters.priceRange.max}
-              onChange={(e) => handlePriceChange(e, 'max')}
-              style={{
-                width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid var(--border-light)', fontSize: '0.85rem',
-                outline: 'none', marginTop: '4px', background: '#fcfbf8', fontFamily: 'var(--font-main)'
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Disponibilidad */}
-      <SectionHeader title="Disponibilidad" section="disponibilidad" />
-      {openSections.disponibilidad !== false && (
-        <div style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--c-obsidian)', cursor: 'pointer', width: '100%' }}>
-            <input
-              type="checkbox"
-              checked={filters.inStockOnly}
-              onChange={(e) => setFilters(prev => ({ ...prev, inStockOnly: e.target.checked }))}
-              style={{ accentColor: 'var(--c-obsidian)', width: '16px', height: '16px', flexShrink: 0, cursor: 'pointer' }}
-            />
-            <span style={{ flex: 1, lineHeight: 1.4, wordBreak: 'break-word' }}>En stock</span>
-          </label>
         </div>
       )}
 

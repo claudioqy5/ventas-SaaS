@@ -815,9 +815,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
 
           {/* Sección Principal de Catálogo de Relojes */}
           <main id="catalogo" className="catalog-main" style={{
-            maxWidth: '1680px',
+            maxWidth: '100%',
             margin: '0 auto',
-            padding: '50px 40px 90px',
+            padding: '50px 2% 90px',
             width: '100%',
             flex: 1
           }}>

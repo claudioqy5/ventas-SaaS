@@ -586,18 +586,32 @@ body {
   }
 }
 
-/* Grid de 4 productos exactos sin huecos laterales en escritorio */
+/* Grid de productos fluido y adaptable */
 .grid-4-products {
   display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
   gap: 30px !important;
   width: 100% !important;
 }
 
+@media (max-width: 1536px) {
+  .grid-4-products {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 25px !important;
+  }
+}
+
 @media (max-width: 1280px) {
   .grid-4-products {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     gap: 20px !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid-4-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
   }
 }
 
