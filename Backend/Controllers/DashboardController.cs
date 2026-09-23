@@ -415,10 +415,24 @@ public class DashboardController : ControllerBase
 
             var pendingOrders = await _context.Sales.Find(pendingFilter).ToListAsync();
 
-            // Obtener números únicos de clientes activos
+            // Obtener clientes que estaban conversando recientemente (últimos 60 minutos)
+            var limiteTiempo = DateTime.UtcNow.AddMinutes(-60);
+            var activeChatsFilter = Builders<WhatsAppChat>.Filter.And(
+                Builders<WhatsAppChat>.Filter.Eq(c => c.EmpresaId, empresaId),
+                Builders<WhatsAppChat>.Filter.Gte(c => c.UltimoMensajeFecha, limiteTiempo)
+            );
+
+            var activeChats = await _context.WhatsAppChats.Find(activeChatsFilter).ToListAsync();
+            var chatNumbers = activeChats
+                .Where(c => !string.IsNullOrEmpty(c.WhatsAppCliente))
+                .Select(c => c.WhatsAppCliente)
+                .ToList();
+
+            // Combinar números de pedidos pendientes y de chats activos
             var uniqueNumbers = pendingOrders
                 .Where(o => !string.IsNullOrEmpty(o.WhatsAppCliente))
                 .Select(o => o.WhatsAppCliente!)
+                .Concat(chatNumbers)
                 .Distinct()
                 .ToList();
 
