@@ -7,6 +7,11 @@ using MongoDB.Driver;
 using SaaS.API.Services;
 using SaaS.API.Models;
 using SaaS.API.Data;
+using Microsoft.Extensions.Configuration;
+using MercadoPago.Config;
+using MercadoPago.Client.Preference;
+using MercadoPago.Resource.Preference;
+using System.Collections.Generic;
 
 namespace SaaS.API.Controllers;
 
@@ -19,12 +24,14 @@ public class SalesController : ControllerBase
 {
     private readonly MongoDbContext _context;
     private readonly IUserContext _userContext;
+    private readonly IConfiguration _configuration;
 
     // Constructor: inyecta la BD y el contexto del usuario actual
-    public SalesController(MongoDbContext context, IUserContext userContext)
+    public SalesController(MongoDbContext context, IUserContext userContext, IConfiguration configuration)
     {
         _context = context;
         _userContext = userContext;
+        _configuration = configuration;
     }
 
     // GET api/sales — devuelve el historial de ventas de la empresa, del mas reciente al mas antiguo
@@ -260,6 +267,120 @@ public class SalesController : ControllerBase
 
         await _context.Sales.InsertOneAsync(sale);
         return CreatedAtAction(nameof(GetAll), new { id = sale.Id }, sale);
+    }
+
+    // POST api/sales/generate-ticket — genera un ticket POS y un link de Mercado Pago
+    [HttpPost("generate-ticket")]
+    public async Task<IActionResult> GenerateTicket([FromBody] Sale sale)
+    {
+        if (!_userContext.HasPermission("ventas"))
+            return Forbid();
+
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        sale.TipoComprobante = string.IsNullOrWhiteSpace(sale.TipoComprobante) ? "Boleta" : sale.TipoComprobante.Trim();
+
+        // Preparo los datos de la venta
+        sale.Id = string.Empty;
+        sale.EmpresaId = empresaId;
+        sale.CreadoPor = _userContext.UserId ?? string.Empty;
+
+        var nameClaim = User.FindFirst("name")?.Value
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value
+            ?? "Empleado";
+        sale.CreadoPorNombre = nameClaim;
+        sale.FechaCreacion = DateTime.UtcNow;
+
+        decimal computedTotal = 0;
+
+        foreach (var item in sale.Detalles)
+        {
+            var product = await _context.Products.Find(p => p.Id == item.ProductoId && p.EmpresaId == empresaId).FirstOrDefaultAsync();
+            if (product == null)
+            {
+                return BadRequest(new { message = $"El producto {item.NombreProducto} no existe o fue eliminado." });
+            }
+            // NO se descuenta stock aquí porque el ticket aún no se ha pagado.
+            computedTotal += item.Total;
+        }
+
+        sale.Total = computedTotal;
+        sale.Subtotal = Math.Round(computedTotal / 1.18m, 2);
+        sale.Impuesto = Math.Round(computedTotal - sale.Subtotal, 2);
+        sale.OperacionGravada = sale.Subtotal;
+        sale.MontoIgv = sale.Impuesto;
+        sale.PorcentajeIgv = 18m;
+        sale.SunatEstado = "No Aplica"; // Hasta que se pague
+
+        // Campos clave para identificar que es un ticket pendiente
+        sale.Origen = "POS_TICKET";
+        sale.EstadoOrden = "PENDIENTE_PAGO";
+        sale.EstadoPago = "Pendiente";
+        sale.MetodoPago = "Mercado Pago (Link)";
+
+        await _context.Sales.InsertOneAsync(sale);
+
+        // Crear Preferencia en Mercado Pago
+        var accessToken = _configuration["MercadoPago:AccessToken"];
+        if (string.IsNullOrEmpty(accessToken))
+        {
+            return StatusCode(500, new { message = "No se ha configurado Mercado Pago en el servidor." });
+        }
+        MercadoPagoConfig.AccessToken = accessToken;
+
+        var mpItems = sale.Detalles.Select(item => new PreferenceItemRequest
+        {
+            Title = item.NombreProducto,
+            Quantity = (int)item.Cantidad,
+            UnitPrice = item.PrecioUnitario,
+            CurrencyId = "PEN"
+        }).ToList();
+
+        // Extraer backUrl desde la configuracion de la app o usar una por defecto (el frontend no nos envia backUrl directo en Sale, usamos una generica)
+        var requestUrl = HttpContext.Request;
+        var serverBaseUrl = $"{requestUrl.Scheme}://{requestUrl.Host}";
+        var backUrl = "https://tienda.gruposercal.com"; // Default for success return 
+
+        var preferenceRequest = new PreferenceRequest
+        {
+            Items = mpItems,
+            Payer = new PreferencePayerRequest
+            {
+                Name    = "Cliente",
+                Surname = "POS",
+                Email   = null
+            },
+            BackUrls = new PreferenceBackUrlsRequest
+            {
+                Success = $"{backUrl}/pedido-confirmado?mp_status=approved&orderId={sale.Id}",
+                Failure = $"{backUrl}/checkout?mp_status=failure",
+                Pending = $"{backUrl}/pedido-confirmado?mp_status=pending&orderId={sale.Id}"
+            },
+            AutoReturn = "approved",
+            NotificationUrl = $"{serverBaseUrl}/api/mercadopago/{empresaId}/webhook",
+            ExternalReference = sale.Id,
+            StatementDescriptor = "GRUPO SERCAL"
+        };
+
+        try
+        {
+            var preferenceClient = new PreferenceClient();
+            Preference preference = await preferenceClient.CreateAsync(preferenceRequest);
+
+            return Ok(new
+            {
+                orderId = sale.Id,
+                preferenceId = preference.Id,
+                initPoint = preference.InitPoint
+            });
+        }
+        catch (Exception ex)
+        {
+            // Opcional: Eliminar la orden si MP falló para no dejar basura
+            await _context.Sales.DeleteOneAsync(s => s.Id == sale.Id);
+            return StatusCode(500, new { message = $"Error al crear link de Mercado Pago: {ex.Message}" });
+        }
     }
 
     // GET api/sales/online-orders — lista los pedidos online de la empresa (para el panel admin)

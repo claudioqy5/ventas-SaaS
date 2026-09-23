@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar" @mouseenter="isSidebarHovered = true" @mouseleave="isSidebarHovered = false">
@@ -465,6 +465,23 @@
             <span>Emitir {{ tipoComprobante }} • S/. {{ cartTotal.toFixed(2) }}</span>
           </span>
         </button>
+
+        <!-- Botón para Generar Ticket de Pago (Link Mercado Pago) -->
+        <button
+          @click="generateTicket"
+          class="btn-secondary w-full"
+          style="margin-top: 10px; padding: 12px; font-weight: 600; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px;"
+          :disabled="cart.length === 0 || loading"
+        >
+          <span v-if="loading" class="action-spinner"></span>
+          <span v-else style="display: flex; align-items: center; gap: 6px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+            Generar Link de Pago
+          </span>
+        </button>
       </div>
     </aside>
   </div>
@@ -473,15 +490,22 @@
   <div v-if="showSuccessModal" class="modal-overlay" style="z-index: 2000;">
     <div class="modal-card card success-modal">
       <div class="success-icon">🎉</div>
-      <h2 class="modal-title" style="text-align:center;">¡Venta Exitosa!</h2>
+      <h2 class="modal-title" style="text-align:center;">
+        {{ isTicketGenerated ? '¡Ticket de Pago Generado!' : '¡Venta Exitosa!' }}
+      </h2>
       <div class="success-code" style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 12px;">
-        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">{{ lastSaleVoucherType }}</span>
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">
+          {{ isTicketGenerated ? 'TICKET PENDIENTE' : lastSaleVoucherType }}
+        </span>
         <strong style="font-size: 1.3rem; color: var(--text-main); letter-spacing: 0.05em;">{{ lastSaleCode }}</strong>
-        <span v-if="lastSaleVoucherType !== 'Nota de Venta'" style="font-size: 0.72rem; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
+        <span v-if="!isTicketGenerated && lastSaleVoucherType !== 'Nota de Venta'" style="font-size: 0.72rem; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
           🏛️ Estructura lista para SUNAT
         </span>
-        <span v-else style="font-size: 0.72rem; background: #ecfdf5; color: #059669; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
+        <span v-else-if="!isTicketGenerated" style="font-size: 0.72rem; background: #ecfdf5; color: #059669; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
           📝 Control Interno
+        </span>
+        <span v-else style="font-size: 0.72rem; background: #fef08a; color: #854d0e; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
+          ⏳ Esperando Pago MP
         </span>
       </div>
 
@@ -499,9 +523,19 @@
         </div>
       </div>
 
+      <div v-if="isTicketGenerated && mpTicketLink" style="margin-top: 15px; margin-bottom: 15px; padding: 15px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: center;">
+        <p style="font-size: 0.85rem; color: #1e3a8a; margin-bottom: 10px; font-weight: 600;">Enlace de Pago Mercado Pago:</p>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <input type="text" :value="mpTicketLink" readonly style="flex: 1; padding: 8px; border: 1px solid #bfdbfe; border-radius: 4px; font-size: 0.8rem; background: white;" />
+          <button @click="copyTicketLink" class="btn btn-primary" style="padding: 8px; border: none; flex-shrink: 0;" title="Copiar Enlace">
+            📋 Copiar
+          </button>
+        </div>
+      </div>
+
       <div class="success-actions" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%;">
-          <button @click="printTicket" class="btn btn-primary" style="background: #2563eb; border: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <button v-if="!isTicketGenerated" @click="printTicket" class="btn btn-primary" style="background: #2563eb; border: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
             🖨️ Imprimir Ticket
           </button>
           <a
@@ -592,7 +626,10 @@ const lastSaleClientName = ref('')
 const lastSaleClientDoc = ref('')
 const lastSaleCart = ref([])
 const lastSaleTotal = ref(0)
+const lastSaleTotal = ref(0)
 const lastClientPhone = ref('')
+const isTicketGenerated = ref(false)
+const mpTicketLink = ref('')
 
 watch([searchQuery, selectedCategory], () => {
   currentPage.value = 1
@@ -1161,6 +1198,8 @@ const checkout = async () => {
     lastSaleCart.value = [...cart.value]
     lastSaleTotal.value = cartTotal.value
     lastClientPhone.value = client?.telefono || ''
+    
+    isTicketGenerated.value = false
     showSuccessModal.value = true
 
     cart.value = []
@@ -1177,6 +1216,133 @@ const checkout = async () => {
     alert(err.message)
   } finally {
     loading.value = false
+  }
+}
+
+const generateTicket = async () => {
+  loading.value = true
+  try {
+    const client = clients.value.find(c => c.id === selectedClientId.value)
+    const clienteId = client ? client.id : null
+    let nombreCliente = client ? client.nombre : 'Cliente General'
+
+    // Validaciones tributarias previas
+    if (tipoComprobante.value === 'Factura') {
+      const ruc = facturaRuc.value.trim()
+      const razon = facturaRazonSocial.value.trim()
+      if (!ruc || ruc.length !== 11 || !/^\d+$/.test(ruc)) {
+        alert('Para emitir una Factura Electrónica es obligatorio ingresar un RUC válido de 11 dígitos numéricos.')
+        loading.value = false
+        return
+      }
+      if (!razon) {
+        alert('Para emitir una Factura Electrónica es obligatoria la Razón Social del cliente o empresa.')
+        loading.value = false
+        return
+      }
+      nombreCliente = razon
+    } else if (tipoComprobante.value === 'Boleta') {
+      if (cartTotal.value >= 700 && !selectedClientHasDoc.value) {
+        alert('Por normativa SUNAT, para ventas en Boleta de Venta iguales o mayores a S/. 700.00 es obligatorio identificar al cliente con su DNI o RUC.')
+        loading.value = false
+        return
+      }
+    }
+
+    const detallesVenta = cart.value.map(item => {
+      const isCostal = item.tipoProducto === 'Costal'
+      const isSack = isCostal && item.presentacion === 'Costal'
+
+      const cantidadBase = isSack ? (item.cantidad * item.kilosPorCostal) : item.cantidad
+      const precioUnitarioBase = isSack ? (item.precioUnitario / item.kilosPorCostal) : item.precioUnitario
+
+      let nombreLabel = item.nombreProducto
+      if (isCostal) {
+        nombreLabel = isSack 
+          ? `${item.nombreProducto} (Costal ${item.kilosPorCostal}Kg)` 
+          : `${item.nombreProducto} (Kg suelto)`
+      }
+
+      return {
+        productoId: item.productoId,
+        nombreProducto: nombreLabel,
+        cantidad: cantidadBase,
+        precioUnitario: Number(precioUnitarioBase.toFixed(4)),
+        unidadMedida: item.unidadMedida,
+        presentacion: item.presentacion,
+        cantidadPresentacion: item.cantidad,
+        precioPresentacion: item.precioUnitario
+      }
+    })
+
+    const payload = {
+      detalles: detallesVenta,
+      metodoPago: "Mercado Pago",
+      estadoPago: "Pendiente",
+      clienteId: clienteId,
+      nombreCliente: nombreCliente,
+      tipoComprobante: tipoComprobante.value,
+      serie: serieActual.value,
+      clienteTipoDocumento: tipoComprobante.value === 'Factura' ? '6' : (client?.tipoDocumento === 'RUC' ? '6' : (client?.numeroDocumento ? '1' : '-')),
+      clienteNumeroDocumento: tipoComprobante.value === 'Factura' ? facturaRuc.value.trim() : (client?.numeroDocumento || ''),
+      clienteRazonSocial: tipoComprobante.value === 'Factura' ? facturaRazonSocial.value.trim() : (client?.nombre || ''),
+      clienteDireccion: tipoComprobante.value === 'Factura' ? facturaDireccion.value.trim() : (client?.direccion || ''),
+      rucFactura: tipoComprobante.value === 'Factura' ? facturaRuc.value.trim() : null,
+      razonSocialFactura: tipoComprobante.value === 'Factura' ? facturaRazonSocial.value.trim() : null,
+      direccionFiscalFactura: tipoComprobante.value === 'Factura' ? facturaDireccion.value.trim() : null
+    }
+
+    const res = await fetch(`${API_URL}/api/sales/generate-ticket`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.token}`
+      },
+      body: JSON.stringify(payload)
+    })
+
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.message || 'Error al generar el ticket.')
+    }
+
+    const result = await res.json()
+
+    // Mostrar modal de éxito
+    lastSaleCode.value = "TKT-" + (result.orderId.substring(result.orderId.length - 6).toUpperCase())
+    lastSaleVoucherType.value = tipoComprobante.value
+    lastSaleClientName.value = nombreCliente
+    lastSaleClientDoc.value = payload.clienteNumeroDocumento || ''
+    lastSaleCart.value = [...cart.value]
+    lastSaleTotal.value = cartTotal.value
+    lastClientPhone.value = client?.telefono || ''
+    
+    isTicketGenerated.value = true
+    mpTicketLink.value = result.initPoint
+    showSuccessModal.value = true
+
+    // Limpiar carrito
+    cart.value = []
+    crossSellSuggestions.value = []
+    selectedClientId.value = ''
+    facturaRuc.value = ''
+    facturaRazonSocial.value = ''
+    facturaDireccion.value = ''
+    isFiado.value = false
+    fetchProximoCorrelativo()
+  } catch (err) {
+    alert(err.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+const copyTicketLink = async () => {
+  try {
+    await navigator.clipboard.writeText(mpTicketLink.value)
+    alert("¡Enlace copiado al portapapeles!")
+  } catch (e) {
+    alert("No se pudo copiar el enlace.")
   }
 }
 
