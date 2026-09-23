@@ -839,18 +839,19 @@ export default function App({ initialCategory, initialProductId, initialView = '
             margin: '0 auto',
             padding: '50px 2% 90px',
             width: '100%',
-            flex: 1
+            flex: 1,
+            backgroundColor: (!showFullCatalog && activeView !== 'search') ? '#ffffff' : undefined
           }}>
             {/* Encabezado del Catálogo */}
             <div className="catalog-header" style={{
               display: 'flex',
               flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
+              justifyContent: (!showFullCatalog && activeView !== 'search') ? 'center' : 'space-between',
+              alignItems: (!showFullCatalog && activeView !== 'search') ? 'center' : 'flex-end',
               marginBottom: '32px',
               gap: '20px'
             }}>
-              <div>
+              <div style={{ textAlign: (!showFullCatalog && activeView !== 'search') ? 'center' : 'left' }}>
                 <span style={{
                   fontSize: '0.74rem',
                   letterSpacing: '0.2em',
@@ -1081,7 +1082,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
-          backgroundColor: '#fcfbf8', // Fondo perla exacto de la página principal
+          backgroundColor: '#ffffff', // Fondo blanco como se solicitó
           overflow: 'hidden'
         }}>
           {/* Fondo animado WebGL en Oro Metálico, Charcoal y Champaña */}
@@ -1108,7 +1109,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
             mouseInteraction={true}
             mouseStrength={0.25}
             lightMode={true}
-            backgroundColor="#fcfbf8"
+            backgroundColor="#ffffff"
           />
           
           {/* Texto superpuesto */}
@@ -1148,7 +1149,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
       {!initialCategory && filteredProducts.length > 4 && (
         <section style={{
           padding: '80px 24px',
-          backgroundColor: 'var(--bg-main)', // Fondo igual al de la página principal
+          backgroundColor: '#ffffff', // Fondo blanco
           position: 'relative'
         }}>
           <div style={{ maxWidth: '1360px', margin: '0 auto' }}>

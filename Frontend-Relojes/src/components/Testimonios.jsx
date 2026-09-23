@@ -29,7 +29,7 @@ export default function Testimonios() {
   return (
     <section style={{
       padding: '90px 24px',
-      backgroundColor: 'var(--bg-main)',
+      backgroundColor: '#ffffff',
       position: 'relative'
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
