@@ -57,7 +57,7 @@
       <div class="pos-workspace" style="display: flex; flex-grow: 1; overflow: hidden; min-height: 0; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #ffffff;">
         <!-- Panel de seleccion de productos disponibles -->
         <div class="products-area" style="flex-grow: 1; display: flex; flex-direction: column; padding: 20px; overflow: hidden; min-height: 0; background: var(--bg-app);">
-          <header class="search-header" style="margin-bottom: 20px; flex-shrink: 0;">
+          <header class="search-header" style="margin-bottom: 20px; flex-shrink: 0; position: relative; z-index: 1000;">
             <div class="search-filters">
               <input v-model="searchQuery" type="text" placeholder="🔍 Buscar por nombre o código de barra..." class="search-input" />
               <select v-model="selectedCategory" class="category-select">
@@ -66,12 +66,12 @@
               </select>
 
               <!-- Filtro de Especificaciones (Multi-select) -->
-              <div style="position: relative;" ref="attributeFilterDropdownRef" class="category-select select-attribute">
+              <div style="position: relative; background-image: none; padding: 0;" ref="attributeFilterDropdownRef" class="category-select select-attribute">
                 <div 
                   @click.stop="showAttributeFilterDropdown = !showAttributeFilterDropdown"
                   class="multiselect-trigger"
                   :class="{ 'active': showAttributeFilterDropdown }"
-                  style="border: none; padding: 0; background: transparent; display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%; cursor: pointer;"
+                  style="border: none; padding: 0 11px; background: transparent; display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%; cursor: pointer;"
                 >
                   <div class="multiselect-selected-text" style="display: flex; align-items: center;">
                     <template v-if="!selectedAttributes || selectedAttributes.length === 0">

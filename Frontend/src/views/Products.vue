@@ -221,12 +221,12 @@
         </select>
 
         <!-- Filtro de Especificaciones (Multi-select) -->
-        <div style="position: relative; padding: 0;" ref="attributeFilterDropdownRef" class="filter-select select-attribute">
+        <div style="position: relative; padding: 0; background-image: none;" ref="attributeFilterDropdownRef" class="filter-select select-attribute">
           <div 
             @click.stop="showAttributeFilterDropdown = !showAttributeFilterDropdown"
             class="multiselect-trigger"
             :class="{ 'active': showAttributeFilterDropdown }"
-            style="border: none; padding: 0; background: transparent; display: flex; width: 100%; justify-content: space-between; cursor: pointer;"
+            style="border: none; padding: 0 11px; background: transparent; display: flex; width: 100%; height: 100%; align-items: center; justify-content: space-between; cursor: pointer;"
           >
             <div class="multiselect-selected-text">
               <template v-if="!selectedAttributes || selectedAttributes.length === 0">
