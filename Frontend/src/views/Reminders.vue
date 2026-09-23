@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -50,10 +50,13 @@
     <main class="main-content">
       <header class="content-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
         <div>
-          <h1 class="text-title">◦ Recordatorios e Historial de Cuentas por Pagar</h1>
+          <h1 class="text-title">Recordatorios e Historial de Cuentas por Pagar</h1>
           <p class="text-subtitle">Gestiona tus cuentas pendientes, vencimientos y recordatorios importantes</p>
         </div>
-        <button @click="openAddModal" class="btn btn-primary">➕ Agregar Cuenta / Recordatorio</button>
+        <button @click="openAddModal" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar Cuenta / Recordatorio
+        </button>
       </header>
 
       <!-- KPI Summary -->
@@ -112,8 +115,12 @@
                 <td>
                   <div class="actions-cell">
                     <button v-if="rem.estado === 'Pendiente'" @click="markAsPaid(rem)" class="btn-action check" title="Marcar como Pagado" style="color: #16a34a; font-size: 1.1rem; font-weight: 500;">✓</button>
-                    <button @click="openEditModal(rem)" class="btn-action edit" title="Editar">✏️</button>
-                    <button @click="deleteReminder(rem.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                    <button @click="openEditModal(rem)" class="btn-action edit" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button @click="deleteReminder(rem.id)" class="btn-action delete" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -127,7 +134,7 @@
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-content card">
         <div class="modal-header">
-          <h2>{{ editMode ? '✏️ Editar Cuenta / Recordatorio' : '➕ Agregar Cuenta / Recordatorio' }}</h2>
+          <h2>{{ editMode ? 'Editar Cuenta / Recordatorio' : 'Agregar Cuenta / Recordatorio' }}</h2>
           <button @click="closeModal" class="close-btn">&times;</button>
         </div>
         

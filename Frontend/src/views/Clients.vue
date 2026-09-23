@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -51,17 +51,20 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">⚇ Gestión de Clientes</h1>
+            <h1 class="text-title">Gestión de Clientes</h1>
             <p class="text-subtitle">Registra, edita y analiza el comportamiento de tus clientes</p>
           </div>
-          <button v-if="activeTab === 'directorio'" @click="openCreateModal" class="btn btn-primary">➕ Agregar Cliente</button>
+          <button v-if="activeTab === 'directorio'" @click="openCreateModal" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Agregar Cliente
+          </button>
         </div>
       </header>
 
       <!-- Sistema de Tabs -->
       <div class="tabs-nav">
-        <button :class="['tab-btn', activeTab === 'directorio' ? 'active' : '']" @click="activeTab = 'directorio'">📝 Directorio</button>
-        <button :class="['tab-btn', activeTab === 'top' ? 'active' : '']" @click="switchToTop">🏆 Top Clientes</button>
+        <button :class="['tab-btn', activeTab === 'directorio' ? 'active' : '']" @click="activeTab = 'directorio'">Directorio</button>
+        <button :class="['tab-btn', activeTab === 'top' ? 'active' : '']" @click="switchToTop">Top Clientes</button>
       </div>
 
       <!-- ══════════ TAB: DIRECTORIO ══════════ -->
@@ -191,8 +194,11 @@
                 </td>
                 <td>
                   <div class="actions-cell" @click.stop>
-                    <button @click="openDetailModal(cli)" class="btn btn-primary btn-sm">🔍 Ver Análisis</button>
-                    <a v-if="cli.telefono" :href="buildWhatsappPromo(cli)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm">📱 WhatsApp</a>
+                    <button @click="openDetailModal(cli)" class="btn btn-primary btn-sm" style="display:inline-flex; align-items:center; gap:4px;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      Ver Análisis
+                    </button>
+                    <a v-if="cli.telefono" :href="buildWhatsappPromo(cli)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm">WhatsApp</a>
                   </div>
                 </td>
               </tr>
@@ -204,7 +210,7 @@
         <div v-if="showDetailModal && selectedClient" class="modal-overlay">
           <div class="modal-card card detail-modal-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
-              <h2 class="modal-title" style="margin-bottom: 0;">◫ Análisis de Cliente</h2>
+              <h2 class="modal-title" style="margin-bottom: 0;">Análisis de Cliente</h2>
               <button @click="showDetailModal = false" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); font-weight: 500;">&times;</button>
             </div>
             
@@ -215,8 +221,11 @@
                 <span class="top-doc" style="font-size: 0.85rem; color: var(--text-muted);">{{ selectedClient.numeroDocumento || selectedClient.correo || 'Sin documento' }}</span>
               </div>
               <div style="display: flex; gap: 8px; align-items: center;">
-                <button @click="printCompleteClientReport" class="btn btn-primary" style="background-color: #6366f1; border: none; font-size: 0.78rem; font-weight: 500; padding: 6px 12px; border-radius: 99px;">📥 Exportar Reporte</button>
-                <a v-if="selectedClient.telefono" :href="buildWhatsappPromo(selectedClient)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm" style="margin-top: 0;">📱 Enviar Oferta</a>
+                <button @click="printCompleteClientReport" class="btn btn-primary" style="background-color: #6366f1; border: none; font-size: 0.78rem; font-weight: 500; padding: 6px 12px; border-radius: 99px; display:inline-flex; align-items:center; gap:4px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Exportar Reporte
+                </button>
+                <a v-if="selectedClient.telefono" :href="buildWhatsappPromo(selectedClient)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm" style="margin-top: 0;">Enviar Oferta</a>
               </div>
             </div>
 

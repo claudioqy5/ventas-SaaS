@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -50,7 +50,7 @@
     <main class="main-content">
       <header class="content-header">
         <div>
-          <h1 class="text-title">≡ Historial de Ventas</h1>
+          <h1 class="text-title">Historial de Ventas</h1>
           <p class="text-subtitle">Consulta todas las ventas registradas en el sistema, con sus respectivos cajeros, clientes y detalles.</p>
         </div>
       </header>
@@ -58,13 +58,13 @@
       <div class="card font-card">
         <!-- Barra de busqueda y filtros -->
         <div class="filters-container">
-          <input v-model="searchQuery" type="text" placeholder="🔍 Buscar por cliente o cajero..." class="filter-input" />
+          <input v-model="searchQuery" type="text" placeholder="Buscar por cliente o cajero..." class="filter-input" />
           <input v-model="filterDate" type="date" class="filter-select" title="Filtrar por fecha" />
           <select v-model="filterPayment" class="filter-select">
-            <option value="">✧ Todos los Métodos</option>
-            <option value="Efectivo">✧ Efectivo</option>
-            <option value="Tarjeta">▪ Tarjeta</option>
-            <option value="Transferencia">🏦 Transferencia</option>
+            <option value="">Todos los Métodos</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Transferencia">Transferencia</option>
           </select>
         </div>
 
@@ -92,8 +92,8 @@
             <tr v-for="(sale, index) in filteredSales" :key="sale.id">
               <td><strong>{{ index + 1 }}</strong></td>
               <td>
-                <span class="badge" style="font-weight: 700; font-size: 0.78rem; background: #f8fafc; color: #334155; padding: 4px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 4px;">
-                  <span style="font-size: 0.82rem;">{{ sale.tipoComprobante === 'Factura' ? '📑' : (sale.tipoComprobante === 'Nota de Venta' ? '📝' : '🧾') }}</span>
+                <span class="badge" style="font-weight: 700; font-size: 0.78rem; background: #f8fafc; color: #334155; padding: 4px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                   {{ sale.numeroComprobante || (sale.tipoComprobante || 'VTA') }}
                 </span>
               </td>
@@ -118,16 +118,22 @@
                 <span v-else class="total-badge">S/. {{ sale.total.toFixed(2) }}</span>
                 <span v-if="sale.revertida" class="reverted-badge" style="margin-left: 8px;">Revertido</span>
               </td>
-              <td style="text-align: center; display: flex; gap: 8px; justify-content: center; align-items: center;">
-                <button @click="openDetails(sale)" class="btn btn-primary btn-sm">👁️ Ver Detalles</button>
-                <button 
-                  v-if="!sale.revertida"
-                  @click="confirmRevertSale(sale)" 
-                  class="btn btn-danger btn-sm"
-                  style="display: flex; align-items: center; gap: 4px; background: linear-gradient(135deg, #ef4444, #b91c1c); border: none;"
-                >
-                  ↩️ Revertir
-                </button>
+              <td style="text-align: center;">
+                <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
+                  <button @click="openDetails(sale)" class="btn-action-pill primary" title="Ver Detalles">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    Ver Detalles
+                  </button>
+                  <button 
+                    v-if="!sale.revertida"
+                    @click="confirmRevertSale(sale)" 
+                    class="btn-action-pill danger"
+                    title="Revertir Venta"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                    Revertir
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -138,7 +144,7 @@
       <div v-if="selectedSale" class="modal-overlay" @click.self="selectedSale = null">
         <div class="modal-content card max-width-600">
           <header class="modal-header">
-            <h3>≡ Detalles de la Venta</h3>
+            <h3>Detalles de la Venta</h3>
             <button @click="selectedSale = null" class="close-btn">×</button>
           </header>
 
@@ -739,5 +745,40 @@ onMounted(() => {
   border-radius: var(--radius-sm);
   display: inline-block;
   border: 1px solid #fca5a5;
+}
+
+.btn-action-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.btn-action-pill.primary {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.btn-action-pill.primary:hover {
+  background: #dbeafe;
+  transform: translateY(-1px);
+}
+
+.btn-action-pill.danger {
+  background: #fef2f2;
+  color: #ef4444;
+  border-color: #fca5a5;
+}
+
+.btn-action-pill.danger:hover {
+  background: #fee2e2;
+  transform: translateY(-1px);
 }
 </style>

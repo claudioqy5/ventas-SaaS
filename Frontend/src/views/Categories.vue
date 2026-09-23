@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -80,7 +80,10 @@
         <div class="table-filters" style="margin-bottom: 0; flex-grow: 1; max-width: 400px; padding: 10px;">
           <input v-model="searchQuery" type="text" :placeholder="'Buscar en ' + activeTabLabel + '...'" class="filter-input" />
         </div>
-        <button @click="openCreateModal" class="btn btn-primary">➕ Agregar {{ activeTabLabel }}</button>
+        <button @click="openCreateModal" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar {{ activeTabLabel }}
+        </button>
       </div>
 
       <!-- Lista de Datos (Dinámica según Tab) -->
@@ -112,8 +115,12 @@
               </td>
               <td>
                 <div class="actions-cell">
-                  <button @click="openEditModal(item)" class="btn-action edit" title="Editar">✏️</button>
-                  <button @click="confirmDelete(item.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                  <button @click="openEditModal(item)" class="btn-action edit" title="Editar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button @click="confirmDelete(item.id)" class="btn-action delete" title="Eliminar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -124,7 +131,7 @@
       <!-- Modal Unificado -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title">{{ isEdit ? '✏️ Editar ' + activeTabLabel : 'Registrar ' + activeTabLabel }}</h2>
+          <h2 class="modal-title">{{ isEdit ? 'Editar ' + activeTabLabel : 'Registrar ' + activeTabLabel }}</h2>
           <form @submit.prevent="saveItem" class="grid">
             <div class="field">
               <label>Nombre de {{ activeTabLabel }}</label>
@@ -142,7 +149,10 @@
                 <input v-model="form.opciones[i]" type="text" placeholder="Nueva Opción" required style="flex-grow: 1; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color);" />
                 <button type="button" @click="form.opciones.splice(i, 1)" class="btn btn-danger" style="padding: 4px 10px;">✕</button>
               </div>
-              <button type="button" @click="form.opciones.push('')" class="btn btn-secondary-compact" style="font-size: 0.75rem; margin-top: 4px;">➕ Agregar Opción</button>
+              <button type="button" @click="form.opciones.push('')" class="btn btn-secondary-compact" style="font-size: 0.75rem; margin-top: 4px; display:inline-flex; align-items:center; gap:4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Agregar Opción
+              </button>
             </div>
 
             <div class="modal-actions">

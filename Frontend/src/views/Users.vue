@@ -51,17 +51,20 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">⚇ Colaboradores y Permisos</h1>
+            <h1 class="text-title">Colaboradores y Permisos</h1>
             <p class="text-subtitle">Gestiona las cuentas de tus trabajadores y restringe el acceso a datos sensibles</p>
           </div>
-          <button @click="openCreateModal" class="btn btn-primary">➕ Agregar Trabajador</button>
+          <button @click="openCreateModal" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Agregar Trabajador
+          </button>
         </div>
       </header>
 
       <!-- Sistema de Tabs (Solo visible para Superadmin) -->
       <div v-if="authStore.isSuperadmin" class="tabs-nav" style="display: flex; gap: 6px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color);">
-        <button :class="['tab-btn', activeTab === 'colaboradores' ? 'active' : '']" @click="activeTab = 'colaboradores'" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: var(--transition);">⚇ Cuentas y Colaboradores</button>
-        <button :class="['tab-btn', activeTab === 'solicitudes' ? 'active' : '']" @click="switchToSolicitudes" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: var(--transition);">≡ Solicitudes de Registro</button>
+        <button :class="['tab-btn', activeTab === 'colaboradores' ? 'active' : '']" @click="activeTab = 'colaboradores'" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: var(--transition);">Cuentas y Colaboradores</button>
+        <button :class="['tab-btn', activeTab === 'solicitudes' ? 'active' : '']" @click="switchToSolicitudes" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: var(--transition);">Solicitudes de Registro</button>
       </div>
 
       <!-- TAB 1: Colaboradores -->
@@ -111,8 +114,12 @@
                 </td>
                 <td>
                   <div class="actions-cell">
-                    <button @click="openEditModal(user)" class="btn-action edit" title="Editar">✏️</button>
-                    <button @click="confirmDelete(user.id)" class="btn-action delete" title="Eliminar">🗑️</button>
+                    <button @click="openEditModal(user)" class="btn-action edit" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button @click="confirmDelete(user.id)" class="btn-action delete" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -165,9 +172,9 @@
                 </td>
                 <td>
                   <div class="actions-cell" style="gap: 6px;">
-                    <button v-if="req.estado === 'Pendiente'" @click="updateRequestStatus(req.id, 'Contactado')" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 4px 8px;">📞 Contactar</button>
-                    <button v-if="req.estado !== 'Aprobado'" @click="approveAndPreFill(req)" class="btn btn-success btn-sm" style="font-size: 0.75rem; padding: 4px 8px; background-color: #10b981; color: white;">✓ Aprobar</button>
-                    <button v-if="req.estado !== 'Rechazado' && req.estado !== 'Aprobado'" @click="updateRequestStatus(req.id, 'Rechazado')" class="btn btn-danger btn-sm" style="font-size: 0.75rem; padding: 4px 8px; background-color: #ef4444; color: white;">✕ Rechazar</button>
+                    <button v-if="req.estado === 'Pendiente'" @click="updateRequestStatus(req.id, 'Contactado')" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 4px 8px;">Contactar</button>
+                    <button v-if="req.estado !== 'Aprobado'" @click="approveAndPreFill(req)" class="btn btn-success btn-sm" style="font-size: 0.75rem; padding: 4px 8px; background-color: #10b981; color: white;">Aprobar</button>
+                    <button v-if="req.estado !== 'Rechazado' && req.estado !== 'Aprobado'" @click="updateRequestStatus(req.id, 'Rechazado')" class="btn btn-danger btn-sm" style="font-size: 0.75rem; padding: 4px 8px; background-color: #ef4444; color: white;">Rechazar</button>
                   </div>
                 </td>
               </tr>
@@ -179,7 +186,7 @@
       <!-- Modal para agregar/editar colaboradores -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-card card">
-          <h2 class="modal-title">{{ isEdit ? '✏️ Editar Colaborador' : '⚇ Registrar Colaborador' }}</h2>
+          <h2 class="modal-title">{{ isEdit ? 'Editar Colaborador' : 'Registrar Colaborador' }}</h2>
           <form @submit.prevent="saveUser" class="grid">
             <div class="grid grid-2">
               <div class="field">

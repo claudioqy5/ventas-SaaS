@@ -354,108 +354,194 @@
 
       <!-- Modal: Cambiar Estado -->
       <div v-if="statusModal.visible" class="modal-overlay" @click.self="statusModal.visible = false">
-        <div class="modal-content card" style="max-width: 460px;">
-          <header class="modal-header">
-            <h3>Actualizar Estado del Pedido</h3>
+        <div class="modal-content card status-modal-content" style="max-width: 780px; width: 95%;">
+          <header class="modal-header" style="border-bottom: 1px solid var(--border-color, #e2e8f0); padding-bottom: 14px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="background: #eff6ff; color: #2563eb; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+              <div>
+                <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700;">Actualizar Estado del Pedido</h3>
+                <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted);">Avanza el pedido en la línea de tiempo o cancela si fue anulado</p>
+              </div>
+            </div>
             <button @click="statusModal.visible = false" class="close-btn">×</button>
           </header>
 
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">
-            Pedido: <strong>#{{ statusModal.order?.id?.slice(-8).toUpperCase() }}</strong> — 
-            Cliente: <strong>{{ statusModal.order?.nombreCliente }}</strong>
-          </p>
-
-          <div class="timeline-container">
-            <div
-              v-for="(step, index) in timelineSteps"
-              :key="step.value"
-              :class="['timeline-step', getStepStatus(step.value), { 'is-selected': statusModal.selected === step.value }]"
-              @click="handleStepClick(step.value)"
-            >
-              <div class="timeline-marker">
-                <div class="timeline-dot">
-                  <svg v-if="getStepStatus(step.value) === 'completed'" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <svg v-if="getStepStatus(step.value) === 'current'" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="8"></circle></svg>
-                </div>
-                <div v-if="index < timelineSteps.length - 1" class="timeline-line"></div>
-              </div>
-              <div class="timeline-content">
-                <span :class="['timeline-title', step.class]">{{ step.label }}</span>
-                <span class="timeline-desc">{{ step.description }}</span>
-              </div>
+          <!-- Order Summary Header Strip -->
+          <div class="status-order-info">
+            <div class="info-pill">
+              <span class="info-label">Pedido:</span>
+              <span class="info-value">#{{ statusModal.order?.id?.slice(-8).toUpperCase() }}</span>
             </div>
-          </div>
-          
-          <div v-if="statusModal.order?.estadoOrden !== 'CANCELADO'" style="margin-top: 16px; text-align: center;">
-            <button @click="handleStepClick('CANCELADO')" :class="['btn', statusModal.selected === 'CANCELADO' ? 'btn-danger' : 'btn-danger-outline']" style="width: 100%; border: 1px solid #ef4444; background-color: transparent; color: #ef4444;">
-              <span v-if="statusModal.selected === 'CANCELADO'" style="color: white; background: #ef4444; display: block; padding: 6px; border-radius: 4px;">✓ Cancelar Pedido Seleccionado</span>
-              <span v-else>✕ Cancelar Pedido</span>
+            <div class="info-pill">
+              <span class="info-label">Cliente:</span>
+              <span class="info-value">{{ statusModal.order?.nombreCliente }}</span>
+            </div>
+            <div class="info-pill">
+              <span class="info-label">Estado actual:</span>
+              <span :class="['estado-badge', estadoClass(statusModal.order?.estadoOrden)]">
+                {{ estadoLabel(statusModal.order?.estadoOrden) }}
+              </span>
+            </div>
+            
+            <button 
+              v-if="statusModal.order?.estadoOrden !== 'CANCELADO'" 
+              @click="handleStepClick('CANCELADO')" 
+              :class="['btn-cancel-action', { 'is-active': statusModal.selected === 'CANCELADO' }]"
+              title="Cancelar Pedido"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              {{ statusModal.selected === 'CANCELADO' ? '✓ Cancelación Seleccionada' : 'Cancelar Pedido' }}
             </button>
           </div>
 
-          <div v-if="statusModal.selected === 'ENVIADO'" style="margin-top: 16px;">
-            <label style="font-size: 0.88rem; font-weight: 500; display: block; margin-bottom: 6px;">Número de Seguimiento (opcional)</label>
-            <input
-              v-model="statusModal.numeroSeguimiento"
-              type="text"
-              placeholder="Ej: PE123456789"
-              class="filter-input"
-              style="width: 100%;"
-            />
+          <!-- Horizontal Stepper Timeline -->
+          <div class="horizontal-stepper-wrapper">
+            <div class="stepper-progress-bar">
+              <div class="stepper-progress-fill" :style="{ width: progressPercentage + '%' }"></div>
+            </div>
+
+            <div class="horizontal-stepper-steps">
+              <div
+                v-for="(step, index) in timelineSteps"
+                :key="step.value"
+                :class="[
+                  'stepper-step-card',
+                  getStepStatus(step.value),
+                  { 
+                    'is-selected': statusModal.selected === step.value,
+                    'is-clickable': isStepClickable(step.value)
+                  }
+                ]"
+                @click="handleStepClick(step.value)"
+              >
+                <div class="step-node-badge">
+                  <div class="step-icon-wrapper">
+                    <!-- Completed Check Icon -->
+                    <svg v-if="getStepStatus(step.value) === 'completed'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    <!-- Icon for step -->
+                    <template v-else>
+                      <svg v-if="step.icon === 'clock'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      <svg v-else-if="step.icon === 'package'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                      <svg v-else-if="step.icon === 'truck'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                      <svg v-else-if="step.icon === 'check-circle'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </template>
+                  </div>
+                  <span class="step-index-tag">Paso {{ index + 1 }}</span>
+                </div>
+
+                <div class="step-card-body">
+                  <h4 :class="['step-card-title', step.class]">{{ step.label }}</h4>
+                  <p class="step-card-desc">{{ step.description }}</p>
+                  
+                  <div class="step-status-tag">
+                    <span v-if="statusModal.selected === step.value" class="tag-selected">✓ Seleccionado</span>
+                    <span v-else-if="getStepStatus(step.value) === 'current'" class="tag-current">Estado Actual</span>
+                    <span v-else-if="getStepStatus(step.value) === 'completed'" class="tag-completed">Completado</span>
+                    <span v-else-if="isStepClickable(step.value)" class="tag-action">Cambiar a este</span>
+                    <span v-else class="tag-disabled">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div v-if="statusModal.selected === 'EN_PREPARACION'" style="margin-top: 16px; background: #f0fdf4; border: 1px solid #86efac; padding: 12px; border-radius: 8px; font-size: 0.88rem; color: #15803d;">
-            <strong>Confirmación de pago:</strong> Al pasar a "En Preparación", el pedido se registrará como venta confirmada y sumará en el Dashboard e Historial de Ventas.
+          <!-- Contextual Action Forms -->
+          <div v-if="statusModal.selected === 'EN_PREPARACION'" class="status-action-box bg-emerald">
+            <div class="action-box-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <div>
+                <strong>Confirmación de pago e ingreso a Ventas</strong>
+                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Al pasar a "En Preparación", se descontará el stock y se registrará la venta en el Dashboard e Historial.</p>
+              </div>
+            </div>
             
-            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #bbf7d0;">
-              <strong style="display:block; margin-bottom:8px; font-size:0.95rem; color:#166534;">Facturación Electrónica</strong>
-              <label style="font-weight:600; font-size:0.85rem; color:#166534;">Comprobante a emitir:</label>
-              <select v-model="statusModal.tipoComprobante" class="filter-input" style="width: 100%; margin-top: 4px; margin-bottom: 12px; background: white;">
-                <option value="Nota de Venta">Nota de Venta (Interno)</option>
-                <option value="Boleta">Boleta de Venta</option>
-                <option value="Factura">Factura</option>
-              </select>
-              
-              <div v-if="statusModal.tipoComprobante === 'Boleta' || statusModal.tipoComprobante === 'Factura'">
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                  <div style="flex:1;">
-                    <label style="font-weight:600; font-size:0.8rem; color:#166534;">Tipo Doc.</label>
-                    <select v-model="statusModal.clienteTipoDocumento" class="filter-input" style="width:100%; margin-top:4px; background: white;">
+            <div class="billing-form-section">
+              <div class="form-row-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>Facturación Electrónica (SUNAT / Interno)</span>
+              </div>
+
+              <div class="form-grid-2col">
+                <div>
+                  <label class="form-label">Comprobante a emitir:</label>
+                  <select v-model="statusModal.tipoComprobante" class="form-input-styled">
+                    <option value="Nota de Venta">Nota de Venta (Interno)</option>
+                    <option value="Boleta">Boleta de Venta</option>
+                    <option value="Factura">Factura</option>
+                  </select>
+                </div>
+
+                <div v-if="statusModal.tipoComprobante === 'Boleta' || statusModal.tipoComprobante === 'Factura'" class="form-flex-row">
+                  <div style="flex: 1;">
+                    <label class="form-label">Tipo Doc.</label>
+                    <select v-model="statusModal.clienteTipoDocumento" class="form-input-styled">
                       <option value="-">Sin Documento</option>
                       <option value="1">DNI</option>
                       <option value="6">RUC</option>
                     </select>
                   </div>
-                  <div style="flex:2;">
-                    <label style="font-weight:600; font-size:0.8rem; color:#166534;">Número</label>
-                    <input v-model="statusModal.clienteNumeroDocumento" type="text" class="filter-input" style="width:100%; margin-top:4px; background: white;" />
+                  <div style="flex: 2;">
+                    <label class="form-label">N° Documento</label>
+                    <input v-model="statusModal.clienteNumeroDocumento" type="text" placeholder="Ej: 71234567" class="form-input-styled" />
                   </div>
                 </div>
+              </div>
 
-                <div style="margin-bottom:10px;">
-                  <label style="font-weight:600; font-size:0.8rem; color:#166534;">Nombre / Razón Social</label>
-                  <input v-model="statusModal.clienteRazonSocial" type="text" class="filter-input" style="width:100%; margin-top:4px; background: white;" />
+              <div v-if="statusModal.tipoComprobante === 'Boleta' || statusModal.tipoComprobante === 'Factura'" class="form-grid-2col" style="margin-top: 10px;">
+                <div>
+                  <label class="form-label">Nombre / Razón Social</label>
+                  <input v-model="statusModal.clienteRazonSocial" type="text" placeholder="Nombre completo o Razón Social" class="form-input-styled" />
                 </div>
-
-                <div style="margin-bottom:4px;">
-                  <label style="font-weight:600; font-size:0.8rem; color:#166534;">Dirección (Opcional)</label>
-                  <input v-model="statusModal.clienteDireccion" type="text" class="filter-input" style="width:100%; margin-top:4px; background: white;" />
+                <div>
+                  <label class="form-label">Dirección Fiscal (Opcional)</label>
+                  <input v-model="statusModal.clienteDireccion" type="text" placeholder="Av. Principal #123" class="form-input-styled" />
                 </div>
               </div>
             </div>
           </div>
-          <div v-if="statusModal.selected === 'CANCELADO'" style="margin-top: 16px; background: #fef2f2; border: 1px solid #fca5a5; padding: 12px; border-radius: 8px; font-size: 0.88rem; color: #b91c1c;">
-            <strong>Advertencia:</strong> Al cancelar, el stock de los productos será restaurado automáticamente al inventario.
+
+          <div v-if="statusModal.selected === 'ENVIADO'" class="status-action-box bg-purple">
+            <div class="action-box-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              <div>
+                <strong>Despacho y Envío del Pedido</strong>
+                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Puedes ingresar la guía o código de seguimiento para que el cliente rastree su paquete.</p>
+              </div>
+            </div>
+            <div style="margin-top: 12px;">
+              <label class="form-label" style="color: #5b21b6;">Número / Código de Seguimiento (opcional)</label>
+              <input
+                v-model="statusModal.numeroSeguimiento"
+                type="text"
+                placeholder="Ej: OLVA-987654321 / SHUTTLE-123"
+                class="form-input-styled"
+                style="border-color: #c4b5fd; background: white;"
+              />
+            </div>
           </div>
 
-          <footer style="margin-top: 24px; display: flex; gap: 10px; justify-content: flex-end;">
-            <button @click="statusModal.visible = false" class="btn btn-secondary" :disabled="updatingStatus">Cancelar</button>
+          <div v-if="statusModal.selected === 'CANCELADO'" class="status-action-box bg-red">
+            <div class="action-box-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <div>
+                <strong>Advertencia de Cancelación</strong>
+                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Al confirmar la cancelación, el pedido quedará anulado y el stock de los productos será restaurado automáticamente al inventario si ya había sido descontado.</p>
+              </div>
+            </div>
+          </div>
+
+          <footer class="modal-footer-styled">
+            <button @click="statusModal.visible = false" class="btn btn-secondary" :disabled="updatingStatus">
+              Cancelar
+            </button>
             <button
               @click="confirmStatusUpdate"
-              class="btn btn-primary"
+              class="btn btn-primary btn-confirm-gradient"
               :disabled="!statusModal.selected || updatingStatus"
             >
-              {{ updatingStatus ? 'Guardando...' : 'Confirmar Cambio' }}
+              <span>{{ updatingStatus ? 'Guardando cambios...' : 'Confirmar Cambio de Estado' }}</span>
             </button>
           </footer>
         </div>
@@ -585,11 +671,29 @@ const ALL_STATUS_OPTIONS = [
 ]
 
 const timelineSteps = [
-  { value: 'PENDIENTE_PAGO', label: 'Pendiente de Pago', class: 'estado-pending', description: 'El pedido ha sido creado y espera confirmación de pago.' },
-  { value: 'EN_PREPARACION', label: 'En Preparación', class: 'estado-preparing', description: 'Pago confirmado. Empezar embalaje del producto.' },
-  { value: 'ENVIADO', label: 'Enviado', class: 'estado-shipped', description: 'Entregado al courier o servicio de envío.' },
-  { value: 'ENTREGADO', label: 'Entregado', class: 'estado-delivered', description: 'El cliente recibió su pedido conforme.' }
+  { value: 'PENDIENTE_PAGO', label: 'Pendiente', class: 'estado-pending', description: 'Esperando confirmación de pago', icon: 'clock' },
+  { value: 'EN_PREPARACION', label: 'En Preparación', class: 'estado-preparing', description: 'Pago verificado. Embalar producto', icon: 'package' },
+  { value: 'ENVIADO', label: 'Enviado', class: 'estado-shipped', description: 'Despachado / Courier de envío', icon: 'truck' },
+  { value: 'ENTREGADO', label: 'Entregado', class: 'estado-delivered', description: 'Cliente recibió su producto conforme', icon: 'check-circle' }
 ]
+
+const progressPercentage = computed(() => {
+  const currentStatus = statusModal.value.order?.estadoOrden
+  const order = { 'PENDIENTE_PAGO': 0, 'EN_PREPARACION': 1, 'ENVIADO': 2, 'ENTREGADO': 3, 'CANCELADO': 0 }
+  const currentIdx = order[currentStatus] ?? 0
+  const selectedIdx = order[statusModal.value.selected] ?? currentIdx
+  const activeIdx = Math.max(currentIdx, selectedIdx)
+  return (activeIdx / 3) * 100
+})
+
+const isStepClickable = (stepValue) => {
+  const currentStatus = statusModal.value.order?.estadoOrden
+  if (currentStatus === 'CANCELADO') return false
+  const order = { 'PENDIENTE_PAGO': 0, 'EN_PREPARACION': 1, 'ENVIADO': 2, 'ENTREGADO': 3, 'CANCELADO': 4 }
+  const currentOrder = order[currentStatus] ?? 0
+  const stepOrder = order[stepValue] ?? 0
+  return stepOrder > currentOrder
+}
 
 const getStepStatus = (stepValue) => {
   const currentStatus = statusModal.value.order?.estadoOrden
@@ -897,142 +1001,401 @@ onMounted(() => fetchOrders())
 .modal-details-table th, .modal-details-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.88rem; }
 .modal-details-table th { background: var(--bg-app); font-weight: 500; color: var(--text-muted); }
 
-/* Status modal */
-.estado-options { display: flex; flex-direction: column; gap: 10px; }
-.estado-option {
-  background: var(--bg-app);
-  border: 2px solid var(--border-color);
-  border-radius: 10px;
-  padding: 14px 16px;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-.estado-option:hover { border-color: #93c5fd; background: #f0f9ff; }
-.estado-option.active { border-color: #3b82f6; background: #eff6ff; }
-
-@media (max-width: 768px) {
-  .summary-cards { grid-template-columns: 1fr 1fr; }
-  .detail-grid { grid-template-columns: 1fr; }
-}
-.timeline-container {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 0;
-  position: relative;
+/* Status modal horizontal stepper styling */
+.status-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 24px;
 }
 
-.timeline-step {
+.status-order-info {
   display: flex;
-  position: relative;
-  min-height: 70px;
-  cursor: pointer;
-  padding: 8px 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-app, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin-bottom: 24px;
+}
+
+.info-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+}
+
+.info-label {
+  color: var(--text-muted, #64748b);
+  font-weight: 500;
+}
+
+.info-value {
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.btn-cancel-action {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px dashed #ef4444;
+  color: #ef4444;
+  padding: 5px 12px;
   border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 4px;
 }
 
-.timeline-step:hover:not(.completed):not(.current):not(.disabled) {
-  background-color: #f8fafc;
+.btn-cancel-action:hover {
+  background: #fef2f2;
+  border-style: solid;
 }
 
-.timeline-step.is-selected {
-  background-color: #eff6ff;
-  box-shadow: inset 0 0 0 2px #3b82f6;
-}
-
-.timeline-step.completed {
-  cursor: default;
-  opacity: 0.75;
-}
-
-.timeline-step.current {
-  cursor: default;
-  background-color: #f8fafc;
-}
-
-.timeline-step.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.timeline-marker {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 24px;
-  margin-right: 16px;
-  margin-top: 2px;
-}
-
-.timeline-dot {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: #e2e8f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.btn-cancel-action.is-active {
+  background: #ef4444;
   color: white;
-  z-index: 2;
-  transition: all 0.3s;
+  border-style: solid;
 }
 
-.timeline-step.completed .timeline-dot {
-  background-color: #10b981;
+/* Horizontal Stepper Wrapper */
+.horizontal-stepper-wrapper {
+  position: relative;
+  margin: 16px 0 24px 0;
 }
 
-.timeline-step.current .timeline-dot {
-  background-color: #3b82f6;
-  box-shadow: 0 0 0 4px #bfdbfe;
-}
-
-.timeline-step.is-selected .timeline-dot {
-  background-color: #3b82f6;
-}
-
-.timeline-line {
+.stepper-progress-bar {
   position: absolute;
-  top: 24px;
-  bottom: -24px;
-  width: 2px;
-  background-color: #e2e8f0;
+  top: 36px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 4px;
   z-index: 1;
 }
 
-.timeline-step.completed .timeline-line {
-  background-color: #10b981;
+.stepper-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.timeline-content {
-  flex: 1;
-  padding-bottom: 12px;
+.horizontal-stepper-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  position: relative;
+  z-index: 2;
 }
 
-.timeline-title {
+.stepper-step-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px 8px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  position: relative;
+}
+
+.stepper-step-card.is-clickable {
+  cursor: pointer;
+}
+
+.stepper-step-card.is-clickable:hover {
+  border-color: #93c5fd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.12);
+}
+
+.stepper-step-card.is-selected {
+  border-color: #3b82f6;
+  background: #f0f7ff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 4px 16px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.stepper-step-card.completed {
+  border-color: #a7f3d0;
+  background: #f0fdf4;
+}
+
+.stepper-step-card.current {
+  border-color: #bfdbfe;
+  background: #f8fafc;
+}
+
+.stepper-step-card.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.step-node-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.step-icon-wrapper {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.stepper-step-card.completed .step-icon-wrapper {
+  background: #10b981;
+  color: white;
+  box-shadow: 0 0 0 4px #d1fae5;
+}
+
+.stepper-step-card.current .step-icon-wrapper {
+  background: #3b82f6;
+  color: white;
+  box-shadow: 0 0 0 4px #dbeafe;
+}
+
+.stepper-step-card.is-selected .step-icon-wrapper {
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 0 0 5px #bfdbfe;
+  transform: scale(1.08);
+}
+
+.step-index-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  margin-top: 6px;
+}
+
+.stepper-step-card.is-selected .step-index-tag {
+  color: #2563eb;
+}
+
+.step-card-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.step-card-title.estado-pending { color: #d97706; }
+.step-card-title.estado-preparing { color: #2563eb; }
+.step-card-title.estado-shipped { color: #7c3aed; }
+.step-card-title.estado-delivered { color: #059669; }
+
+.step-card-desc {
+  font-size: 0.74rem;
+  color: #64748b;
+  margin: 0 0 8px 0;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 28px;
+}
+
+.step-status-tag {
+  margin-top: auto;
+  font-size: 0.68rem;
   font-weight: 600;
-  font-size: 0.95rem;
-  display: inline-block;
-  margin-bottom: 4px;
 }
 
-.timeline-title.estado-pending { color: #d97706; }
-.timeline-title.estado-preparing { color: #2563eb; }
-.timeline-title.estado-shipped { color: #7c3aed; }
-.timeline-title.estado-delivered { color: #059669; }
+.tag-selected {
+  background: #2563eb;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
 
-.timeline-desc {
-  font-size: 0.82rem;
-  color: var(--text-muted);
+.tag-current {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.tag-completed {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.tag-action {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.tag-disabled {
+  color: #cbd5e1;
+}
+
+/* Contextual Action Boxes */
+.status-action-box {
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-top: 16px;
+  transition: all 0.3s ease;
+}
+
+.status-action-box.bg-emerald {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #14532d;
+}
+
+.status-action-box.bg-purple {
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+  color: #581c87;
+}
+
+.status-action-box.bg-red {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.action-box-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.action-box-header strong {
+  font-size: 0.92rem;
   display: block;
 }
 
-.btn-danger-outline {
-  transition: all 0.2s;
+.billing-form-section {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #bbf7d0;
 }
-.btn-danger-outline:hover {
-  background-color: #fef2f2 !important;
+
+.form-row-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #166534;
+  margin-bottom: 12px;
+}
+
+.form-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-flex-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #166534;
+  margin-bottom: 4px;
+}
+
+.form-input-styled {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #86efac;
+  background: white;
+  font-size: 0.88rem;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input-styled:focus {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.modal-footer-styled {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.btn-confirm-gradient {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-confirm-gradient:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+
+@media (max-width: 768px) {
+  .horizontal-stepper-steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stepper-progress-bar {
+    display: none;
+  }
+  .form-grid-2col {
+    grid-template-columns: 1fr;
+  }
+  .status-order-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .btn-cancel-action {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
 }
 </style>
