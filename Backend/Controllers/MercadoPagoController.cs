@@ -71,7 +71,7 @@ public class MercadoPagoController : ControllerBase
             {
                 Name    = client?.Nombres ?? client?.Nombre ?? "Invitado",
                 Surname = client?.Apellidos ?? "",
-                Email   = client?.Correo ?? "invitado@gruposercal.com"
+                Email   = !string.IsNullOrEmpty(client?.Correo) ? client.Correo : null
             },
             BackUrls = new PreferenceBackUrlsRequest
             {
