@@ -166,15 +166,15 @@
             <div class="form-group">
               <label for="estado" class="font-bold">Estado</label>
               <select id="estado" v-model="form.estado" class="form-input w-full" style="padding: 10px; margin-top: 6px; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
-                <option value="Pendiente">â³ Pendiente</option>
-                <option value="Pagado">âœ§ Pagado</option>
-                <option value="Completado">âœ“ Completado</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Pagado">Pagado</option>
+                <option value="Completado">Completado</option>
               </select>
             </div>
 
             <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 6px;">
               <input type="checkbox" id="recurrente" v-model="form.recurrente" style="width: 18px; height: 18px; cursor: pointer;" />
-              <label for="recurrente" class="font-bold" style="cursor: pointer; user-select: none;">ðŸ” Repetir mensualmente automáticamente</label>
+              <label for="recurrente" class="font-bold" style="cursor: pointer; user-select: none;">Repetir mensualmente automáticamente</label>
             </div>
           </div>
           <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px;">

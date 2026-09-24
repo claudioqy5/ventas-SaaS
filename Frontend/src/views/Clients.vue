@@ -124,7 +124,9 @@
         <!-- Alerta de clientes inactivos -->
         <div v-if="clientesInactivos.length > 0" class="inactivos-alert card">
           <div class="inactivos-header">
-            <span class="inactivos-icon">ðŸ””</span>
+            <span class="inactivos-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            </span>
             <div>
               <h3 class="inactivos-title">¡Clientes Inactivos Detectados!</h3>
               <p class="inactivos-sub">{{ clientesInactivos.length }} cliente(s) no han comprado en más de 30 días. Envíales un mensaje de reactivación.</p>
@@ -135,9 +137,11 @@
               <div class="inactivo-avatar">{{ cli.nombre?.charAt(0).toUpperCase() }}</div>
               <div class="inactivo-info">
                 <span class="inactivo-name">{{ cli.nombre }}</span>
-                <span class="inactivo-days">ðŸ•’ Hace {{ cli.diasDesdeUltimaCompra }} días</span>
+                <span class="inactivo-days" style="display:inline-flex; align-items:center; gap:4px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Hace {{ cli.diasDesdeUltimaCompra }} días
+                </span>
               </div>
-              <a v-if="cli.telefono" :href="buildWhatsappReactivacion(cli)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm">ðŸ“± Reactivar</a>
+              <a v-if="cli.telefono" :href="buildWhatsappReactivacion(cli)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm">Reactivar</a>
             </div>
           </div>
         </div>
