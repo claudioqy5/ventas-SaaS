@@ -223,7 +223,6 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import axios from 'axios'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -243,10 +242,11 @@ onMounted(async () => {
 
 const fetchComplaints = async () => {
   try {
-    const response = await axios.get(`${API_URL}/complaints/empresa/${authStore.user.empresaId}`, {
+    const response = await fetch(`${API_URL}/complaints/empresa/${authStore.user.empresaId}`, {
       headers: { Authorization: `Bearer ${authStore.token}` }
     })
-    complaints.value = response.data
+    if (!response.ok) throw new Error('Network response was not ok')
+    complaints.value = await response.json()
   } catch (error) {
     console.error('Error cargando reclamos:', error)
   }
