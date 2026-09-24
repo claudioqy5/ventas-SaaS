@@ -805,9 +805,11 @@ onMounted(() => {
 /* Pie Chart Styling */
 .donut-chart-layout {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 10px 0;
+  gap: 16px;
 }
 
 .pie-wrapper {
@@ -948,6 +950,11 @@ onMounted(() => {
   background: #ffffff;
   color: var(--primary-hover);
   box-shadow: var(--shadow-sm);
+}
+
+.chart-axis-label-x {
+  font-size: 10px;
+  fill: #64748b;
 }
 
 .chart-axis-label-x.label-active {

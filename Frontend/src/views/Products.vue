@@ -216,9 +216,9 @@
         </select>
 
         <!-- Filtro de Especificaciones (Multi-select) -->
-        <div style="position: relative; padding: 0; background-image: none;" ref="attributeFilterDropdownRef" class="filter-select select-attribute">
+        <div ref="attributeFilterDropdownRef" class="filter-select select-attribute">
           <div 
-            @click.stop="showAttributeFilterDropdown = !showAttributeFilterDropdown"
+            @click.stop="toggleAttrDropdown"
             class="multiselect-trigger"
             :class="{ 'active': showAttributeFilterDropdown }"
             style="border: none; padding: 0 11px; background: transparent; display: flex; width: 100%; height: 100%; align-items: center; justify-content: space-between; cursor: pointer;"
@@ -240,47 +240,55 @@
             </svg>
           </div>
 
-          <div v-if="showAttributeFilterDropdown" class="multiselect-dropdown-panel" @click.stop style="position: absolute; top: calc(100% + 4px); right: 0; left: auto; min-width: 260px; z-index: 1050;">
-            <div class="multiselect-dropdown-header">
-              <span>Especificaciones</span>
-              <button 
-                v-if="selectedAttributes && selectedAttributes.length > 0"
-                type="button" 
-                class="btn-clear-categories" 
-                @click.stop="selectedAttributes = []"
-              >
-                Limpiar
-              </button>
-            </div>
-            <div class="multiselect-dropdown-list" style="max-height: 250px; overflow-y: auto;">
-              <template v-for="(vals, groupName) in groupedAttributes" :key="groupName">
-                <div style="padding: 6px 12px; font-weight: 600; font-size: 0.75rem; background: #f1f5f9; color: #475569; text-transform: uppercase;">
-                  {{ groupName }}
-                </div>
-                <div 
-                  v-for="val in vals" 
-                  :key="`${groupName}: ${val}`" 
-                  class="multiselect-item"
-                  :class="{ 'selected': selectedAttributes.includes(`${groupName}: ${val}`) }"
-                  @click.stop="toggleAttributeFilter(`${groupName}: ${val}`)"
-                  style="padding-left: 16px;"
+          <!-- Teleport: renderiza el dropdown directamente en el body para escapar del overflow:auto -->
+          <Teleport to="body">
+            <div 
+              v-if="showAttributeFilterDropdown" 
+              class="attr-dropdown-teleport"
+              @click.stop 
+              :style="attrDropdownStyle"
+            >
+              <div class="multiselect-dropdown-header">
+                <span>Especificaciones</span>
+                <button 
+                  v-if="selectedAttributes && selectedAttributes.length > 0"
+                  type="button" 
+                  class="btn-clear-categories" 
+                  @click.stop="selectedAttributes = []"
                 >
-                  <input 
-                    type="checkbox" 
-                    :checked="selectedAttributes.includes(`${groupName}: ${val}`)" 
-                    tabindex="-1"
-                    style="pointer-events: none; margin-right: 8px;"
-                  />
-                  <span style="flex: 1; user-select: none; font-size: 0.85rem;">{{ val }}</span>
-                </div>
-              </template>
+                  Limpiar
+                </button>
+              </div>
+              <div class="multiselect-dropdown-list" style="max-height: 250px; overflow-y: auto;">
+                <template v-for="(vals, groupName) in groupedAttributes" :key="groupName">
+                  <div style="padding: 6px 12px; font-weight: 600; font-size: 0.75rem; background: #f1f5f9; color: #475569; text-transform: uppercase;">
+                    {{ groupName }}
+                  </div>
+                  <div 
+                    v-for="val in vals" 
+                    :key="`${groupName}: ${val}`" 
+                    class="multiselect-item"
+                    :class="{ 'selected': selectedAttributes.includes(`${groupName}: ${val}`) }"
+                    @click.stop="toggleAttributeFilter(`${groupName}: ${val}`)"
+                    style="padding-left: 16px;"
+                  >
+                    <input 
+                      type="checkbox" 
+                      :checked="selectedAttributes.includes(`${groupName}: ${val}`)" 
+                      tabindex="-1"
+                      style="pointer-events: none; margin-right: 8px;"
+                    />
+                    <span style="flex: 1; user-select: none; font-size: 0.85rem;">{{ val }}</span>
+                  </div>
+                </template>
+              </div>
+              <div class="multiselect-dropdown-footer">
+                <button type="button" class="btn-done-categories" @click.stop="showAttributeFilterDropdown = false">
+                  Cerrar
+                </button>
+              </div>
             </div>
-            <div class="multiselect-dropdown-footer">
-              <button type="button" class="btn-done-categories" @click.stop="showAttributeFilterDropdown = false">
-                Cerrar
-              </button>
-            </div>
-          </div>
+          </Teleport>
         </div>
 
         <select v-model="sortMode" class="filter-select select-sort" title="Ordenar lista">
@@ -1469,6 +1477,26 @@ const toggleAttributeFilter = (attrKey) => {
     selectedAttributes.value.push(attrKey)
   }
 }
+
+const attrDropdownStyle = ref({})
+
+const toggleAttrDropdown = () => {
+  showAttributeFilterDropdown.value = !showAttributeFilterDropdown.value
+  if (showAttributeFilterDropdown.value && attributeFilterDropdownRef.value) {
+    const rect = attributeFilterDropdownRef.value.getBoundingClientRect()
+    attrDropdownStyle.value = {
+      position: 'fixed',
+      top: (rect.bottom + 4) + 'px',
+      left: rect.left + 'px',
+      minWidth: Math.max(rect.width, 260) + 'px',
+      zIndex: 99999,
+      background: '#ffffff',
+      border: '1px solid #e2e8f0',
+      borderRadius: '8px',
+      boxShadow: '0 12px 28px -5px rgba(0,0,0,0.2), 0 8px 10px -6px rgba(0,0,0,0.1)',
+    }
+  }
+}
 const sortMode = ref('newest')
 const productAnalysis = ref({})
 
@@ -2515,6 +2543,7 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
+
 .filter-select:hover {
   border-color: #cbd5e1;
   background-color: #ffffff;
@@ -2534,6 +2563,10 @@ onUnmounted(() => {
 .filter-select.select-attribute {
   width: 175px;
   max-width: 175px;
+  overflow: visible !important;
+  position: relative;
+  padding: 0;
+  background-image: none;
 }
 
 .filter-select.select-sort {
@@ -3837,7 +3870,7 @@ onUnmounted(() => {
   border-radius: 8px;
   box-shadow: 0 12px 28px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   z-index: 1050;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .multiselect-dropdown-header {
