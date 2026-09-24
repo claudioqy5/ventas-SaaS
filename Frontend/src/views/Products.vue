@@ -240,7 +240,7 @@
             </svg>
           </div>
 
-          <div v-if="showAttributeFilterDropdown" class="multiselect-dropdown-panel" @click.stop style="top: 100%; left: 0; min-width: 260px; z-index: 100;">
+          <div v-if="showAttributeFilterDropdown" class="multiselect-dropdown-panel" @click.stop style="position: absolute; top: calc(100% + 4px); right: 0; left: auto; min-width: 260px; z-index: 1050;">
             <div class="multiselect-dropdown-header">
               <span>Especificaciones</span>
               <button 

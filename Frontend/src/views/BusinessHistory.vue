@@ -147,60 +147,114 @@
               No hay datos de ventas registrados para este periodo.
             </div>
             <div v-else class="chart-wrapper">
-            <svg class="line-chart-svg" viewBox="0 0 800 250">
+            <svg class="line-chart-svg" viewBox="0 0 800 240">
               <defs>
-                <linearGradient id="bar-grad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="var(--primary-hover)" />
-                  <stop offset="100%" stop-color="var(--primary)" />
+                <linearGradient id="area-grad-hourly-pro" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.22" />
+                  <stop offset="60%" stop-color="#6366f1" stop-opacity="0.06" />
+                  <stop offset="100%" stop-color="#6366f1" stop-opacity="0.0" />
                 </linearGradient>
-              </defs>
-              <line x1="50" y1="30" x2="780" y2="30" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="50" y1="110" x2="780" y2="110" stroke="#f1f2f5" stroke-dasharray="4" />
-              <line x1="50" y1="190" x2="780" y2="190" stroke="#e2e8f0" stroke-width="1.5" />
 
-              <text x="40" y="35" class="chart-axis-label text-right">S/.{{ (maxVenta).toFixed(0) }}</text>
-              <text x="40" y="115" class="chart-axis-label text-right">S/.{{ (maxVenta / 2).toFixed(0) }}</text>
-              <text x="40" y="195" class="chart-axis-label text-right">0</text>
+                <linearGradient id="line-grad-hourly-pro" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#4338ca" />
+                  <stop offset="50%" stop-color="#6366f1" />
+                  <stop offset="100%" stop-color="#818cf8" />
+                </linearGradient>
 
-              <!-- Render Bars instead of line -->
-              <g v-for="(point, idx) in chartPoints" :key="idx">
-                <rect
-                  :x="point.x - barWidth / 2"
-                  :y="point.y"
-                  :width="barWidth"
-                  :height="point.height"
-                  rx="3.5"
-                  fill="url(#bar-grad)"
-                  class="chart-bar"
-                >
-                  <title>{{ formatEtiqueta(point.etiqueta) }} {{ point.diaSemana ? '(' + formatDayName(point.diaSemana) + ')' : '' }}: S/.{{ point.val.toFixed(2) }} ({{ point.cantidad }} ventas)</title>
-                </rect>
+                <filter id="curve-glow" x="-10%" y="-20%" width="120%" height="150%">
+                  <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#4f46e5" flood-opacity="0.28" />
+                </filter>
 
-                <!-- Floating value labels on top of bars -->
-                <text v-if="chartPoints.length <= 12 && point.val > 0" :x="point.x" :y="point.y - 6" class="chart-tooltip-text" text-anchor="middle">
-                  S/.{{ point.val.toFixed(0) }}
-                </text>
+                <filter id="tooltip-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.25" />
+                </filter>
                 
-                <!-- X Axis Labels (Custom weekly format with day name above or below) -->
+                <filter id="badge-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#1e1b4b" flood-opacity="0.25" />
+                </filter>
+              </defs>
+
+              <!-- Subtle Background Grid Lines -->
+              <line x1="65" y1="35" x2="780" y2="35" stroke="#f1f5f9" stroke-dasharray="3 3" stroke-width="1.2" />
+              <line x1="65" y1="86" x2="780" y2="86" stroke="#f1f5f9" stroke-dasharray="3 3" stroke-width="1.2" />
+              <line x1="65" y1="138" x2="780" y2="138" stroke="#f1f5f9" stroke-dasharray="3 3" stroke-width="1.2" />
+              <line x1="65" y1="190" x2="780" y2="190" stroke="#e2e8f0" stroke-width="1.5" />
+
+              <!-- Y-Axis Labels -->
+              <text x="56" y="39" class="chart-axis-label" text-anchor="end">S/.{{ (maxVenta).toFixed(0) }}</text>
+              <text x="56" y="90" class="chart-axis-label" text-anchor="end">S/.{{ (maxVenta * 0.66).toFixed(0) }}</text>
+              <text x="56" y="142" class="chart-axis-label" text-anchor="end">S/.{{ (maxVenta * 0.33).toFixed(0) }}</text>
+              <text x="56" y="194" class="chart-axis-label zero" text-anchor="end">0</text>
+
+              <!-- Smooth Area Gradient Fill -->
+              <path :d="periodAreaPath" fill="url(#area-grad-hourly-pro)" />
+
+              <!-- Smooth Main Curve Line with Glow -->
+              <path :d="periodLinePath" fill="none" stroke="url(#line-grad-hourly-pro)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#curve-glow)" />
+
+              <!-- Peak Callouts (Visible when not actively hovering another point) -->
+              <g v-if="hoveredPeriodIndex === null">
+                <g v-for="(p, idx) in activePointsWithSales" :key="'active-point-' + idx">
+                  <circle :cx="p.x" :cy="p.y" r="8" fill="#4f46e5" fill-opacity="0.18" />
+                  <circle :cx="p.x" :cy="p.y" r="4.5" fill="#4f46e5" stroke="#ffffff" stroke-width="2.5" />
+                  <g :transform="`translate(${p.x - 38}, ${p.y - 32})`">
+                    <rect width="76" height="22" rx="11" fill="#1e1b4b" filter="url(#badge-shadow)" />
+                    <text x="38" y="15" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle">
+                      S/. {{ p.val.toFixed(0) }}
+                    </text>
+                  </g>
+                </g>
+              </g>
+
+              <!-- X-Axis Labels -->
+              <g v-for="(point, idx) in chartPoints" :key="'axis-x-' + idx">
+                <line :x1="point.x" y1="190" :x2="point.x" :y2="194" stroke="#cbd5e1" stroke-width="1" />
                 <g v-if="selectedPeriod === 'semanal'">
-                  <!-- Date label -->
-                  <text :x="point.x" y="206" class="chart-axis-label date-lbl" text-anchor="middle">{{ formatEtiqueta(point.etiqueta) }}</text>
-                  <!-- Capitalized Day label -->
-                  <text :x="point.x" y="220" class="chart-axis-label day-lbl font-bold" text-anchor="middle" style="fill: var(--primary-hover);">
-                    {{ formatDayName(point.diaSemana) }}
-                  </text>
+                  <text :x="point.x" y="210" :class="['chart-axis-label-x', { 'label-active': hoveredPeriodIndex === idx }]" text-anchor="middle">{{ formatEtiqueta(point.etiqueta) }}</text>
+                  <text :x="point.x" y="222" :class="['chart-axis-label-x font-bold', { 'label-active': hoveredPeriodIndex === idx }]" text-anchor="middle">{{ formatDayName(point.diaSemana) }}</text>
                 </g>
                 <g v-else-if="selectedPeriod === 'mensual'">
-                  <!-- Weekly label for month -->
-                  <text :x="point.x" y="206" class="chart-axis-label date-lbl font-bold" text-anchor="middle">{{ point.etiqueta }}</text>
-                  <text :x="point.x" y="220" class="chart-axis-label" text-anchor="middle" style="fill: var(--text-muted); font-size: 10px;">
-                    {{ point.rango }}
-                  </text>
+                  <text :x="point.x" y="210" :class="['chart-axis-label-x font-bold', { 'label-active': hoveredPeriodIndex === idx }]" text-anchor="middle">{{ point.etiqueta }}</text>
+                  <text :x="point.x" y="222" class="chart-axis-label-x" text-anchor="middle" style="font-size: 9px;">{{ point.rango }}</text>
                 </g>
                 <g v-else>
-                  <!-- Standard date/month label -->
-                  <text v-if="chartPoints.length <= 12 || idx % 5 === 0" :x="point.x" y="208" class="chart-axis-label" text-anchor="middle">{{ formatEtiqueta(point.etiqueta) }}</text>
+                  <text v-if="chartPoints.length <= 12 || idx % 5 === 0" :x="point.x" y="210" :class="['chart-axis-label-x', { 'label-active': hoveredPeriodIndex === idx }]" text-anchor="middle">{{ formatEtiqueta(point.etiqueta) }}</text>
                 </g>
+              </g>
+
+              <!-- Interactive Hover Guideline & Cursor Pin -->
+              <g v-if="hoveredPeriodPoint" pointer-events="none">
+                <!-- Vertical Guideline -->
+                <line :x1="hoveredPeriodPoint.x" y1="30" :x2="hoveredPeriodPoint.x" y2="190" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.8" />
+                
+                <!-- Pulsing Cursor Circle -->
+                <circle :cx="hoveredPeriodPoint.x" :cy="hoveredPeriodPoint.y" r="9" fill="#6366f1" fill-opacity="0.22" />
+                <circle :cx="hoveredPeriodPoint.x" :cy="hoveredPeriodPoint.y" r="4.5" fill="#ffffff" stroke="#4f46e5" stroke-width="3" />
+
+                <!-- Rich SaaS Floating Tooltip Card -->
+                <g :transform="`translate(${getTooltipX(hoveredPeriodPoint)}, ${getTooltipY(hoveredPeriodPoint)})`">
+                  <rect width="140" height="58" rx="8" fill="#0f172a" fill-opacity="0.96" stroke="#334155" stroke-width="1" filter="url(#tooltip-shadow)" />
+                  <text x="12" y="18" fill="#94a3b8" font-size="10" font-weight="600" letter-spacing="0.5">PERIODO: {{ hoveredPeriodPoint.etiqueta }}</text>
+                  <text x="12" y="36" fill="#38bdf8" font-size="13" font-weight="800">S/. {{ hoveredPeriodPoint.val.toFixed(2) }}</text>
+                  <circle :cx="16" :cy="48" r="3" :fill="hoveredPeriodPoint.val > 0 ? '#10b981' : '#64748b'" />
+                  <text x="24" y="51" :fill="hoveredPeriodPoint.val > 0 ? '#34d399' : '#94a3b8'" font-size="9" font-weight="500">
+                    {{ hoveredPeriodPoint.val > 0 ? `${hoveredPeriodPoint.cantidad} ventas registradas` : 'Sin movimientos' }}
+                  </text>
+                </g>
+              </g>
+
+              <!-- Invisible full-height hover targets for silky smooth mouse tracking -->
+              <g class="hover-detector-group">
+                <rect v-for="(point, idx) in chartPoints"
+                      :key="'hover-rect-' + idx"
+                      :x="point.x - 15.5"
+                      y="20"
+                      width="31"
+                      height="180"
+                      fill="transparent"
+                      style="cursor: crosshair;"
+                      @mouseenter="hoveredPeriodIndex = idx"
+                      @mouseleave="hoveredPeriodIndex = null" />
               </g>
             </svg>
           </div>
@@ -217,7 +271,7 @@
               <svg class="pie-chart-svg" viewBox="-10 -10 140 140">
                 <defs>
                   <filter id="pie-center-shadow-period" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-opacity="0.15"/>
+                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.12"/>
                   </filter>
                 </defs>
                 <g v-for="(seg, idx) in pieSegments" :key="idx" 
@@ -228,10 +282,10 @@
                   <path :d="seg.d"
                         :fill="seg.color"
                         stroke="#ffffff"
-                        stroke-width="1"
+                        stroke-width="1.5"
                         stroke-linejoin="round"
                         class="pie-segment" />
-                  <text v-if="parseFloat(seg.percent) > 4"
+                  <text v-if="parseFloat(seg.percent) > 6"
                         :x="seg.tx"
                         :y="seg.ty"
                         class="pie-label"
@@ -241,7 +295,7 @@
                 </g>
                 
                 <!-- Central White Circle (Donut) -->
-                <circle cx="60" cy="60" r="23" fill="#ffffff" filter="url(#pie-center-shadow-period)" />
+                <circle cx="60" cy="60" r="24" fill="#ffffff" filter="url(#pie-center-shadow-period)" />
                 
                 <!-- Central Text (Hover & Total Info) -->
                 <g v-if="hoveredSegment">
@@ -267,6 +321,16 @@
                   </text>
                 </g>
               </svg>
+            </div>
+
+            <!-- Sleek Bottom Legend -->
+            <div class="donut-legend">
+              <div v-for="(seg, idx) in pieSegments" :key="'leg-' + idx" class="legend-item" @mouseenter="hoveredSegment = seg" @mouseleave="hoveredSegment = null">
+                <span class="legend-bullet" :style="{ backgroundColor: seg.color }"></span>
+                <span class="legend-label">{{ seg.metodo }}:</span>
+                <span class="legend-value">S/. {{ seg.total.toFixed(2) }}</span>
+                <span class="legend-percent">({{ seg.percent }}%)</span>
+              </div>
             </div>
           </div>
         </div>
@@ -470,18 +534,19 @@ const chartPoints = computed(() => {
   if (!list || list.length === 0) return []
   const count = list.length
   
-  const chartWidth = 700 // from X=60 to X=760
-  const startX = 60
+  const chartWidth = 715 // modern width
+  const startX = 65
+  const baselineY = 190
+  const plotHeight = 155
+  const maxVal = maxVenta.value || 100
   const spacing = count > 1 ? chartWidth / (count - 1) : chartWidth
   
   return list.map((v, index) => {
     const x = startX + index * spacing
-    const height = (v.total / maxVenta.value) * 160 // scaled up height
-    const y = 190 - height
+    const y = baselineY - (v.total / maxVal) * plotHeight
     return { 
       x, 
       y, 
-      height: Math.max(height, 2), 
       val: v.total, 
       cantidad: v.cantidad, 
       etiqueta: v.etiqueta, 
@@ -490,6 +555,74 @@ const chartPoints = computed(() => {
     }
   })
 })
+
+const hoveredPeriodIndex = ref(null)
+
+const hoveredPeriodPoint = computed(() => {
+  if (hoveredPeriodIndex.value === null || !chartPoints.value) return null
+  return chartPoints.value[hoveredPeriodIndex.value] || null
+})
+
+const activePointsWithSales = computed(() => {
+  return chartPoints.value.filter(p => p.val > 0)
+})
+
+const generateSmoothSpline = (points) => {
+  if (!points || points.length === 0) return ""
+  if (points.length === 1) return `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`
+
+  let d = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`
+  const tension = 0.22
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = i === 0 ? points[0] : points[i - 1]
+    const p1 = points[i]
+    const p2 = points[i + 1]
+    const p3 = i + 2 < points.length ? points[i + 2] : p2
+
+    if (p1.val === 0 && p2.val === 0) {
+      d += ` L ${p2.x.toFixed(1)} 190`
+      continue
+    }
+
+    const cp1x = p1.x + (p2.x - p0.x) * tension
+    let cp1y = p1.y + (p2.y - p0.y) * tension
+    if (cp1y > 190) cp1y = 190
+
+    const cp2x = p2.x - (p3.x - p1.x) * tension
+    let cp2y = p2.y - (p3.y - p1.y) * tension
+    if (cp2y > 190) cp2y = 190
+
+    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`
+  }
+  return d
+}
+
+const periodLinePath = computed(() => {
+  return generateSmoothSpline(chartPoints.value)
+})
+
+const periodAreaPath = computed(() => {
+  const points = chartPoints.value
+  if (points.length === 0) return ""
+  const spline = generateSmoothSpline(points)
+  const startX = points[0].x.toFixed(1)
+  const endX = points[points.length - 1].x.toFixed(1)
+  return `${spline} L ${endX} 190 L ${startX} 190 Z`
+})
+
+const getTooltipX = (point) => {
+  if (!point) return 0
+  if (point.x > 670) return point.x - 142
+  if (point.x < 140) return point.x + 12
+  return point.x - 68
+}
+
+const getTooltipY = (point) => {
+  if (!point) return 0
+  const targetY = point.y - 60
+  return targetY < 25 ? 28 : targetY
+}
 
 // Formatting functions
 const formatDayName = (dayStr) => {

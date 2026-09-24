@@ -90,7 +90,7 @@
                   </svg>
                 </div>
 
-                <div v-if="showAttributeFilterDropdown" class="multiselect-dropdown-panel" @click.stop style="position: absolute; top: 100%; left: 0; min-width: 260px; z-index: 100; background: white; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 4px;">
+                <div v-if="showAttributeFilterDropdown" class="multiselect-dropdown-panel" @click.stop style="position: absolute; top: 100%; right: 0; left: auto; min-width: 260px; z-index: 100; background: white; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 4px;">
                   <div class="multiselect-dropdown-header" style="display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--border-color);">
                     <span style="font-weight: 600;">Especificaciones</span>
                     <button 
@@ -171,14 +171,16 @@
 
             <!-- Controles de paginación -->
             <div class="pagination-controls" style="margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 15px; flex-shrink: 0; padding-top: 10px; border-top: 1px solid var(--border-color);">
-              <button @click="currentPage--" :disabled="currentPage === 1" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">
-                ⬅️ Anterior
+              <button @click="currentPage--" :disabled="currentPage === 1" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                Anterior
               </button>
               <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-main);">
                 Página {{ currentPage }} de {{ totalPages }}
               </span>
-              <button @click="currentPage++" :disabled="currentPage >= totalPages" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">
-                Siguiente ➡️
+              <button @click="currentPage++" :disabled="currentPage >= totalPages" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                Siguiente
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
               </button>
             </div>
           </div>
