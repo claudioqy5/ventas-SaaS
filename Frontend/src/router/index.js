@@ -119,6 +119,12 @@ const routes = [
     name: 'PaymentMethods',
     meta: { requiresAuth: true, permission: 'formas_pago' }
   },
+  {
+    path: '/complaints',
+    component: () => import('../views/Complaints.vue'),
+    name: 'Complaints',
+    meta: { requiresAuth: true, permission: 'libro_reclamaciones' }
+  },
   { path: '/:pathMatch(.*)*', redirect: '/login' }
 ]
 
