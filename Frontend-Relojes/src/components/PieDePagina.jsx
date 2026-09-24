@@ -126,7 +126,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               textTransform: 'uppercase',
               marginTop: '5px'
             }}>
-              Haute Horlogerie • Boutique Perú
+              En cada segundo • Boutique Perú
             </div>
           </div>
         </div>

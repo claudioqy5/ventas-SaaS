@@ -169,6 +169,38 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
           </div>
         ))}
       </div>
+
+      {/* Pagination Dots (Indicadores) */}
+      <div style={{
+        position: 'absolute',
+        bottom: '40px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        gap: '12px',
+        zIndex: 20
+      }}>
+        {CAROUSEL_DATA.map((_, index) => (
+          <button
+            key={`dot-${index}`}
+            onClick={() => setCurrentIndex(index)}
+            style={{
+              width: '12px',
+              height: '12px',
+              borderRadius: '50%',
+              backgroundColor: index === currentIndex ? '#fff' : 'rgba(255, 255, 255, 0.3)',
+              border: index === currentIndex ? '2px solid rgba(255, 255, 255, 0.8)' : 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              padding: 0,
+              outline: 'none',
+              boxShadow: index === currentIndex ? '0 0 10px rgba(255, 255, 255, 0.5)' : 'none',
+              transform: index === currentIndex ? 'scale(1.2)' : 'scale(1)'
+            }}
+            aria-label={`Ir a la imagen ${index + 1}`}
+          />
+        ))}
+      </div>
     </section>
   );
 }

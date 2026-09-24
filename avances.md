@@ -801,3 +801,15 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
   - **Estructura Global del Sidebar**: Se homologó quirúrgicamente el componente Sidebar (`nav-links`) en `Complaints.vue` basándose en el estándar usado en `Dashboard.vue`, garantizando que el orden y comportamiento de las secciones no varíe al navegar entre vistas.
   - **Desenfoque (Blur) Modal Global**: Se aumentó la jerarquía visual (`z-index: 1000`) de la clase `.modal-backdrop` en `Complaints.vue` para asegurar que, al abrir los detalles de una reclamación, el oscurecimiento abarque íntegramente la pantalla, bloqueando la visibilidad y clics sobre el Sidebar, logrando total sincronía visual con el resto de la plataforma.
 - **Limpieza del Repositorio**: Se eliminaron los scripts temporales (`fix-users.js`, `fix-sidebar-complaints.js`, etc.) que ya cumplieron su propósito, evitando cargar archivos basura al entorno de producción.
+
+## Actualización - Mejoras en la Portada (Hero) y Rebranding Visual (24 de Septiembre)
+- **Frontend-Relojes (Tienda)**:
+  - **Rebranding y Consistencia de Marca**:
+    - En `BarraNavegacion.jsx` se reemplazó el texto del logo de "L'G - HAUTE HORLOGERIE" a "L'GANT - en cada segundo".
+    - En `PieDePagina.jsx` se actualizó el texto del logotipo y slogan a "L'GANT - En cada segundo • Boutique Perú".
+  - **Nuevo Carrusel Dinámico (Hero)**:
+    - Se eliminó la caja blanca estática de "Boutique de Alta Relojería" de la portada inicial (`Inicio.jsx`).
+    - Se implementó un carrusel dinámico de fondo completo (Full Width) con reproducción automática cada 5 segundos.
+    - Se importaron 3 imágenes de alta resolución (`coleccion edifice.jpg`, `dorados.jpg`, `mujeres.jpg`) desde la carpeta `assets/hero/`.
+    - Cada imagen se acompaña de textos específicos ("Colección Edifice", "Elegancia Dorada", "Alta Relojería Femenina") con efectos suaves de transición (fade & slide-up) y un degradado oscuro superpuesto para garantizar la perfecta legibilidad del texto blanco.
+    - **Paginación (Dots)**: Se implementó un sistema de indicadores (puntitos) en la parte inferior de la pantalla para permitir a los usuarios identificar visualmente la cantidad de imágenes y navegar manualmente entre las diapositivas al hacer clic en ellas.

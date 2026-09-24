@@ -207,7 +207,7 @@ export default function BarraNavegacion({
               />
               <div style={{ width: '1.5px', height: '36px', backgroundColor: 'var(--c-gold)', opacity: 0.6 }}></div>
               <div style={{ fontSize: '2.1rem', fontFamily: '"Cinzel", serif', color: 'var(--c-obsidian)', lineHeight: 1, letterSpacing: '0.06em', fontWeight: 700 }}>
-                L'G
+                L'GANT
               </div>
             </div>
             <div style={{
@@ -219,7 +219,7 @@ export default function BarraNavegacion({
               marginLeft: '0.42em',
               fontWeight: 600
             }}>
-              HAUTE HORLOGERIE
+              en cada segundo
             </div>
           </a>
 
