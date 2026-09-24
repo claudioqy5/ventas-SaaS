@@ -22,6 +22,7 @@ import WebThreads from './components/WebThreads';
 import Beneficios from './components/Beneficios';
 import VistaPreguntasFrecuentes from './components/VistaPreguntasFrecuentes';
 import VistaTerminosCondiciones from './components/VistaTerminosCondiciones';
+import VistaLibroReclamaciones from './components/VistaLibroReclamaciones';
 import VistaPanelCliente from './components/VistaPanelCliente';
 import VistaPedidoConfirmado from './components/VistaPedidoConfirmado';
 import VistaVerificarCorreo from './components/VistaVerificarCorreo';
@@ -785,6 +786,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
           }}
           onNavigateHome={handleBackToCatalog}
         />
+      ) : activeView === 'reclamaciones' ? (
+        <VistaLibroReclamaciones storeName={storeName} empresaId={empresaId} />
       ) : selectedProduct ? (
         <PaginaDetalleProducto
           product={selectedProduct}

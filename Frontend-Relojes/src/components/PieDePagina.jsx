@@ -278,8 +278,8 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               {/* Libro de reclamaciones con icono representativo SVG limpio (sin emojis) */}
               <li style={{ marginTop: '10px' }}>
                 <a 
-                  href="/terminos-y-condiciones" 
-                  onClick={handleLinkClick('terminos', '/terminos-y-condiciones')}
+                  href="/libro-de-reclamaciones" 
+                  onClick={handleLinkClick('reclamaciones', '/libro-de-reclamaciones')}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
