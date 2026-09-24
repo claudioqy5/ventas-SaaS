@@ -1,4 +1,4 @@
-﻿# BitÃ¡cora de Avances y DocumentaciÃ³n Oficial del Proyecto Ventas SaaS
+# BitÃ¡cora de Avances y DocumentaciÃ³n Oficial del Proyecto Ventas SaaS
 
 > **Nota:** Este archivo contiene el historial estructurado de desarrollos, actualizaciones, endpoints e informaciÃ³n vital del negocio.
 
@@ -787,3 +787,17 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
   - **Identidad Visual de Comprobantes**: Incorporación de iconos SVG formales en el listado de ventas para diferenciar de un solo vistazo Boletas, Facturas y Notas de Venta (evitando el uso de emojis informales).
   - **Soporte XML y CDR para Sunat Beta**: Se habilitaron los botones de "Descargar XML" y "Descargar CDR" directamente en el modal de detalles de venta. Los documentos de prueba autogenerados por APIs Perú pueden descargarse libremente para revisar la estructura en Beta antes de pasar a producción oficial.
   - **Layout del Dashboard y Emojis**: Refactorización del dashboard de KPI para mostrar las tarjetas en una línea horizontal (sin deformar el menú lateral) e integración correcta del Loader encapsulado solo en los contenedores de carga. Reemplazo general de emojis informales por iconos SVG nativos.
+
+## Actualización - Implementación del Libro de Reclamaciones (23/24 de Septiembre)
+- **Desarrollo del Backend**: Integración con el sistema para guardar las reclamaciones emitidas desde el Frontend Tienda.
+- **Frontend Administrador (Complaints.vue)**:
+  - Se creó el módulo y la vista `Complaints.vue` para que el administrador pueda revisar el listado de reclamaciones filtradas por `empresaId`.
+  - Se adaptó la interfaz para listar reclamaciones y visualizar en un Modal el detalle individual del reclamo (datos del cliente, producto reclamado, detalle y pedido solicitado).
+  - Se sustituyó el uso de la librería `axios` por la función nativa `fetch` para evitar fallos de compilación en el despliegue del Dashboard.
+- **Gestión de Permisos (Users.vue)**: 
+  - Se inyectó el permiso `'libro_reclamaciones'` en el sistema de gestión de colaboradores.
+  - Ahora es posible habilitar y deshabilitar el acceso de forma individual para cada cuenta mediante el panel de Colaboradores.
+- **Estandarización de UX/UI**:
+  - **Estructura Global del Sidebar**: Se homologó quirúrgicamente el componente Sidebar (`nav-links`) en `Complaints.vue` basándose en el estándar usado en `Dashboard.vue`, garantizando que el orden y comportamiento de las secciones no varíe al navegar entre vistas.
+  - **Desenfoque (Blur) Modal Global**: Se aumentó la jerarquía visual (`z-index: 1000`) de la clase `.modal-backdrop` en `Complaints.vue` para asegurar que, al abrir los detalles de una reclamación, el oscurecimiento abarque íntegramente la pantalla, bloqueando la visibilidad y clics sobre el Sidebar, logrando total sincronía visual con el resto de la plataforma.
+- **Limpieza del Repositorio**: Se eliminaron los scripts temporales (`fix-users.js`, `fix-sidebar-complaints.js`, etc.) que ya cumplieron su propósito, evitando cargar archivos basura al entorno de producción.
