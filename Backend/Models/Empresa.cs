@@ -32,5 +32,9 @@ public class Empresa
     public string? RazonSocial { get; set; }
     public string? DireccionFiscal { get; set; }
     public string? Ubigeo { get; set; }
+    public string? Departamento { get; set; }
+    public string? Provincia { get; set; }
+    public string? Distrito { get; set; }
+    public string? CodigoLocal { get; set; }
     public string? ApisPeruToken { get; set; }
 }

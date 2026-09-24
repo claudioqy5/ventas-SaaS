@@ -126,7 +126,11 @@ public class ApisPeruService : IApisPeruService
                     address = new
                     {
                         ubigueo = empresa.Ubigeo ?? "150101", // Default a Lima Cercado si está vacío
-                        direccion = empresa.DireccionFiscal ?? "Av Principal 123"
+                        direccion = empresa.DireccionFiscal ?? "Av Principal 123",
+                        provincia = empresa.Provincia ?? "LIMA",
+                        departamento = empresa.Departamento ?? "LIMA",
+                        distrito = empresa.Distrito ?? "LIMA",
+                        codLocal = empresa.CodigoLocal ?? "0000"
                     }
                 },
                 mtoOperGravadas = Math.Round(mtoOperGravadas, 2),
