@@ -74,7 +74,7 @@
         <table v-if="!loading && filteredSuppliers.length > 0" class="data-table">
           <thead>
             <tr>
-              <th style="width: 50px;">NÂ°</th>
+              <th style="width: 50px;">N°</th>
               <th>Nombre del Proveedor</th>
               <th>Teléfono</th>
               <th>Email</th>

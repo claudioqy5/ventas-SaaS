@@ -358,7 +358,7 @@
         <table v-if="!loading && filteredProducts.length > 0" class="data-table">
           <thead>
             <tr>
-              <th style="width: 65px;">NÂ°</th>
+              <th style="width: 65px;">N°</th>
               <th style="width: 135px;">Código</th>
               <th>Producto</th>
               <th style="width: 110px;">Costo</th>
@@ -471,7 +471,7 @@
                   <template v-if="isModelExpanded(group.key)">
                     <tr v-for="(item, vIdx) in group.items" :key="item.id" class="variant-sub-row">
                       <td class="sub-index-cell">
-                        <span class="tree-connector">â†³</span> {{ groupIndex + 1 }}.{{ vIdx + 1 }}
+                        <span class="tree-connector">↳</span> {{ groupIndex + 1 }}.{{ vIdx + 1 }}
                       </td>
                       <td>
                         <code>{{ item.codigoBarras }}</code>
@@ -570,7 +570,7 @@
                     </td>
                     <td>
                       <span :class="['stock-badge', prod.stock <= prod.stockMinimo ? 'low' : 'ok']">
-                        <template v-if="prod.esServicio">â€” Servicio â€”</template>
+                        <template v-if="prod.esServicio">— Servicio —</template>
                         <template v-else-if="prod.tipoProducto === 'Costal'">
                           {{ (Number(prod.stock) / Number(prod.kilosPorCostal || 1)).toFixed(1) }} Costal(es)
                         </template>
@@ -634,7 +634,7 @@
                 </td>
                 <td>
                   <span :class="['stock-badge', prod.stock <= prod.stockMinimo ? 'low' : 'ok']">
-                    <template v-if="prod.esServicio">â€” Servicio â€”</template>
+                    <template v-if="prod.esServicio">— Servicio —</template>
                     <template v-else-if="prod.tipoProducto === 'Costal'">
                       {{ (Number(prod.stock) / Number(prod.kilosPorCostal || 1)).toFixed(1) }} Costal(es)
                     </template>
@@ -861,7 +861,7 @@
                   <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
                 </div>
                 <div class="field" style="grid-column: span 2; margin-bottom: 0 !important;">
-                  <label>Precio Oferta x Kg (S/.) â€” 0 = Sin oferta</label>
+                  <label>Precio Oferta x Kg (S/.) — 0 = Sin oferta</label>
                   <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" />
                 </div>
               </div>
@@ -1022,7 +1022,7 @@
               <div v-if="form.imagenes.length > 0" style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <div v-for="(img, idx) in form.imagenes" :key="idx" style="position: relative; width: 80px; height: 80px;">
                   <img :src="img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);" alt="Imagen producto" />
-                  <button type="button" @click="removeImage(idx)" style="position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; padding: 0; box-sizing: border-box; flex-shrink: 0; font-size: 0.8rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; z-index: 5;">âœ•</button>
+                  <button type="button" @click="removeImage(idx)" style="position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; padding: 0; box-sizing: border-box; flex-shrink: 0; font-size: 0.8rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; z-index: 5;">✕</button>
                   <div v-if="idx === 0" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.55); color: white; font-size: 0.6rem; text-align: center; border-radius: 0 0 6px 6px; padding: 2px;">Principal</div>
                 </div>
               </div>
@@ -2730,7 +2730,7 @@ onUnmounted(() => {
   background-color: var(--primary-hover);
 }
 
-/* â”€â”€ Panel de Especificaciones Horizontal Compacto â”€â”€ */
+/* -- Panel de Especificaciones Horizontal Compacto -- */
 .specifications-panel {
   background-color: #f8fafc;
   border: 1px solid var(--border-color);
@@ -2861,7 +2861,7 @@ onUnmounted(() => {
   font-weight: 500 !important;
 }
 
-/* â”€â”€ Análisis de stock por IA â”€â”€ */
+/* -- Análisis de stock por IA -- */
 .analysis-cell {
   display: flex;
   flex-direction: column;
@@ -2946,7 +2946,7 @@ onUnmounted(() => {
   box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.08);
 }
 
-/* â”€â”€ Modal Studio Lightbox & Inspector de Producto Premium â”€â”€ */
+/* -- Modal Studio Lightbox & Inspector de Producto Premium -- */
 .studio-modal-overlay {
   position: fixed;
   top: 0;

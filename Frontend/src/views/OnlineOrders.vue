@@ -132,7 +132,7 @@
           <select v-model="filterOrigen" class="filter-input" style="width: auto; min-width: 160px;" title="Filtrar por origen del pedido">
             <option value="">Todos los orígenes</option>
             <option value="TiendaVirtual">ðŸŒ Tienda Web</option>
-            <option value="WhatsAppBot">ðŸ“± WhatsApp Bot</option>
+            <option value="WhatsAppBot">📱 WhatsApp Bot</option>
           </select>
           <div class="date-filters">
             <span class="date-label">Desde:</span>
@@ -177,7 +177,7 @@
                   {{ order.direccionEntrega }}<br>
                   <span style="color: var(--text-muted);">{{ order.distritoEntrega }}, {{ order.provinciaEntrega }}</span>
                 </span>
-                <span v-else style="color: var(--text-muted);">â€”</span>
+                <span v-else style="color: var(--text-muted);">—</span>
               </td>
               <td>
                 <span class="payment-badge">{{ order.metodoPago }}</span>
@@ -265,10 +265,10 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 Dirección de Entrega
               </h4>
-              <div class="detail-row"><span>Dirección:</span> <strong>{{ selectedOrder.direccionEntrega || 'â€”' }}</strong></div>
-              <div class="detail-row"><span>Distrito:</span> <strong>{{ selectedOrder.distritoEntrega || 'â€”' }}</strong></div>
-              <div class="detail-row"><span>Provincia:</span> <strong>{{ selectedOrder.provinciaEntrega || 'â€”' }}</strong></div>
-              <div class="detail-row"><span>Departamento:</span> <strong>{{ selectedOrder.departamentoEntrega || 'â€”' }}</strong></div>
+              <div class="detail-row"><span>Dirección:</span> <strong>{{ selectedOrder.direccionEntrega || '—' }}</strong></div>
+              <div class="detail-row"><span>Distrito:</span> <strong>{{ selectedOrder.distritoEntrega || '—' }}</strong></div>
+              <div class="detail-row"><span>Provincia:</span> <strong>{{ selectedOrder.provinciaEntrega || '—' }}</strong></div>
+              <div class="detail-row"><span>Departamento:</span> <strong>{{ selectedOrder.departamentoEntrega || '—' }}</strong></div>
               <div v-if="selectedOrder.referenciaEntrega" class="detail-row"><span>Referencia:</span> <strong>{{ selectedOrder.referenciaEntrega }}</strong></div>
               <div v-if="selectedOrder.notasEntrega" class="detail-row"><span>Notas:</span> <strong>{{ selectedOrder.notasEntrega }}</strong></div>
             </div>
@@ -282,9 +282,9 @@
               <div class="detail-row"><span>Estado:</span> <span :class="['estado-badge', estadoClass(selectedOrder.estadoOrden)]">{{ estadoLabel(selectedOrder.estadoOrden) }}</span></div>
               <div v-if="selectedOrder.codigoOperacionPago" class="detail-row"><span>Cód. Operación:</span> <strong>{{ selectedOrder.codigoOperacionPago }}</strong></div>
               <div v-if="selectedOrder.fechaConfirmacionPago" class="detail-row"><span>Confirmado el:</span> <strong>{{ formatDateTime(selectedOrder.fechaConfirmacionPago) }}</strong></div>
-              <div v-if="selectedOrder.numeroSeguimiento" class="detail-row"><span>NÂ° Seguimiento:</span> <strong>{{ selectedOrder.numeroSeguimiento }}</strong></div>
+              <div v-if="selectedOrder.numeroSeguimiento" class="detail-row"><span>N° Seguimiento:</span> <strong>{{ selectedOrder.numeroSeguimiento }}</strong></div>
               <div v-if="selectedOrder.whatsAppCliente" class="detail-row"><span>WhatsApp:</span> <strong style="color:#25d366;">+{{ selectedOrder.whatsAppCliente }}</strong></div>
-              <div v-if="selectedOrder.origenPedido === 'WhatsAppBot'" class="detail-row"><span>Origen:</span> <strong style="color:#25d366;">ðŸ“± Bot WhatsApp</strong></div>
+              <div v-if="selectedOrder.origenPedido === 'WhatsAppBot'" class="detail-row"><span>Origen:</span> <strong style="color:#25d366;">📱 Bot WhatsApp</strong></div>
             </div>
 
             <div class="detail-section">
@@ -420,7 +420,7 @@
               title="Cancelar Pedido"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-              {{ statusModal.selected === 'CANCELADO' ? 'âœ“ Cancelación Seleccionada' : 'Cancelar Pedido' }}
+              {{ statusModal.selected === 'CANCELADO' ? '✓ Cancelación Seleccionada' : 'Cancelar Pedido' }}
             </button>
           </div>
 
@@ -464,11 +464,11 @@
                   <p class="step-card-desc">{{ step.description }}</p>
                   
                   <div class="step-status-tag">
-                    <span v-if="statusModal.selected === step.value" class="tag-selected">âœ“ Seleccionado</span>
+                    <span v-if="statusModal.selected === step.value" class="tag-selected">✓ Seleccionado</span>
                     <span v-else-if="getStepStatus(step.value) === 'current'" class="tag-current">Estado Actual</span>
                     <span v-else-if="getStepStatus(step.value) === 'completed'" class="tag-completed">Completado</span>
                     <span v-else-if="isStepClickable(step.value)" class="tag-action">Cambiar a este</span>
-                    <span v-else class="tag-disabled">â€”</span>
+                    <span v-else class="tag-disabled">—</span>
                   </div>
                 </div>
               </div>
@@ -511,7 +511,7 @@
                     </select>
                   </div>
                   <div style="flex: 2;">
-                    <label class="form-label">NÂ° Documento</label>
+                    <label class="form-label">N° Documento</label>
                     <input v-model="statusModal.clienteNumeroDocumento" type="text" placeholder="Ej: 71234567" class="form-input-styled" />
                   </div>
                 </div>
@@ -1110,7 +1110,7 @@ const confirmStatusUpdate = async () => {
 }
 
 const formatDateTime = (dateStr) => {
-  if (!dateStr) return 'â€”'
+  if (!dateStr) return '—'
   return new Date(dateStr).toLocaleString('es-PE', {
     timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false
   })
@@ -1202,7 +1202,7 @@ onMounted(() => fetchOrders())
 .summary-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
 .summary-count { font-size: 1.8rem; font-weight: 700; color: var(--text-main); line-height: 1.1; }
 
-/* â”€â”€ Acciones de la tabla â”€â”€ */
+/* -- Acciones de la tabla -- */
 .actions-cell {
   text-align: center;
   white-space: nowrap;

@@ -94,7 +94,7 @@
         <table v-if="!loading && filteredSales.length > 0" class="data-table">
           <thead>
             <tr>
-              <th style="width: 50px;">NÂ°</th>
+              <th style="width: 50px;">N°</th>
               <th>Comprobante</th>
               <th>Fecha y Hora</th>
               <th>Cliente</th>
@@ -199,7 +199,7 @@
             <table class="modal-details-table">
               <thead>
                 <tr>
-                  <th style="width: 40px;">NÂ°</th>
+                  <th style="width: 40px;">N°</th>
                   <th>Producto</th>
                   <th style="text-align: center;">Cant.</th>
                   <th style="text-align: right;">Unit.</th>
@@ -241,7 +241,7 @@
               rel="noopener noreferrer"
               class="btn btn-whatsapp"
             >
-              ðŸ“± Enviar Comprobante por WhatsApp
+              📱 Enviar Comprobante por WhatsApp
             </a>
 
             <button 
@@ -275,7 +275,7 @@
             </div>
             
             <div v-if="selectedSale?.revertida" style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); text-align: center; color: #b91c1c; font-weight: 500; font-size: 0.9rem;">
-              ðŸš« Esta venta fue revertida por {{ selectedSale.revertidaPorNombre || 'el sistema' }} el {{ formatDateTime(selectedSale.fechaReversion) }}
+              🚫 Esta venta fue revertida por {{ selectedSale.revertidaPorNombre || 'el sistema' }} el {{ formatDateTime(selectedSale.fechaReversion) }}
             </div>
             
             <button @click="selectedSale = null" class="btn btn-secondary w-full">Cerrar</button>
@@ -407,7 +407,7 @@ const printSaleTicket = (sale) => {
       </head>
       <body>
         <div class="text-center">
-          <h2 style="margin: 0; font-size: 16px;">â—ˆ ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
+          <h2 style="margin: 0; font-size: 16px;"> ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
           <p style="margin: 2px 0; font-size: 11px;">R.U.C. 20609876543</p>
           <div class="divider"></div>
           <p class="bold" style="margin: 4px 0; font-size: 13px;">${voucherTitle}</p>
@@ -539,8 +539,8 @@ const whatsappSaleUrl = computed(() => {
   if (!selectedSale.value?.clienteTelefono) return '#'
   const sale = selectedSale.value
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
-  const items = (sale.detalles || []).map(i => `  â€¢ ${i.nombreProducto} x${i.cantidad} = S/. ${(i.cantidad * i.precioUnitario).toFixed(2)}`).join('%0A')
-  const msg = `¡Hola! Gracias por tu compra en *${store}* â–%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE', { timeZone: 'America/Lima' })}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0A¡Vuelve pronto! ðŸ˜Š`
+  const items = (sale.detalles || []).map(i => `  • ${i.nombreProducto} x${i.cantidad} = S/. ${(i.cantidad * i.precioUnitario).toFixed(2)}`).join('%0A')
+  const msg = `¡Hola! Gracias por tu compra en *${store}* â–%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE', { timeZone: 'America/Lima' })}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
   const phone = sale.clienteTelefono.replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${msg}`
 })
@@ -788,7 +788,7 @@ onMounted(() => {
   gap: 10px;
 }
 
-/* â”€â”€ WhatsApp button â”€â”€ */
+/* -- WhatsApp button -- */
 .btn-whatsapp {
   display: flex;
   align-items: center;

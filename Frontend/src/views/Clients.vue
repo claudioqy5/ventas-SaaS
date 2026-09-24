@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
 <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -67,7 +67,7 @@
         <button :class="['tab-btn', activeTab === 'top' ? 'active' : '']" @click="switchToTop">Top Clientes</button>
       </div>
 
-      <!-- â•â•â•â•â•â•â•â•â•â• TAB: DIRECTORIO â•â•â•â•â•â•â•â•â•â• -->
+      <!-- TAB: DIRECTORIO -->
       <template v-if="activeTab === 'directorio'">
         <!-- Seccion de filtros de busqueda -->
         <div class="table-filters card">
@@ -82,7 +82,7 @@
           <table v-if="!loading && filteredClients.length > 0" class="data-table">
             <thead>
               <tr>
-                <th style="width: 50px;">NÂ°</th>
+                <th style="width: 50px;">N°</th>
                 <th>Nombre</th>
                 <th>Documento (DNI/RUC)</th>
                 <th>Teléfono</th>
@@ -118,7 +118,7 @@
         </div>
       </template>
 
-      <!-- â•â•â•â•â•â•â•â•â•â• TAB: TOP CLIENTES â•â•â•â•â•â•â•â•â•â• -->
+      <!-- TAB: TOP CLIENTES -->
       <template v-else-if="activeTab === 'top'">
 
         <!-- Alerta de clientes inactivos -->
@@ -147,9 +147,9 @@
         </div>
 
         <!-- Estado cargando o sin datos -->
-        <div v-if="loadingTop" class="empty-state card">Calculando estadísticasâ€¦</div>
+        <div v-if="loadingTop" class="empty-state card">Calculando estadísticas...</div>
         <div v-else-if="topClientes.length === 0" class="empty-state card">
-          â—« Aún no hay suficientes datos de compras vinculadas a clientes. Selecciona un cliente en el POS al registrar ventas.
+          Aún no hay suficientes datos de compras vinculadas a clientes. Selecciona un cliente en el POS al registrar ventas.
         </div>
 
         <!-- Buscador de Top Clientes -->
@@ -177,7 +177,7 @@
               <tr v-for="cli in filteredTopClientes" :key="cli.clienteId" class="clickable-row" @click="openDetailModal(cli)" style="cursor: pointer;">
                 <td>
                   <span :class="['rank-badge', 'rank-' + cli.originalRank]" style="font-weight: 500; font-size: 0.9rem;">
-                    {{ cli.originalRank === 1 ? 'ðŸ¥‡ 1' : cli.originalRank === 2 ? 'ðŸ¥ˆ 2' : cli.originalRank === 3 ? 'ðŸ¥‰ 3' : '#' + cli.originalRank }}
+                    {{ '#' + cli.originalRank }}
                   </span>
                 </td>
                 <td>
@@ -253,7 +253,7 @@
             <div class="analysis-columns-grid" style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; margin-bottom: 24px; align-items: start;">
               <!-- Columna Izquierda: Tendencia de Compras -->
               <div class="sparkline-wrapper" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md);">
-                <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); margin-bottom: 12px;">â–¸ Tendencia de Compras (Últimos 6 meses)</span>
+                <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); margin-bottom: 12px;">Tendencia de Compras (Últimos 6 meses)</span>
                 <svg class="line-chart-svg" viewBox="0 0 500 150" style="width: 100%; height: 230px; background: transparent; overflow: visible;">
                   <defs>
                     <linearGradient :id="'sparkGrad-' + selectedClient.clienteId" x1="0" y1="0" x2="0" y2="1">
@@ -326,7 +326,7 @@
                 <!-- Listado de compras del mes seleccionado -->
                 <div class="selected-month-sales" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); background: #fafafa; margin-bottom: 0;">
                   <h4 style="font-size: 0.9rem; font-weight: 500; color: var(--text-main); margin-top: 0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                    <span>â– Compras de: <strong style="color: #4f46e5;">{{ selectedMonth?.mes }} {{ selectedMonth?.anio }}</strong></span>
+                    <span>Compras de: <strong style="color: #4f46e5;">{{ selectedMonth?.mes }} {{ selectedMonth?.anio }}</strong></span>
                     <span class="badge badge-info" style="font-size: 0.72rem; background-color: #e0f2fe; color: #0369a1;">S/. {{ selectedMonth?.total.toFixed(2) }}</span>
                   </h4>
 
@@ -347,7 +347,7 @@
                           <td style="padding: 8px; text-align: left; font-size: 0.75rem;">{{ formatDate(sale.fechaCreacion) }}</td>
                           <td style="padding: 8px; text-align: right; font-weight: 500; color: var(--text-main);">S/. {{ sale.total.toFixed(2) }}</td>
                           <td style="padding: 8px; text-align: center;">
-                            <button @click="openSaleDetail(sale)" class="btn btn-primary btn-sm" style="padding: 2px 6px; font-size: 0.7rem;">ðŸ“„ Boleta</button>
+                            <button @click="openSaleDetail(sale)" class="btn btn-primary btn-sm" style="padding: 2px 6px; font-size: 0.7rem;">Boleta</button>
                           </td>
                         </tr>
                       </tbody>
@@ -357,7 +357,7 @@
 
                 <!-- Top productos de este cliente -->
                 <div v-if="selectedClient.topProductos?.length > 0" class="top-products" style="margin-bottom: 0; padding-top: 12px; border-top: 1px dashed var(--border-color);">
-                  <p class="top-products-title" style="font-size: 0.82rem; font-weight: 500; color: var(--text-muted); margin-bottom: 10px;">â– Productos más comprados históricamente:</p>
+                  <p class="top-products-title" style="font-size: 0.82rem; font-weight: 500; color: var(--text-muted); margin-bottom: 10px;">Productos más comprados históricamente:</p>
                   <div class="top-products-list" style="display: flex; flex-wrap: wrap; gap: 6px;">
                     <span v-for="(p, pi) in selectedClient.topProductos" :key="pi" class="product-chip" style="background: #e2e8f0; color: #1e293b; padding: 4px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 500;">
                       {{ p.producto }} <strong style="color: #6366f1;">x{{ p.cantidad }}</strong>
@@ -377,7 +377,7 @@
         <div v-if="showSaleDetailModal && selectedSale" class="modal-overlay" style="z-index: 1100; background-color: rgba(0, 0, 0, 0.45);">
           <div class="modal-card card" style="max-width: 500px; border-top: 4px solid var(--primary); text-align: left; padding: 24px; color: var(--text-main);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
-              <h3 style="font-size: 1.15rem; font-weight: 500; margin: 0; color: var(--text-main);">ðŸ“„ Detalles de Compra</h3>
+              <h3 style="font-size: 1.15rem; font-weight: 500; margin: 0; color: var(--text-main);">Detalles de Compra</h3>
               <button @click="showSaleDetailModal = false" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-muted); font-weight: 500;">&times;</button>
             </div>
 
@@ -428,7 +428,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
-              <button @click="printSaleTicket(selectedSale)" class="btn btn-primary" style="background-color: #10b981; border: none; font-size: 0.8rem; font-weight: 500; padding: 8px 16px;">ðŸ–¨ï¸ Imprimir Ticket</button>
+              <button @click="printSaleTicket(selectedSale)" class="btn btn-primary" style="background-color: #10b981; border: none; font-size: 0.8rem; font-weight: 500; padding: 8px 16px;">Imprimir Ticket</button>
               <button @click="showSaleDetailModal = false" class="btn btn-secondary">Cerrar</button>
             </div>
           </div>
@@ -518,7 +518,7 @@
       <!-- Perfil Completo del Cliente -->
       <div v-if="showProfileModal && selectedProfile" class="modal-overlay">
         <div class="modal-card card" style="max-width: 600px;">
-          <h2 class="modal-title">ðŸ‘ï¸ Perfil del Cliente</h2>
+          <h2 class="modal-title">Perfil del Cliente</h2>
           <div class="grid grid-2" style="gap: 15px; margin-bottom: 20px;">
             <div><strong>Nombres:</strong> {{ selectedProfile.nombres || selectedProfile.nombre || '' }}</div>
             <div><strong>Apellidos:</strong> {{ selectedProfile.apellidos || '' }}</div>
@@ -773,7 +773,7 @@ const printSaleTicket = (sale) => {
       </head>
       <body>
         <div class="text-center header">
-          <h2>â—ˆ ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
+          <h2>${authStore.user?.nombreEmpresa || 'VentasSaaS'}</h2>
           <p>Punto de Venta - Boleta de Compra</p>
         </div>
         <div class="divider"></div>
@@ -864,7 +864,7 @@ const printCompleteClientReport = () => {
       <body>
         <div class="header">
           <div>
-            <div class="brand">â—ˆ ${authStore.user?.nombreEmpresa || 'VentasSaaS'}</div>
+            <div class="brand">${authStore.user?.nombreEmpresa || 'VentasSaaS'}</div>
             <div class="subtitle">Reporte Consolidado de Cliente</div>
           </div>
           <div style="text-align: right;">
@@ -888,14 +888,14 @@ const printCompleteClientReport = () => {
           </div>
         </div>
 
-        <h3>â¬¦ Productos Más Comprados</h3>
+        <h3>Productos Más Comprados</h3>
         <div style="margin-top: 10px;">
           ${(client.topProductos || []).map(p => `
             <span class="product-chip">${p.producto} (x${p.cantidad})</span>
           `).join('') || '<p>No hay productos registrados.</p>'}
         </div>
 
-        <h3>â–¸ Historial Mensual (Últimos 6 Meses)</h3>
+        <h3>Historial Mensual (Últimos 6 Meses)</h3>
         <table>
           <thead>
             <tr>
@@ -913,7 +913,7 @@ const printCompleteClientReport = () => {
           </tbody>
         </table>
 
-        <h3>â‰¡ Detalle Completo de Transacciones</h3>
+        <h3>Detalle Completo de Transacciones</h3>
         <table>
           <thead>
             <tr>
@@ -1088,7 +1088,7 @@ const buildClientChartPath = (tendencia) => {
 const buildWhatsappReactivacion = (cli) => {
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
   const productos = (cli.topProductos || []).slice(0, 2).map(p => p.producto).join(' y ')
-  const msg = `¡Hola ${cli.nombre}! ðŸ‘‹ Somos *${store}* y te echamos de menos. Tus productos favoritos (${productos || 'nuestros mejores productos'}) te esperan âœ¨ ¡Ven a visitarnos! â–`
+  const msg = `¡Hola ${cli.nombre}! Somos *${store}* y te echamos de menos. Tus productos favoritos (${productos || 'nuestros mejores productos'}) te esperan. ¡Ven a visitarnos!`;
   const phone = (cli.telefono || '').replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`
 }
@@ -1097,7 +1097,7 @@ const buildWhatsappReactivacion = (cli) => {
 const buildWhatsappPromo = (cli) => {
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
   const productos = (cli.topProductos || []).slice(0, 2).map(p => p.producto).join(', ')
-  const msg = `¡Hola ${cli.nombre}! ðŸ”¶ Tenemos novedades y ofertas especiales en *${store}*. ${productos ? `Recordamos que acostumbras llevar: ${productos}.` : ''} ¡Te esperamos! â–`
+  const msg = `¡Hola ${cli.nombre}! Tenemos novedades y ofertas especiales en *${store}*. ${productos ? `Recordamos que acostumbras llevar: ${productos}.` : ''} ¡Te esperamos!`;
   const phone = (cli.telefono || '').replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`
 }
@@ -1239,7 +1239,7 @@ onMounted(() => {
   box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
 }
 
-/* â”€â”€ Tabs â”€â”€ */
+/* -- Tabs -- */
 .tabs-nav {
   display: flex;
   gap: 6px;
@@ -1272,7 +1272,7 @@ onMounted(() => {
   border-bottom-color: var(--primary);
 }
 
-/* â”€â”€ Alerta de inactivos â”€â”€ */
+/* -- Alerta de inactivos -- */
 .inactivos-alert {
   margin-bottom: 24px;
   padding: 20px;
@@ -1352,7 +1352,7 @@ onMounted(() => {
   font-weight: 500;
 }
 
-/* â”€â”€ Grid de top clientes â”€â”€ */
+/* -- Grid de top clientes -- */
 .top-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -1416,7 +1416,7 @@ onMounted(() => {
   color: var(--text-muted);
 }
 
-/* â”€â”€ Métricas â”€â”€ */
+/* -- Métricas -- */
 .top-metrics {
   display: flex;
   gap: 0;
@@ -1454,7 +1454,7 @@ onMounted(() => {
 .val-ok { color: #16a34a; }
 .val-danger { color: #dc2626; }
 
-/* â”€â”€ Sparkline â”€â”€ */
+/* -- Sparkline -- */
 .sparkline-wrapper {
   display: flex;
   flex-direction: column;
@@ -1481,7 +1481,7 @@ onMounted(() => {
   padding: 0 2px;
 }
 
-/* â”€â”€ Productos top del cliente â”€â”€ */
+/* -- Productos top del cliente -- */
 .top-products {
   border-top: 1px dashed var(--border-color);
   padding-top: 12px;
@@ -1509,7 +1509,7 @@ onMounted(() => {
   color: #1e40af;
 }
 
-/* â”€â”€ Botón WhatsApp pequeño â”€â”€ */
+/* -- Botón WhatsApp pequeño -- */
 .btn-whatsapp-sm {
   display: inline-flex;
   align-items: center;
@@ -1531,7 +1531,7 @@ onMounted(() => {
   box-shadow: 0 4px 10px rgba(37, 211, 102, 0.35);
 }
 
-/* â”€â”€ Estilos de la tabla resumen de Top Clientes y Modal â”€â”€ */
+/* -- Estilos de la tabla resumen de Top Clientes y Modal -- */
 .clickable-row:hover {
   background-color: var(--bg-app);
 }

@@ -82,7 +82,7 @@
           <table v-if="!loading && users.length > 0" class="data-table">
             <thead>
               <tr>
-                <th style="width: 50px;">NÂ°</th>
+                <th style="width: 50px;">N°</th>
                 <th>Nombre</th>
                 <th v-if="authStore.isSuperadmin">Tienda / Negocio</th>
                 <th>Correo Electrónico</th>
@@ -137,14 +137,14 @@
       <!-- TAB 2: Solicitudes de Registro (Solo Superadmin) -->
       <template v-else-if="activeTab === 'solicitudes' && authStore.isSuperadmin">
         <div class="card font-card">
-          <div v-if="loadingRequests" class="empty-state">Cargando solicitudesâ€¦</div>
+          <div v-if="loadingRequests" class="empty-state">Cargando solicitudes...</div>
           <div v-if="!loading && registerRequests.length === 0" class="empty-state">
             No hay solicitudes de registro recibidas.
           </div>
           <table v-if="!loading && registerRequests.length > 0" class="data-table">
             <thead>
               <tr>
-                <th style="width: 50px;">NÂ°</th>
+                <th style="width: 50px;">N°</th>
                 <th>Fecha</th>
                 <th>Empresa Solicitada</th>
                 <th>Propietario</th>
@@ -208,7 +208,7 @@
             <div class="grid grid-2">
               <div class="field">
                 <label>{{ isEdit ? 'Nueva Contraseña (Opcional)' : 'Contraseña Temporal' }}</label>
-                <input v-model="form.clave" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" :required="!isEdit" />
+                <input v-model="form.clave" type="password" placeholder="••••••••" :required="!isEdit" />
               </div>
               <div class="field">
                 <label>Rol del Usuario</label>

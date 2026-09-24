@@ -72,7 +72,7 @@
 
       <!-- Seccion A: Formulario de ingreso de mercaderia -->
       <div v-if="showRegisterForm" class="card font-card form-container">
-        <h2 class="section-title">âž• Nueva Compra / Ingreso de Almacén</h2>
+        <h2 class="section-title">+ Nueva Compra / Ingreso de Almacén</h2>
         
         <form @submit.prevent="submitPurchase" class="grid">
           <div class="grid grid-2">
@@ -94,7 +94,7 @@
 
           <!-- Lista de productos añadidos al abastecimiento -->
           <div class="restock-items">
-            <h3>â¬¦ Detalles de los Productos</h3>
+            <h3>★ Detalles de los Productos</h3>
             <div v-if="form.detalles.length === 0" class="empty-items">
               Añade al menos un producto de la lista desplegable de arriba.
             </div>
@@ -119,7 +119,7 @@
                 <span class="subtotal-val">S/. {{ (item.cantidad * item.precioCosto).toFixed(2) }}</span>
               </div>
 
-              <button type="button" @click="removeItem(idx)" class="btn-remove-item">âœ•</button>
+              <button type="button" @click="removeItem(idx)" class="btn-remove-item">✕</button>
             </div>
           </div>
 
@@ -128,7 +128,7 @@
               Total Compra: <span>S/. {{ grandTotal.toFixed(2) }}</span>
             </div>
             <button type="submit" class="btn btn-success" :disabled="form.detalles.length === 0 || loading">
-              {{ loading ? 'Procesando...' : 'ðŸ“¥ Confirmar e Ingresar a Almacén' }}
+              {{ loading ? 'Procesando...' : '📥 Confirmar e Ingresar a Almacén' }}
             </button>
           </div>
         </form>
@@ -136,7 +136,7 @@
 
       <!-- Seccion B: Historial de facturas de compra -->
       <div v-if="!loading" class="card font-card">
-        <h2 class="section-title">â‰¡ Historial de Compras Realizadas</h2>
+        <h2 class="section-title">≡ Historial de Compras Realizadas</h2>
         
         <!-- Seccion de filtros de busqueda -->
         <div class="table-filters" style="margin-bottom: 20px;">
@@ -155,7 +155,7 @@
         <table v-if="!loading && filteredPurchases.length > 0" class="data-table">
           <thead>
             <tr>
-              <th style="width: 50px;">NÂ°</th>
+              <th style="width: 50px;">N°</th>
               <th>Fecha</th>
               <th>Proveedor</th>
               <th>Productos Comprados</th>

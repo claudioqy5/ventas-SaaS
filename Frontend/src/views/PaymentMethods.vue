@@ -74,7 +74,7 @@
         <table v-if="!loading && paymentMethods.length > 0" class="data-table">
           <thead>
             <tr>
-              <th style="width: 50px;">NÂ°</th>
+              <th style="width: 50px;">N°</th>
               <th>Nombre de la Forma de Pago</th>
               <th>Estado</th>
               <th>Acciones</th>
