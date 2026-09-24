@@ -249,7 +249,7 @@
               @click="printSaleTicket(selectedSale)" 
               class="btn btn-primary btn-ticket"
             >
-              ðŸ–¨ï¸ Descargar {{ selectedSale?.tipoComprobante || 'Comprobante' }} (PDF)
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: text-bottom;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Descargar {{ selectedSale?.tipoComprobante || 'Comprobante' }} (PDF)
             </button>
 
             <div v-if="selectedSale?.sunatXmlUrl || selectedSale?.sunatCdrUrl" style="display: flex; gap: 10px;">
@@ -320,7 +320,7 @@ const activePaymentMethods = computed(() => paymentMethodsList.value.filter(m =>
 
 const fetchPaymentMethods = async () => {
   try {
-    const res = await fetch(`${API_URL}/api/payment-methods`, {
+    const res = await fetch(`${API_URL}/api/paymentmethods`, {
       headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (res.ok) {
@@ -541,7 +541,7 @@ const whatsappSaleUrl = computed(() => {
   const sale = selectedSale.value
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
   const items = (sale.detalles || []).map(i => `  • ${i.nombreProducto} x${i.cantidad} = S/. ${(i.cantidad * i.precioUnitario).toFixed(2)}`).join('%0A')
-  const msg = `¡Hola! Gracias por tu compra en *${store}* â–%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE', { timeZone: 'America/Lima' })}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0A¡Vuelve pronto! 😊`
+  const msg = `¡Hola! Gracias por tu compra en *${store}*%0A%0AComprobante: *${sale.id?.slice(-8).toUpperCase() || 'N/A'}*%0AFecha: ${new Date(sale.fechaCreacion).toLocaleDateString('es-PE', { timeZone: 'America/Lima' })}%0A%0A${items}%0A%0A*Total: S/. ${sale.total?.toFixed(2)}*%0A%0A¡Vuelve pronto!`
   const phone = sale.clienteTelefono.replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${msg}`
 })

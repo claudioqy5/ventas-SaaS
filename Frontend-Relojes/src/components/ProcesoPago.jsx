@@ -286,7 +286,13 @@ export default function ProcesoPago({
         });
         const checkoutUrl = mpRes.initPoint;
         if (checkoutUrl && typeof window !== 'undefined') {
-          window.location.href = checkoutUrl;
+          // Open in a new tab to avoid Mercado Pago CSP / BFCache issues
+          const newWindow = window.open(checkoutUrl, '_blank');
+          
+          // Fallback if popup blocker prevented the new tab
+          if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+            window.location.href = checkoutUrl;
+          }
         }
         return;
       }

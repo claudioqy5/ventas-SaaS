@@ -131,8 +131,8 @@
           <input v-model="searchQuery" type="text" placeholder="Buscar por cliente, ID o WhatsApp..." class="filter-input search-input" />
           <select v-model="filterOrigen" class="filter-input" style="width: auto; min-width: 160px;" title="Filtrar por origen del pedido">
             <option value="">Todos los orígenes</option>
-            <option value="TiendaVirtual">ðŸŒ Tienda Web</option>
-            <option value="WhatsAppBot">📱 WhatsApp Bot</option>
+            <option value="TiendaVirtual">Tienda Web</option>
+            <option value="WhatsAppBot">WhatsApp Bot</option>
           </select>
           <div class="date-filters">
             <span class="date-label">Desde:</span>
