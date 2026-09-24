@@ -186,11 +186,27 @@
               <text x="56" y="142" class="chart-axis-label" text-anchor="end">S/.{{ (maxVenta * 0.33).toFixed(0) }}</text>
               <text x="56" y="194" class="chart-axis-label zero" text-anchor="end">0</text>
 
-              <!-- Smooth Area Gradient Fill -->
-              <path :d="periodAreaPath" fill="url(#area-grad-hourly-pro)" />
+              <defs>
+                <linearGradient id="bar-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#6366f1" />
+                  <stop offset="100%" stop-color="#4338ca" />
+                </linearGradient>
+              </defs>
 
-              <!-- Smooth Main Curve Line with Glow -->
-              <path :d="periodLinePath" fill="none" stroke="url(#line-grad-hourly-pro)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#curve-glow)" />
+              <!-- Modern Bars -->
+              <g v-for="(point, idx) in chartPoints" :key="'bar-' + idx">
+                <rect
+                  :x="point.x - barWidth / 2"
+                  :y="point.y"
+                  :width="barWidth"
+                  :height="point.height"
+                  rx="4"
+                  fill="url(#bar-grad)"
+                  style="transition: all 0.3s ease;"
+                  :filter="hoveredPeriodIndex === idx ? 'url(#curve-glow)' : 'none'"
+                  :opacity="hoveredPeriodIndex !== null && hoveredPeriodIndex !== idx ? 0.4 : 1"
+                />
+              </g>
 
               <!-- Peak Callouts (Visible when not actively hovering another point) -->
               <g v-if="hoveredPeriodIndex === null">
@@ -224,12 +240,8 @@
 
               <!-- Interactive Hover Guideline & Cursor Pin -->
               <g v-if="hoveredPeriodPoint" pointer-events="none">
-                <!-- Vertical Guideline -->
-                <line :x1="hoveredPeriodPoint.x" y1="30" :x2="hoveredPeriodPoint.x" y2="190" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.8" />
-                
-                <!-- Pulsing Cursor Circle -->
-                <circle :cx="hoveredPeriodPoint.x" :cy="hoveredPeriodPoint.y" r="9" fill="#6366f1" fill-opacity="0.22" />
-                <circle :cx="hoveredPeriodPoint.x" :cy="hoveredPeriodPoint.y" r="4.5" fill="#ffffff" stroke="#4f46e5" stroke-width="3" />
+                <!-- Vertical Guideline for Bars (Centered on bar) -->
+                <line :x1="hoveredPeriodPoint.x" y1="30" :x2="hoveredPeriodPoint.x" y2="190" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.4" />
 
                 <!-- Rich SaaS Floating Tooltip Card -->
                 <g :transform="`translate(${getTooltipX(hoveredPeriodPoint)}, ${getTooltipY(hoveredPeriodPoint)})`">
@@ -543,10 +555,12 @@ const chartPoints = computed(() => {
   
   return list.map((v, index) => {
     const x = startX + index * spacing
-    const y = baselineY - (v.total / maxVal) * plotHeight
+    const height = (v.total / maxVal) * plotHeight
+    const y = baselineY - height
     return { 
       x, 
       y, 
+      height: Math.max(height, 2),
       val: v.total, 
       cantidad: v.cantidad, 
       etiqueta: v.etiqueta, 
@@ -565,50 +579,6 @@ const hoveredPeriodPoint = computed(() => {
 
 const activePointsWithSales = computed(() => {
   return chartPoints.value.filter(p => p.val > 0)
-})
-
-const generateSmoothSpline = (points) => {
-  if (!points || points.length === 0) return ""
-  if (points.length === 1) return `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`
-
-  let d = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`
-  const tension = 0.22
-
-  for (let i = 0; i < points.length - 1; i++) {
-    const p0 = i === 0 ? points[0] : points[i - 1]
-    const p1 = points[i]
-    const p2 = points[i + 1]
-    const p3 = i + 2 < points.length ? points[i + 2] : p2
-
-    if (p1.val === 0 && p2.val === 0) {
-      d += ` L ${p2.x.toFixed(1)} 190`
-      continue
-    }
-
-    const cp1x = p1.x + (p2.x - p0.x) * tension
-    let cp1y = p1.y + (p2.y - p0.y) * tension
-    if (cp1y > 190) cp1y = 190
-
-    const cp2x = p2.x - (p3.x - p1.x) * tension
-    let cp2y = p2.y - (p3.y - p1.y) * tension
-    if (cp2y > 190) cp2y = 190
-
-    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`
-  }
-  return d
-}
-
-const periodLinePath = computed(() => {
-  return generateSmoothSpline(chartPoints.value)
-})
-
-const periodAreaPath = computed(() => {
-  const points = chartPoints.value
-  if (points.length === 0) return ""
-  const spline = generateSmoothSpline(points)
-  const startX = points[0].x.toFixed(1)
-  const endX = points[points.length - 1].x.toFixed(1)
-  return `${spline} L ${endX} 190 L ${startX} 190 Z`
 })
 
 const getTooltipX = (point) => {
@@ -978,5 +948,56 @@ onMounted(() => {
   background: #ffffff;
   color: var(--primary-hover);
   box-shadow: var(--shadow-sm);
+}
+
+.chart-axis-label-x.label-active {
+  fill: #1e1b4b;
+  font-weight: 700;
+}
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.legend-item:hover {
+  background: #f1f5f9;
+}
+
+.legend-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.legend-value {
+  margin-left: auto;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.legend-percent {
+  font-size: 0.75rem;
+  color: #64748b;
 }
 </style>

@@ -2466,8 +2466,8 @@ onUnmounted(() => {
   border-radius: var(--radius-md, 10px);
   border: 1px solid var(--border-color, #e2e8f0);
   align-items: center;
-  flex-wrap: nowrap;
-  overflow-x: auto;
+  flex-wrap: wrap;
+  overflow: visible;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
