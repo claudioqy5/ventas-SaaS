@@ -57,12 +57,6 @@
         </div>
       </header>
 
-      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
-        <!-- Loader -->
-    <HamsterLoader v-if="loading" label="Cargando categorías y marcas..." />
-      </div>
-
-
       <!-- Pestañas -->
       <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
         <button 
@@ -177,7 +171,7 @@ import { API_URL } from '../config'
 import { ref, reactive, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import HamsterLoader from '../components/HamsterLoader.vue'
+
 
 const router = useRouter()
 const authStore = useAuthStore()

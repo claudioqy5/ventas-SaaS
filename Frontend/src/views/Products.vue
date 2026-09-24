@@ -15,8 +15,8 @@
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
       <nav class="nav-links">
-        <!-- SECCIÃ“N: ANÃLISIS -->
-        <div class="nav-section-title">AnÃ¡lisis</div>
+        <!-- SECCIÓN: ANÁLISIS -->
+        <div class="nav-section-title">Análisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon">
             <rect x="3" y="3" width="7" height="9"></rect>
@@ -34,7 +34,7 @@
           <span class="sidebar-text">Historial de Negocio</span>
         </router-link>
 
-        <!-- SECCIÃ“N: VENTAS -->
+        <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon">
@@ -79,8 +79,8 @@
           <span class="sidebar-text">Formas de Pago</span>
         </router-link>
 
-        <!-- SECCIÃ“N: LOGÃSTICA -->
-        <div class="nav-section-title">LogÃ­stica</div>
+        <!-- SECCIÓN: LOGÍSTICA -->
+        <div class="nav-section-title">Logística</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon">
             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
@@ -93,7 +93,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon">
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
           </svg>
-          <span class="sidebar-text">CategorÃ­as</span>
+          <span class="sidebar-text">Categorías</span>
         </router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon">
@@ -105,7 +105,7 @@
           <span class="sidebar-text">Movimientos</span>
         </router-link>
 
-        <!-- SECCIÃ“N: COMPRAS -->
+        <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon">
@@ -125,8 +125,8 @@
           <span class="sidebar-text">Compras</span>
         </router-link>
 
-        <!-- SECCIÃ“N: GESTIÃ“N -->
-        <div class="nav-section-title">GestiÃ³n</div>
+        <!-- SECCIÓN: GESTIÓN -->
+        <div class="nav-section-title">Gestión</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -156,7 +156,7 @@
           <polyline points="16 17 21 12 16 7"></polyline>
           <line x1="21" y1="12" x2="9" y2="12"></line>
         </svg>
-        <span class="sidebar-text">Cerrar SesiÃ³n</span>
+        <span class="sidebar-text">Cerrar Sesión</span>
       </button>
     </aside>
 
@@ -174,7 +174,7 @@
             </div>
             <div>
               <h1 class="text-title">Inventario de Productos</h1>
-              <p class="text-subtitle">GestiÃ³n de catÃ¡logo, variantes agrupadas y control de existencias</p>
+              <p class="text-subtitle">Gestión de catálogo, variantes agrupadas y control de existencias</p>
             </div>
           </div>
           
@@ -200,11 +200,6 @@
         </div>
       </header>
 
-      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
-        <HamsterLoader v-if="loading" label="Cargando inventario..." />
-      </div>
-
-
       <!-- Seccion de filtros de busqueda -->
       <div class="table-filters card">
         <div class="filter-input-wrap">
@@ -212,11 +207,11 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, cÃ³digo o modelo..." class="filter-input" />
+          <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código o modelo..." class="filter-input" />
         </div>
 
-        <select v-model="selectedCategory" class="filter-select select-category" title="Filtrar por categorÃ­a">
-          <option value="">Todas las CategorÃ­as</option>
+        <select v-model="selectedCategory" class="filter-select select-category" title="Filtrar por categoría">
+          <option value="">Todas las Categori­as</option>
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.nombre }}</option>
         </select>
 
@@ -289,7 +284,7 @@
         </div>
 
         <select v-model="sortMode" class="filter-select select-sort" title="Ordenar lista">
-          <option value="newest">MÃ¡s recientes</option>
+          <option value="newest">Más recientes</option>
           <option value="price-desc">Mayor precio</option>
           <option value="price-asc">Menor precio</option>
           <option value="stock-desc">Mayor stock</option>
@@ -342,16 +337,20 @@
         </button>
       </div>
 
+      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
+        <HamsterLoader v-if="loading" label="Cargando inventario..." />
+      </div>
+
       <!-- Tabla de inventario de productos -->
       <div v-if="!loading" class="card font-card">
         <div v-if="!loading && filteredProducts.length === 0" class="empty-state">
-          No hay productos que coincidan con la bÃºsqueda.
+          No hay productos que coincidan con la búsqueda.
         </div>
         <table v-if="!loading && filteredProducts.length > 0" class="data-table">
           <thead>
             <tr>
               <th style="width: 65px;">NÂ°</th>
-              <th style="width: 135px;">CÃ³digo</th>
+              <th style="width: 135px;">Código</th>
               <th>Producto</th>
               <th style="width: 110px;">Costo</th>
               <th style="width: 125px;">Precio Venta</th>
@@ -361,10 +360,10 @@
             </tr>
           </thead>
           <tbody>
-            <!-- VISTA AGRUPADA POR MODELO (ACORDEÃ“N) -->
+            <!-- VISTA AGRUPADA POR MODELO (ACORDEÓN) -->
             <template v-if="viewMode === 'grouped'">
               <template v-for="(group, groupIndex) in groupedProductsList" :key="group.key">
-                <!-- CASO 1: MODELO CON MÃšLTIPLES VARIANTES -->
+                <!-- CASO 1: MODELO CON MÚLTIPLES VARIANTES -->
                 <template v-if="group.isGroup && group.items.length > 1">
                   <!-- Fila Maestra / Cabecera del Modelo -->
                   <tr class="model-group-row" @click="toggleModelExpand(group.key)">
@@ -459,7 +458,7 @@
                     </td>
                   </tr>
 
-                  <!-- Subfilas Desplegadas con SangrÃ­a de cada Variante -->
+                  <!-- Subfilas Desplegadas con Sangría de cada Variante -->
                   <template v-if="isModelExpanded(group.key)">
                     <tr v-for="(item, vIdx) in group.items" :key="item.id" class="variant-sub-row">
                       <td class="sub-index-cell">
@@ -480,7 +479,7 @@
                               <span style="font-size: 0.9rem; color: var(--text-primary);">{{ item.nombre }}</span>
                             </div>
                             <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">
-                              CÃ³digo SKU: {{ item.codigoBarras }}
+                              Código SKU: {{ item.codigoBarras }}
                             </div>
                           </div>
                         </div>
@@ -527,7 +526,7 @@
                   </template>
                 </template>
 
-                <!-- CASO 2: PRODUCTO INDIVIDUAL DIRECTO (SIN MÃšLTIPLES VARIANTES) -->
+                <!-- CASO 2: PRODUCTO INDIVIDUAL DIRECTO (SIN MÚLTIPLES VARIANTES) -->
                 <template v-else>
                   <tr v-for="prod in group.items" :key="prod.id" class="standalone-row">
                     <td><strong>{{ groupIndex + 1 }}</strong></td>
@@ -679,7 +678,7 @@
           </h2>
           <form @submit.prevent="saveProduct" class="compact-form">
             <div style="display: grid; grid-template-columns: 1.55fr 1.45fr; gap: 20px; margin-bottom: 16px;">
-              <!-- COLUMNA IZQUIERDA: Datos BÃ¡sicos -->
+              <!-- COLUMNA IZQUIERDA: Datos Básicos -->
               <div style="display: flex; flex-direction: column; gap: 12px;">
             <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; align-items: start;">
               <div class="field" style="margin-bottom: 0;">
@@ -687,7 +686,7 @@
                 <input v-model="form.nombre" type="text" placeholder="Ej. Alimento Royal Canin" required />
               </div>
               <div class="field" style="position: relative; margin-bottom: 0;" ref="categoryDropdownRef">
-                <label>CategorÃ­as <span style="color: #ef4444;">*</span></label>
+                <label>Categorías <span style="color: #ef4444;">*</span></label>
                 <div 
                   @click="toggleCategoryDropdown"
                   class="multiselect-trigger"
@@ -698,7 +697,7 @@
                       <span class="placeholder-text">Seleccione...</span>
                     </template>
                     <template v-else-if="form.categoriaIds.length === 1">
-                      <span class="selected-single">{{ categories.find(c => c.id === form.categoriaIds[0])?.nombre || '1 categorÃ­a' }}</span>
+                      <span class="selected-single">{{ categories.find(c => c.id === form.categoriaIds[0])?.nombre || '1 categoría' }}</span>
                     </template>
                     <template v-else>
                       <span class="selected-single">{{ categories.find(c => c.id === form.categoriaIds[0])?.nombre }}</span>
@@ -710,10 +709,10 @@
                   </svg>
                 </div>
 
-                <!-- MenÃº desplegable flotante (No empuja los elementos inferiores) -->
+                <!-- Menú desplegable flotante (No empuja los elementos inferiores) -->
                 <div v-if="showCategoryDropdown" class="multiselect-dropdown-panel" @click.stop>
                   <div class="multiselect-dropdown-header">
-                    <span>CategorÃ­as</span>
+                    <span>Categorías</span>
                     <button 
                       v-if="form.categoriaIds && form.categoriaIds.length > 0"
                       type="button" 
@@ -724,12 +723,12 @@
                     </button>
                   </div>
 
-                  <!-- Buscador si hay mÃ¡s de 5 categorÃ­as -->
+                  <!-- Buscador si hay más de 5 categorías -->
                   <div v-if="categories.length > 5" style="padding: 6px 8px; border-bottom: 1px solid var(--border-color);">
                     <input 
                       v-model="categorySearchText" 
                       type="text" 
-                      placeholder="Buscar categorÃ­a..." 
+                      placeholder="Buscar categoría..." 
                       style="width: 100%; height: 28px !important; padding: 2px 8px !important; font-size: 0.8rem !important; border-radius: 4px !important; border: 1px solid var(--border-color) !important; background-color: var(--bg-app);"
                       @click.stop
                     />
@@ -737,7 +736,7 @@
 
                   <div class="multiselect-dropdown-list">
                     <div v-if="filteredCategories.length === 0" style="padding: 10px; text-align: center; font-size: 0.78rem; color: #94a3b8;">
-                      No se encontraron categorÃ­as
+                      No se encontraron categorías
                     </div>
                     <div 
                       v-for="cat in filteredCategories" 
@@ -772,10 +771,10 @@
               </div>
             </div>
 
-            <!-- FILA 2: CÃ³digo/SKU, Modelo y Tipo de Producto -->
+            <!-- FILA 2: Código/SKU, Modelo y Tipo de Producto -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 12px; align-items: end;">
               <div class="field">
-                <label>CÃ³digo de Barra / SKU</label>
+                <label>Código de Barra / SKU</label>
                 <input v-model="form.codigoBarras" type="text" placeholder="7501234567" required />
               </div>
               <div class="field">
@@ -939,10 +938,10 @@
               </div>
             </div>
 
-            <!-- FILA 4: Stock MÃ­nimo y DescripciÃ³n (Alineados en 1fr y 2.2fr) -->
+            <!-- FILA 4: Stock Mínimo y Descripción (Alineados en 1fr y 2.2fr) -->
             <div style="display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px; margin-top: 4px;">
               <div class="field">
-                <label>Stock MÃ­nimo ({{ form.tipoProducto === 'Costal' ? 'Costales' : form.unidadMedida }})</label>
+                <label>Stock Mínimo ({{ form.tipoProducto === 'Costal' ? 'Costales' : form.unidadMedida }})</label>
                 <input v-model.number="form.stockMinimo"
                   type="number"
                   :step="form.tipoProducto === 'Costal' ? '0.1' : '1'"
@@ -951,7 +950,7 @@
                   min="0" required />
               </div>
               <div class="field">
-                <label>DescripciÃ³n del Producto</label>
+                <label>Descripción del Producto</label>
                 <textarea v-model="form.descripcion" placeholder="Ej. Alimento premium sabor cordero y arroz" rows="4" style="width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 0.9rem; font-family: inherit; resize: vertical;"></textarea>
               </div>
             </div>
@@ -992,25 +991,25 @@
             </div>
           </div>
 
-          <!-- FILA INFERIOR: Subida de imÃ¡genes mÃºltiples -->
+          <!-- FILA INFERIOR: Subida de imágenes múltiples -->
           <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
               <div style="display: flex; align-items: center; font-size: 0.75rem; font-weight: 500; color: #475569; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; color: #64748b;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                ImÃ¡genes del Producto (mÃ¡x. 5 imÃ¡genes, 1MB c/u - Optimizado para SEO)
+                Imágenes del Producto (máx. 5 imágenes, 1MB c/u - Optimizado para SEO)
               </div>
               
-              <!-- BotÃ³n de subida -->
+              <!-- Botón de subida -->
               <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
                 <label class="btn btn-secondary-compact" style="cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 6px;">
                   <input type="file" accept=".jpg,.jpeg,.png,.webp" multiple @change="handleImageUpload" style="display: none;" :disabled="uploadingImage || form.imagenes.length >= 5" />
                   <svg v-if="uploadingImage" class="spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
                   <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                  <span>{{ uploadingImage ? 'Subiendo...' : 'Seleccionar imÃ¡genes' }}</span>
+                  <span>{{ uploadingImage ? 'Subiendo...' : 'Seleccionar imágenes' }}</span>
                 </label>
-                <span style="font-size: 0.78rem; color: var(--text-muted);">{{ form.imagenes.length }}/5 imÃ¡genes</span>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">{{ form.imagenes.length }}/5 imágenes</span>
               </div>
 
-              <!-- Vista previa de imÃ¡genes subidas -->
+              <!-- Vista previa de imágenes subidas -->
               <div v-if="form.imagenes.length > 0" style="display: flex; flex-wrap: wrap; gap: 8px;">
                 <div v-for="(img, idx) in form.imagenes" :key="idx" style="position: relative; width: 80px; height: 80px;">
                   <img :src="img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);" alt="Imagen producto" />
@@ -1018,10 +1017,10 @@
                   <div v-if="idx === 0" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.55); color: white; font-size: 0.6rem; text-align: center; border-radius: 0 0 6px 6px; padding: 2px;">Principal</div>
                 </div>
               </div>
-              <div v-else style="font-size: 0.8rem; color: var(--text-muted);">Sin imÃ¡genes cargadas aÃºn.</div>
+              <div v-else style="font-size: 0.8rem; color: var(--text-muted);">Sin imágenes cargadas aún.</div>
             </div>
 
-            <!-- BOTONES DE ACCIÃ“N -->
+            <!-- BOTONES DE ACCIÓN -->
             <div class="modal-actions-compact">
               <button type="button" @click="showModal = false" class="btn btn-secondary-compact">Cancelar</button>
               <button type="submit" class="btn btn-primary-compact">{{ isEdit ? 'Guardar Cambios' : 'Guardar Producto' }}</button>
@@ -1034,7 +1033,7 @@
     <!-- Modal Studio Lightbox & Inspector de Producto Premium -->
     <div v-if="showGalleryModal" class="studio-modal-overlay" @click.self="closeGalleryModal">
       <div class="studio-modal-card" role="dialog" aria-modal="true">
-        <!-- COLUMNA IZQUIERDA: Escenario Studio & GalerÃ­a Interactiva -->
+        <!-- COLUMNA IZQUIERDA: Escenario Studio & Galería Interactiva -->
         <div class="studio-viewport-column">
           <!-- Top Floating Bar: Badges y Contador -->
           <div class="studio-floating-topbar">
@@ -1059,7 +1058,7 @@
                 <circle cx="8.5" cy="8.5" r="1.5"></circle>
                 <polyline points="21 15 16 10 5 21"></polyline>
               </svg>
-              <p>Sin fotografÃ­a registrada</p>
+              <p>Sin fotografía registrada</p>
             </div>
             <template v-else>
               <!-- Flecha Anterior -->
@@ -1122,7 +1121,7 @@
           </div>
         </div>
 
-        <!-- COLUMNA DERECHA: Ficha de InspecciÃ³n RÃ¡pida de Producto -->
+        <!-- COLUMNA DERECHA: Ficha de Inspección Rápida de Producto -->
         <div class="studio-details-column">
           <!-- Header de Ficha -->
           <div class="studio-details-header">
@@ -1146,12 +1145,12 @@
             </button>
           </div>
 
-          <!-- TÃ­tulo y SKU -->
+          <!-- Título y SKU -->
           <h2 class="studio-product-title">{{ selectedGalleryProduct?.nombre || 'Producto' }}</h2>
 
           <div class="studio-sku-box" @click="copyGallerySku(selectedGalleryProduct?.codigoBarras)" :title="'Copiar ' + (selectedGalleryProduct?.codigoBarras || '')">
             <div class="studio-sku-info">
-              <span class="studio-sku-label">SKU / CÃ“DIGO BARRAS</span>
+              <span class="studio-sku-label">SKU / CÓDIGO BARRAS</span>
               <span class="studio-sku-value">{{ selectedGalleryProduct?.codigoBarras || 'N/A' }}</span>
             </div>
             <button type="button" class="studio-copy-btn">
@@ -1159,7 +1158,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span style="color: #10b981;">Â¡Copiado!</span>
+                <span style="color: #10b981;">¡Copiado!</span>
               </template>
               <template v-else>
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1192,18 +1191,18 @@
             </div>
 
             <div class="studio-stock-block">
-              <span class="studio-metric-label">Disponibilidad en AlmacÃ©n</span>
+              <span class="studio-metric-label">Disponibilidad en Almacén</span>
               <div :class="['studio-stock-pill', (selectedGalleryProduct?.stock <= selectedGalleryProduct?.stockMinimo) ? 'low' : 'ok']">
                 <span class="studio-stock-dot"></span>
                 <span class="studio-stock-text">
                   {{ Number(selectedGalleryProduct?.stock || 0).toFixed(0) }} {{ selectedGalleryProduct?.unidadMedida || 'unidades' }}
                 </span>
               </div>
-              <span class="studio-stock-min-hint">MÃ­nimo sugerido: {{ selectedGalleryProduct?.stockMinimo || 5 }}</span>
+              <span class="studio-stock-min-hint">Mínimo sugerido: {{ selectedGalleryProduct?.stockMinimo || 5 }}</span>
             </div>
           </div>
 
-          <!-- Selector RÃ¡pido de Variantes del Mismo Modelo (Si existen) -->
+          <!-- Selector Rápido de Variantes del Mismo Modelo (Si existen) -->
           <div v-if="galleryModelVariants.length > 1" class="studio-variants-section">
             <div class="studio-section-subtitle">
               <span>Variantes de este modelo</span>
@@ -1228,7 +1227,7 @@
             </div>
           </div>
 
-          <!-- Ficha TÃ©cnica / Especificaciones (Atributos) -->
+          <!-- Ficha Técnica / Especificaciones (Atributos) -->
           <div v-if="formattedGalleryAttributes.length > 0" class="studio-specs-section">
             <div class="studio-section-subtitle">Especificaciones</div>
             <div class="studio-specs-grid">
@@ -1282,7 +1281,7 @@ const galleryImages = ref([]);
 const activeImageIndex = ref(0);
 const copiedSku = ref(false);
 
-// Estado y funciones para selector mÃºltiple moderno de categorÃ­as
+// Estado y funciones para selector múltiple moderno de categorías
 const showCategoryDropdown = ref(false);
 const categoryDropdownRef = ref(null);
 const categorySearchText = ref('');
@@ -1450,7 +1449,7 @@ const getSwatchHex = (colorName) => {
   if (c.includes('oro') || c.includes('dorado') || c.includes('gold') || c.includes('champagne')) return '#d97706';
   if (c.includes('rojo') || c.includes('red') || c.includes('granate') || c.includes('vino')) return '#dc2626';
   if (c.includes('verde') || c.includes('green') || c.includes('esmeralda')) return '#16a34a';
-  if (c.includes('marron') || c.includes('marrÃ³n') || c.includes('cuero') || c.includes('cafe') || c.includes('cafÃ©')) return '#854d0e';
+  if (c.includes('marron') || c.includes('marrón') || c.includes('cuero') || c.includes('cafe') || c.includes('café')) return '#854d0e';
   if (c.includes('rosa') || c.includes('rose') || c.includes('rosado')) return '#f43f5e';
   return '#64748b';
 };
@@ -1514,7 +1513,7 @@ const groupedAttributes = computed(() => {
 
 const defaultImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><rect width='100%25' height='100%25' fill='%23f1f5f9'/><path d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M11 11.5L5 17h14l-4.5-6-3.5 4.5z'/></svg>"
 
-const viewMode = ref('grouped') // 'grouped' (acordeÃ³n) o 'flat' (lista plana)
+const viewMode = ref('grouped') // 'grouped' (acordeón) o 'flat' (lista plana)
 const expandedModels = ref(new Set())
 
 const isModelExpanded = (key) => {
@@ -1660,7 +1659,7 @@ const groupedProductsList = computed(() => {
     }
   })
 
-  // Calcular mÃ©tricas consolidadas por modelo
+  // Calcular métricas consolidadas por modelo
   result.forEach(group => {
     if (group.isGroup) {
       let totalStock = 0
@@ -1842,7 +1841,7 @@ const computeStockAnalysis = async () => {
     if (!res.ok) return
     const allSales = await res.json()
 
-    // Filtrar ventas de los Ãºltimos 30 dÃ­as
+    // Filtrar ventas de los últimos 30 días
     const since = new Date()
     since.setDate(since.getDate() - 30)
 
@@ -1865,7 +1864,7 @@ const computeStockAnalysis = async () => {
     }
     productAnalysis.value = analysis
   } catch (e) {
-    console.warn('No se pudo calcular anÃ¡lisis de stock', e)
+    console.warn('No se pudo calcular análisis de stock', e)
   }
 }
 
@@ -1962,7 +1961,7 @@ const openEditModal = (product) => {
 
 const saveProduct = async () => {
   if (!form.categoriaIds || form.categoriaIds.length === 0) {
-    alert('Por favor seleccione al menos una categorÃ­a.')
+    alert('Por favor seleccione al menos una categoría.')
     return
   }
 
@@ -1975,7 +1974,7 @@ const saveProduct = async () => {
       payload.marcaId = null
     }
 
-    // Filtrar atributos vacÃ­os antes de enviarlos al backend para mantener limpia la DB
+    // Filtrar atributos vacíos antes de enviarlos al backend para mantener limpia la DB
     payload.atributos = payload.atributos.filter(a => a.valor && a.valor.trim() !== '')
 
     // Si es Costal, hacemos las conversiones de costo y stock a Kilogramos para la base de datos
@@ -2020,15 +2019,15 @@ const saveProduct = async () => {
     }
     
     showModal.value = false
-    alert(isEdit.value ? 'Â¡Producto actualizado con Ã©xito!' : 'Â¡Producto agregado al inventario con Ã©xito!')
+    alert(isEdit.value ? '¡Producto actualizado con éxito!' : '¡Producto agregado al inventario con éxito!')
     fetchProducts()
   } catch (err) {
-    alert(err.message || 'Error de conexiÃ³n con el servidor.')
+    alert(err.message || 'Error de conexión con el servidor.')
   }
 }
 
 const confirmDelete = async (id) => {
-  if (!confirm('Â¿EstÃ¡s seguro de que deseas eliminar este producto permanentemente?')) return
+  if (!confirm('¿Estás seguro de que deseas eliminar este producto permanentemente?')) return
   try {
     const res = await fetch(`${API_URL}/api/products/${id}`, {
       method: 'DELETE',
@@ -2037,7 +2036,7 @@ const confirmDelete = async (id) => {
       }
     })
     if (!res.ok) throw new Error('Error al eliminar el producto.')
-    alert('Â¡Producto eliminado con Ã©xito!')
+    alert('¡Producto eliminado con éxito!')
     fetchProducts()
   } catch (err) {
     alert(err.message)
@@ -2078,7 +2077,7 @@ const handleImageUpload = async (event) => {
       if (!res.ok) { alert('Error al subir imagen: ' + file.name); continue }
       const data = await res.json()
       form.imagenes.push(data.url)
-      // La primera imagen tambiÃ©n queda como imagenUrl principal (compatibilidad)\r
+      // La primera imagen también queda como imagenUrl principal (compatibilidad)\r
       if (form.imagenes.length === 1) form.imagenUrl = data.url
     }
   } finally {
@@ -2824,7 +2823,7 @@ onUnmounted(() => {
   font-weight: 500 !important;
 }
 
-/* â”€â”€ AnÃ¡lisis de stock por IA â”€â”€ */
+/* â”€â”€ Análisis de stock por IA â”€â”€ */
 .analysis-cell {
   display: flex;
   flex-direction: column;
@@ -2998,7 +2997,7 @@ onUnmounted(() => {
   letter-spacing: 0.02em;
 }
 
-/* Vitrina de exhibiciÃ³n del producto */
+/* Vitrina de exhibición del producto */
 .studio-stage-frame {
   position: relative;
   display: flex;
@@ -3132,7 +3131,7 @@ onUnmounted(() => {
   min-height: 280px;
 }
 
-/* Columna Derecha: Ficha de InspecciÃ³n Clara */
+/* Columna Derecha: Ficha de Inspección Clara */
 .studio-details-column {
   background: #ffffff;
   padding: 24px 28px;
@@ -3263,7 +3262,7 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
-/* MÃ©tricas de Precio y Stock */
+/* Métricas de Precio y Stock */
 .studio-metrics-card {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
@@ -3448,7 +3447,7 @@ onUnmounted(() => {
   color: #64748b;
 }
 
-/* Ficha TÃ©cnica / Especificaciones */
+/* Ficha Técnica / Especificaciones */
 .studio-specs-section {
   margin-bottom: 20px;
 }
@@ -3544,7 +3543,7 @@ onUnmounted(() => {
 }
 
 /* ========================================================
-   ESTILOS DE AGRUPACIÃ“N POR MODELO (ACORDEÃ“N DE INVENTARIO)
+   ESTILOS DE AGRUPACIÓN POR MODELO (ACORDEÓN DE INVENTARIO)
    ======================================================== */
 .view-mode-pill-group {
   display: flex;

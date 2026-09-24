@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -8,12 +8,12 @@
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
       <nav class="nav-links">
-        <!-- SECCIÃ“N: ANÃLISIS -->
-        <div class="nav-section-title">AnÃ¡lisis</div>
+        <!-- SECCIÓN: ANÁLISIS -->
+        <div class="nav-section-title">Análisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg> <span class="sidebar-text">Dashboard</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> <span class="sidebar-text">Historial de Negocio</span></router-link>
 
-        <!-- SECCIÃ“N: VENTAS -->
+        <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18 M16 10a4 4 0 0 1-8 0"/></svg> <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg> <span class="sidebar-text">Historial Ventas</span></router-link>
@@ -26,24 +26,24 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v2 M3 5v14a2 2 0 0 0 2 2h16v-5 M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg> <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4 M2 13v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4 M2 9h20 M2 13h20"/></svg> <span class="sidebar-text">Formas de Pago</span></router-link>
 
-        <!-- SECCIÃ“N: LOGÃSTICA -->
-        <div class="nav-section-title">LogÃ­stica</div>
+        <!-- SECCIÓN: LOGÍSTICA -->
+        <div class="nav-section-title">Logística</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">CategorÃ­as</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 2v6h-6 M3 12a9 9 0 0 1 15-6.7L21 8 M3 22v-6h6 M21 12a9 9 0 0 1-15 6.7L3 16"/></svg> <span class="sidebar-text">Movimientos</span></router-link>
 
-        <!-- SECCIÃ“N: COMPRAS -->
+        <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18"/></svg> <span class="sidebar-text">Compras</span></router-link>
 
-        <!-- SECCIÃ“N: GESTIÃ“N -->
-        <div class="nav-section-title">GestiÃ³n</div>
+        <!-- SECCIÓN: GESTIÓN -->
+        <div class="nav-section-title">Gestión</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg> <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span class="sidebar-text">Recordatorios</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar SesiÃ³n</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Area de contenido principal -->
@@ -54,16 +54,11 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
             Pedidos
           </h1>
-          <p class="text-subtitle">Gestiona todos los pedidos recibidos desde la tienda online y el bot de WhatsApp. Confirma pagos, actualiza estados y realiza seguimiento de envÃ­os.</p>
+          <p class="text-subtitle">Gestiona todos los pedidos recibidos desde la tienda online y el bot de WhatsApp. Confirma pagos, actualiza estados y realiza seguimiento de envíos.</p>
         </div>
       </header>
 
-      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
-        <HamsterLoader v-if="loading" label="Cargando pedidos..." />
-      </div>
-
-
-      <!-- Tarjetas de resumen interactivas para filtrado rÃ¡pido -->
+      <!-- Tarjetas de resumen interactivas para filtrado rápido -->
       <div class="summary-cards">
         <div
           class="summary-card pending"
@@ -85,13 +80,13 @@
           class="summary-card preparing"
           :class="{ active: filterEstado === 'EN_PREPARACION' }"
           @click="selectStatusCard('EN_PREPARACION')"
-          title="Clic para filtrar por En PreparaciÃ³n"
+          title="Clic para filtrar por En Preparación"
         >
           <div class="summary-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
           </div>
           <div class="summary-info">
-            <div class="summary-label">En PreparaciÃ³n</div>
+            <div class="summary-label">En Preparación</div>
             <div class="summary-count">{{ countByStatus('EN_PREPARACION') }}</div>
           </div>
           <span v-if="filterEstado === 'EN_PREPARACION'" class="card-active-indicator">Activo</span>
@@ -135,7 +130,7 @@
         <div class="filters-container">
           <input v-model="searchQuery" type="text" placeholder="Buscar por cliente, ID o WhatsApp..." class="filter-input search-input" />
           <select v-model="filterOrigen" class="filter-input" style="width: auto; min-width: 160px;" title="Filtrar por origen del pedido">
-            <option value="">Todos los orÃ­genes</option>
+            <option value="">Todos los orígenes</option>
             <option value="TiendaVirtual">ðŸŒ Tienda Web</option>
             <option value="WhatsAppBot">ðŸ“± WhatsApp Bot</option>
           </select>
@@ -157,8 +152,8 @@
             <tr>
               <th>ID / Fecha</th>
               <th>Cliente</th>
-              <th>DirecciÃ³n de Entrega</th>
-              <th>MÃ©todo de Pago</th>
+              <th>Dirección de Entrega</th>
+              <th>Método de Pago</th>
               <th>Total</th>
               <th>Estado</th>
               <th>Origen</th>
@@ -187,7 +182,7 @@
               <td>
                 <span class="payment-badge">{{ order.metodoPago }}</span>
                 <br>
-                <span v-if="order.codigoOperacionPago" style="font-size: 0.78rem; color: var(--text-muted);">CÃ³d: {{ order.codigoOperacionPago }}</span>
+                <span v-if="order.codigoOperacionPago" style="font-size: 0.78rem; color: var(--text-muted);">Cód: {{ order.codigoOperacionPago }}</span>
               </td>
               <td><strong style="color: var(--text-main);">S/. {{ Number(order.total || 0).toFixed(2) }}</strong></td>
               <td>
@@ -241,7 +236,7 @@
                 Tienda Web
               </span>
             </div>
-            <button @click="selectedOrder = null" class="close-btn">Ã—</button>
+            <button @click="selectedOrder = null" class="close-btn">×</button>
           </header>
 
           <div class="detail-grid">
@@ -257,9 +252,9 @@
             <div class="detail-section">
               <h4 class="detail-section-title">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                DirecciÃ³n de Entrega
+                Dirección de Entrega
               </h4>
-              <div class="detail-row"><span>DirecciÃ³n:</span> <strong>{{ selectedOrder.direccionEntrega || 'â€”' }}</strong></div>
+              <div class="detail-row"><span>Dirección:</span> <strong>{{ selectedOrder.direccionEntrega || 'â€”' }}</strong></div>
               <div class="detail-row"><span>Distrito:</span> <strong>{{ selectedOrder.distritoEntrega || 'â€”' }}</strong></div>
               <div class="detail-row"><span>Provincia:</span> <strong>{{ selectedOrder.provinciaEntrega || 'â€”' }}</strong></div>
               <div class="detail-row"><span>Departamento:</span> <strong>{{ selectedOrder.departamentoEntrega || 'â€”' }}</strong></div>
@@ -272,9 +267,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                 Pago
               </h4>
-              <div class="detail-row"><span>MÃ©todo:</span> <strong>{{ selectedOrder.metodoPago }}</strong></div>
+              <div class="detail-row"><span>Método:</span> <strong>{{ selectedOrder.metodoPago }}</strong></div>
               <div class="detail-row"><span>Estado:</span> <span :class="['estado-badge', estadoClass(selectedOrder.estadoOrden)]">{{ estadoLabel(selectedOrder.estadoOrden) }}</span></div>
-              <div v-if="selectedOrder.codigoOperacionPago" class="detail-row"><span>CÃ³d. OperaciÃ³n:</span> <strong>{{ selectedOrder.codigoOperacionPago }}</strong></div>
+              <div v-if="selectedOrder.codigoOperacionPago" class="detail-row"><span>Cód. Operación:</span> <strong>{{ selectedOrder.codigoOperacionPago }}</strong></div>
               <div v-if="selectedOrder.fechaConfirmacionPago" class="detail-row"><span>Confirmado el:</span> <strong>{{ formatDateTime(selectedOrder.fechaConfirmacionPago) }}</strong></div>
               <div v-if="selectedOrder.numeroSeguimiento" class="detail-row"><span>NÂ° Seguimiento:</span> <strong>{{ selectedOrder.numeroSeguimiento }}</strong></div>
               <div v-if="selectedOrder.whatsAppCliente" class="detail-row"><span>WhatsApp:</span> <strong style="color:#25d366;">+{{ selectedOrder.whatsAppCliente }}</strong></div>
@@ -288,7 +283,7 @@
               </h4>
               <div class="detail-row"><span>Tipo:</span> <strong>{{ selectedOrder.tipoComprobante }}</strong></div>
               <div v-if="selectedOrder.rucFactura" class="detail-row"><span>RUC:</span> <strong>{{ selectedOrder.rucFactura }}</strong></div>
-              <div v-if="selectedOrder.razonSocialFactura" class="detail-row"><span>RazÃ³n Social:</span> <strong>{{ selectedOrder.razonSocialFactura }}</strong></div>
+              <div v-if="selectedOrder.razonSocialFactura" class="detail-row"><span>Razón Social:</span> <strong>{{ selectedOrder.razonSocialFactura }}</strong></div>
             </div>
           </div>
 
@@ -327,7 +322,7 @@
                 :key="idx"
                 :href="url"
                 target="_blank"
-                title="Clic para ver en tamaÃ±o completo"
+                title="Clic para ver en tamaño completo"
                 style="display:block; border-radius:8px; overflow:hidden; border:2px solid #25d366; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.15s;"
                 @mouseenter="$event.currentTarget.style.transform='scale(1.04)'"
                 @mouseleave="$event.currentTarget.style.transform='scale(1)'"
@@ -338,7 +333,7 @@
           </div>
           <div v-else-if="selectedOrder.origenPedido === 'WhatsAppBot' && selectedOrder.estadoOrden === 'PENDIENTE_PAGO'" style="margin-top: 16px; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px; padding: 12px; font-size: 0.88rem; color: #92400e; display:flex; align-items:center; gap:8px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            El cliente aÃºn no ha enviado el comprobante de pago por WhatsApp.
+            El cliente aún no ha enviado el comprobante de pago por WhatsApp.
           </div>
 
           <footer style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
@@ -364,10 +359,10 @@
               </div>
               <div>
                 <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700;">Actualizar Estado del Pedido</h3>
-                <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted);">Avanza el pedido en la lÃ­nea de tiempo o cancela si fue anulado</p>
+                <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted);">Avanza el pedido en la línea de tiempo o cancela si fue anulado</p>
               </div>
             </div>
-            <button @click="statusModal.visible = false" class="close-btn">Ã—</button>
+            <button @click="statusModal.visible = false" class="close-btn">×</button>
           </header>
 
           <!-- Order Summary Header Strip -->
@@ -394,7 +389,7 @@
               title="Cancelar Pedido"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-              {{ statusModal.selected === 'CANCELADO' ? 'âœ“ CancelaciÃ³n Seleccionada' : 'Cancelar Pedido' }}
+              {{ statusModal.selected === 'CANCELADO' ? 'âœ“ Cancelación Seleccionada' : 'Cancelar Pedido' }}
             </button>
           </div>
 
@@ -454,15 +449,15 @@
             <div class="action-box-header">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               <div>
-                <strong>ConfirmaciÃ³n de pago e ingreso a Ventas</strong>
-                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Al pasar a "En PreparaciÃ³n", se descontarÃ¡ el stock y se registrarÃ¡ la venta en el Dashboard e Historial.</p>
+                <strong>Confirmación de pago e ingreso a Ventas</strong>
+                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Al pasar a "En Preparación", se descontará el stock y se registrará la venta en el Dashboard e Historial.</p>
               </div>
             </div>
             
             <div class="billing-form-section">
               <div class="form-row-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>FacturaciÃ³n ElectrÃ³nica (SUNAT / Interno)</span>
+                <span>Facturación Electrónica (SUNAT / Interno)</span>
               </div>
 
               <div class="form-grid-2col">
@@ -493,11 +488,11 @@
 
               <div v-if="statusModal.tipoComprobante === 'Boleta' || statusModal.tipoComprobante === 'Factura'" class="form-grid-2col" style="margin-top: 10px;">
                 <div>
-                  <label class="form-label">Nombre / RazÃ³n Social</label>
-                  <input v-model="statusModal.clienteRazonSocial" type="text" placeholder="Nombre completo o RazÃ³n Social" class="form-input-styled" />
+                  <label class="form-label">Nombre / Razón Social</label>
+                  <input v-model="statusModal.clienteRazonSocial" type="text" placeholder="Nombre completo o Razón Social" class="form-input-styled" />
                 </div>
                 <div>
-                  <label class="form-label">DirecciÃ³n Fiscal (Opcional)</label>
+                  <label class="form-label">Dirección Fiscal (Opcional)</label>
                   <input v-model="statusModal.clienteDireccion" type="text" placeholder="Av. Principal #123" class="form-input-styled" />
                 </div>
               </div>
@@ -508,12 +503,12 @@
             <div class="action-box-header">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
               <div>
-                <strong>Despacho y EnvÃ­o del Pedido</strong>
-                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Puedes ingresar la guÃ­a o cÃ³digo de seguimiento para que el cliente rastree su paquete.</p>
+                <strong>Despacho y Envío del Pedido</strong>
+                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Puedes ingresar la guía o código de seguimiento para que el cliente rastree su paquete.</p>
               </div>
             </div>
             <div style="margin-top: 12px;">
-              <label class="form-label" style="color: #5b21b6;">NÃºmero / CÃ³digo de Seguimiento (opcional)</label>
+              <label class="form-label" style="color: #5b21b6;">Número / Código de Seguimiento (opcional)</label>
               <input
                 v-model="statusModal.numeroSeguimiento"
                 type="text"
@@ -528,8 +523,8 @@
             <div class="action-box-header">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               <div>
-                <strong>Advertencia de CancelaciÃ³n</strong>
-                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Al confirmar la cancelaciÃ³n, el pedido quedarÃ¡ anulado y el stock de los productos serÃ¡ restaurado automÃ¡ticamente al inventario si ya habÃ­a sido descontado.</p>
+                <strong>Advertencia de Cancelación</strong>
+                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Al confirmar la cancelación, el pedido quedará anulado y el stock de los productos será restaurado automáticamente al inventario si ya había sido descontado.</p>
               </div>
             </div>
           </div>
@@ -557,7 +552,7 @@ import { API_URL } from '../config'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import HamsterLoader from '../components/HamsterLoader.vue'
+
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -646,7 +641,7 @@ const filteredOrders = computed(() => {
 const estadoLabel = (estado) => {
   const labels = {
     'PENDIENTE_PAGO': 'Pendiente de Pago',
-    'EN_PREPARACION': 'En PreparaciÃ³n',
+    'EN_PREPARACION': 'En Preparación',
     'ENVIADO': 'Enviado',
     'ENTREGADO': 'Entregado',
     'CANCELADO': 'Cancelado'
@@ -666,17 +661,17 @@ const estadoClass = (estado) => {
 }
 
 const ALL_STATUS_OPTIONS = [
-  { value: 'EN_PREPARACION', label: 'En PreparaciÃ³n', class: 'estado-preparing', description: 'Pago confirmado. Empezar embalaje del reloj.' },
-  { value: 'ENVIADO', label: 'Enviado', class: 'estado-shipped', description: 'Entregado al courier o servicio de envÃ­o.' },
-  { value: 'ENTREGADO', label: 'Entregado', class: 'estado-delivered', description: 'El cliente recibiÃ³ su pedido conforme.' },
+  { value: 'EN_PREPARACION', label: 'En Preparación', class: 'estado-preparing', description: 'Pago confirmado. Empezar embalaje del reloj.' },
+  { value: 'ENVIADO', label: 'Enviado', class: 'estado-shipped', description: 'Entregado al courier o servicio de envío.' },
+  { value: 'ENTREGADO', label: 'Entregado', class: 'estado-delivered', description: 'El cliente recibió su pedido conforme.' },
   { value: 'CANCELADO', label: 'Cancelado', class: 'estado-cancelled', description: 'Cancelar pedido y restaurar stock al inventario.' }
 ]
 
 const timelineSteps = [
-  { value: 'PENDIENTE_PAGO', label: 'Pendiente', class: 'estado-pending', description: 'Esperando confirmaciÃ³n de pago', icon: 'clock' },
-  { value: 'EN_PREPARACION', label: 'En PreparaciÃ³n', class: 'estado-preparing', description: 'Pago verificado. Embalar producto', icon: 'package' },
-  { value: 'ENVIADO', label: 'Enviado', class: 'estado-shipped', description: 'Despachado / Courier de envÃ­o', icon: 'truck' },
-  { value: 'ENTREGADO', label: 'Entregado', class: 'estado-delivered', description: 'Cliente recibiÃ³ su producto conforme', icon: 'check-circle' }
+  { value: 'PENDIENTE_PAGO', label: 'Pendiente', class: 'estado-pending', description: 'Esperando confirmación de pago', icon: 'clock' },
+  { value: 'EN_PREPARACION', label: 'En Preparación', class: 'estado-preparing', description: 'Pago verificado. Embalar producto', icon: 'package' },
+  { value: 'ENVIADO', label: 'Enviado', class: 'estado-shipped', description: 'Despachado / Courier de envío', icon: 'truck' },
+  { value: 'ENTREGADO', label: 'Entregado', class: 'estado-delivered', description: 'Cliente recibió su producto conforme', icon: 'check-circle' }
 ]
 
 const progressPercentage = computed(() => {
@@ -781,7 +776,7 @@ const confirmStatusUpdate = async () => {
     statusModal.value.visible = false
     await fetchOrders()
   } catch (err) {
-    alert('Error de conexiÃ³n al actualizar el estado.')
+    alert('Error de conexión al actualizar el estado.')
   } finally {
     updatingStatus.value = false
   }

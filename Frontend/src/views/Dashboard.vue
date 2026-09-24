@@ -81,10 +81,7 @@
       </header>
 
       <!-- Main Financial KPI Summary Cards (All in one row) -->
-      <div v-if="loading" style="display: flex; justify-content: center; padding: 40px;">
-        <HamsterLoader label="Cargando estadísticas del dashboard..." />
-      </div>
-      <div v-else style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; overflow-x: auto;">
+      <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; overflow-x: auto;">
         <!-- Venta Total Cobrada -->
         <div class="kpi-total-card bruto" style="background: linear-gradient(135deg, #eef2ff, #e0e7ff); border: 1px solid #c7d2fe; padding: 14px 16px; border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm);">
           <div style="font-size: 0.7rem; font-weight: 700; color: #4338ca; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;">
@@ -447,7 +444,7 @@ import { API_URL } from '../config'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import HamsterLoader from '../components/HamsterLoader.vue'
+
 
 const router = useRouter()
 const authStore = useAuthStore()

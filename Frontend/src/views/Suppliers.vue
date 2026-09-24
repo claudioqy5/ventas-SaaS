@@ -8,12 +8,12 @@
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
             <nav class="nav-links">
-        <!-- SECCIÃ“N: ANÃLISIS -->
-        <div class="nav-section-title">AnÃ¡lisis</div>
+        <!-- SECCIÓN: ANÁLISIS -->
+        <div class="nav-section-title">Análisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg> <span class="sidebar-text">Dashboard</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> <span class="sidebar-text">Historial de Negocio</span></router-link>
 
-        <!-- SECCIÃ“N: VENTAS -->
+        <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18 M16 10a4 4 0 0 1-8 0"/></svg> <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg> <span class="sidebar-text">Historial Ventas</span></router-link>
@@ -26,24 +26,24 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v2 M3 5v14a2 2 0 0 0 2 2h16v-5 M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg> <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4 M2 13v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4 M2 9h20 M2 13h20"/></svg> <span class="sidebar-text">Formas de Pago</span></router-link>
 
-        <!-- SECCIÃ“N: LOGÃSTICA -->
-        <div class="nav-section-title">LogÃ­stica</div>
+        <!-- SECCIÓN: LOGÍSTICA -->
+        <div class="nav-section-title">Logística</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">CategorÃ­as</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 2v6h-6 M3 12a9 9 0 0 1 15-6.7L21 8 M3 22v-6h6 M21 12a9 9 0 0 1-15 6.7L3 16"/></svg> <span class="sidebar-text">Movimientos</span></router-link>
 
-        <!-- SECCIÃ“N: COMPRAS -->
+        <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18"/></svg> <span class="sidebar-text">Compras</span></router-link>
 
-        <!-- SECCIÃ“N: GESTIÃ“N -->
-        <div class="nav-section-title">GestiÃ³n</div>
+        <!-- SECCIÓN: GESTIÓN -->
+        <div class="nav-section-title">Gestión</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg> <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span class="sidebar-text">Recordatorios</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar SesiÃ³n</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Area de contenido principal -->
@@ -51,7 +51,7 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">GestiÃ³n de Proveedores</h1>
+            <h1 class="text-title">Gestión de Proveedores</h1>
             <p class="text-subtitle">Registra y administra tus proveedores comerciales</p>
           </div>
           <button @click="openCreateModal" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:6px;">
@@ -61,30 +61,24 @@
         </div>
       </header>
 
-      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
-        <!-- Loader -->
-    <HamsterLoader v-if="loading" label="Cargando proveedores..." />
-      </div>
-
-
       <!-- Seccion de filtros de busqueda -->
       <div class="table-filters card">
-        <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, correo o telÃ©fono..." class="filter-input" />
+        <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, correo o teléfono..." class="filter-input" />
       </div>
 
       <!-- Tabla de datos principal -->
       <div v-if="!loading" class="card font-card">
         <div v-if="!loading && filteredSuppliers.length === 0" class="empty-state">
-          No se encontraron proveedores que coincidan con la bÃºsqueda.
+          No se encontraron proveedores que coincidan con la búsqueda.
         </div>
         <table v-if="!loading && filteredSuppliers.length > 0" class="data-table">
           <thead>
             <tr>
               <th style="width: 50px;">NÂ°</th>
               <th>Nombre del Proveedor</th>
-              <th>TelÃ©fono</th>
+              <th>Teléfono</th>
               <th>Email</th>
-              <th>DirecciÃ³n</th>
+              <th>Dirección</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -116,23 +110,23 @@
           <h2 class="modal-title">{{ isEdit ? 'Editar Proveedor' : 'Registrar Proveedor' }}</h2>
           <form @submit.prevent="saveSupplier" class="grid">
             <div class="field">
-              <label>Nombre Comercial / RazÃ³n Social</label>
+              <label>Nombre Comercial / Razón Social</label>
               <input v-model="form.nombre" type="text" placeholder="Ej. Distribuidora Central" required />
             </div>
 
             <div class="grid grid-2">
               <div class="field">
-                <label>TelÃ©fono de Contacto</label>
+                <label>Teléfono de Contacto</label>
                 <input v-model="form.telefono" type="text" placeholder="987654321" />
               </div>
               <div class="field">
-                <label>Correo ElectrÃ³nico</label>
+                <label>Correo Electrónico</label>
                 <input v-model="form.correo" type="email" placeholder="ventas@distribuidora.com" />
               </div>
             </div>
 
             <div class="field">
-              <label>DirecciÃ³n</label>
+              <label>Dirección</label>
               <input v-model="form.direccion" type="text" placeholder="Av. Principal 456" />
             </div>
 
@@ -152,7 +146,7 @@ import { API_URL } from '../config'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import HamsterLoader from '../components/HamsterLoader.vue'
+
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -237,7 +231,7 @@ const saveSupplier = async () => {
     if (!res.ok) throw new Error('Error al guardar el proveedor.')
 
     showModal.value = false
-    alert(isEdit.value ? 'Â¡Proveedor actualizado!' : 'Â¡Proveedor registrado!')
+    alert(isEdit.value ? '¡Proveedor actualizado!' : '¡Proveedor registrado!')
     fetchSuppliers()
   } catch (err) {
     alert(err.message)
@@ -245,7 +239,7 @@ const saveSupplier = async () => {
 }
 
 const confirmDelete = async (id) => {
-  if (!confirm('Â¿EstÃ¡s seguro de que deseas eliminar este proveedor?')) return
+  if (!confirm('¿Estás seguro de que deseas eliminar este proveedor?')) return
 
   try {
     const res = await fetch(`${API_URL}/api/suppliers/${id}`, {
@@ -257,7 +251,7 @@ const confirmDelete = async (id) => {
 
     if (!res.ok) throw new Error('Error al eliminar el proveedor.')
 
-    alert('Â¡Proveedor eliminado!')
+    alert('¡Proveedor eliminado!')
     fetchSuppliers()
   } catch (err) {
     alert(err.message)

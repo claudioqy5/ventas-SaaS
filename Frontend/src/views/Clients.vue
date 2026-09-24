@@ -8,12 +8,12 @@
         <span class="user-badge">{{ authStore.rolEnEspanol }}</span>
       </div>
             <nav class="nav-links">
-        <!-- SECCIÃ“N: ANÃLISIS -->
-        <div class="nav-section-title">AnÃ¡lisis</div>
+        <!-- SECCIÓN: ANÁLISIS -->
+        <div class="nav-section-title">Análisis</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('dashboard')" to="/dashboard" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg> <span class="sidebar-text">Dashboard</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_negocio')" to="/business-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> <span class="sidebar-text">Historial de Negocio</span></router-link>
 
-        <!-- SECCIÃ“N: VENTAS -->
+        <!-- SECCIÓN: VENTAS -->
         <div class="nav-section-title">Ventas</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('ventas')" to="/pos" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18 M16 10a4 4 0 0 1-8 0"/></svg> <span class="sidebar-text">POS Ventas</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('historial_ventas')" to="/sales-history" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg> <span class="sidebar-text">Historial Ventas</span></router-link>
@@ -26,24 +26,24 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cuentas_cobrar')" to="/credit-sales" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v2 M3 5v14a2 2 0 0 0 2 2h16v-5 M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg> <span class="sidebar-text">Cuentas por Cobrar</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('formas_pago')" to="/payment-methods" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4 M2 13v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4 M2 9h20 M2 13h20"/></svg> <span class="sidebar-text">Formas de Pago</span></router-link>
 
-        <!-- SECCIÃ“N: LOGÃSTICA -->
-        <div class="nav-section-title">LogÃ­stica</div>
+        <!-- SECCIÓN: LOGÍSTICA -->
+        <div class="nav-section-title">Logística</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('productos')" to="/products" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> <span class="sidebar-text">Inventario</span></router-link>
-        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">CategorÃ­as</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="sidebar-text">Categorías</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('movimientos')" to="/stock-movements" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M21 2v6h-6 M3 12a9 9 0 0 1 15-6.7L21 8 M3 22v-6h6 M21 12a9 9 0 0 1-15 6.7L3 16"/></svg> <span class="sidebar-text">Movimientos</span></router-link>
 
-        <!-- SECCIÃ“N: COMPRAS -->
+        <!-- SECCIÓN: COMPRAS -->
         <div class="nav-section-title">Compras</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('proveedores')" to="/suppliers" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Proveedores</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('compras')" to="/purchases" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18"/></svg> <span class="sidebar-text">Compras</span></router-link>
 
-        <!-- SECCIÃ“N: GESTIÃ“N -->
-        <div class="nav-section-title">GestiÃ³n</div>
+        <!-- SECCIÓN: GESTIÓN -->
+        <div class="nav-section-title">Gestión</div>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('clientes')" to="/clients" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg> <span class="sidebar-text">Clientes</span></router-link>
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('reminders')" to="/reminders" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span class="sidebar-text">Recordatorios</span></router-link>
         <router-link v-if="authStore.isSuperadmin || authStore.isEmpresaOwner || authStore.hasPermission('colaboradores')" to="/users" class="nav-item" active-class="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="sidebar-text">Colaboradores</span></router-link>
       </nav>
-      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar SesiÃ³n</span></button>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg> <span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>
 
     <!-- Area de contenido principal -->
@@ -51,7 +51,7 @@
       <header class="content-header">
         <div class="header-flex">
           <div>
-            <h1 class="text-title">GestiÃ³n de Clientes</h1>
+            <h1 class="text-title">Gestión de Clientes</h1>
             <p class="text-subtitle">Registra, edita y analiza el comportamiento de tus clientes</p>
           </div>
           <button v-if="activeTab === 'directorio'" @click="openCreateModal" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:6px;">
@@ -60,12 +60,6 @@
           </button>
         </div>
       </header>
-
-      <div v-if="loading" style="display: flex; justify-content: center; padding: 60px;">
-        <!-- Loader -->
-    <HamsterLoader v-if="loading" label="Cargando clientes..." />
-      </div>
-
 
       <!-- Sistema de Tabs -->
       <div class="tabs-nav">
@@ -77,13 +71,13 @@
       <template v-if="activeTab === 'directorio'">
         <!-- Seccion de filtros de busqueda -->
         <div class="table-filters card">
-          <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, documento, correo o telÃ©fono..." class="filter-input" />
+          <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, documento, correo o teléfono..." class="filter-input" />
         </div>
 
         <!-- Tabla de datos principal -->
         <div v-if="!loading" class="card font-card">
           <div v-if="!loading && filteredClients.length === 0" class="empty-state">
-            No se encontraron clientes que coincidan con la bÃºsqueda.
+            No se encontraron clientes que coincidan con la búsqueda.
           </div>
           <table v-if="!loading && filteredClients.length > 0" class="data-table">
             <thead>
@@ -91,9 +85,9 @@
                 <th style="width: 50px;">NÂ°</th>
                 <th>Nombre</th>
                 <th>Documento (DNI/RUC)</th>
-                <th>TelÃ©fono</th>
+                <th>Teléfono</th>
                 <th>Email</th>
-                <th>DirecciÃ³n</th>
+                <th>Dirección</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -132,8 +126,8 @@
           <div class="inactivos-header">
             <span class="inactivos-icon">ðŸ””</span>
             <div>
-              <h3 class="inactivos-title">Â¡Clientes Inactivos Detectados!</h3>
-              <p class="inactivos-sub">{{ clientesInactivos.length }} cliente(s) no han comprado en mÃ¡s de 30 dÃ­as. EnvÃ­ales un mensaje de reactivaciÃ³n.</p>
+              <h3 class="inactivos-title">¡Clientes Inactivos Detectados!</h3>
+              <p class="inactivos-sub">{{ clientesInactivos.length }} cliente(s) no han comprado en más de 30 días. Envíales un mensaje de reactivación.</p>
             </div>
           </div>
           <div class="inactivos-list">
@@ -141,7 +135,7 @@
               <div class="inactivo-avatar">{{ cli.nombre?.charAt(0).toUpperCase() }}</div>
               <div class="inactivo-info">
                 <span class="inactivo-name">{{ cli.nombre }}</span>
-                <span class="inactivo-days">ðŸ•’ Hace {{ cli.diasDesdeUltimaCompra }} dÃ­as</span>
+                <span class="inactivo-days">ðŸ•’ Hace {{ cli.diasDesdeUltimaCompra }} días</span>
               </div>
               <a v-if="cli.telefono" :href="buildWhatsappReactivacion(cli)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm">ðŸ“± Reactivar</a>
             </div>
@@ -149,9 +143,9 @@
         </div>
 
         <!-- Estado cargando o sin datos -->
-        <div v-if="loadingTop" class="empty-state card">Calculando estadÃ­sticasâ€¦</div>
+        <div v-if="loadingTop" class="empty-state card">Calculando estadísticasâ€¦</div>
         <div v-else-if="topClientes.length === 0" class="empty-state card">
-          â—« AÃºn no hay suficientes datos de compras vinculadas a clientes. Selecciona un cliente en el POS al registrar ventas.
+          â—« Aún no hay suficientes datos de compras vinculadas a clientes. Selecciona un cliente en el POS al registrar ventas.
         </div>
 
         <!-- Buscador de Top Clientes -->
@@ -162,16 +156,16 @@
         <!-- Tabla Resumen de Top Clientes -->
         <div v-if="!loadingTop && topClientes.length > 0" class="card font-card">
           <div v-if="!loading && filteredTopClientes.length === 0" class="empty-state" style="padding: 24px;">
-            No se encontraron clientes que coincidan con la bÃºsqueda.
+            No se encontraron clientes que coincidan con la búsqueda.
           </div>
           <table v-if="!loading && filteredTopClientes.length > 0" class="data-table">
             <thead>
               <tr>
-                <th style="width: 80px;">PosiciÃ³n</th>
+                <th style="width: 80px;">Posición</th>
                 <th>Cliente</th>
                 <th>Total Gastado</th>
                 <th>Compras</th>
-                <th>Ãšltima Compra</th>
+                <th>Última Compra</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -195,14 +189,14 @@
                 <td><strong>{{ cli.numCompras }}</strong> compras</td>
                 <td>
                   <span :class="['status-badge', cli.inactivo ? 'disabled' : 'ok']">
-                    Hace {{ cli.diasDesdeUltimaCompra }} dÃ­as
+                    Hace {{ cli.diasDesdeUltimaCompra }} días
                   </span>
                 </td>
                 <td>
                   <div class="actions-cell" @click.stop>
                     <button @click="openDetailModal(cli)" class="btn btn-primary btn-sm" style="display:inline-flex; align-items:center; gap:4px;">
                       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                      Ver AnÃ¡lisis
+                      Ver Análisis
                     </button>
                     <a v-if="cli.telefono" :href="buildWhatsappPromo(cli)" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-sm">WhatsApp</a>
                   </div>
@@ -212,11 +206,11 @@
           </table>
         </div>
 
-        <!-- Modal de AnÃ¡lisis Detallado de Cliente -->
+        <!-- Modal de Análisis Detallado de Cliente -->
         <div v-if="showDetailModal && selectedClient" class="modal-overlay">
           <div class="modal-card card detail-modal-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
-              <h2 class="modal-title" style="margin-bottom: 0;">AnÃ¡lisis de Cliente</h2>
+              <h2 class="modal-title" style="margin-bottom: 0;">Análisis de Cliente</h2>
               <button @click="showDetailModal = false" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); font-weight: 500;">&times;</button>
             </div>
             
@@ -235,7 +229,7 @@
               </div>
             </div>
 
-            <!-- MÃ©tricas clave -->
+            <!-- Métricas clave -->
             <div class="top-metrics" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; text-align: center; background: var(--bg-app); padding: 16px; border-radius: var(--radius-md);">
               <div class="metric" style="display: flex; flex-direction: column; gap: 4px;">
                 <span class="metric-val" style="font-size: 1.2rem; font-weight: 500; color: var(--text-main);">S/. {{ selectedClient.totalGastado?.toFixed(2) }}</span>
@@ -247,15 +241,15 @@
               </div>
               <div class="metric" style="display: flex; flex-direction: column; gap: 4px;">
                 <span class="metric-val" :class="selectedClient.inactivo ? 'val-danger' : 'val-ok'" style="font-size: 1.2rem; font-weight: 500;">Hace {{ selectedClient.diasDesdeUltimaCompra }}d</span>
-                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase;">Ãšltima compra</span>
+                <span class="metric-lbl" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase;">Última compra</span>
               </div>
             </div>
 
-            <!-- Panel de AnÃ¡lisis en 2 Columnas (GrÃ¡fico a la izquierda, Historial y Productos a la derecha) -->
+            <!-- Panel de Análisis en 2 Columnas (Gráfico a la izquierda, Historial y Productos a la derecha) -->
             <div class="analysis-columns-grid" style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; margin-bottom: 24px; align-items: start;">
               <!-- Columna Izquierda: Tendencia de Compras -->
               <div class="sparkline-wrapper" style="border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md);">
-                <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); margin-bottom: 12px;">â–¸ Tendencia de Compras (Ãšltimos 6 meses)</span>
+                <span class="sparkline-label" style="display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); margin-bottom: 12px;">â–¸ Tendencia de Compras (Últimos 6 meses)</span>
                 <svg class="line-chart-svg" viewBox="0 0 500 150" style="width: 100%; height: 230px; background: transparent; overflow: visible;">
                   <defs>
                     <linearGradient :id="'sparkGrad-' + selectedClient.clienteId" x1="0" y1="0" x2="0" y2="1">
@@ -341,7 +335,7 @@
                         <tr style="background: var(--bg-app);">
                           <th style="padding: 8px; text-align: left;">Fecha y Hora</th>
                           <th style="padding: 8px; text-align: right;">Total</th>
-                          <th style="padding: 8px; text-align: center;">AcciÃ³n</th>
+                          <th style="padding: 8px; text-align: center;">Acción</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -359,7 +353,7 @@
 
                 <!-- Top productos de este cliente -->
                 <div v-if="selectedClient.topProductos?.length > 0" class="top-products" style="margin-bottom: 0; padding-top: 12px; border-top: 1px dashed var(--border-color);">
-                  <p class="top-products-title" style="font-size: 0.82rem; font-weight: 500; color: var(--text-muted); margin-bottom: 10px;">â– Productos mÃ¡s comprados histÃ³ricamente:</p>
+                  <p class="top-products-title" style="font-size: 0.82rem; font-weight: 500; color: var(--text-muted); margin-bottom: 10px;">â– Productos más comprados históricamente:</p>
                   <div class="top-products-list" style="display: flex; flex-wrap: wrap; gap: 6px;">
                     <span v-for="(p, pi) in selectedClient.topProductos" :key="pi" class="product-chip" style="background: #e2e8f0; color: #1e293b; padding: 4px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 500;">
                       {{ p.producto }} <strong style="color: #6366f1;">x{{ p.cantidad }}</strong>
@@ -387,7 +381,7 @@
               <p style="margin: 4px 0;"><strong>ID Venta:</strong> <code>{{ selectedSale.id }}</code></p>
               <p style="margin: 4px 0;"><strong>Fecha y Hora:</strong> {{ formatDate(selectedSale.fechaCreacion) }}</p>
               <p style="margin: 4px 0;"><strong>Atendido por:</strong> {{ selectedSale.creadoPorNombre }}</p>
-              <p style="margin: 4px 0;"><strong>MÃ©todo de Pago:</strong> <span class="badge badge-info">{{ selectedSale.metodoPago }}</span></p>
+              <p style="margin: 4px 0;"><strong>Método de Pago:</strong> <span class="badge badge-info">{{ selectedSale.metodoPago }}</span></p>
               <p style="margin: 4px 0;"><strong>Estado de Venta:</strong> <span class="badge badge-info" style="background-color: #e0f2fe; color: #0369a1;">{{ selectedSale.estadoPago }}</span></p>
             </div>
 
@@ -455,7 +449,7 @@
               </div>
               <div class="field">
                 <label>Apellidos</label>
-                <input v-model="form.apellidos" type="text" placeholder="Ej. PÃ©rez GÃ³mez" required />
+                <input v-model="form.apellidos" type="text" placeholder="Ej. Pérez Gómez" required />
               </div>
             </div>
             <div class="grid grid-2">
@@ -469,26 +463,26 @@
                 </select>
               </div>
               <div class="field">
-                <label>NÃºmero Documento</label>
-                <input v-model="form.numeroDocumento" type="text" placeholder="NÃºmero de documento..." />
+                <label>Número Documento</label>
+                <input v-model="form.numeroDocumento" type="text" placeholder="Número de documento..." />
               </div>
             </div>
 
             <h3 style="font-size: 0.95rem; color: var(--primary); margin-top: 15px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">Contacto</h3>
             <div class="grid grid-2">
               <div class="field">
-                <label>TelÃ©fono de Contacto</label>
+                <label>Teléfono de Contacto</label>
                 <input v-model="form.telefono" type="text" placeholder="987654321" />
               </div>
               <div class="field">
-                <label>Correo ElectrÃ³nico</label>
+                <label>Correo Electrónico</label>
                 <input v-model="form.correo" type="email" placeholder="juan@correo.com" />
               </div>
             </div>
 
             <h3 style="font-size: 0.95rem; color: var(--primary); margin-top: 15px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">Datos de Entrega</h3>
             <div class="field" style="margin-bottom: 15px;">
-              <label>DirecciÃ³n Principal</label>
+              <label>Dirección Principal</label>
               <input v-model="form.direccion" type="text" placeholder="Calle Las Flores 123" />
             </div>
             <div class="grid grid-3" style="grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
@@ -524,15 +518,15 @@
           <div class="grid grid-2" style="gap: 15px; margin-bottom: 20px;">
             <div><strong>Nombres:</strong> {{ selectedProfile.nombres || selectedProfile.nombre || '' }}</div>
             <div><strong>Apellidos:</strong> {{ selectedProfile.apellidos || '' }}</div>
-            <div><strong>TelÃ©fono:</strong> {{ selectedProfile.telefono || '' }}</div>
-            <div><strong>Correo ElectrÃ³nico:</strong> {{ selectedProfile.correo || '' }}</div>
+            <div><strong>Teléfono:</strong> {{ selectedProfile.telefono || '' }}</div>
+            <div><strong>Correo Electrónico:</strong> {{ selectedProfile.correo || '' }}</div>
             <div><strong>Documento:</strong> {{ selectedProfile.tipoDocumento || 'DNI' }} - {{ selectedProfile.numeroDocumento || '' }}</div>
             <div><strong>Cuenta Ecommerce:</strong> 
-              <span v-if="selectedProfile.esUsuarioEcommerce" class="badge badge-info">SÃ­</span>
+              <span v-if="selectedProfile.esUsuarioEcommerce" class="badge badge-info">Sí</span>
               <span v-else class="text-muted">No</span>
             </div>
             <div style="grid-column: span 2;">
-              <strong>DirecciÃ³n de Entrega:</strong> 
+              <strong>Dirección de Entrega:</strong> 
               {{ selectedProfile.direccion || '' }}
               <span v-if="selectedProfile.distrito">, {{ selectedProfile.distrito }}</span>
               <span v-if="selectedProfile.provincia">, {{ selectedProfile.provincia }}</span>
@@ -544,14 +538,14 @@
             <div><strong>Cliente desde:</strong> {{ new Date(selectedProfile.fechaCreacion).toLocaleDateString() }}</div>
             <div>
               <strong>Correo Verificado:</strong> 
-              <span v-if="selectedProfile.correoVerificado" class="badge badge-success" style="background-color: #10b981; color: white;">SÃ­</span>
+              <span v-if="selectedProfile.correoVerificado" class="badge badge-success" style="background-color: #10b981; color: white;">Sí</span>
               <span v-else class="badge badge-warning" style="background-color: #f59e0b; color: white;">No</span>
             </div>
           </div>
           <div class="modal-actions" style="display: flex; justify-content: space-between;">
             <button v-if="selectedProfile.esUsuarioEcommerce && !selectedProfile.correoVerificado" @click="verifyClient(selectedProfile.id)" class="btn btn-primary" style="background-color: #10b981; border: none; display: inline-flex; align-items: center; gap: 4px;">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>Activar Cuenta (Forzar VerificaciÃ³n)</span>
+              <span>Activar Cuenta (Forzar Verificación)</span>
             </button>
             <div style="flex-grow: 1;"></div>
             <button @click="showProfileModal = false" class="btn btn-secondary">Cerrar</button>
@@ -567,7 +561,7 @@ import { API_URL } from '../config'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import HamsterLoader from '../components/HamsterLoader.vue'
+
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -683,7 +677,7 @@ const saveClient = async () => {
     if (!res.ok) throw new Error('Error al guardar el cliente.')
 
     showModal.value = false
-    alert(isEdit.value ? 'Â¡Cliente actualizado!' : 'Â¡Cliente registrado!')
+    alert(isEdit.value ? '¡Cliente actualizado!' : '¡Cliente registrado!')
     fetchClients()
   } catch (err) {
     alert(err.message)
@@ -691,7 +685,7 @@ const saveClient = async () => {
 }
 
 const confirmDelete = async (id) => {
-  if (!confirm('Â¿EstÃ¡s seguro de que deseas eliminar este cliente?')) return
+  if (!confirm('¿Estás seguro de que deseas eliminar este cliente?')) return
 
   try {
     const res = await fetch(`${API_URL}/api/clients/${id}`, {
@@ -703,7 +697,7 @@ const confirmDelete = async (id) => {
 
     if (!res.ok) throw new Error('Error al eliminar el cliente.')
 
-    alert('Â¡Cliente eliminado!')
+    alert('¡Cliente eliminado!')
     fetchClients()
   } catch (err) {
     alert(err.message)
@@ -716,7 +710,7 @@ const openProfileModal = (client) => {
 }
 
 const verifyClient = async (id) => {
-  if (!confirm('Â¿Deseas marcar este correo como verificado manualmente?')) return
+  if (!confirm('¿Deseas marcar este correo como verificado manualmente?')) return
   try {
     const res = await fetch(`${API_URL}/api/clients/${id}/verify`, {
       method: 'PUT',
@@ -783,7 +777,7 @@ const printSaleTicket = (sale) => {
         <p><strong>Fecha:</strong> ${formatDate(sale.fechaCreacion)}</p>
         <p><strong>Cliente:</strong> ${selectedClient.value?.nombre}</p>
         <p><strong>Vendedor:</strong> ${sale.creadoPorNombre}</p>
-        <p><strong>MÃ©todo de Pago:</strong> ${sale.metodoPago}</p>
+        <p><strong>Método de Pago:</strong> ${sale.metodoPago}</p>
         <div class="divider"></div>
         <table>
           <thead>
@@ -822,7 +816,7 @@ const printSaleTicket = (sale) => {
         </table>
         <div class="divider"></div>
         <div class="text-center" style="margin-top: 30px;">
-          <p>Â¡Gracias por su preferencia!</p>
+          <p>¡Gracias por su preferencia!</p>
         </div>
         <${'script'}>
           window.onload = function() {
@@ -885,19 +879,19 @@ const printCompleteClientReport = () => {
             <div class="card-lbl">Total Compras</div>
           </div>
           <div class="card">
-            <div class="card-val">Hace ${client.diasDesdeUltimaCompra} dÃ­as</div>
-            <div class="card-lbl">Ãšltima Compra</div>
+            <div class="card-val">Hace ${client.diasDesdeUltimaCompra} días</div>
+            <div class="card-lbl">Última Compra</div>
           </div>
         </div>
 
-        <h3>â¬¦ Productos MÃ¡s Comprados</h3>
+        <h3>â¬¦ Productos Más Comprados</h3>
         <div style="margin-top: 10px;">
           ${(client.topProductos || []).map(p => `
             <span class="product-chip">${p.producto} (x${p.cantidad})</span>
           `).join('') || '<p>No hay productos registrados.</p>'}
         </div>
 
-        <h3>â–¸ Historial Mensual (Ãšltimos 6 Meses)</h3>
+        <h3>â–¸ Historial Mensual (Últimos 6 Meses)</h3>
         <table>
           <thead>
             <tr>
@@ -922,7 +916,7 @@ const printCompleteClientReport = () => {
               <th>Fecha y Hora</th>
               <th>ID Venta</th>
               <th>Vendedor</th>
-              <th>MÃ©todo Pago</th>
+              <th>Método Pago</th>
               <th>Total</th>
             </tr>
           </thead>
@@ -979,7 +973,7 @@ const openDetailModal = async (client) => {
 const formatDate = (dateStr) => {
   if (!dateStr) return 'N/A'
   const d = new Date(dateStr)
-  // Ajuste de zona horaria para PerÃº (UTC-5)
+  // Ajuste de zona horaria para Perú (UTC-5)
   const local = new Date(d.getTime() - (5 * 60 * 60 * 1000))
   return local.toLocaleDateString('es-PE', {
     day: '2-digit', month: '2-digit', year: 'numeric',
@@ -1047,7 +1041,7 @@ const clientMaxVal = (tendencia) => {
   return Math.max(...tendencia.map(t => t.total), 1)
 }
 
-// Construye los puntos de la lÃ­nea de tendencia del cliente (500x150)
+// Construye los puntos de la línea de tendencia del cliente (500x150)
 const clientChartPoints = (tendencia) => {
   if (!tendencia || tendencia.length === 0) return []
   const maxVal = clientMaxVal(tendencia)
@@ -1086,11 +1080,11 @@ const buildClientChartPath = (tendencia) => {
   return `M ${pts[0].x},120 L ${linePoints} L ${pts[pts.length - 1].x},120 Z`
 }
 
-// Mensaje de WhatsApp para clientes inactivos (reactivaciÃ³n con oferta)
+// Mensaje de WhatsApp para clientes inactivos (reactivación con oferta)
 const buildWhatsappReactivacion = (cli) => {
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
   const productos = (cli.topProductos || []).slice(0, 2).map(p => p.producto).join(' y ')
-  const msg = `Â¡Hola ${cli.nombre}! ðŸ‘‹ Somos *${store}* y te echamos de menos. Tus productos favoritos (${productos || 'nuestros mejores productos'}) te esperan âœ¨ Â¡Ven a visitarnos! â–`
+  const msg = `¡Hola ${cli.nombre}! ðŸ‘‹ Somos *${store}* y te echamos de menos. Tus productos favoritos (${productos || 'nuestros mejores productos'}) te esperan âœ¨ ¡Ven a visitarnos! â–`
   const phone = (cli.telefono || '').replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`
 }
@@ -1099,7 +1093,7 @@ const buildWhatsappReactivacion = (cli) => {
 const buildWhatsappPromo = (cli) => {
   const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
   const productos = (cli.topProductos || []).slice(0, 2).map(p => p.producto).join(', ')
-  const msg = `Â¡Hola ${cli.nombre}! ðŸ”¶ Tenemos novedades y ofertas especiales en *${store}*. ${productos ? `Recordamos que acostumbras llevar: ${productos}.` : ''} Â¡Te esperamos! â–`
+  const msg = `¡Hola ${cli.nombre}! ðŸ”¶ Tenemos novedades y ofertas especiales en *${store}*. ${productos ? `Recordamos que acostumbras llevar: ${productos}.` : ''} ¡Te esperamos! â–`
   const phone = (cli.telefono || '').replace(/[^0-9]/g, '')
   return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`
 }
@@ -1418,7 +1412,7 @@ onMounted(() => {
   color: var(--text-muted);
 }
 
-/* â”€â”€ MÃ©tricas â”€â”€ */
+/* â”€â”€ Métricas â”€â”€ */
 .top-metrics {
   display: flex;
   gap: 0;
@@ -1511,7 +1505,7 @@ onMounted(() => {
   color: #1e40af;
 }
 
-/* â”€â”€ BotÃ³n WhatsApp pequeÃ±o â”€â”€ */
+/* â”€â”€ Botón WhatsApp pequeño â”€â”€ */
 .btn-whatsapp-sm {
   display: inline-flex;
   align-items: center;
