@@ -385,6 +385,13 @@
                     Colaboradores
                   </span>
                 </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" value="libro_reclamaciones" v-model="form.permisos" />
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Libro de Reclamaciones
+                  </span>
+                </label>
               </div>
             </div>
 
@@ -511,7 +518,7 @@ const openCreateModal = () => {
   form.correo = ''
   form.clave = ''
   form.rol = authStore.isSuperadmin ? 'EmpresaOwner' : 'Employee'
-  form.permisos = authStore.isSuperadmin ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders', 'cuentas_cobrar', 'formas_pago', 'colaboradores', 'pedidos_web', 'chats_bot'] : ['ventas', 'productos']
+  form.permisos = authStore.isSuperadmin ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders', 'cuentas_cobrar', 'formas_pago', 'colaboradores', 'pedidos_web', 'chats_bot', 'libro_reclamaciones'] : ['ventas', 'productos']
   form.activo = true
   form.nombreTienda = ''
   form.empresaId = ''
@@ -549,7 +556,8 @@ const formatPermissionName = (perm) => {
     'chats_bot': 'Chats IA',
     'cuentas_cobrar': 'Cuentas por Cobrar',
     'formas_pago': 'Formas de Pago',
-    'colaboradores': 'Colaboradores'
+    'colaboradores': 'Colaboradores',
+    'libro_reclamaciones': 'Libro Reclamaciones'
   }
   return mapping[perm] || perm
 }
