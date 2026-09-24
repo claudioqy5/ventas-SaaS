@@ -526,23 +526,23 @@ const openEditModal = (user) => {
 
 const formatPermissionName = (perm) => {
   const mapping = {
-    'dashboard': 'â—« Dashboard',
-    'historial_negocio': 'â–¸ Historial Negocio',
-    'ventas': 'â– POS Ventas',
-    'productos': 'â¬¦ Productos',
+    'dashboard': 'Dashboard',
+    'historial_negocio': 'Historial Negocio',
+    'ventas': 'POS Ventas',
+    'productos': 'Productos',
     'categorias': 'Categorías',
-    'clientes': 'âš‡ Clientes',
-    'proveedores': 'âŒ‚ Proveedores',
-    'compras': 'âœ§ Compras',
-    'reminders': 'â—¦ Recordatorios',
-    'movimientos': 'âŸ³ Movimientos',
-    'modificar_productos': 'âœï¸ Editar Prod.',
-    'historial_ventas': 'â‰¡ Historial Ventas',
-    'pedidos_web': 'ðŸ“¦ Pedidos',
-    'chats_bot': 'ðŸ’¬ Chats IA',
-    'cuentas_cobrar': 'â–« Cuentas por Cobrar',
-    'formas_pago': 'â–ª Formas de Pago',
-    'colaboradores': 'âš‡ Colaboradores'
+    'clientes': 'Clientes',
+    'proveedores': 'Proveedores',
+    'compras': 'Compras',
+    'reminders': 'Recordatorios',
+    'movimientos': 'Movimientos',
+    'modificar_productos': 'Editar Prod.',
+    'historial_ventas': 'Historial Ventas',
+    'pedidos_web': 'Pedidos',
+    'chats_bot': 'Chats IA',
+    'cuentas_cobrar': 'Cuentas por Cobrar',
+    'formas_pago': 'Formas de Pago',
+    'colaboradores': 'Colaboradores'
   }
   return mapping[perm] || perm
 }
