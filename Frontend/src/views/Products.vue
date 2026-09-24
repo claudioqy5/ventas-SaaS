@@ -244,6 +244,7 @@
           <Teleport to="body">
             <div 
               v-if="showAttributeFilterDropdown" 
+              ref="attrTeleportRef"
               class="attr-dropdown-teleport"
               @click.stop 
               :style="attrDropdownStyle"
@@ -1328,7 +1329,10 @@ const handleClickOutsideCategoryDropdown = (e) => {
   if (categoryDropdownRef.value && !categoryDropdownRef.value.contains(e.target)) {
     showCategoryDropdown.value = false;
   }
-  if (attributeFilterDropdownRef.value && !attributeFilterDropdownRef.value.contains(e.target)) {
+  // The attribute filter dropdown is teleported to <body>, so we must also check attrTeleportRef
+  const insideTrigger = attributeFilterDropdownRef.value && attributeFilterDropdownRef.value.contains(e.target);
+  const insidePanel = attrTeleportRef.value && attrTeleportRef.value.contains(e.target);
+  if (!insideTrigger && !insidePanel) {
     showAttributeFilterDropdown.value = false;
   }
 };
@@ -1469,6 +1473,7 @@ const selectedCategory = ref('')
 const selectedAttributes = ref([])
 const showAttributeFilterDropdown = ref(false)
 const attributeFilterDropdownRef = ref(null)
+const attrTeleportRef = ref(null) // ref for the teleported dropdown panel (rendered at body level)
 
 const toggleAttributeFilter = (attrKey) => {
   if (selectedAttributes.value.includes(attrKey)) {

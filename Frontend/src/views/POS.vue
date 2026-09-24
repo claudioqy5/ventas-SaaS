@@ -563,73 +563,164 @@
     </aside>
   </div>
 
-  <!-- Modal de venta exitosa con opción de WhatsApp y Comprobante Térmico -->
+  <!-- Modal de confirmación de venta exitosa con opción de WhatsApp y Comprobante Térmico -->
   <div v-if="showSuccessModal" class="modal-overlay" style="z-index: 2000;">
     <div class="modal-card card success-modal">
-      <div class="success-icon">🎉</div>
-      <h2 class="modal-title" style="text-align:center;">
+      <!-- Botón de cerrar superior derecho -->
+      <button @click="showSuccessModal = false" class="modal-close-icon-btn" title="Cerrar modal" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Icono SVG animado (Sin emojis) -->
+      <div class="success-icon-wrapper" :class="{ 'pending': isTicketGenerated }">
+        <svg v-if="!isTicketGenerated" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <svg v-else width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </div>
+
+      <!-- Título de confirmación -->
+      <h2 class="modal-title success-modal-title">
         {{ isTicketGenerated ? '¡Ticket de Pago Generado!' : '¡Venta Exitosa!' }}
       </h2>
-      <div class="success-code" style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 12px;">
-        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">
-          {{ isTicketGenerated ? 'TICKET PENDIENTE' : lastSaleVoucherType }}
+
+      <!-- Detalle del Comprobante y Código -->
+      <div class="success-voucher-container">
+        <span class="voucher-type-label">
+          {{ isTicketGenerated ? 'Ticket Pendiente' : lastSaleVoucherType }}
         </span>
-        <strong style="font-size: 1.3rem; color: var(--text-main); letter-spacing: 0.05em;">{{ lastSaleCode }}</strong>
-        <span v-if="!isTicketGenerated && lastSaleVoucherType !== 'Nota de Venta'" style="font-size: 0.72rem; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
-          🏛️ Estructura lista para SUNAT
+        <div class="voucher-number-badge">
+          {{ lastSaleCode }}
+        </div>
+
+        <!-- Badges de Estado con SVG (Sin emojis) -->
+        <span v-if="!isTicketGenerated && lastSaleVoucherType !== 'Nota de Venta'" class="voucher-status-pill sunat">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 12 11 14 15 10"></polyline>
+          </svg>
+          Estructura lista para SUNAT
         </span>
-        <span v-else-if="!isTicketGenerated" style="font-size: 0.72rem; background: #ecfdf5; color: #059669; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
-          📝 Control Interno
+        <span v-else-if="!isTicketGenerated" class="voucher-status-pill internal">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          Control Interno
         </span>
-        <span v-else style="font-size: 0.72rem; background: #fef08a; color: #854d0e; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
-          ⏳ Esperando Pago MP
+        <span v-else class="voucher-status-pill pending">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          Esperando Pago Mercado Pago
         </span>
       </div>
 
-      <div class="success-summary">
-        <div v-for="item in lastSaleCart" :key="item.productoId" class="success-item">
-          <span>{{ item.nombreProducto }}</span>
-          <span>
-            x{{ item.presentacion === 'Costal' ? `${item.cantidad} costal(es)` : `${item.cantidad} ${item.unidadMedida}` }} 
-            — S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}
-          </span>
+      <!-- Resumen tipo Ticket de Productos -->
+      <div class="receipt-summary-box">
+        <div v-if="lastSaleClientName" class="receipt-client-info">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Cliente:</span>
+          <strong>{{ lastSaleClientName }}</strong>
         </div>
-        <div class="success-total-row">
-          <span>Total Cobrado</span>
-          <span>S/. {{ lastSaleTotal.toFixed(2) }}</span>
+
+        <div class="receipt-items-list">
+          <div v-for="item in lastSaleCart" :key="item.productoId" class="receipt-item-row">
+            <span class="receipt-item-title" :title="item.nombreProducto">{{ item.nombreProducto }}</span>
+            <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+              <span class="receipt-item-qty">
+                x{{ item.presentacion === 'Costal' ? `${item.cantidad} costal(es)` : `${item.cantidad} ${item.unidadMedida}` }}
+              </span>
+              <span class="receipt-item-price">
+                S/. {{ (item.precioUnitario * item.cantidad).toFixed(2) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="receipt-total-row">
+          <span class="receipt-total-label">Total Cobrado</span>
+          <span class="receipt-total-amount">S/. {{ lastSaleTotal.toFixed(2) }}</span>
         </div>
       </div>
 
-      <div v-if="isTicketGenerated && mpTicketLink" style="margin-top: 15px; margin-bottom: 15px; padding: 15px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: center;">
-        <p style="font-size: 0.85rem; color: #1e3a8a; margin-bottom: 10px; font-weight: 600;">Enlace de Pago Mercado Pago:</p>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <input type="text" :value="mpTicketLink" readonly style="flex: 1; padding: 8px; border: 1px solid #bfdbfe; border-radius: 4px; font-size: 0.8rem; background: white;" />
-          <button @click="copyTicketLink" class="btn btn-primary" style="padding: 8px; border: none; flex-shrink: 0;" title="Copiar Enlace">
-            📋 Copiar
+      <!-- Enlace Mercado Pago si aplica -->
+      <div v-if="isTicketGenerated && mpTicketLink" class="mp-ticket-box">
+        <div class="mp-ticket-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+          <span>Enlace de Pago Mercado Pago:</span>
+        </div>
+        <div class="mp-ticket-input-row">
+          <input type="text" :value="mpTicketLink" readonly class="mp-ticket-input" />
+          <button @click="copyTicketLink" class="btn-mp-copy" :class="{ 'copied': ticketCopied }" :title="ticketCopied ? '¡Enlace copiado!' : 'Copiar enlace'" type="button">
+            <svg v-if="!ticketCopied" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>{{ ticketCopied ? 'Copiado' : 'Copiar' }}</span>
           </button>
         </div>
       </div>
 
-      <div class="success-actions" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%;">
-          <button v-if="!isTicketGenerated" @click="printTicket" class="btn btn-primary" style="background: #2563eb; border: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
-            🖨️ Imprimir Ticket
+      <!-- Botones de Acción con SVGs (Sin emojis) -->
+      <div class="success-actions-container">
+        <div class="success-actions-grid">
+          <!-- Botón Imprimir Ticket -->
+          <button v-if="!isTicketGenerated" @click="printTicket" class="btn-modal-action btn-action-print" type="button">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            <span>Imprimir Ticket</span>
           </button>
+
+          <!-- Botón WhatsApp (con teléfono) -->
           <a
             v-if="lastClientPhone"
             :href="whatsappUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="btn btn-whatsapp"
-            style="display: flex; align-items: center; justify-content: center; gap: 6px;"
+            class="btn-modal-action btn-action-whatsapp"
           >
-            📱 WhatsApp
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+            </svg>
+            <span>WhatsApp</span>
           </a>
-          <button v-else disabled class="btn btn-secondary" style="opacity: 0.6; font-size: 0.8rem;" title="El cliente no tiene teléfono registrado">
-            📱 Sin WhatsApp
+
+          <!-- Botón Sin WhatsApp (sin teléfono) -->
+          <button v-else disabled class="btn-modal-action btn-action-disabled" title="El cliente no tiene teléfono registrado" type="button">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+            <span>Sin WhatsApp</span>
           </button>
         </div>
-        <button @click="showSuccessModal = false" class="btn btn-secondary w-full" style="margin-top: 4px;">Cerrar</button>
+
+        <!-- Botón Cerrar -->
+        <button @click="showSuccessModal = false" class="btn-modal-action btn-action-close" type="button">
+          <span>Cerrar</span>
+        </button>
       </div>
     </div>
   </div>
@@ -707,6 +798,7 @@ const lastSaleTotal = ref(0)
 const lastClientPhone = ref('')
 const isTicketGenerated = ref(false)
 const mpTicketLink = ref('')
+const ticketCopied = ref(false)
 
 watch([searchQuery, selectedCategory], () => {
   currentPage.value = 1
@@ -1486,7 +1578,10 @@ const generateTicket = async () => {
 const copyTicketLink = async () => {
   try {
     await navigator.clipboard.writeText(mpTicketLink.value)
-    alert("¡Enlace copiado al portapapeles!")
+    ticketCopied.value = true
+    setTimeout(() => {
+      ticketCopied.value = false
+    }, 2200)
   } catch (e) {
     alert("No se pudo copiar el enlace.")
   }
@@ -2427,27 +2522,85 @@ onUnmounted(() => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 16px;
   z-index: 2000;
+  animation: fadeInOverlay 0.2s ease-out;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .success-modal {
-  max-width: 480px;
-  width: 90%;
-  padding: 30px;
+  position: relative;
+  max-width: 440px;
+  width: 100%;
+  padding: 28px 24px 22px;
   background: #ffffff;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  border-radius: 18px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
   text-align: center;
+  animation: popInModal 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
 }
 
-.success-icon {
-  font-size: 3.5rem;
+@keyframes popInModal {
+  from { transform: scale(0.93) translateY(8px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Close Icon Button top right */
+.modal-close-icon-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  padding: 0;
+}
+.modal-close-icon-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* Top Icon Wrapper (No emojis) */
+.success-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  color: #059669;
+  border: 4px solid #f0fdf4;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15), 0 8px 16px rgba(16, 185, 129, 0.1);
   margin-bottom: 12px;
   animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.success-icon-wrapper.pending {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #d97706;
+  border-color: #fffbeb;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15), 0 8px 16px rgba(217, 119, 6, 0.1);
 }
 
 @keyframes pop-in {
@@ -2455,48 +2608,300 @@ onUnmounted(() => {
   to   { transform: scale(1);   opacity: 1; }
 }
 
-.success-code {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  margin-bottom: 20px;
+.success-modal-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
 }
 
-.success-summary {
-  background: var(--bg-app);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  margin-bottom: 24px;
-  text-align: left;
+/* Voucher block */
+.success-voucher-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 16px;
+}
+
+.voucher-type-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.voucher-number-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 4px 14px;
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: 0.03em;
+}
+
+.voucher-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  margin-top: 2px;
+}
+
+.voucher-status-pill.sunat {
+  background: #e0f2fe;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+}
+
+.voucher-status-pill.internal {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.voucher-status-pill.pending {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+/* Receipt box */
+.receipt-summary-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.receipt-client-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  color: #64748b;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.receipt-items-list {
+  max-height: 110px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 2px;
+}
+
+.receipt-items-list::-webkit-scrollbar {
+  width: 4px;
+}
+.receipt-items-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.receipt-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  color: #334155;
+}
+
+.receipt-item-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 8px;
+  font-weight: 500;
+}
+
+.receipt-item-qty {
+  font-size: 0.72rem;
+  color: #64748b;
+  background: #e2e8f0;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.receipt-item-price {
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.receipt-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.receipt-total-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.receipt-total-amount {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* Mercado Pago link box */
+.mp-ticket-box {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.mp-ticket-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1e40af;
+  margin-bottom: 6px;
+}
+
+.mp-ticket-input-row {
+  display: flex;
+  align-items: center;
   gap: 8px;
 }
 
-.success-item {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.88rem;
-  color: var(--text-muted);
+.mp-ticket-input {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  background: #ffffff;
+  color: #1e3a8a;
+  outline: none;
 }
 
-.success-total-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-main);
-  border-top: 1px dashed var(--border-color);
-  padding-top: 10px;
-  margin-top: 6px;
+.btn-mp-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-mp-copy:hover {
+  background: #1d4ed8;
+}
+.btn-mp-copy.copied {
+  background: #059669;
 }
 
-.success-actions {
+/* Action buttons */
+.success-actions-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  width: 100%;
 }
 
-/* ── WhatsApp button ── */
+.success-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.btn-modal-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.btn-action-print {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+}
+.btn-action-print:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+}
+
+.btn-action-whatsapp {
+  background: #25d366;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 6px rgba(37, 211, 102, 0.25);
+}
+.btn-action-whatsapp:hover {
+  background: #20ba5a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.35);
+}
+
+.btn-action-disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 1px solid #e2e8f0;
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.btn-action-close {
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  width: 100%;
+}
+.btn-action-close:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+/* ── Fallback WhatsApp button ── */
 .btn-whatsapp {
   display: flex;
   align-items: center;

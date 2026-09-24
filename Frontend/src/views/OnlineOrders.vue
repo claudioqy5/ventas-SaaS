@@ -214,6 +214,17 @@
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                   </button>
+                  <!-- Botón Enviar Comprobante por WhatsApp -->
+                  <button
+                    v-if="order.estadoOrden !== 'PENDIENTE_PAGO' && order.estadoOrden !== 'CANCELADO'"
+                    @click="sendOrderVoucherWhatsApp(order)"
+                    class="btn-action-icon whatsapp"
+                    title="Enviar comprobante por WhatsApp"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                    </svg>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -336,7 +347,27 @@
             El cliente aún no ha enviado el comprobante de pago por WhatsApp.
           </div>
 
-          <footer style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+          <footer style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
+            <button
+              v-if="selectedOrder.estadoOrden !== 'PENDIENTE_PAGO' && selectedOrder.estadoOrden !== 'CANCELADO'"
+              @click="sendOrderVoucherWhatsApp(selectedOrder)"
+              class="btn"
+              style="background: #25d366; color: white; display: flex; align-items: center; gap: 6px; font-weight: 600; padding: 8px 14px; border-radius: 8px; border: none;"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              <span>Enviar Comprobante WhatsApp</span>
+            </button>
+            <button
+              v-if="selectedOrder.estadoOrden !== 'PENDIENTE_PAGO' && selectedOrder.estadoOrden !== 'CANCELADO'"
+              @click="printOrderTicket(selectedOrder)"
+              class="btn"
+              style="background: #2563eb; color: white; display: flex; align-items: center; gap: 6px; font-weight: 600; padding: 8px 14px; border-radius: 8px; border: none;"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+              <span>Imprimir Ticket</span>
+            </button>
             <button
               v-if="selectedOrder.estadoOrden !== 'CANCELADO' && selectedOrder.estadoOrden !== 'ENTREGADO'"
               @click="openStatusModal(selectedOrder); selectedOrder = null"
@@ -496,6 +527,41 @@
                   <input v-model="statusModal.clienteDireccion" type="text" placeholder="Av. Principal #123" class="form-input-styled" />
                 </div>
               </div>
+
+              <!-- Envío de Comprobante por WhatsApp -->
+              <div class="whatsapp-dispatch-card" style="margin-top: 14px; padding: 12px 14px; background: #ffffff; border: 1px solid #86efac; border-radius: 8px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                  <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.86rem; color: #166534; cursor: pointer; user-select: none;">
+                    <input type="checkbox" v-model="statusModal.enviarWhatsApp" style="width: 16px; height: 16px; accent-color: #25d366;" />
+                    <span style="display: inline-flex; align-items: center; gap: 6px;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="#25d366"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                      Enviar comprobante por WhatsApp al confirmar
+                    </span>
+                  </label>
+                  <span style="font-size: 0.72rem; color: #15803d; background: #dcfce7; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
+                    Automático
+                  </span>
+                </div>
+
+                <div v-if="statusModal.enviarWhatsApp" style="margin-top: 10px;">
+                  <label class="form-label" style="color: #166534; font-size: 0.78rem;">Número de WhatsApp del Cliente:</label>
+                  <div style="display: flex; gap: 8px; align-items: center;">
+                    <div style="position: relative; flex: 1;">
+                      <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.85rem; color: #64748b; font-weight: 600;">+51</span>
+                      <input
+                        v-model="statusModal.whatsAppCliente"
+                        type="text"
+                        placeholder="Ej: 987654321"
+                        class="form-input-styled"
+                        style="padding-left: 42px; background: white; border-color: #86efac;"
+                      />
+                    </div>
+                    <span v-if="statusModal.order?.whatsAppCliente" style="font-size: 0.74rem; color: #16a34a; white-space: nowrap;">
+                      ✓ Detectado del pedido
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -541,6 +607,83 @@
               <span>{{ updatingStatus ? 'Guardando cambios...' : 'Confirmar Cambio de Estado' }}</span>
             </button>
           </footer>
+        </div>
+      </div>
+
+      <!-- Modal: Confirmación de Venta y Envío por WhatsApp -->
+      <div v-if="voucherSuccessModal.visible" class="modal-overlay" style="z-index: 2100;">
+        <div class="modal-content card" style="position: relative; max-width: 480px; width: 92%; padding: 26px 24px; text-align: center; border-radius: 18px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+          <!-- Botón cerrar X -->
+          <button @click="voucherSuccessModal.visible = false" class="close-btn" style="position: absolute; top: 14px; right: 14px;" type="button">×</button>
+
+          <!-- Icono SVG de éxito -->
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); color: #059669; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; border: 4px solid #f0fdf4; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+
+          <h3 style="margin: 0 0 4px; font-size: 1.3rem; font-weight: 700; color: #0f172a;">¡Comprobante Generado!</h3>
+          <p style="margin: 0 0 16px; font-size: 0.85rem; color: #64748b;">
+            El pedido <strong>#{{ voucherSuccessModal.order?.id?.slice(-8).toUpperCase() }}</strong> pasó a <strong>En Preparación</strong> y la venta quedó registrada.
+          </p>
+
+          <!-- Tarjeta de comprobante generado -->
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; margin-bottom: 16px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.8rem; font-weight: 600; color: #64748b; text-transform: uppercase;">
+                {{ voucherSuccessModal.order?.tipoComprobante || 'Comprobante' }}
+              </span>
+              <span style="font-family: monospace; font-size: 1.05rem; font-weight: 700; color: #1e293b; background: #e2e8f0; padding: 2px 8px; border-radius: 6px;">
+                {{ voucherSuccessModal.order?.numeroComprobante || `#${voucherSuccessModal.order?.id?.slice(-8).toUpperCase()}` }}
+              </span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #475569; margin-bottom: 4px;">
+              <span>Cliente:</span>
+              <strong>{{ voucherSuccessModal.order?.nombreCliente }}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; font-weight: 700; color: #0f172a; border-top: 1px dashed #cbd5e1; padding-top: 8px; margin-top: 8px;">
+              <span>Total Cobrado:</span>
+              <span style="font-size: 1.15rem; color: #059669;">S/. {{ Number(voucherSuccessModal.order?.total || 0).toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <!-- Acciones principales -->
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <a
+              :href="voucherSuccessModal.whatsappUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn"
+              style="display: flex; align-items: center; justify-content: center; gap: 8px; background: #25d366; color: white; padding: 11px 16px; font-weight: 600; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+              </svg>
+              <span>Enviar por WhatsApp</span>
+            </a>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button
+                @click="printOrderTicket(voucherSuccessModal.order)"
+                class="btn"
+                style="display: flex; align-items: center; justify-content: center; gap: 6px; background: #2563eb; color: white; padding: 10px; font-weight: 600; border-radius: 8px; border: none;"
+                type="button"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                <span>Imprimir Ticket</span>
+              </button>
+
+              <button
+                @click="voucherSuccessModal.visible = false"
+                class="btn btn-secondary"
+                style="padding: 10px; border-radius: 8px;"
+                type="button"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -589,7 +732,16 @@ const statusModal = ref({
   clienteTipoDocumento: '-',
   clienteNumeroDocumento: '',
   clienteRazonSocial: '',
-  clienteDireccion: ''
+  clienteDireccion: '',
+  enviarWhatsApp: true,
+  whatsAppCliente: ''
+})
+
+const voucherSuccessModal = ref({
+  visible: false,
+  order: null,
+  whatsappUrl: '',
+  phone: ''
 })
 
 const fetchOrders = async () => {
@@ -735,23 +887,182 @@ const openDetail = (order) => {
 }
 
 const openStatusModal = (order) => {
+  const defaultDocType = order.rucFactura ? '6' : (order.dniReceptor ? (order.dniReceptor.length === 11 ? '6' : '1') : '-')
+  const defaultDocNum = order.rucFactura || order.dniReceptor || order.clienteNumeroDocumento || ''
+  const defaultName = order.razonSocialFactura || order.clienteRazonSocial || order.nombreCliente || ''
+  const defaultAddress = order.direccionFiscalFactura || order.clienteDireccion || order.direccionEntrega || ''
+
   statusModal.value = { 
     visible: true, 
     order, 
     selected: '', 
     numeroSeguimiento: '',
-    tipoComprobante: 'Nota de Venta',
-    clienteTipoDocumento: order.dniReceptor ? (order.dniReceptor.length === 11 ? '6' : '1') : '-',
-    clienteNumeroDocumento: order.dniReceptor || '',
-    clienteRazonSocial: order.nombreCliente || '',
-    clienteDireccion: order.direccionEntrega || ''
+    tipoComprobante: order.tipoComprobante || 'Boleta',
+    clienteTipoDocumento: defaultDocType,
+    clienteNumeroDocumento: defaultDocNum,
+    clienteRazonSocial: defaultName,
+    clienteDireccion: defaultAddress,
+    enviarWhatsApp: true,
+    whatsAppCliente: order.whatsAppCliente || order.clienteTelefono || order.telefonoCliente || ''
   }
+}
+
+const getWhatsAppVoucherUrl = (order, phoneOverride = '') => {
+  if (!order) return '#'
+  const store = authStore.user?.nombreEmpresa || 'Nuestra Tienda'
+  let rawPhone = phoneOverride || order.whatsAppCliente || order.clienteTelefono || order.telefonoCliente || ''
+  let phone = String(rawPhone).replace(/[^0-9]/g, '')
+  if (phone.length === 9) phone = '51' + phone
+
+  const orderId = order.id ? order.id.slice(-8).toUpperCase() : ''
+  const voucherType = order.tipoComprobante || 'Comprobante'
+  const voucherNum = order.numeroComprobante || `#${orderId}`
+  const total = Number(order.total || 0).toFixed(2)
+
+  let itemsText = ''
+  if (order.detalles && order.detalles.length > 0) {
+    itemsText = order.detalles.map(item => {
+      const subtotal = ((item.cantidad || 1) * (item.precioUnitario || 0)).toFixed(2)
+      return `• ${item.nombreProducto} x${item.cantidad} = S/. ${subtotal}`
+    }).join('\n')
+  }
+
+  let pdfText = ''
+  if (order.sunatPdfUrl) {
+    const fullUrl = order.sunatPdfUrl.startsWith('http') ? order.sunatPdfUrl : `${API_URL}${order.sunatPdfUrl.startsWith('/') ? '' : '/'}${order.sunatPdfUrl}`;
+    pdfText = `\n\n📄 *Descargar Comprobante:* ${fullUrl}`
+  }
+
+  const message = `¡Hola, *${order.nombreCliente || 'Estimado(a) Cliente'}*! 👋\n` +
+    `Confirmamos que tu pedido *#${orderId}* ya está *En Preparación* en *${store}*.\n\n` +
+    `🧾 *Comprobante:* ${voucherType}\n` +
+    `🔢 *N°:* ${voucherNum}\n` +
+    `💰 *Total Cobrado:* S/. ${total}\n\n` +
+    `📦 *Detalle de productos:*\n${itemsText}${pdfText}\n\n` +
+    `¡Muchas gracias por tu preferencia! Estaremos notificándote en cuanto sea despachado. 🚚`
+
+  return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`
+}
+
+const sendOrderVoucherWhatsApp = (order) => {
+  if (!order) return
+  let phone = order.whatsAppCliente || order.clienteTelefono || order.telefonoCliente || ''
+  if (!phone) {
+    const input = prompt('Ingresa el número de WhatsApp del cliente (+51):', '')
+    if (!input) return
+    phone = input.trim()
+  }
+  const url = getWhatsAppVoucherUrl(order, phone)
+  window.open(url, '_blank')
+}
+
+const printOrderTicket = (order) => {
+  if (!order) return
+  const printWindow = window.open('', '_blank', 'width=450,height=600')
+  const store = authStore.user?.nombreEmpresa || 'VentasSaaS'
+  const fecha = new Date(order.fechaCreacion || Date.now()).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'medium' })
+  const subtotal = ((order.total || 0) / 1.18).toFixed(2)
+  const igv = ((order.total || 0) - Number(subtotal)).toFixed(2)
+
+  const voucherTitle = order.tipoComprobante === 'Factura'
+    ? 'FACTURA ELECTRÓNICA'
+    : (order.tipoComprobante === 'Boleta' ? 'BOLETA DE VENTA ELECTRÓNICA' : 'NOTA DE VENTA')
+
+  const docLabel = order.clienteTipoDocumento === '6' || order.tipoComprobante === 'Factura' ? 'RUC' : 'DNI/Doc'
+  const code = order.numeroComprobante || `#${order.id?.slice(-8).toUpperCase()}`
+
+  const html = `
+    <html>
+      <head>
+        <title>${voucherTitle}_${code}</title>
+        <style>
+          @page { margin: 0; }
+          body { font-family: 'Courier New', Courier, monospace; padding: 15px; color: #000; font-size: 12px; width: 280px; margin: auto; }
+          .text-center { text-align: center; }
+          .text-right { text-align: right; }
+          .bold { font-weight: bold; }
+          .divider { border-top: 1px dashed #000; margin: 8px 0; }
+          table { width: 100%; border-collapse: collapse; font-size: 11px; }
+          th, td { padding: 3px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="text-center">
+          <h2 style="margin: 0; font-size: 16px;">${store}</h2>
+          <p style="margin: 2px 0; font-size: 11px;">PEDIDO ONLINE</p>
+          <div class="divider"></div>
+          <p class="bold" style="margin: 4px 0; font-size: 13px;">${voucherTitle}</p>
+          <p class="bold" style="margin: 2px 0; font-size: 13px;">${code}</p>
+        </div>
+        <div class="divider"></div>
+        <p style="margin: 2px 0;"><strong>Fecha:</strong> ${fecha}</p>
+        <p style="margin: 2px 0;"><strong>Cliente:</strong> ${order.nombreCliente || 'Cliente General'}</p>
+        ${order.clienteNumeroDocumento ? `<p style="margin: 2px 0;"><strong>${docLabel}:</strong> ${order.clienteNumeroDocumento}</p>` : ''}
+        ${order.direccionEntrega ? `<p style="margin: 2px 0;"><strong>Entrega:</strong> ${order.direccionEntrega}</p>` : ''}
+        <div class="divider"></div>
+        <table>
+          <thead>
+            <tr>
+              <th align="left">Cant.</th>
+              <th align="left">Descripción</th>
+              <th align="right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${(order.detalles || []).map(i => `
+              <tr>
+                <td valign="top">${i.cantidad}</td>
+                <td valign="top">${i.nombreProducto}</td>
+                <td valign="top" align="right">S/. ${((i.cantidad || 1) * (i.precioUnitario || 0)).toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="divider"></div>
+        <div class="text-right">
+          <p style="margin: 2px 0;">Op. Gravada: S/. ${subtotal}</p>
+          <p style="margin: 2px 0;">IGV (18%): S/. ${igv}</p>
+          <h3 style="margin: 5px 0; font-size: 15px;">TOTAL: S/. ${Number(order.total || 0).toFixed(2)}</h3>
+        </div>
+        <div class="divider"></div>
+        <div class="text-center" style="font-size: 10px; margin-top: 10px;">
+          <p style="margin: 2px 0;">¡Gracias por su compra!</p>
+        </div>
+      </body>
+    </html>
+  `
+  printWindow.document.write(html)
+  printWindow.document.close()
+  setTimeout(() => {
+    printWindow.focus()
+    printWindow.print()
+    printWindow.close()
+  }, 250)
 }
 
 const confirmStatusUpdate = async () => {
   if (!statusModal.value.selected || !statusModal.value.order) return
+
+  // Confirmación del navegador antes de cancelar
+  if (statusModal.value.selected === 'CANCELADO') {
+    const orderId = statusModal.value.order?.id?.slice(-8).toUpperCase()
+    const confirmed = window.confirm(
+      `¿Estás seguro de que deseas cancelar el pedido #${orderId}?\n\n` +
+      `• Esta acción NO se puede revertir una vez confirmada.\n` +
+      `• El pedido quedará anulado.\n` +
+      `• El stock de los productos será restaurado automáticamente al inventario si ya había sido descontado.`
+    )
+    if (!confirmed) {
+      return
+    }
+  }
+
   updatingStatus.value = true
   try {
+    const isEnPreparacion = statusModal.value.selected === 'EN_PREPARACION'
+    const targetWhatsApp = statusModal.value.whatsAppCliente
+    const shouldSendWA = statusModal.value.enviarWhatsApp
+
     const res = await fetch(`${API_URL}/api/sales/${statusModal.value.order.id}/order-status`, {
       method: 'PUT',
       headers: {
@@ -761,11 +1072,11 @@ const confirmStatusUpdate = async () => {
       body: JSON.stringify({
         nuevoEstado: statusModal.value.selected,
         numeroSeguimiento: statusModal.value.numeroSeguimiento || null,
-        tipoComprobante: statusModal.value.selected === 'EN_PREPARACION' ? statusModal.value.tipoComprobante : null,
-        clienteTipoDocumento: statusModal.value.selected === 'EN_PREPARACION' ? statusModal.value.clienteTipoDocumento : null,
-        clienteNumeroDocumento: statusModal.value.selected === 'EN_PREPARACION' ? statusModal.value.clienteNumeroDocumento : null,
-        clienteRazonSocial: statusModal.value.selected === 'EN_PREPARACION' ? statusModal.value.clienteRazonSocial : null,
-        clienteDireccion: statusModal.value.selected === 'EN_PREPARACION' ? statusModal.value.clienteDireccion : null
+        tipoComprobante: isEnPreparacion ? statusModal.value.tipoComprobante : null,
+        clienteTipoDocumento: isEnPreparacion ? statusModal.value.clienteTipoDocumento : null,
+        clienteNumeroDocumento: isEnPreparacion ? statusModal.value.clienteNumeroDocumento : null,
+        clienteRazonSocial: isEnPreparacion ? statusModal.value.clienteRazonSocial : null,
+        clienteDireccion: isEnPreparacion ? statusModal.value.clienteDireccion : null
       })
     })
     const data = await res.json()
@@ -773,8 +1084,24 @@ const confirmStatusUpdate = async () => {
       alert(data.message || 'Error al actualizar el estado.')
       return
     }
+
+    const updatedOrder = data.pedido || statusModal.value.order
     statusModal.value.visible = false
     await fetchOrders()
+
+    if (isEnPreparacion) {
+      const waUrl = getWhatsAppVoucherUrl(updatedOrder, targetWhatsApp)
+      voucherSuccessModal.value = {
+        visible: true,
+        order: updatedOrder,
+        whatsappUrl: waUrl,
+        phone: targetWhatsApp || updatedOrder.whatsAppCliente || ''
+      }
+
+      if (shouldSendWA && (targetWhatsApp || updatedOrder.whatsAppCliente)) {
+        window.open(waUrl, '_blank')
+      }
+    }
   } catch (err) {
     alert('Error de conexión al actualizar el estado.')
   } finally {
@@ -898,6 +1225,18 @@ onMounted(() => fetchOrders())
   border-color: #16a34a;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(22, 163, 74, 0.25);
+}
+.btn-action-icon.whatsapp {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-color: #86efac;
+}
+.btn-action-icon.whatsapp:hover {
+  background: #25d366;
+  color: #ffffff;
+  border-color: #25d366;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.35);
 }
 .date-filters {
   display: flex;

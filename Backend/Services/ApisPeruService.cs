@@ -13,11 +13,13 @@ namespace SaaS.API.Services;
 public class ApisPeruService : IApisPeruService
 {
     private readonly HttpClient _httpClient;
+    private readonly IWebHostEnvironment _env;
     private const string BASE_URL = "https://facturacion.apisperu.com/api/v1";
 
-    public ApisPeruService(HttpClient httpClient)
+    public ApisPeruService(HttpClient httpClient, IWebHostEnvironment env)
     {
         _httpClient = httpClient;
+        _env = env;
     }
 
     public async Task<(bool Success, string Message, string? XmlUrl, string? PdfUrl, string? CdrUrl, string? SunatStatus, string? Hash)> EmitirComprobanteAsync(Sale venta, Empresa empresa)
@@ -156,7 +158,9 @@ public class ApisPeruService : IApisPeruService
             string? xmlUrl = null, pdfUrl = null, cdrUrl = null, sunatStatus = "ACEPTADO", hashString = null;
 
             var serieCorrelativo = $"{serieComprobante}-{correlativoStr.PadLeft(8, '0')}";
-            var storageDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "comprobantes", rucEmpresa);
+            // Store files in the same 'uploads' folder that Program.cs serves via UseStaticFiles
+            // (ContentRootPath/uploads/...) — NOT in wwwroot, which caused 404 in production
+            var storageDir = Path.Combine(_env.ContentRootPath, "uploads", "comprobantes", rucEmpresa);
             Directory.CreateDirectory(storageDir);
 
             // 1. Extraer Hash
