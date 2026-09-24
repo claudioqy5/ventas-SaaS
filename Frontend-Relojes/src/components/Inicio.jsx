@@ -1,7 +1,39 @@
-import React from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 
+import imgEdifice from '../assets/hero/coleccion edifice.jpg';
+import imgDorados from '../assets/hero/dorados.jpg';
+import imgMujeres from '../assets/hero/mujeres.jpg';
+
+const CAROUSEL_DATA = [
+  {
+    img: imgEdifice,
+    title: 'Colección Edifice',
+    desc: 'Velocidad e inteligencia en cada milímetro de titanio.'
+  },
+  {
+    img: imgDorados,
+    title: 'Elegancia Dorada',
+    desc: 'Un brillo inconfundible que resalta tu distinción en cada instante.'
+  },
+  {
+    img: imgMujeres,
+    title: 'Alta Relojería Femenina',
+    desc: 'La perfecta armonía entre delicadeza y precisión absoluta.'
+  }
+];
+
 export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % CAROUSEL_DATA.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section className="hero-section" style={{
       position: 'relative',
@@ -9,12 +41,45 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#ffffff',
+      background: '#000',
       overflow: 'hidden',
-      color: '#000',
+      color: '#fff',
       borderBottomLeftRadius: '100px',
       borderBottomRightRadius: '100px'
     }}>
+      {/* Imágenes del Carrusel */}
+      {CAROUSEL_DATA.map((item, index) => (
+        <div 
+          key={index}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            opacity: index === currentIndex ? 1 : 0,
+            transition: 'opacity 1.5s ease-in-out',
+            zIndex: 1
+          }}
+        >
+          <img 
+            src={item.img.src || item.img} 
+            alt={item.title} 
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
+            }}
+          />
+          {/* Overlay gradiente oscuro para que resalten los textos y las letras de fondo */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%)'
+          }}></div>
+        </div>
+      ))}
+
       {/* Giant Background Text Top - L'GANTE */}
       <div style={{
         position: 'absolute',
@@ -24,11 +89,12 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         fontSize: 'clamp(5rem, 16vw, 22rem)',
         fontFamily: 'var(--font-sans)',
         fontWeight: 900,
-        color: 'rgba(0, 0, 0, 0.03)',
+        color: 'rgba(255, 255, 255, 0.06)',
         whiteSpace: 'nowrap',
-        zIndex: 1,
+        zIndex: 2,
         letterSpacing: '-0.02em',
-        lineHeight: 0.8
+        lineHeight: 0.8,
+        pointerEvents: 'none'
       }}>
         L'GANT
       </div>
@@ -43,83 +109,65 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         fontFamily: 'var(--font-sans)',
         fontWeight: 900,
         color: 'transparent',
-        WebkitTextStroke: '2px rgba(0, 0, 0, 0.05)',
+        WebkitTextStroke: '2px rgba(255, 255, 255, 0.1)',
         whiteSpace: 'nowrap',
-        zIndex: 1,
+        zIndex: 2,
         letterSpacing: '-0.02em',
-        lineHeight: 0.8
+        lineHeight: 0.8,
+        pointerEvents: 'none'
       }}>
         EN CADA SEGUNDO
       </div>
 
-      {/* STATIC HERO CONTENT */}
+      {/* Textos Dinámicos del Carrusel */}
       <div style={{
         position: 'relative',
         zIndex: 10,
         width: '100%',
-        maxWidth: '1200px',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        pointerEvents: 'none'
       }}>
-        {/* Textos del Reloj y Botones */}
-        <div style={{
-          position: 'relative',
-          textAlign: 'center',
-          maxWidth: '800px',
-          width: '100%',
-          padding: '40px 60px',
-          background: 'rgba(255, 255, 255, 0.8)',
-          backdropFilter: 'blur(10px)',
-          borderRadius: '24px',
-          boxShadow: '0 20px 50px rgba(0,0,0,0.05)',
-          border: '1px solid rgba(0,0,0,0.05)'
-        }}>
-          <h2 style={{
-            fontFamily: '"Cormorant Garamond", "Cinzel", serif',
-            fontSize: 'clamp(1.8rem, 3vw, 2.8rem)',
-            fontWeight: 700,
-            color: 'var(--c-obsidian)',
-            marginBottom: '10px'
-          }}>
-            Boutique de Alta Relojería
-          </h2>
-          <p style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: '1rem',
-            color: 'var(--c-steel)',
-            lineHeight: 1.6,
-            marginBottom: '30px'
-          }}>
-            Descubre nuestra colección exclusiva. Precisión, elegancia y diseño en cada segundo de tu vida.
-          </p>
-
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
-            <button
-              onClick={onExplore}
-              style={{
-                padding: '14px 28px', backgroundColor: '#000', color: '#fff',
-                border: 'none', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600,
-                letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer',
-                display: 'inline-flex', alignItems: 'center', gap: '10px', transition: 'all 0.3s ease'
-              }}
-            >
-              Explorar Colección <ArrowRight size={16} />
-            </button>
-            <button
-              onClick={onOpenWhatsAppConcierge}
-              style={{
-                padding: '14px 28px', backgroundColor: '#fff', color: '#000',
-                border: '1px solid #ddd', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600,
-                letterSpacing: '0.05em', textTransform: 'uppercase', cursor: 'pointer',
-                display: 'inline-flex', alignItems: 'center', gap: '10px', transition: 'all 0.3s ease'
-              }}
-            >
-              <MessageCircle size={16} /> Asesoría Personalizada
-            </button>
+        {CAROUSEL_DATA.map((item, index) => (
+          <div
+            key={`text-${index}`}
+            style={{
+              position: 'absolute',
+              textAlign: 'center',
+              opacity: index === currentIndex ? 1 : 0,
+              transform: index === currentIndex ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              width: '100%',
+              maxWidth: '800px',
+              padding: '0 20px'
+            }}
+          >
+            <h2 style={{
+              fontFamily: '"Cormorant Garamond", "Cinzel", serif',
+              fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+              fontWeight: 700,
+              color: '#fff',
+              textShadow: '0 10px 30px rgba(0,0,0,0.8)',
+              marginBottom: '1rem',
+              letterSpacing: '0.02em'
+            }}>
+              {item.title}
+            </h2>
+            <p style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 'clamp(1rem, 1.5vw, 1.25rem)',
+              color: '#f5f5f7',
+              textShadow: '0 4px 10px rgba(0,0,0,0.8)',
+              letterSpacing: '0.05em',
+              fontWeight: 300
+            }}>
+              {item.desc}
+            </p>
           </div>
-        </div>
+        ))}
       </div>
     </section>
   );
