@@ -98,20 +98,18 @@
           <span class="sidebar-text">Formas de Pago</span>
         </router-link>
       </nav>
-      <div class="sidebar-footer">
-        <button @click="handleLogout" class="btn-logout">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg>
-          <span class="sidebar-text">Cerrar Sesión</span>
-        </button>
-      </div>
+      <button @click="handleLogout" class="btn btn-danger w-full logout-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9"/></svg>
+        <span class="sidebar-text">Cerrar Sesión</span>
+      </button>
     </aside>
 
     <!-- Contenido principal -->
     <main class="main-content">
-      <header class="top-header">
+      <header class="content-header" style="display: flex; justify-content: space-between; align-items: center;">
         <div class="header-info">
-          <h2>Libro de Reclamaciones</h2>
-          <p class="subtitle">Gestiona las quejas y reclamos ingresados desde la tienda virtual.</p>
+          <h1 class="text-title" style="margin: 0;">Libro de Reclamaciones</h1>
+          <p class="text-subtitle" style="margin: 0;">Gestiona las quejas y reclamos ingresados desde la tienda virtual.</p>
         </div>
       </header>
 
@@ -269,29 +267,7 @@ const handleLogout = () => {
 </script>
 
 <style scoped>
-/* Estilos basados en la estructura del dashboard de SaaS */
-.dashboard-layout { display: flex; min-height: 100vh; background-color: #f8fafc; }
-.sidebar { width: 260px; background-color: #ffffff; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
-.sidebar-brand { padding: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #f1f5f9; }
-.sidebar-brand-name { font-weight: 700; font-size: 1.25rem; color: #0f172a; letter-spacing: -0.02em; }
-.user-info { padding: 20px; border-bottom: 1px solid #f1f5f9; }
-.user-name { font-weight: 600; color: #1e293b; margin: 0 0 4px 0; font-size: 0.95rem; }
-.user-badge { font-size: 0.75rem; background-color: #f1f5f9; color: #64748b; padding: 4px 10px; border-radius: 99px; font-weight: 500; }
-.nav-links { flex: 1; overflow-y: auto; padding: 20px 12px; display: flex; flex-direction: column; gap: 4px; }
-.nav-section-title { font-size: 0.75rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin: 16px 0 8px 12px; }
-.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; color: #64748b; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 0.95rem; transition: all 0.2s ease; position: relative; }
-.nav-item:hover { background-color: #f8fafc; color: #0f172a; }
-.nav-item.active { background-color: #eff6ff; color: #2563eb; }
-.sidebar-icon { stroke-width: 2.2; }
-.badge-pending { margin-left: auto; background-color: #ef4444; color: white; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
-.sidebar-footer { padding: 16px; border-top: 1px solid #f1f5f9; }
-.btn-logout { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; background: none; border: 1px solid #e2e8f0; border-radius: 8px; color: #64748b; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-.btn-logout:hover { background-color: #f8fafc; color: #ef4444; border-color: #ef4444; }
-
-.main-content { flex: 1; display: flex; flex-direction: column; overflow-x: hidden; }
-.top-header { background-color: #ffffff; padding: 20px 32px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-.header-info h2 { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin: 0 0 4px 0; }
-.subtitle { color: #64748b; margin: 0; font-size: 0.95rem; }
+/* Estilos adicionales para esta vista */
 
 .content-wrapper { padding: 32px; overflow-y: auto; flex: 1; }
 .card { background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
