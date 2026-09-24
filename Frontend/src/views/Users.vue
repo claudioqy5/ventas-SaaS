@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard-layout">
 <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -162,7 +162,7 @@
                 <td><strong>{{ req.nombrePropietario }}</strong></td>
                 <td>
                   <div style="font-size: 0.85rem; line-height: 1.4;">
-                    ðŸ“ž {{ req.telefono }}<br>
+                    <span style="display:inline-flex; align-items:center; gap:4px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> {{ req.telefono }}</span><br>
                     âœ‰ï¸ {{ req.correoPropietario }}
                   </div>
                 </td>
@@ -245,84 +245,133 @@
               <div class="field checkbox-wrapper">
                 <label class="checkbox-label">
                   <input type="checkbox" v-model="form.activo" :disabled="!authStore.isSuperadmin && isEdit && form.rol === 'EmpresaOwner'" />
-                  <span>Cuenta Activa / Permitir ingreso</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- Selector de permisos dinamicos segun el rol de empleado -->
+                  <span>Cuenta Activa / Permitir ingreso</span>            <!-- Selector de permisos dinamicos segun el rol de empleado -->
             <div class="permissions-selector">
-              <h3>ðŸ”’ Asignar Permisos</h3>
+              <h3 style="display:flex; align-items:center; gap:8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Asignar Permisos
+              </h3>
               <p class="text-subtitle">Selecciona los módulos a los que este usuario tendrá acceso:</p>
               
               <div class="checkbox-grid">
                 <label class="checkbox-card">
                   <input type="checkbox" value="ventas" v-model="form.permisos" />
-                  <span>â– Ventas (POS)</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18 M16 10a4 4 0 0 1-8 0"/></svg>
+                    Ventas (POS)
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="productos" v-model="form.permisos" />
-                  <span>â¬¦ Productos e Inventario</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Productos e Inventario
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="dashboard" v-model="form.permisos" />
-                  <span>â—« Dashboard Estadísticas</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"/></svg>
+                    Dashboard Estadísticas
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="historial_negocio" v-model="form.permisos" />
-                  <span>â–¸ Historial de Negocio</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Historial de Negocio
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="clientes" v-model="form.permisos" />
-                  <span>ðŸ‘¤ Clientes</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
+                    Clientes
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="proveedores" v-model="form.permisos" />
-                  <span>âŒ‚ Proveedores</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Proveedores
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="compras" v-model="form.permisos" />
-                  <span>âœ§ Compras (Sensible)</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18"/></svg>
+                    Compras (Sensible)
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="categorias" v-model="form.permisos" />
-                  <span>Categorías</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    Categorías
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="modificar_productos" v-model="form.permisos" />
-                  <span>âœï¸ Editar/Eliminar Productos</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Editar/Eliminar Productos
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="historial_ventas" v-model="form.permisos" />
-                  <span>â‰¡ Historial de Ventas</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg>
+                    Historial de Ventas
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="pedidos_web" v-model="form.permisos" />
-                  <span>ðŸ“¦ Pedidos</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20 M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    Pedidos
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="chats_bot" v-model="form.permisos" />
-                  <span>ðŸ’¬ Chats IA</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    Chats IA
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="reminders" v-model="form.permisos" />
-                  <span>â—¦ Recordatorios</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    Recordatorios
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="movimientos" v-model="form.permisos" />
-                  <span>âŸ³ Movimientos de Inventario</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6 M3 12a9 9 0 0 1 15-6.7L21 8 M3 22v-6h6 M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+                    Movimientos de Inventario
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="cuentas_cobrar" v-model="form.permisos" />
-                  <span>â–« Cuentas por Cobrar</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v2 M3 5v14a2 2 0 0 0 2 2h16v-5 M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+                    Cuentas por Cobrar
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="formas_pago" v-model="form.permisos" />
-                  <span>â–ª Formas de Pago</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4 M2 13v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4 M2 9h20 M2 13h20"/></svg>
+                    Formas de Pago
+                  </span>
                 </label>
                 <label class="checkbox-card">
                   <input type="checkbox" value="colaboradores" v-model="form.permisos" />
-                  <span>âš‡ Colaboradores</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Colaboradores
+                  </span>
                 </label>
               </div>
             </div>
