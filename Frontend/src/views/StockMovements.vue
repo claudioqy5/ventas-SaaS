@@ -72,11 +72,11 @@
             <input v-model="endDate" @change="fetchMovements" type="date" class="filter-date" />
           </div>
         </div>
-        <div v-if="!loading && movements.length === 0" class="empty-state">
+        <div v-if="!loading && filteredMovements.length === 0" class="empty-state">
           No se encontraron movimientos registrados en este rango de fechas.
         </div>
 
-        <div v-if="!loading && movements.length > 0" class="table-responsive">
+        <div v-if="!loading && filteredMovements.length > 0" class="table-responsive">
           <table class="data-table">
             <thead>
               <tr>
@@ -91,7 +91,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(mov, index) in movements" :key="mov.id">
+              <tr v-for="(mov, index) in filteredMovements" :key="mov.id">
                 <td><strong>{{ index + 1 }}</strong></td>
                 <td><code>{{ formatDateTime(mov.fechaCreacion) }}</code></td>
                 <td><strong>{{ mov.nombreProducto }}</strong></td>
@@ -121,7 +121,7 @@
 
 <script setup>
 import { API_URL } from '../config'
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import HamsterLoader from '../components/HamsterLoader.vue'
@@ -132,6 +132,7 @@ const authStore = useAuthStore()
 const movements = ref([])
 const loading = ref(false)
 const searchQuery = ref('')
+const filterVoucherType = ref('')
 
 const getTodayDateString = () => {
   const d = new Date()
@@ -151,6 +152,37 @@ const debouncedFetch = () => {
     fetchMovements()
   }, 350)
 }
+
+
+const filteredMovements = computed(() => {
+  return movements.value.filter(mov => {
+    if (!filterVoucherType.value) return true
+    const voucher = filterVoucherType.value.toLowerCase()
+    const tipo = (mov.tipo || '').toLowerCase()
+    const motivo = (mov.motivo || '').toLowerCase()
+
+    if (voucher === 'boleta') {
+      return motivo.includes('boleta') || tipo.includes('boleta')
+    }
+    if (voucher === 'factura') {
+      return motivo.includes('factura') || tipo.includes('factura')
+    }
+    if (voucher === 'nota de venta') {
+      return motivo.includes('nota de venta') || tipo.includes('nota de venta')
+    }
+    if (voucher === 'pedido web') {
+      return tipo.includes('pedido web') || tipo.includes('online') || motivo.includes('online') || motivo.includes('pedido')
+    }
+    if (voucher === 'entrada') {
+      return tipo === 'entrada' || tipo === 'compra' || motivo.includes('compra') || motivo.includes('ingreso')
+    }
+    if (voucher === 'ajuste') {
+      return tipo === 'ajuste' || motivo.includes('ajuste')
+    }
+
+    return tipo.includes(voucher) || motivo.includes(voucher)
+  })
+})
 
 const fetchMovements = async () => {
   loading.value = true

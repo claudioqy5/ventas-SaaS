@@ -70,6 +70,7 @@
             <option value="Boleta">Boleta de Venta</option>
             <option value="Factura">Factura</option>
             <option value="Nota de Venta">Nota de Venta</option>
+            <option value="Pedido Web">Pedido Web / Online</option>
           </select>
 
           <!-- Filtro de Fecha Desde - Hasta -->
