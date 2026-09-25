@@ -1739,6 +1739,7 @@ onMounted(() => fetchOrders())
     margin-left: 0;
     width: 100%;
     justify-content: center;
+  }
 }
 
 .modal-content {
