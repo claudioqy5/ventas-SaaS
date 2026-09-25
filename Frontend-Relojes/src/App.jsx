@@ -832,10 +832,26 @@ export default function App({ initialCategory, initialProductId, initialView = '
                 onNavigateView={handleNavigateView}
               />
               {/* Colecciones Destacadas */}
-              <CategoriasDestacadas onSelectCategory={(cat) => {
-                handleSelectCategory(cat);
-                scrollToCatalog();
-              }} />
+              <CategoriasDestacadas 
+                onSearchSubmit={handleSearchSubmit}
+                onSelectStyle={(group, value) => {
+                  setSearchQuery('');
+                  setSelectedCategory('');
+                  setAdvancedFilters({
+                    priceRange: { min: '', max: '' },
+                    inStockOnly: false,
+                    gender: [],
+                    dynamic: {
+                      [group]: [value]
+                    }
+                  });
+                  setShowFullCatalog(true);
+                  setActiveView('catalog');
+                  setTimeout(() => {
+                    document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' });
+                  }, 40);
+                }} 
+              />
             </>
           )}
 

@@ -6,19 +6,19 @@ import edificeImg from '../assets/categorias/edifice.jpg';
 import eleganteImg from '../assets/categorias/elegante.jpg';
 import retroImg from '../assets/categorias/retro.jpg';
 
-export default function CategoriasDestacadas({ onSelectCategory }) {
+export default function CategoriasDestacadas({ onSelectStyle, onSearchSubmit }) {
   const categorias = [
-    { id: 'casual', nombre: 'Casual', imagen: casualImg, tag: 'Casual', style: { fontFamily: '"Segoe UI", "Helvetica Neue", sans-serif', fontWeight: 500, fontStyle: 'normal', letterSpacing: '0.05em' } },
-    { id: 'clasico', nombre: 'Clásico', imagen: clasicoImg, tag: 'Clásico', style: { fontFamily: 'var(--font-serif), "Times New Roman", serif', fontWeight: 400, fontStyle: 'italic', letterSpacing: '0.05em' } },
-    { id: 'deportivo', nombre: 'Deportivo', imagen: deportivoImg, tag: 'Deportivo', style: { fontFamily: '"Impact", "Arial Black", sans-serif', fontWeight: 900, fontStyle: 'italic', textTransform: 'uppercase', letterSpacing: '0.05em' } },
-    { id: 'edifice', nombre: 'Edifice', imagen: edificeImg, tag: 'Edifice', style: { fontFamily: '"Trebuchet MS", "Lucida Sans Unicode", sans-serif', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' } },
-    { id: 'elegante', nombre: 'Elegante', imagen: eleganteImg, tag: 'Elegante', style: { fontFamily: 'var(--font-serif), "Georgia", serif', fontWeight: 300, textTransform: 'uppercase', letterSpacing: '0.2em' } },
-    { id: 'retro', nombre: 'Retro', imagen: retroImg, tag: 'Retro', style: { fontFamily: '"Courier New", monospace', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' } }
+    { id: 'casual', nombre: 'Casual', imagen: casualImg, filterValue: 'Casual', style: { fontFamily: '"Segoe UI", "Helvetica Neue", sans-serif', fontWeight: 500, fontStyle: 'normal', letterSpacing: '0.05em' } },
+    { id: 'clasico', nombre: 'Clásico', imagen: clasicoImg, filterValue: 'Clásico', style: { fontFamily: 'var(--font-serif), "Times New Roman", serif', fontWeight: 400, fontStyle: 'italic', letterSpacing: '0.05em' } },
+    { id: 'deportivo', nombre: 'Deportivo', imagen: deportivoImg, filterValue: 'Deportivo', style: { fontFamily: '"Impact", "Arial Black", sans-serif', fontWeight: 900, fontStyle: 'italic', textTransform: 'uppercase', letterSpacing: '0.05em' } },
+    { id: 'edifice', nombre: 'Edifice', imagen: edificeImg, searchQuery: 'edifice', style: { fontFamily: '"Trebuchet MS", "Lucida Sans Unicode", sans-serif', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' } },
+    { id: 'elegante', nombre: 'Elegante', imagen: eleganteImg, filterValue: 'Elegante', style: { fontFamily: 'var(--font-serif), "Georgia", serif', fontWeight: 300, textTransform: 'uppercase', letterSpacing: '0.2em' } },
+    { id: 'retro', nombre: 'Retro', imagen: retroImg, filterValue: 'Retro', style: { fontFamily: '"Courier New", monospace', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' } }
   ];
 
   return (
-    <div className="categorias-destacadas" style={{ padding: '60px 24px', backgroundColor: '#ffffff' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="categorias-destacadas" style={{ padding: '60px 0.5vw', backgroundColor: '#ffffff' }}>
+      <div style={{ width: '100%', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <p style={{
             fontSize: '0.74rem',
@@ -46,23 +46,26 @@ export default function CategoriasDestacadas({ onSelectCategory }) {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-          gap: '20px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(150px, 16vw, 300px), 1fr))',
+          gap: '0.5vw',
           width: '100%'
         }}>
           {categorias.map((cat, idx) => (
             <div 
               key={idx} 
               onClick={() => {
-                if (onSelectCategory) {
-                    onSelectCategory(cat.tag);
+                if (cat.searchQuery && onSearchSubmit) {
+                  onSearchSubmit(cat.searchQuery);
+                } else if (cat.filterValue && onSelectStyle) {
+                  onSelectStyle('Estilo', cat.filterValue);
                 }
               }}
               style={{
                 position: 'relative',
-                borderRadius: '12px',
+                //borderRadius: '12px',
                 overflow: 'hidden',
-                aspectRatio: '4/5',
+                height: '45vh',
+                minHeight: '280px',
                 cursor: 'pointer',
                 boxShadow: '0 4px 14px rgba(11, 11, 12, 0.08)',
                 transition: 'transform 0.4s ease, box-shadow 0.4s ease'

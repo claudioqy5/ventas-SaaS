@@ -32,7 +32,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
       setCurrentIndex((prev) => (prev + 1) % CAROUSEL_DATA.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [currentIndex]);
 
   return (
     <section className="hero-section" style={{
