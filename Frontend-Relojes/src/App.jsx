@@ -929,7 +929,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                   fontWeight: 500
                 }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px', display: 'inline', position: 'relative', top: '-1px' }}><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"/></svg>
-                  {activeView === 'search' ? 'BÚSQUEDA INTELIGENTE' : (showFullCatalog ? 'CATÁLOGO PRIVADO' : 'DESCUBRE LO ÚLTIMO')}
+                  {activeView === 'search' ? 'BÚSQUEDA INTELIGENTE' : (showFullCatalog ? 'CATÁLOGO PRIVADO' : 'SELECCIÓN EXCLUSIVA')}
                 </span>
                 <h2 className="font-serif" style={{
                   fontSize: 'clamp(1.8rem, 3vw, 2.4rem)',
@@ -948,7 +948,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                             ? 'Novedades & Nuevos Ingresos'
                             : `Colección ${selectedCategory}`)
                       : 'Guardatiempos Exclusivos'
-                  ) : 'Nuevos Ingresos'}
+                  ) : 'Los más Vendidos'}
                 </h2>
                 {activeView === 'search' && searchQuery && (
                   <p style={{
@@ -1082,9 +1082,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
                 ) : (
                   <>
                     <div className="grid-4-products" style={{ marginBottom: !showFullCatalog ? '60px' : '0' }}>
-                      {(showFullCatalog ? groupedProducts : newArrivalsGrouped.slice(0, 4)).map((group) => (
+                      {(showFullCatalog ? groupedProducts : bestSellersGrouped.slice(0, 4)).map((group) => (
                         <TarjetaProducto
-                          key={`new-${group.main.id}`}
+                          key={`main-${group.main.id}`}
                           product={group.main}
                           variants={group.variants}
                           onQuickView={handleSelectProduct}
@@ -1093,32 +1093,6 @@ export default function App({ initialCategory, initialProductId, initialView = '
                         />
                       ))}
                     </div>
-
-                    {!showFullCatalog && bestSellersGrouped.length > 0 && (
-                      <>
-                        <div style={{ textAlign: 'center', marginBottom: '30px', marginTop: '20px' }}>
-                          <span style={{ fontSize: '0.74rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--c-blush)', fontFamily: 'var(--font-serif)', fontWeight: 500 }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px', display: 'inline', position: 'relative', top: '-1px' }}><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"/></svg>
-                            SELECCIÓN EXCLUSIVA
-                          </span>
-                          <h2 className="font-serif" style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', color: 'var(--c-deep-purple)', letterSpacing: '0.02em', marginTop: '4px', fontWeight: 600 }}>
-                            Los más Vendidos
-                          </h2>
-                        </div>
-                        <div className="grid-4-products">
-                          {bestSellersGrouped.slice(0, 4).map((group) => (
-                            <TarjetaProducto
-                              key={`best-${group.main.id}`}
-                              product={group.main}
-                              variants={group.variants}
-                              onQuickView={handleSelectProduct}
-                              onAddToCart={handleAddToCart}
-                              onWhatsAppInquiry={handleWhatsAppInquiry}
-                            />
-                          ))}
-                        </div>
-                      </>
-                    )}
                   </>
                 )}
               </div>
@@ -1240,7 +1214,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
       )}
 
       {/* Sección "Nuevos Ingresos" */}
-      {!initialCategory && filteredProducts.length > 4 && (
+      {!initialCategory && newArrivalsGrouped.length > 0 && (
         <section style={{
           padding: '80px 24px',
           backgroundColor: '#ffffff', // Fondo blanco
@@ -1269,10 +1243,11 @@ export default function App({ initialCategory, initialProductId, initialView = '
               </h2>
             </div>
             <div className="grid-4-products">
-              {filteredProducts.slice(4, 8).map((product) => (
+              {newArrivalsGrouped.slice(0, 4).map((group) => (
                 <TarjetaProducto
-                  key={product.id}
-                  product={product}
+                  key={`new-${group.main.id}`}
+                  product={group.main}
+                  variants={group.variants}
                   onQuickView={handleSelectProduct}
                   onAddToCart={handleAddToCart}
                   onWhatsAppInquiry={handleWhatsAppInquiry}
