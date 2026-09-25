@@ -813,3 +813,16 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
     - Se importaron 3 imágenes de alta resolución (`coleccion edifice.jpg`, `dorados.jpg`, `mujeres.jpg`) desde la carpeta `assets/hero/`.
     - Cada imagen se acompaña de textos específicos ("Colección Edifice", "Elegancia Dorada", "Alta Relojería Femenina") con efectos suaves de transición (fade & slide-up) y un degradado oscuro superpuesto para garantizar la perfecta legibilidad del texto blanco.
     - **Paginación (Dots)**: Se implementó un sistema de indicadores (puntitos) en la parte inferior de la pantalla para permitir a los usuarios identificar visualmente la cantidad de imágenes y navegar manualmente entre las diapositivas al hacer clic en ellas.
+
+## Actualización - 24 de Septiembre (Nuevos Ingresos, Los Más Vendidos y Bugfix Panel)
+- **Frontend E-Commerce (Tienda)**:
+  - **Reorganización del Catálogo y Categorías Destacadas (`App.jsx` y `CategoriasDestacadas.jsx`)**:
+    - Se adaptó la vista principal para mostrar dinámicamente dos vitrinas separadas: **"Nuevos Ingresos"** (título: "DESCUBRE LO ÚLTIMO") y **"Los más Vendidos"**. 
+    - Las secciones detectan automáticamente a los productos que pertenecen a sus respectivas categorías ("nuevos ingresos", "lo mas vendido") usando comprobación transversal en `categoria`, `categorias` y `etiqueta`.
+    - En caso de que no haya productos específicamente etiquetados en alguna sección, se aplica un mecanismo de "fallback" inteligente que muestra los primeros o últimos productos del catálogo general, asegurando que las cuadrículas nunca queden vacías.
+    - Se modificaron las tarjetas de "Categorías Destacadas" para abarcar completamente el ancho del contenedor, mejorando la distribución de la UI, y se les dio dimensiones en porcentajes para adaptabilidad fluida (responsive).
+  - **Mejora del Carrusel**: 
+    - Se ajustaron los temporizadores del carrusel automático para asegurar una transición fluida cada 5 segundos de forma circular y perpetua.
+    - Cuando el usuario interactúa manualmente con las fotos o los indicadores (dots), el contador de 5 segundos se resetea internamente para evitar saltos prematuros de diapositivas justo después de una interacción.
+- **Frontend Panel de Administrador (Vue.js)**:
+  - **Corrección de Bug en Cierre de Sesión (`WhatsAppChats.vue`)**: Se detectó y resolvió un error donde el botón "Cerrar Sesión" de la vista de chats de inteligencia artificial no tenía respuesta. Se importó y definió el manejador `handleLogout` junto con `useRouter`, sincronizando el comportamiento de cierre de sesión con el resto del dashboard de administrador.

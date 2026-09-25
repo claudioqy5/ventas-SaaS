@@ -166,11 +166,13 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { API_URL } from '../config';
 import HamsterLoader from '../components/HamsterLoader.vue';
 
 const authStore = useAuthStore();
+const router = useRouter();
 const empresaId = computed(() => authStore.user?.empresaId);
 
 const chats = ref([]);
@@ -265,6 +267,10 @@ onMounted(() => {
     loadChats();
   }
 });
+const handleLogout = () => {
+  authStore.logout();
+  router.push('/login');
+};
 </script>
 
 <style scoped>

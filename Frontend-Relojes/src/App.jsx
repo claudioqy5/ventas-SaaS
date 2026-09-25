@@ -658,6 +658,52 @@ export default function App({ initialCategory, initialProductId, initialView = '
     return result;
   }, [filteredProducts]);
 
+  const bestSellersGrouped = useMemo(() => {
+    const isMasVendido = (str) => str && str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes('mas vendido');
+    const bestSellers = products.filter(p => {
+      const catMatch = isMasVendido(p.categoria) || (p.categorias && p.categorias.some(c => isMasVendido(c)));
+      const tagMatch = isMasVendido(p.etiqueta);
+      return catMatch || tagMatch;
+    });
+
+    const groups = {};
+    const result = [];
+    bestSellers.forEach(p => {
+      const key = p.codigoModelo ? p.codigoModelo : p.id;
+      if (!groups[key]) {
+        groups[key] = { main: p, variants: [p] };
+        result.push(groups[key]);
+      } else {
+        groups[key].variants.push(p);
+      }
+    });
+    
+    return result.length > 0 ? result : groupedProducts; // Fallback si aún no hay productos en esa categoría
+  }, [products, groupedProducts]);
+
+  const newArrivalsGrouped = useMemo(() => {
+    const isNuevosIngresos = (str) => str && str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes('nuevos ingresos');
+    const arr = products.filter(p => {
+      const catMatch = isNuevosIngresos(p.categoria) || (p.categorias && p.categorias.some(c => isNuevosIngresos(c)));
+      const tagMatch = isNuevosIngresos(p.etiqueta);
+      return catMatch || tagMatch;
+    });
+
+    const groups = {};
+    const result = [];
+    arr.forEach(p => {
+      const key = p.codigoModelo ? p.codigoModelo : p.id;
+      if (!groups[key]) {
+        groups[key] = { main: p, variants: [p] };
+        result.push(groups[key]);
+      } else {
+        groups[key].variants.push(p);
+      }
+    });
+    
+    return result.length > 0 ? result : groupedProducts; // Fallback
+  }, [products, groupedProducts]);
+
   // Carrito
   const handleAddToCart = (product, qty = 1) => {
     setCart((prev) => {
@@ -883,7 +929,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                   fontWeight: 500
                 }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px', display: 'inline', position: 'relative', top: '-1px' }}><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"/></svg>
-                  {activeView === 'search' ? 'BÚSQUEDA INTELIGENTE' : (showFullCatalog ? 'CATÁLOGO PRIVADO' : 'SELECCIÓN EXCLUSIVA')}
+                  {activeView === 'search' ? 'BÚSQUEDA INTELIGENTE' : (showFullCatalog ? 'CATÁLOGO PRIVADO' : 'DESCUBRE LO ÚLTIMO')}
                 </span>
                 <h2 className="font-serif" style={{
                   fontSize: 'clamp(1.8rem, 3vw, 2.4rem)',
@@ -902,7 +948,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                             ? 'Novedades & Nuevos Ingresos'
                             : `Colección ${selectedCategory}`)
                       : 'Guardatiempos Exclusivos'
-                  ) : 'Los más Vendidos'}
+                  ) : 'Nuevos Ingresos'}
                 </h2>
                 {activeView === 'search' && searchQuery && (
                   <p style={{
@@ -1035,10 +1081,10 @@ export default function App({ initialCategory, initialProductId, initialView = '
                   </div>
                 ) : (
                   <>
-                    <div className="grid-4-products">
-                      {(showFullCatalog ? groupedProducts : groupedProducts.slice(0, 4)).map((group) => (
+                    <div className="grid-4-products" style={{ marginBottom: !showFullCatalog ? '60px' : '0' }}>
+                      {(showFullCatalog ? groupedProducts : newArrivalsGrouped.slice(0, 4)).map((group) => (
                         <TarjetaProducto
-                          key={group.main.id}
+                          key={`new-${group.main.id}`}
                           product={group.main}
                           variants={group.variants}
                           onQuickView={handleSelectProduct}
@@ -1047,6 +1093,32 @@ export default function App({ initialCategory, initialProductId, initialView = '
                         />
                       ))}
                     </div>
+
+                    {!showFullCatalog && bestSellersGrouped.length > 0 && (
+                      <>
+                        <div style={{ textAlign: 'center', marginBottom: '30px', marginTop: '20px' }}>
+                          <span style={{ fontSize: '0.74rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--c-blush)', fontFamily: 'var(--font-serif)', fontWeight: 500 }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px', display: 'inline', position: 'relative', top: '-1px' }}><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"/></svg>
+                            SELECCIÓN EXCLUSIVA
+                          </span>
+                          <h2 className="font-serif" style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', color: 'var(--c-deep-purple)', letterSpacing: '0.02em', marginTop: '4px', fontWeight: 600 }}>
+                            Los más Vendidos
+                          </h2>
+                        </div>
+                        <div className="grid-4-products">
+                          {bestSellersGrouped.slice(0, 4).map((group) => (
+                            <TarjetaProducto
+                              key={`best-${group.main.id}`}
+                              product={group.main}
+                              variants={group.variants}
+                              onQuickView={handleSelectProduct}
+                              onAddToCart={handleAddToCart}
+                              onWhatsAppInquiry={handleWhatsAppInquiry}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
               </div>
