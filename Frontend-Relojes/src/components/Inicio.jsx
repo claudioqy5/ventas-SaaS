@@ -10,17 +10,23 @@ const CAROUSEL_DATA = [
   {
     img: imgEdifice,
     title: 'Colección Edifice',
-    desc: 'Velocidad e inteligencia en cada milímetro de titanio.'
+    desc: 'Velocidad e inteligencia en cada milímetro de titanio.',
+    actionUrl: '/buscar?q=edifice',
+    actionText: 'Descubrir Edifice'
   },
   {
     img: imgDorados,
     title: 'Elegancia Dorada',
-    desc: 'Un brillo inconfundible que resalta tu distinción en cada instante.'
+    desc: 'Un brillo inconfundible que resalta tu distinción en cada instante.',
+    actionUrl: '/buscar?q=dorado',
+    actionText: 'Ver Colección'
   },
   {
     img: imgMujeres,
     title: 'Alta Relojería Femenina',
-    desc: 'La perfecta armonía entre delicadeza y precisión absoluta.'
+    desc: 'La perfecta armonía entre delicadeza y precisión absoluta.',
+    actionUrl: '/categoria/mujer',
+    actionText: 'Explorar Piezas'
   }
 ];
 
@@ -162,10 +168,42 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
               color: '#f5f5f7',
               textShadow: '0 4px 10px rgba(0,0,0,0.8)',
               letterSpacing: '0.05em',
-              fontWeight: 300
+              fontWeight: 300,
+              marginBottom: '20px'
             }}>
               {item.desc}
             </p>
+            <a 
+              href={item.actionUrl}
+              style={{
+                display: 'inline-block',
+                marginTop: '15px',
+                padding: '12px 36px',
+                border: '1px solid rgba(255, 255, 255, 0.5)',
+                color: '#fff',
+                backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.15em',
+                fontSize: '0.8rem',
+                fontWeight: 500,
+                textDecoration: 'none',
+                transition: 'all 0.4s ease',
+                cursor: 'pointer',
+                pointerEvents: 'auto'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+                e.target.style.color = '#000';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.25)';
+                e.target.style.color = '#fff';
+              }}
+            >
+              {item.actionText}
+            </a>
           </div>
         ))}
       </div>
