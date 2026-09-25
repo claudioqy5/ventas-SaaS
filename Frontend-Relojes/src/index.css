@@ -375,6 +375,18 @@ body {
   letter-spacing: 0.12em;
 }
 
+/* Libro de Reclamaciones Layout */
+.libro-header-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.libro-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.libro-flex-row {
+  display: flex;
+}
 
 /* =========================================================
    Surgical Mobile Overrides (Max-width: 768px)
@@ -659,6 +671,18 @@ body {
     justify-content: flex-end !important;
   }
   .checkout-table-cart td:last-child::before { content: none; }
+
+  /* Libro de Reclamaciones Mobile */
+  .libro-header-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .libro-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+  .libro-flex-row {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
 }
 
 /* Grid de productos fluido y adaptable */

@@ -129,7 +129,7 @@ export default function VistaLibroReclamaciones({ storeName = "L'gant", empresaI
         </div>
 
         {/* Info Proveedor */}
-        <div style={{ backgroundColor: 'var(--c-obsidian)', color: '#ffffff', padding: '24px', borderRadius: '12px', marginBottom: '32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div className="libro-header-grid" style={{ backgroundColor: 'var(--c-obsidian)', color: '#ffffff', padding: '24px', borderRadius: '12px', marginBottom: '32px', gap: '16px' }}>
           <div>
             <span style={{ display: 'block', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', marginBottom: '4px' }}>Razón Social</span>
             <strong style={{ fontSize: '0.95rem' }}>GRUPO SERCAL S.A.C.</strong>
@@ -153,7 +153,7 @@ export default function VistaLibroReclamaciones({ storeName = "L'gant", empresaI
               Identificación del Consumidor Reclamante
             </h3>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div className="libro-grid-2" style={{ gap: '20px' }}>
               <div style={{ gridColumn: '1 / -1' }}>
                 <label style={labelStyle}>Nombres y Apellidos *</label>
                 <input type="text" name="nombre" required value={formData.nombre} onChange={handleChange} style={inputStyle} placeholder="Ej. Juan Pérez" />
@@ -188,7 +188,7 @@ export default function VistaLibroReclamaciones({ storeName = "L'gant", empresaI
               Identificación del Bien Contratado
             </h3>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div className="libro-grid-2" style={{ gap: '20px' }}>
               <div>
                 <label style={labelStyle}>Tipo *</label>
                 <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
@@ -220,7 +220,7 @@ export default function VistaLibroReclamaciones({ storeName = "L'gant", empresaI
               Detalle de la Reclamación y Pedido del Consumidor
             </h3>
             
-            <div style={{ display: 'flex', gap: '32px', marginBottom: '24px', padding: '16px', backgroundColor: '#F9FAFB', borderRadius: '8px', border: '1px solid #E5E7EB' }}>
+            <div className="libro-flex-row" style={{ gap: '32px', marginBottom: '24px', padding: '16px', backgroundColor: '#F9FAFB', borderRadius: '8px', border: '1px solid #E5E7EB' }}>
               <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer', flex: 1 }}>
                 <input type="radio" name="tipoReclamo" value="Reclamo" checked={formData.tipoReclamo === 'Reclamo'} onChange={handleChange} style={{ width: '20px', height: '20px', accentColor: 'var(--c-blush)', marginTop: '2px' }} />
                 <div>
