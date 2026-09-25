@@ -1082,7 +1082,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                 ) : (
                   <>
                     <div className="grid-4-products" style={{ marginBottom: !showFullCatalog ? '60px' : '0' }}>
-                      {(showFullCatalog ? groupedProducts : bestSellersGrouped.slice(0, 4)).map((group) => (
+                      {(showFullCatalog ? groupedProducts : bestSellersGrouped.slice(0, 5)).map((group) => (
                         <TarjetaProducto
                           key={`main-${group.main.id}`}
                           product={group.main}
@@ -1243,7 +1243,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
               </h2>
             </div>
             <div className="grid-4-products">
-              {newArrivalsGrouped.slice(0, 4).map((group) => (
+              {newArrivalsGrouped.slice(0, 5).map((group) => (
                 <TarjetaProducto
                   key={`new-${group.main.id}`}
                   product={group.main}
