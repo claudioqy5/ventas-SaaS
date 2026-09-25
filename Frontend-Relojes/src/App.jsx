@@ -1216,11 +1216,12 @@ export default function App({ initialCategory, initialProductId, initialView = '
       {/* Sección "Nuevos Ingresos" */}
       {!initialCategory && newArrivalsGrouped.length > 0 && (
         <section style={{
-          padding: '80px 24px',
+          padding: '50px 2% 90px',
           backgroundColor: '#ffffff', // Fondo blanco
-          position: 'relative'
+          position: 'relative',
+          width: '100%'
         }}>
-          <div style={{ maxWidth: '1360px', margin: '0 auto' }}>
+          <div style={{ maxWidth: '100%', margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '55px' }}>
               <span style={{
                 fontSize: '0.74rem',
