@@ -851,7 +851,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
               flexWrap: 'wrap',
               justifyContent: (!showFullCatalog && activeView !== 'search') ? 'center' : 'space-between',
               alignItems: (!showFullCatalog && activeView !== 'search') ? 'center' : 'flex-end',
-              marginBottom: '32px',
+              marginBottom: '12px',
               gap: '20px'
             }}>
               <div style={{ textAlign: (!showFullCatalog && activeView !== 'search') ? 'center' : 'left' }}>

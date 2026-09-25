@@ -163,7 +163,7 @@ export default function BarraNavegacion({
         </div>
 
         <div className="navbar-main" style={{
-          maxWidth: '1360px',
+          maxWidth: '95%',
           margin: '0 auto',
           padding: '16px 24px',
           display: 'flex',
@@ -226,7 +226,7 @@ export default function BarraNavegacion({
 
 
         {/* Enlaces de Navegación de Alta Categoría */}
-        <nav className={`navbar-links ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '22px', flexWrap: 'wrap' }}>
+        <nav className={`navbar-links ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '40px', flexWrap: 'wrap' }}>
           {[
             { label: 'Hombre', href: '/categoria/hombre', tag: 'Hombre' },
             { label: 'Mujer', href: '/categoria/mujer', tag: 'Mujer' },
