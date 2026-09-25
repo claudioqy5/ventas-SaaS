@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <head>
-        <link rel="icon" type="image/png" href="/logo-lgant-gold.png" />
+        <link rel="icon" type="image/png" href="/logo-lgant-negro.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;600;700&family=Cinzel:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -79,7 +79,7 @@ export default function RootLayout({ children }) {
                 <line x1="14" y1="150" x2="30" y2="150" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
                 <line x1="42.72" y1="82" x2="53.86" y2="90" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
                 <line x1="82" y1="42.72" x2="90" y2="53.86" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
-                <image href="/logo-lgant-gold.png" x="137" y="38" width="26" height="34" />
+                <image href="/logo-lgant-blanco.png" x="137" y="38" width="26" height="34" />
                 <text x="150" y="84" text-anchor="middle" fill="#ffffff" font-family="'Cinzel',serif" font-size="9" font-weight="700" letter-spacing="0.32em">L'GANT</text>
                 <text x="150" y="93" text-anchor="middle" fill="#D4AF37" font-family="'Cinzel',serif" font-size="5.5" font-weight="700" letter-spacing="0.2em">BOUTIQUE DE ALTA RELOJERÍA · PERÚ</text>
                 <g class="tp-hand">
@@ -94,7 +94,7 @@ export default function RootLayout({ children }) {
             </div>
             <div style="margin-top:35px;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0.95">
               <div style="display:flex;align-items:center;gap:14px">
-                <img src="/logo-lgant-gold.png" alt="L'gant" style="height:44px;width:auto;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(212,175,55,0.35))" />
+                <img src="/logo-lgant-blanco.png" alt="L'gant" style="height:44px;width:auto;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(212,175,55,0.35))" />
                 <div style="width:1.5px;height:32px;background:rgba(212,175,55,0.6)"></div>
                 <div style="font-size:2.2rem;font-family:'Cinzel',serif;color:#D4AF37;line-height:1;letter-spacing:0.08em;font-weight:700">L'GANT</div>
               </div>

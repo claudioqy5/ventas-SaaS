@@ -53,7 +53,7 @@ export default function VistaVerificarCorreo({ onOpenAuth, onNavigateHome }) {
         {/* Logo L'gant */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '28px' }}>
           <img
-            src="/logo-lgant-gold.png"
+            src="/logo-lgant-negro.png"
             alt="L'gant"
             style={{ height: '46px', width: 'auto', objectFit: 'contain' }}
           />

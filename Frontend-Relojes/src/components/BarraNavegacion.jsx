@@ -203,7 +203,7 @@ export default function BarraNavegacion({
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
               <img
-                src="/logo-lgant-gold.png"
+                src="/logo-lgant-negro.png"
                 alt="L'gant"
                 style={{ height: '42px', width: 'auto', objectFit: 'contain' }}
               />

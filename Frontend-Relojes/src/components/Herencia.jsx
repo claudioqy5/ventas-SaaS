@@ -17,7 +17,7 @@ export default function Herencia() {
         <div style={{ textAlign: 'center', marginBottom: '55px' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '18px' }}>
             <img
-              src="/logo-lgant-gold.png"
+              src="/logo-lgant-negro.png"
               alt="L'gant"
               style={{ height: '52px', width: 'auto', objectFit: 'contain', opacity: 0.95 }}
             />

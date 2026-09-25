@@ -503,7 +503,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
             <div style={{ marginBottom: '28px', textAlign: 'center' }}>
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
                 <img
-                  src="/logo-lgant-gold.png"
+                  src="/logo-lgant-negro.png"
                   alt="L'gant"
                   style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
                 />

@@ -184,7 +184,7 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
           ))}
 
           {/* Firmas de Manufactura en estilo Cinzel con Emblema León L'gant */}
-          <image href="/logo-lgant-gold.png" x="137" y="38" width="26" height="34" />
+          <image href="/logo-lgant-blanco.png" x="137" y="38" width="26" height="34" />
           <text
             x="150"
             y="84"
@@ -293,7 +293,7 @@ export default function CargadorReloj({ isLoading = true, onFinish, minDuration 
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <img src="/logo-lgant-gold.png" alt="L'gant" style={{ height: '44px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.35))' }} />
+          <img src="/logo-lgant-blanco.png" alt="L'gant" style={{ height: '44px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.35))' }} />
           <div style={{ width: '1.5px', height: '32px', backgroundColor: 'rgba(212, 175, 55, 0.6)' }}></div>
           <div style={{ fontSize: '2.2rem', fontFamily: '"Cinzel", serif', color: '#D4AF37', lineHeight: 1, letterSpacing: '0.08em', fontWeight: 700 }}>
             L'GANT

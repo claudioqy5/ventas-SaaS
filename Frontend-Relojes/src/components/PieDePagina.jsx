@@ -103,7 +103,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
           borderBottom: '1px solid rgba(212, 175, 55, 0.25)'
         }}>
           <img
-            src="/logo-lgant-gold.png"
+            src="/logo-lgant-blanco.png"
             alt="L'gant"
             style={{ height: '54px', width: 'auto', objectFit: 'contain' }}
           />
@@ -201,7 +201,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               alignItems: 'center',
               gap: '8px'
             }}>
-              <img src="/logo-lgant-gold.png" alt="" style={{ height: '18px', width: 'auto' }} />
+              <img src="/logo-lgant-blanco.png" alt="" style={{ height: '18px', width: 'auto' }} />
               L'gant
             </h4>
             <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(212, 175, 55, 0.35)', marginBottom: '24px' }}></div>
