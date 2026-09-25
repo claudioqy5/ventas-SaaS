@@ -826,3 +826,7 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
     - Cuando el usuario interact√∫a manualmente con las fotos o los indicadores (dots), el contador de 5 segundos se resetea internamente para evitar saltos prematuros de diapositivas justo despu√©s de una interacci√≥n.
 - **Frontend Panel de Administrador (Vue.js)**:
   - **Correcci√≥n de Bug en Cierre de Sesi√≥n (`WhatsAppChats.vue`)**: Se detect√≥ y resolvi√≥ un error donde el bot√≥n "Cerrar Sesi√≥n" de la vista de chats de inteligencia artificial no ten√≠a respuesta. Se import√≥ y defini√≥ el manejador `handleLogout` junto con `useRouter`, sincronizando el comportamiento de cierre de sesi√≥n con el resto del dashboard de administrador.
+  - **CorrecciÛn Estructural y EstÈtica (Layout de Cat·logo)**:
+    - Se resolviÛ la duplicidad visual de "Nuevos Ingresos" garantizando que solo "Los m·s Vendidos" se visualicen en la cabecera principal del cat·logo, mientras que "Nuevos Ingresos" se posicionÛ de manera exclusiva debajo de la animaciÛn *Eternidad en cada Segundo*.
+    - Se modificÛ la cuadrÌcula pasando el renderizado din·mico de 4 tarjetas a 5 por fila, sacando el m·ximo provecho de la estructura fluida configurada previamente en el CSS.
+    - Se rectificÛ el contenedor (wrapper) de la secciÛn "Nuevos Ingresos" retirando el lÌmite rÌgido de 1360px de ancho e igualando sus dimensiones a 100% con los paddings exactos del cat·logo (50px 2% 90px), logrando que todas las colecciones se extiendan a los costados de manera uniforme y simÈtrica en monitores anchos.
