@@ -15,7 +15,7 @@ import { fetchStoreProducts } from './services/api';
 import CargadorReloj from './components/CargadorReloj';
 import BotonWhatsApp from './components/BotonWhatsApp';
 import PanelFiltros from './components/PanelFiltros';
-import MarcasDestacadas from './components/MarcasDestacadas';
+import CategoriasDestacadas from './components/CategoriasDestacadas';
 import ToastNotificacion from './components/ToastNotificacion';
 import ToastBienvenidaCliente from './components/ToastBienvenidaCliente';
 import WebThreads from './components/WebThreads';
@@ -831,8 +831,11 @@ export default function App({ initialCategory, initialProductId, initialView = '
                 onOpenWhatsAppConcierge={handleOpenWhatsAppConcierge}
                 onNavigateView={handleNavigateView}
               />
-              {/* Banner de Marcas Reconocidas */}
-              <MarcasDestacadas />
+              {/* Colecciones Destacadas */}
+              <CategoriasDestacadas onSelectCategory={(cat) => {
+                handleSelectCategory(cat);
+                scrollToCatalog();
+              }} />
             </>
           )}
 
