@@ -8,12 +8,12 @@ import retroImg from '../assets/categorias/retro.jpg';
 
 export default function CategoriasDestacadas({ onSelectCategory }) {
   const categorias = [
-    { id: 'casual', nombre: 'Casual', imagen: casualImg, tag: 'Casual' },
-    { id: 'clasico', nombre: 'Clásico', imagen: clasicoImg, tag: 'Clásico' },
-    { id: 'deportivo', nombre: 'Deportivo', imagen: deportivoImg, tag: 'Deportivo' },
-    { id: 'edifice', nombre: 'Edifice', imagen: edificeImg, tag: 'Edifice' },
-    { id: 'elegante', nombre: 'Elegante', imagen: eleganteImg, tag: 'Elegante' },
-    { id: 'retro', nombre: 'Retro', imagen: retroImg, tag: 'Retro' }
+    { id: 'casual', nombre: 'Casual', imagen: casualImg, tag: 'Casual', style: { fontFamily: '"Segoe UI", "Helvetica Neue", sans-serif', fontWeight: 500, fontStyle: 'normal', letterSpacing: '0.05em' } },
+    { id: 'clasico', nombre: 'Clásico', imagen: clasicoImg, tag: 'Clásico', style: { fontFamily: 'var(--font-serif), "Times New Roman", serif', fontWeight: 400, fontStyle: 'italic', letterSpacing: '0.05em' } },
+    { id: 'deportivo', nombre: 'Deportivo', imagen: deportivoImg, tag: 'Deportivo', style: { fontFamily: '"Impact", "Arial Black", sans-serif', fontWeight: 900, fontStyle: 'italic', textTransform: 'uppercase', letterSpacing: '0.05em' } },
+    { id: 'edifice', nombre: 'Edifice', imagen: edificeImg, tag: 'Edifice', style: { fontFamily: '"Trebuchet MS", "Lucida Sans Unicode", sans-serif', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' } },
+    { id: 'elegante', nombre: 'Elegante', imagen: eleganteImg, tag: 'Elegante', style: { fontFamily: 'var(--font-serif), "Georgia", serif', fontWeight: 300, textTransform: 'uppercase', letterSpacing: '0.2em' } },
+    { id: 'retro', nombre: 'Retro', imagen: retroImg, tag: 'Retro', style: { fontFamily: '"Courier New", monospace', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' } }
   ];
 
   return (
@@ -99,7 +99,7 @@ export default function CategoriasDestacadas({ onSelectCategory }) {
                 textAlign: 'center',
                 pointerEvents: 'none'
               }}>
-                <h3 className="font-serif" style={{ fontSize: '1.1rem', letterSpacing: '0.04em', fontWeight: 600, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                <h3 style={{ fontSize: '1.2rem', textShadow: '0 2px 4px rgba(0,0,0,0.6)', margin: 0, ...cat.style }}>
                   {cat.nombre}
                 </h3>
               </div>

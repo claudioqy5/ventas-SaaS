@@ -25,6 +25,7 @@ export default function BarraNavegacion({
   whatsappNumber
 }) {
   const [showSearch, setShowSearch] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
 
@@ -48,20 +49,21 @@ export default function BarraNavegacion({
       .slice(0, 5);
   }, [searchQuery, products]);
 
-  // Cerrar menú de usuario al hacer click fuera
+  // Cerrar menú de usuario y dropdown de búsqueda al hacer click fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setIsUserMenuOpen(false);
       }
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setIsSearchFocused(false);
+      }
     };
-    if (isUserMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isUserMenuOpen]);
+  }, []);
 
   // Cerrar búsqueda al hacer click fuera
   // Eliminado el useEffect redundante para evitar doble registro y cierre inmediato
@@ -547,6 +549,7 @@ export default function BarraNavegacion({
               }}
               onClick={() => {
                 if (!showSearch) setShowSearch(true);
+                setIsSearchFocused(true);
               }}
               title={!showSearch ? "Buscar en el catálogo" : undefined}
               onMouseEnter={(e) => {
@@ -564,7 +567,7 @@ export default function BarraNavegacion({
                     setShowSearch(true);
                   } else if (searchQuery && searchQuery.trim()) {
                     if (onSearchSubmit) onSearchSubmit(searchQuery);
-                    // No ocultar si hay texto buscado
+                    setIsSearchFocused(false);
                   } else {
                     setShowSearch(false);
                   }
@@ -594,16 +597,21 @@ export default function BarraNavegacion({
                 type="text"
                 placeholder="Buscar reloj, calibre, marca..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setIsSearchFocused(true);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
                     if (onSearchSubmit && searchQuery.trim()) {
                       onSearchSubmit(searchQuery);
-                      // No ocultar si hay texto buscado
+                      setIsSearchFocused(false);
                     }
                   } else if (e.key === 'Escape') {
                     setShowSearch(false);
+                    setIsSearchFocused(false);
                   }
                 }}
                 style={{
@@ -665,7 +673,7 @@ export default function BarraNavegacion({
             </div>
 
             {/* Dropdown Flotante de Sugerencias Inteligentes en Tiempo Real */}
-            {showSearch && searchQuery && searchQuery.trim().length >= 2 && (
+            {showSearch && isSearchFocused && searchQuery && searchQuery.trim().length >= 2 && (
               <div
                 style={{
                   position: 'absolute',
