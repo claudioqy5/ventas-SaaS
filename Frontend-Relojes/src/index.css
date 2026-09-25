@@ -611,6 +611,54 @@ body {
   .catalog-layout > div:last-child > div[style*="grid-template-columns"] {
     width: 100% !important;
   }
+
+  /* Checkout Table Mobile Fix */
+  .checkout-table-container {
+    overflow-x: hidden !important;
+    margin: 0 -10px !important;
+  }
+  .checkout-table-cart {
+    min-width: 0 !important;
+  }
+  .checkout-table-cart thead {
+    display: none !important;
+  }
+  .checkout-table-cart, .checkout-table-cart tbody, .checkout-table-cart tr, .checkout-table-cart td {
+    display: block !important;
+    width: 100% !important;
+  }
+  .checkout-table-cart tr {
+    padding: 15px 10px !important;
+    border-bottom: 1px solid var(--border-light) !important;
+    position: relative;
+  }
+  .checkout-table-cart td {
+    padding: 6px 0 !important;
+    text-align: right !important;
+    border: none !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+  .checkout-table-cart td:first-child {
+    justify-content: flex-start !important;
+    text-align: left !important;
+    margin-bottom: 8px;
+    padding-right: 30px !important; /* Space for delete button */
+  }
+  .checkout-table-cart td:nth-child(2)::before { content: "Precio"; font-weight: 600; color: var(--c-taupe); font-size: 0.8rem; }
+  .checkout-table-cart td:nth-child(3)::before { content: "Cantidad"; font-weight: 600; color: var(--c-taupe); font-size: 0.8rem; }
+  .checkout-table-cart td:nth-child(4)::before { content: "Total"; font-weight: 600; color: var(--c-taupe); font-size: 0.8rem; }
+  
+  .checkout-table-cart td:last-child {
+    position: absolute;
+    top: 15px;
+    right: 5px;
+    width: auto !important;
+    padding: 0 !important;
+    justify-content: flex-end !important;
+  }
+  .checkout-table-cart td:last-child::before { content: none; }
 }
 
 /* Grid de productos fluido y adaptable */

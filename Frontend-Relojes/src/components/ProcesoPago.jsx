@@ -448,8 +448,8 @@ export default function ProcesoPago({
                     </button>
                   </div>
                 ) : (
-                  <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '500px' }}>
+                  <div className="checkout-table-container" style={{ overflowX: 'auto' }}>
+                    <table className="checkout-table-cart" style={{ width: '100%', borderCollapse: 'collapse', minWidth: '500px' }}>
                       <thead>
                         <tr style={{ borderBottom: '2px solid var(--border-light)', color: 'var(--c-obsidian)', fontSize: '0.75rem', letterSpacing: '0.05em' }}>
                           <th style={{ padding: '12px 0', textAlign: 'left', width: '45%' }}>PRODUCTO</th>
