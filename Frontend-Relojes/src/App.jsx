@@ -26,6 +26,7 @@ import VistaLibroReclamaciones from './components/VistaLibroReclamaciones';
 import VistaPanelCliente from './components/VistaPanelCliente';
 import VistaPedidoConfirmado from './components/VistaPedidoConfirmado';
 import VistaVerificarCorreo from './components/VistaVerificarCorreo';
+import CookieBanner from './components/CookieBanner';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 import { matchProductSmart } from './utils/searchEngine';
 
@@ -1341,6 +1342,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
         onClose={() => setAddedProduct(null)}
         onOpenCart={() => setIsCartOpen(true)}
       />
+      
+      <CookieBanner />
     </div>
   );
 }

@@ -69,12 +69,6 @@ const FooterLink = ({ href = "#", onClick, children }) => (
 );
 
 export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavigate, onSelectCategory, whatsappNumber }) {
-  const marcas = [
-    "Rolex", "Cartier", "Patek Philippe", "Audemars Piguet",
-    "Omega", "Tag Heuer", "Breitling", "Hublot",
-    "IWC", "Jaeger-LeCoultre", "Tudor", "Panerai"
-  ];
-
   const handleLinkClick = (viewName, fallbackUrl) => (e) => {
     e.preventDefault();
     if (onNavigate) {
@@ -213,36 +207,6 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               <FooterLink href="/categoria/marcas" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Marcas'); } }}>Alta Relojería</FooterLink>
               <FooterLink href="/categoria/accesorios" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Accesorios'); } }}>Accesorios y Cajas</FooterLink>
               <FooterLink href="#" onClick={(e) => { e.preventDefault(); if (onOpenWhatsAppConcierge) onOpenWhatsAppConcierge(); }}>Contáctanos</FooterLink>
-            </ul>
-          </div>
-
-          {/* COL 3: MARCAS */}
-          <div>
-            <h4 style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: '0.95rem',
-              fontWeight: 800,
-              color: '#ffffff',
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase',
-              marginBottom: '10px'
-            }}>
-              Marcas
-            </h4>
-            <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(212, 175, 55, 0.35)', marginBottom: '24px' }}></div>
-            
-            <ul style={{ 
-              listStyle: 'none', 
-              padding: 0, 
-              margin: 0, 
-              display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              columnGap: '10px', 
-              rowGap: '14px' 
-            }}>
-              {marcas.map(marca => (
-                <FooterLink key={marca} href="/categoria/marcas" onClick={(e) => { if (onSelectCategory) { e.preventDefault(); onSelectCategory('Marcas'); } }}>{marca}</FooterLink>
-              ))}
             </ul>
           </div>
 
