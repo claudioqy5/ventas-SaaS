@@ -249,7 +249,7 @@ export default function CajonCarrito({
                       cursor: 'pointer',
                       padding: '4px'
                     }}
-                    title="Eliminar de la bolsa"
+                    title="Eliminar del carrito"
                   >
                     <Trash2 size={16} />
                   </button>

@@ -90,7 +90,7 @@ export default function ToastNotificacion({ product, onClose, onOpenCart }) {
             color: '#10b981',
             textTransform: 'uppercase'
           }}>
-            Añadido con éxito a su bolsa
+            Añadido con éxito a su carrito
           </span>
         </div>
 
@@ -167,7 +167,7 @@ export default function ToastNotificacion({ product, onClose, onOpenCart }) {
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--c-deep-purple)')}
           >
             <ShoppingBag size={16} />
-            Ver Bolsa
+            Ver Carrito de compras
           </button>
         </div>
       </div>

@@ -909,7 +909,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
             padding: '50px 2% 90px',
             width: '100%',
             flex: 1,
-            backgroundColor: (!showFullCatalog && activeView !== 'search') ? '#ffffff' : undefined
+            backgroundColor: '#ffffff'
           }}>
             {/* Encabezado del Catálogo */}
             <div className="catalog-header" style={{

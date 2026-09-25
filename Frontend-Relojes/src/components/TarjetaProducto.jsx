@@ -311,7 +311,7 @@ export default function TarjetaProducto({
             ) : (
               <>
                 <ShoppingBag size={15} strokeWidth={1.5} />
-                Agregar a la bolsa
+                Agregar al carrito
               </>
             )}
           </button>

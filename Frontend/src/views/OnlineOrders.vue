@@ -1739,6 +1739,10 @@ onMounted(() => fetchOrders())
     margin-left: 0;
     width: 100%;
     justify-content: center;
-  }
+}
+
+.modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
 }
 </style>

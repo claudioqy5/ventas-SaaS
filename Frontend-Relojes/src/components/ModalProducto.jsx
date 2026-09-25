@@ -433,12 +433,12 @@ export default function ModalProducto({
                   {added ? (
                     <>
                       <Check size={18} />
-                      ¡Añadido a la Bolsa!
+                      ¡Añadido al carrito!
                     </>
                   ) : (
                     <>
                       <ShoppingBag size={18} />
-                      Añadir a la Bolsa
+                      Añadir al carrito
                     </>
                   )}
                 </button>

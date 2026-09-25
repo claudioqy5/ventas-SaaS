@@ -471,12 +471,12 @@ export default function PaginaDetalleProducto({
                 {added ? (
                   <>
                     <Check size={18} />
-                    ¡Añadido a la Bolsa!
+                    ¡Añadido al Carrito!
                   </>
                 ) : (
                   <>
                     <ShoppingBag size={18} />
-                    {added ? 'Añadido' : 'Añadir al Carrito de Compras'}
+                    Añadir al Carrito de Compras
                   </>
                 )}
               </button>
