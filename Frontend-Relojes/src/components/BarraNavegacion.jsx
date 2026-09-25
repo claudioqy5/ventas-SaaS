@@ -341,9 +341,9 @@ export default function BarraNavegacion({
                 e.currentTarget.style.borderColor = user ? 'var(--c-blush)' : 'var(--border-light)';
               }}
             >
-              <User size={18} color={user ? 'var(--c-blush)' : 'var(--c-deep-purple)'} />
+              <User size={18} color={user ? 'var(--c-blush)' : 'var(--c-deep-purple)'} style={{ flexShrink: 0 }} />
               {user && (
-                <>
+                <span className="user-text-desktop" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{
                     fontSize: '0.82rem',
                     fontFamily: 'var(--font-serif)',
@@ -357,7 +357,7 @@ export default function BarraNavegacion({
                   ) : (
                     <ChevronDown size={14} color="rgba(255, 255, 255, 0.75)" />
                   )}
-                </>
+                </span>
               )}
             </button>
 
@@ -528,7 +528,7 @@ export default function BarraNavegacion({
           {/* Contenedor relativo para el Buscador y su Dropdown de Sugerencias */}
           <div ref={searchContainerRef} style={{ position: 'relative' }}>
             <div
-              className="navbar-search"
+              className={`navbar-search ${showSearch ? 'is-open' : ''}`}
               style={{
                 position: 'relative',
                 display: 'flex',

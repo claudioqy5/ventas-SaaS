@@ -418,9 +418,36 @@ body {
   .navbar-links::-webkit-scrollbar {
     display: none;
   }
+  .navbar-actions {
+    gap: 6px !important;
+  }
+  .navbar-actions > div > button,
+  .navbar-actions > button,
   .navbar-search {
-    /* Prevent search bar from taking too much width on mobile */
-    max-width: 180px !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .navbar-actions > div > button > svg,
+  .navbar-actions > button > svg,
+  .navbar-search button svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  /* When search is open on mobile, it should position absolute to cover the middle */
+  .navbar-search.is-open {
+    position: absolute !important;
+    right: 0 !important;
+    width: calc(100vw - 90px) !important;
+    max-width: none !important;
+    height: 36px !important;
+    z-index: 50 !important;
+  }
+  .navbar-search {
+    /* Prevent search bar from taking too much width on mobile when not open */
+    max-width: 36px !important;
+  }
+  .user-text-desktop {
+    display: none !important;
   }
   
   /* Hero Section */
