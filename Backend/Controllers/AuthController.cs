@@ -408,55 +408,71 @@ public class AuthController : ControllerBase
 
         var correoFinal = !string.IsNullOrEmpty(request.Correo) ? request.Correo : sale.ClienteEmail;
 
-        if (string.IsNullOrEmpty(correoFinal))
-            return BadRequest(new { message = "No se proporcionó un usuario/correo para la cuenta." });
-
-        var existingClient = await _context.Clients.Find(c => c.Correo == correoFinal && c.EmpresaId == empresaId).FirstOrDefaultAsync();
-
-        Client client;
-        if (existingClient != null)
+        Client client = null;
+        if (!string.IsNullOrEmpty(request.ClientId))
         {
-            client = existingClient;
-            var updateClient = Builders<Client>.Update.Set(c => c.EsUsuarioEcommerce, true);
+            client = await _context.Clients.Find(c => c.Id == request.ClientId && c.EmpresaId == empresaId).FirstOrDefaultAsync();
+            if (client == null) return BadRequest(new { message = "El cliente seleccionado no existe." });
             
+            // Opcional: si mandan clave al vincular por ID, actualizar la clave
             if (!string.IsNullOrEmpty(request.Clave))
             {
-                updateClient = updateClient.Set(c => c.ClaveHash, _passwordHasher.Hash(request.Clave));
+                var updateClient = Builders<Client>.Update
+                    .Set(c => c.EsUsuarioEcommerce, true)
+                    .Set(c => c.ClaveHash, _passwordHasher.Hash(request.Clave));
+                await _context.Clients.UpdateOneAsync(c => c.Id == client.Id, updateClient);
             }
-            
-            await _context.Clients.UpdateOneAsync(c => c.Id == client.Id, updateClient);
         }
         else
         {
-            if (string.IsNullOrEmpty(request.Clave))
-                return BadRequest(new { message = "Debes proporcionar una contraseña para crear la nueva cuenta." });
+            if (string.IsNullOrEmpty(correoFinal))
+                return BadRequest(new { message = "No se proporcionó un usuario/correo para la cuenta." });
 
-            client = new Client
+            client = await _context.Clients.Find(c => c.Correo == correoFinal && c.EmpresaId == empresaId).FirstOrDefaultAsync();
+
+            if (client != null)
             {
-                EmpresaId = empresaId,
-                Nombre = sale.NombreCliente,
-                Nombres = sale.NombreCliente,
-                Correo = correoFinal,
-                Telefono = sale.WhatsAppCliente ?? "",
-                TipoDocumento = sale.ClienteTipoDocumento ?? "DNI",
-                NumeroDocumento = sale.ClienteNumeroDocumento ?? "",
-                Direccion = sale.DireccionEntrega ?? "",
-                Departamento = sale.DepartamentoEntrega ?? "",
-                Provincia = sale.ProvinciaEntrega ?? "",
-                Distrito = sale.DistritoEntrega ?? "",
-                Referencia = sale.ReferenciaEntrega ?? "",
-                ClaveHash = _passwordHasher.Hash(request.Clave),
-                EsUsuarioEcommerce = true,
-                CorreoVerificado = true,
-                FechaCreacion = DateTime.UtcNow
-            };
-            await _context.Clients.InsertOneAsync(client);
+                var updateClient = Builders<Client>.Update.Set(c => c.EsUsuarioEcommerce, true);
+                
+                if (!string.IsNullOrEmpty(request.Clave))
+                {
+                    updateClient = updateClient.Set(c => c.ClaveHash, _passwordHasher.Hash(request.Clave));
+                }
+                
+                await _context.Clients.UpdateOneAsync(c => c.Id == client.Id, updateClient);
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(request.Clave))
+                    return BadRequest(new { message = "Debes proporcionar una contraseña para crear la nueva cuenta." });
+
+                client = new Client
+                {
+                    EmpresaId = empresaId,
+                    Nombre = sale.NombreCliente,
+                    Nombres = sale.NombreCliente,
+                    Correo = correoFinal,
+                    Telefono = sale.WhatsAppCliente ?? "",
+                    TipoDocumento = sale.ClienteTipoDocumento ?? "DNI",
+                    NumeroDocumento = sale.ClienteNumeroDocumento ?? "",
+                    Direccion = sale.DireccionEntrega ?? "",
+                    Departamento = sale.DepartamentoEntrega ?? "",
+                    Provincia = sale.ProvinciaEntrega ?? "",
+                    Distrito = sale.DistritoEntrega ?? "",
+                    Referencia = sale.ReferenciaEntrega ?? "",
+                    ClaveHash = _passwordHasher.Hash(request.Clave),
+                    EsUsuarioEcommerce = true,
+                    CorreoVerificado = true,
+                    FechaCreacion = DateTime.UtcNow
+                };
+                await _context.Clients.InsertOneAsync(client);
+            }
         }
 
         var updateSale = Builders<Sale>.Update.Set(s => s.ClienteId, client.Id);
         await _context.Sales.UpdateOneAsync(s => s.Id == sale.Id, updateSale);
 
-        return Ok(new { message = "Cuenta creada y pedido vinculado exitosamente." });
+        return Ok(new { message = "Pedido vinculado exitosamente." });
     }
 }
 
@@ -465,4 +481,4 @@ public record LoginRequest(string Correo, string Clave);
 public record RegisterEmpresaRequest(string NombreEmpresa, string PlanSuscripcion, string NombrePropietario, string CorreoPropietario, string ClavePropietario);
 public record CreateUserRequest(string? EmpresaId, string Nombre, string Correo, string Clave, string Rol, List<string> Permisos, string? NombreTienda);
 public record UpdateUserRequest(string Nombre, string Correo, string? Clave, string Rol, List<string> Permisos, bool Activo, string? EmpresaId);
-public record LinkOrderClientRequest(string OrderId, string Clave, string? Correo);
+public record LinkOrderClientRequest(string OrderId, string? Clave, string? Correo, string? ClientId);

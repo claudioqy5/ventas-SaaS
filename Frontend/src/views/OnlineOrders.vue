@@ -717,16 +717,42 @@
             <button @click="linkClientModal.visible = false" class="close-btn">×</button>
           </header>
           <div class="modal-body" style="padding: 20px;">
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0; margin-bottom: 16px; line-height: 1.5;">
-              Se creará (o actualizará) una cuenta de E-Commerce para <strong>{{ linkClientModal.order?.nombreCliente }}</strong> y se le asignará este pedido.
-            </p>
-            <div style="margin-bottom: 16px;">
-              <label class="form-label">Usuario</label>
-              <input v-model="linkClientModal.correo" type="text" class="form-input-styled" placeholder="Ej: 962956919 o correo@ejemplo.com" />
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+              <button @click="linkClientModal.mode = 'new'" :class="['btn', linkClientModal.mode === 'new' ? 'btn-primary' : 'btn-secondary']" style="flex: 1; padding: 8px;">Crear/Actualizar</button>
+              <button @click="linkClientModal.mode = 'existing'" :class="['btn', linkClientModal.mode === 'existing' ? 'btn-primary' : 'btn-secondary']" style="flex: 1; padding: 8px;">Cliente Existente</button>
             </div>
-            <div style="margin-bottom: 16px;">
-              <label class="form-label">Contraseña inicial para el cliente</label>
-              <input v-model="linkClientModal.clave" type="text" class="form-input-styled" placeholder="Ej: 962956919" />
+
+            <div v-if="linkClientModal.mode === 'new'">
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0; margin-bottom: 16px; line-height: 1.5;">
+                Se creará (o actualizará) una cuenta de E-Commerce para <strong>{{ linkClientModal.order?.nombreCliente }}</strong> y se le asignará este pedido.
+              </p>
+              <div style="margin-bottom: 16px;">
+                <label class="form-label">Usuario</label>
+                <input v-model="linkClientModal.correo" type="text" class="form-input-styled" placeholder="Ej: 962956919 o correo@ejemplo.com" />
+              </div>
+              <div style="margin-bottom: 16px;">
+                <label class="form-label">Contraseña inicial para el cliente</label>
+                <input v-model="linkClientModal.clave" type="text" class="form-input-styled" placeholder="Ej: 962956919" />
+              </div>
+            </div>
+
+            <div v-else>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0; margin-bottom: 16px; line-height: 1.5;">
+                Selecciona un cliente existente para asignarle este pedido.
+              </p>
+              <div style="margin-bottom: 16px;">
+                <label class="form-label">Buscar y seleccionar cliente</label>
+                <select v-model="linkClientModal.clientId" class="form-input-styled" style="width: 100%;">
+                  <option value="" disabled>-- Selecciona un cliente --</option>
+                  <option v-for="c in linkClientModal.clientsList" :key="c.id" :value="c.id">
+                    {{ c.nombre || c.nombres + ' ' + c.apellidos }} ({{ c.correo || c.telefono || 'Sin correo/tel' }})
+                  </option>
+                </select>
+              </div>
+              <div style="margin-bottom: 16px;">
+                <label class="form-label">Nueva contraseña (Opcional)</label>
+                <input v-model="linkClientModal.clave" type="text" class="form-input-styled" placeholder="Dejar en blanco para mantener la actual" />
+              </div>
             </div>
           </div>
           <footer style="display: flex; gap: 10px; justify-content: flex-end; padding: 16px 20px; border-top: 1px solid var(--border-color, #e2e8f0); background: #f8fafc;">
@@ -765,29 +791,53 @@ const updatingStatus = ref(false)
 const linkClientModal = ref({
   visible: false,
   order: null,
+  mode: 'new',
+  clientId: '',
   correo: '',
   clave: '',
-  loading: false
+  loading: false,
+  clientsList: []
 })
 
-const openLinkClientModal = (order) => {
+const openLinkClientModal = async (order) => {
   linkClientModal.value = {
     visible: true,
     order,
+    mode: 'new',
+    clientId: '',
     correo: order.clienteEmail || order.whatsAppCliente || order.clienteTelefono || '',
     clave: order.whatsAppCliente || order.clienteTelefono || '',
-    loading: false
+    loading: false,
+    clientsList: []
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/api/clients`, {
+      headers: { 'Authorization': `Bearer ${authStore.token}` }
+    })
+    if (res.ok) {
+      linkClientModal.value.clientsList = await res.json()
+    }
+  } catch (e) {
+    console.error('Error fetching clients:', e)
   }
 }
 
 const submitLinkClient = async () => {
-  if (!linkClientModal.value.correo) {
-    alert('Debes ingresar un usuario para la cuenta.')
-    return
-  }
-  if (!linkClientModal.value.clave) {
-    alert('Debes ingresar una contraseña temporal para la cuenta.')
-    return
+  if (linkClientModal.value.mode === 'new') {
+    if (!linkClientModal.value.correo) {
+      alert('Debes ingresar un usuario para la cuenta.')
+      return
+    }
+    if (!linkClientModal.value.clave) {
+      alert('Debes ingresar una contraseña temporal para la cuenta.')
+      return
+    }
+  } else {
+    if (!linkClientModal.value.clientId) {
+      alert('Debes seleccionar un cliente existente.')
+      return
+    }
   }
   
   linkClientModal.value.loading = true
@@ -800,8 +850,9 @@ const submitLinkClient = async () => {
       },
       body: JSON.stringify({
         orderId: linkClientModal.value.order.id,
-        correo: linkClientModal.value.correo,
-        clave: linkClientModal.value.clave
+        correo: linkClientModal.value.mode === 'new' ? linkClientModal.value.correo : null,
+        clientId: linkClientModal.value.mode === 'existing' ? linkClientModal.value.clientId : null,
+        clave: linkClientModal.value.clave || null
       })
     })
     
