@@ -115,6 +115,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
   const [showFullCatalog, setShowFullCatalog] = useState(!!initialCategory || !!initialSearchQuery);
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery || '');
   const [sortBy, setSortBy] = useState('featured');
+  const [currentPage, setCurrentPage] = useState(1);
   
   // Modales, Notificaciones y Vistas
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -569,8 +570,19 @@ export default function App({ initialCategory, initialProductId, initialView = '
           matchesCategory = isMujerCat || isMujerAttr;
         } else if (selLower === 'accesorios') {
           matchesCategory = (p.categoria && p.categoria.toLowerCase().includes('accesorio')) || (p.categorias && p.categorias.some(c => c.toLowerCase().includes('accesorio')));
-        } else if (selLower === 'marcas') {
+        } else if (selLower === 'colecciones' || selLower === 'marcas') {
           matchesCategory = true;
+        } else if (['casual', 'clásico', 'deportivo', 'elegante', 'retro', 'clasico'].includes(selLower)) {
+          // Filtrar por estilo
+          const targetStyle = selLower === 'clásico' ? 'clasico' : selLower;
+          matchesCategory = 
+            p.estilo?.toLowerCase().replace('á', 'a') === targetStyle || 
+            p.atributos?.some(a => a.nombre?.toLowerCase() === 'estilo' && a.valor?.toLowerCase().replace('á', 'a') === targetStyle);
+        } else if (['edifice', 'vintage'].includes(selLower)) {
+          // Filtrar por colección
+          matchesCategory = 
+            p.coleccion?.toLowerCase() === selLower || 
+            p.atributos?.some(a => (a.nombre?.toLowerCase() === 'colección' || a.nombre?.toLowerCase() === 'coleccion') && a.valor?.toLowerCase() === selLower);
         } else {
           matchesCategory = (p.categoria && p.categoria.toLowerCase() === selLower) || (p.categorias && p.categorias.some(c => c.toLowerCase() === selLower));
         }
@@ -642,6 +654,10 @@ export default function App({ initialCategory, initialProductId, initialView = '
       });
   }, [products, selectedCategory, searchQuery, sortBy, advancedFilters, activeView]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filteredProducts]);
+
   const groupedProducts = useMemo(() => {
     const groups = {};
     const result = [];
@@ -704,6 +720,31 @@ export default function App({ initialCategory, initialProductId, initialView = '
     
     return result.length > 0 ? result : groupedProducts; // Fallback
   }, [products, groupedProducts]);
+
+  const ITEMS_PER_PAGE = 28;
+  const totalPages = Math.ceil(groupedProducts.length / ITEMS_PER_PAGE) || 1;
+
+  const currentProducts = useMemo(() => {
+    if (!showFullCatalog) return bestSellersGrouped.slice(0, 5);
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return groupedProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [showFullCatalog, bestSellersGrouped, groupedProducts, currentPage]);
+
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+      }
+    }
+    return pages;
+  };
 
   // Carrito
   const handleAddToCart = (product, qty = 1) => {
@@ -1082,8 +1123,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
                   </div>
                 ) : (
                   <>
-                    <div className="grid-4-products" style={{ marginBottom: !showFullCatalog ? '60px' : '0' }}>
-                      {(showFullCatalog ? groupedProducts : bestSellersGrouped.slice(0, 5)).map((group) => (
+                    <div className={showFullCatalog ? "grid-4-products" : "grid-5-products"} style={{ marginBottom: !showFullCatalog ? '60px' : '0' }}>
+                      {currentProducts.map((group) => (
                         <TarjetaProducto
                           key={`main-${group.main.id}`}
                           product={group.main}
@@ -1094,6 +1135,69 @@ export default function App({ initialCategory, initialProductId, initialView = '
                         />
                       ))}
                     </div>
+
+                    {showFullCatalog && groupedProducts.length > ITEMS_PER_PAGE && (
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center', 
+                        marginTop: '50px', 
+                        paddingTop: '20px', 
+                        borderTop: '1px solid rgba(59, 60, 65, 0.1)' 
+                      }}>
+                        <div style={{ color: 'var(--c-indigo)', fontSize: '0.95rem', fontFamily: 'var(--font-serif)', fontWeight: 600 }}>
+                          {((currentPage - 1) * ITEMS_PER_PAGE) + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, groupedProducts.length)} de {groupedProducts.length} Resultados
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <button 
+                            onClick={() => {
+                              setCurrentPage(prev => Math.max(prev - 1, 1));
+                              window.scrollTo({ top: document.getElementById('catalogo').offsetTop - 80, behavior: 'smooth' });
+                            }} 
+                            disabled={currentPage === 1} 
+                            style={{ background: 'none', border: 'none', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.4 : 1, padding: '4px', color: 'var(--c-indigo)', display: 'flex', alignItems: 'center' }}
+                          >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                          </button>
+                          
+                          {getPageNumbers().map((num, i) => (
+                            <button 
+                              key={i} 
+                              onClick={() => {
+                                if (typeof num === 'number') {
+                                  setCurrentPage(num);
+                                  window.scrollTo({ top: document.getElementById('catalogo').offsetTop - 80, behavior: 'smooth' });
+                                }
+                              }}
+                              style={{
+                                width: '38px', height: '38px', borderRadius: '50%', border: 'none',
+                                backgroundColor: num === currentPage ? 'var(--c-deep-purple)' : 'transparent',
+                                color: num === currentPage ? '#ffffff' : 'var(--c-indigo)',
+                                fontWeight: num === currentPage ? 700 : 500,
+                                fontFamily: 'var(--font-serif)',
+                                fontSize: '0.95rem',
+                                cursor: typeof num === 'number' ? 'pointer' : 'default',
+                                transition: 'all 0.2s ease',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                              }}
+                            >
+                              {num}
+                            </button>
+                          ))}
+
+                          <button 
+                            onClick={() => {
+                              setCurrentPage(prev => Math.min(prev + 1, totalPages));
+                              window.scrollTo({ top: document.getElementById('catalogo').offsetTop - 80, behavior: 'smooth' });
+                            }} 
+                            disabled={currentPage === totalPages} 
+                            style={{ background: 'none', border: 'none', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', opacity: currentPage === totalPages ? 0.4 : 1, padding: '4px', color: 'var(--c-indigo)', display: 'flex', alignItems: 'center' }}
+                          >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -1244,7 +1348,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
                 Nuevos Ingresos
               </h2>
             </div>
-            <div className="grid-4-products">
+            <div className="grid-5-products">
               {newArrivalsGrouped.slice(0, 5).map((group) => (
                 <TarjetaProducto
                   key={`new-${group.main.id}`}

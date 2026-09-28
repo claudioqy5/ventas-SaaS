@@ -232,7 +232,14 @@ export default function BarraNavegacion({
           {[
             { label: 'Hombre', href: '/categoria/hombre', tag: 'Hombre' },
             { label: 'Mujer', href: '/categoria/mujer', tag: 'Mujer' },
-            { label: 'Marcas', href: '/categoria/marcas', isHighlight: true, isBrand: true },
+            { 
+              label: 'Colecciones', 
+              href: '#', 
+              isHighlight: true, 
+              isBrand: true, 
+              tag: 'Colecciones',
+              dropdown: ['Casual', 'Clásico', 'Deportivo', 'Elegante', 'Retro', 'Edifice', 'Vintage']
+            },
             { label: 'Novedades', href: '/categoria/novedades', tag: 'Novedades' },
             { label: 'Ofertas', href: '/categoria/ofertas', tag: 'Ofertas' },
             { label: 'Accesorios', href: '/categoria/accesorios', tag: 'Accesorios' }
@@ -243,63 +250,86 @@ export default function BarraNavegacion({
             );
 
             return (
-              <Link
-                key={idx}
-                href={item.href}
-                onClick={(e) => {
-                  if (onSelectCategory) {
-                    e.preventDefault();
-                    onSelectCategory(targetTag);
-                    if (isMobileMenuOpen) setIsMobileMenuOpen(false);
-                  }
-                }}
-                style={{
-                  color: isCatActive 
-                    ? 'var(--c-blush)' 
-                    : item.isHighlight 
-                      ? 'var(--c-indigo)' 
-                      : 'var(--c-deep-purple)',
-                  textDecoration: 'none',
-                  fontSize: '0.8rem',
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  fontFamily: 'var(--font-serif)',
-                  fontWeight: isCatActive ? 700 : 500,
-                  transition: 'all 0.2s ease',
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  padding: '6px 0',
-                  flexShrink: 0,
-                  whiteSpace: 'nowrap',
-                  borderBottom: isCatActive ? '2px solid var(--c-gold)' : '2px solid transparent'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCatActive) e.currentTarget.style.color = 'var(--c-blush)';
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCatActive) {
-                    e.currentTarget.style.color = item.isHighlight ? 'var(--c-indigo)' : 'var(--c-deep-purple)';
-                  }
-                }}
-              >
-                {item.label}
-                {item.badge && (
-                  <span style={{
-                    fontSize: '0.58rem',
-                    backgroundColor: item.badge === 'OFERTA' ? 'var(--c-blush)' : 'var(--c-indigo)',
-                    color: '#ffffff',
-                    padding: '2px 5px',
-                    borderRadius: '4px',
-                    lineHeight: 1,
-                    fontWeight: 800,
-                    letterSpacing: '0.05em'
-                  }}>
-                    {item.badge}
-                  </span>
+              <div key={idx} className={item.dropdown ? "nav-item-container" : ""}>
+                <Link
+                  href={item.href}
+                  onClick={(e) => {
+                    if (item.dropdown) {
+                      e.preventDefault();
+                    } else if (onSelectCategory) {
+                      e.preventDefault();
+                      onSelectCategory(targetTag);
+                      if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+                    }
+                  }}
+                  style={{
+                    color: isCatActive 
+                      ? 'var(--c-blush)' 
+                      : item.isHighlight 
+                        ? 'var(--c-indigo)' 
+                        : 'var(--c-deep-purple)',
+                    textDecoration: 'none',
+                    fontSize: '0.8rem',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    fontFamily: 'var(--font-serif)',
+                    fontWeight: isCatActive ? 700 : 500,
+                    transition: 'all 0.2s ease',
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    padding: '6px 0',
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap',
+                    borderBottom: isCatActive ? '2px solid var(--c-gold)' : '2px solid transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isCatActive) e.currentTarget.style.color = 'var(--c-blush)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isCatActive) {
+                      e.currentTarget.style.color = item.isHighlight ? 'var(--c-indigo)' : 'var(--c-deep-purple)';
+                    }
+                  }}
+                >
+                  {item.label}
+                  {item.badge && (
+                    <span style={{
+                      fontSize: '0.58rem',
+                      backgroundColor: item.badge === 'OFERTA' ? 'var(--c-blush)' : 'var(--c-indigo)',
+                      color: '#ffffff',
+                      padding: '2px 5px',
+                      borderRadius: '4px',
+                      lineHeight: 1,
+                      fontWeight: 800,
+                      letterSpacing: '0.05em'
+                    }}>
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+
+                {item.dropdown && (
+                  <div className="nav-dropdown">
+                    {item.dropdown.map((dropItem, dropIdx) => (
+                      <button
+                        key={dropIdx}
+                        className="nav-dropdown-item"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (onSelectCategory) {
+                            onSelectCategory(dropItem);
+                            if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+                          }
+                        }}
+                      >
+                        {dropItem}
+                      </button>
+                    ))}
+                  </div>
                 )}
-              </Link>
+              </div>
             );
           })}
         </nav>

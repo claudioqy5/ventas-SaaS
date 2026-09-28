@@ -688,34 +688,41 @@ body {
 /* Grid de productos fluido y adaptable */
 .grid-4-products {
   display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 30px !important;
+  width: 100% !important;
+}
+
+.grid-5-products {
+  display: grid !important;
   grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
   gap: 30px !important;
   width: 100% !important;
 }
 
 @media (max-width: 1536px) {
-  .grid-4-products {
+  .grid-4-products, .grid-5-products {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 25px !important;
   }
 }
 
 @media (max-width: 1280px) {
-  .grid-4-products {
+  .grid-4-products, .grid-5-products {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     gap: 20px !important;
   }
 }
 
 @media (max-width: 1024px) {
-  .grid-4-products {
+  .grid-4-products, .grid-5-products {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 16px !important;
   }
 }
 
 @media (max-width: 640px) {
-  .grid-4-products {
+  .grid-4-products, .grid-5-products {
     grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
     gap: 16px !important;
   }
@@ -745,6 +752,59 @@ body {
   to {
     transform: translateX(0);
   }
+}
+
+/* Nav Dropdown */
+.nav-item-container {
+  position: relative;
+}
+.nav-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  min-width: 160px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 10px 0;
+  z-index: 200;
+  border: 1px solid rgba(59, 60, 65, 0.1);
+  animation: fadeIn 0.2s ease-out;
+}
+/* Puente invisible para que no se pierda el hover al bajar el mouse */
+.nav-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 0;
+  width: 100%;
+  height: 15px;
+  background: transparent;
+}
+.nav-item-container:hover .nav-dropdown {
+  display: block;
+}
+.nav-dropdown-item {
+  display: block;
+  padding: 10px 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  text-align: center;
+}
+.nav-dropdown-item:hover {
+  background-color: #f9f9f9;
+  color: var(--c-blush);
 }
 
 
