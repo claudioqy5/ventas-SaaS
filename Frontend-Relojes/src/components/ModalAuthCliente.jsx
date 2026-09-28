@@ -577,13 +577,13 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
 
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, color: 'var(--c-deep-purple)', marginBottom: '8px' }}>
-                Correo Electrónico
+                Correo o Teléfono (Usuario)
               </label>
               <div style={{ position: 'relative' }}>
                 <span style={{ position: 'absolute', left: '16px', top: '10px', color: 'var(--c-taupe)', fontFamily: 'sans-serif', fontSize: '1.2rem', fontWeight: 500 }}>@</span>
                 <input
-                  type="email"
-                  placeholder="Ingresa tu correo electrónico"
+                  type="text"
+                  placeholder="Ej. correo@ejemplo.com o 962956919"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   style={{

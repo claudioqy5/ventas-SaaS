@@ -486,9 +486,14 @@
                 <input v-model="form.telefono" type="text" placeholder="987654321" />
               </div>
               <div class="field">
-                <label>Correo Electrónico</label>
-                <input v-model="form.correo" type="email" placeholder="juan@correo.com" />
+                <label>Usuario (Correo o Teléfono)</label>
+                <input v-model="form.correo" type="text" placeholder="juan@correo.com o 987654321" />
               </div>
+            </div>
+
+            <div class="field" style="margin-bottom: 15px;">
+              <label>Contraseña E-commerce {{ isEdit ? '(Opcional: llenar solo para cambiarla)' : '(Opcional)' }}</label>
+              <input v-model="form.nuevaClave" type="text" placeholder="Ej: 962956919" />
             </div>
 
             <h3 style="font-size: 0.95rem; color: var(--primary); margin-top: 15px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">Datos de Entrega</h3>
@@ -607,6 +612,7 @@ const form = reactive({
   numeroDocumento: '',
   telefono: '',
   correo: '',
+  nuevaClave: '',
   direccion: '',
   departamento: '',
   provincia: '',
@@ -641,6 +647,7 @@ const openCreateModal = () => {
   form.numeroDocumento = ''
   form.telefono = ''
   form.correo = ''
+  form.nuevaClave = ''
   form.direccion = ''
   form.departamento = ''
   form.provincia = ''
@@ -659,6 +666,7 @@ const openEditModal = (client) => {
   form.numeroDocumento = client.numeroDocumento || ''
   form.telefono = client.telefono || ''
   form.correo = client.correo || ''
+  form.nuevaClave = ''
   form.direccion = client.direccion || ''
   form.departamento = client.departamento || ''
   form.provincia = client.provincia || ''

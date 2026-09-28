@@ -338,7 +338,11 @@ public class PublicStoreController : ControllerBase
             RucFactura = request.RucFactura,
             RazonSocialFactura = request.RazonSocialFactura,
             DireccionFiscalFactura = request.DireccionFiscalFactura,
-            CodigoOperacionPago = request.CodigoOperacionPago
+            CodigoOperacionPago = request.CodigoOperacionPago,
+            ClienteEmail = request.CorreoCliente,
+            WhatsAppCliente = request.TelefonoCliente,
+            ClienteTipoDocumento = request.TipoDocumento,
+            ClienteNumeroDocumento = request.NumeroDocumento
         };
 
         foreach (var item in request.Items)
@@ -634,6 +638,8 @@ public record StoreOrderRequest(
     string? NombreCliente,
     string? TipoDocumento,
     string? NumeroDocumento,
+    string? CorreoCliente,
+    string? TelefonoCliente,
     // Datos de entrega
     string? DireccionEntrega,
     string? DepartamentoEntrega,

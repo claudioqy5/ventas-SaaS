@@ -387,6 +387,77 @@ public class AuthController : ControllerBase
 
         return Ok(new { message = "Correo verificado exitosamente." });
     }
+
+    // POST api/auth/link-order-client — crea o actualiza la cuenta del cliente y vincula su pedido
+    [Authorize]
+    [HttpPost("link-order-client")]
+    public async Task<IActionResult> LinkOrderClient([FromBody] LinkOrderClientRequest request)
+    {
+        var role = _userContext.Role;
+        if (role != "Superadmin" && role != "EmpresaOwner" && !_userContext.HasPermission("clientes") && !_userContext.HasPermission("pedidos_web"))
+            return Forbid();
+
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        var sale = await _context.Sales.Find(s => s.Id == request.OrderId && s.EmpresaId == empresaId).FirstOrDefaultAsync();
+        if (sale == null) return NotFound(new { message = "Pedido no encontrado." });
+
+        if (!string.IsNullOrEmpty(sale.ClienteId))
+            return BadRequest(new { message = "Este pedido ya está vinculado a un cliente." });
+
+        var correoFinal = !string.IsNullOrEmpty(request.Correo) ? request.Correo : sale.ClienteEmail;
+
+        if (string.IsNullOrEmpty(correoFinal))
+            return BadRequest(new { message = "No se proporcionó un usuario/correo para la cuenta." });
+
+        var existingClient = await _context.Clients.Find(c => c.Correo == correoFinal && c.EmpresaId == empresaId).FirstOrDefaultAsync();
+
+        Client client;
+        if (existingClient != null)
+        {
+            client = existingClient;
+            var updateClient = Builders<Client>.Update.Set(c => c.EsUsuarioEcommerce, true);
+            
+            if (!string.IsNullOrEmpty(request.Clave))
+            {
+                updateClient = updateClient.Set(c => c.ClaveHash, _passwordHasher.Hash(request.Clave));
+            }
+            
+            await _context.Clients.UpdateOneAsync(c => c.Id == client.Id, updateClient);
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(request.Clave))
+                return BadRequest(new { message = "Debes proporcionar una contraseña para crear la nueva cuenta." });
+
+            client = new Client
+            {
+                EmpresaId = empresaId,
+                Nombre = sale.NombreCliente,
+                Nombres = sale.NombreCliente,
+                Correo = correoFinal,
+                Telefono = sale.WhatsAppCliente ?? "",
+                TipoDocumento = sale.ClienteTipoDocumento ?? "DNI",
+                NumeroDocumento = sale.ClienteNumeroDocumento ?? "",
+                Direccion = sale.DireccionEntrega ?? "",
+                Departamento = sale.DepartamentoEntrega ?? "",
+                Provincia = sale.ProvinciaEntrega ?? "",
+                Distrito = sale.DistritoEntrega ?? "",
+                Referencia = sale.ReferenciaEntrega ?? "",
+                ClaveHash = _passwordHasher.Hash(request.Clave),
+                EsUsuarioEcommerce = true,
+                CorreoVerificado = true,
+                FechaCreacion = DateTime.UtcNow
+            };
+            await _context.Clients.InsertOneAsync(client);
+        }
+
+        var updateSale = Builders<Sale>.Update.Set(s => s.ClienteId, client.Id);
+        await _context.Sales.UpdateOneAsync(s => s.Id == sale.Id, updateSale);
+
+        return Ok(new { message = "Cuenta creada y pedido vinculado exitosamente." });
+    }
 }
 
 // Modelos de peticion (DTOs) — definen la estructura de los datos que llegan en cada endpoint
@@ -394,3 +465,4 @@ public record LoginRequest(string Correo, string Clave);
 public record RegisterEmpresaRequest(string NombreEmpresa, string PlanSuscripcion, string NombrePropietario, string CorreoPropietario, string ClavePropietario);
 public record CreateUserRequest(string? EmpresaId, string Nombre, string Correo, string Clave, string Rol, List<string> Permisos, string? NombreTienda);
 public record UpdateUserRequest(string Nombre, string Correo, string? Clave, string Rol, List<string> Permisos, bool Activo, string? EmpresaId);
+public record LinkOrderClientRequest(string OrderId, string Clave, string? Correo);

@@ -144,7 +144,7 @@ export default function ProcesoPago({
     const errors = {};
     if (!personalData.nombres.trim()) errors.nombres = 'Ingresa tus nombres';
     if (!personalData.apellidos.trim()) errors.apellidos = 'Ingresa tus apellidos';
-    if (!personalData.email.trim() || !personalData.email.includes('@')) errors.email = 'Ingresa un correo electrónico válido';
+    if (!personalData.email.trim()) errors.email = 'Ingresa un correo o teléfono válido';
     if (!personalData.numDoc.trim()) errors.numDoc = 'Ingresa tu número de documento';
     if (!personalData.telefono.trim() || personalData.telefono.length < 8) errors.telefono = 'Ingresa un teléfono válido';
     setFormErrors(errors);
@@ -193,10 +193,6 @@ export default function ProcesoPago({
     if (currentStep === 1) {
       if (items.length > 0) setCurrentStep(2);
     } else if (currentStep === 2) {
-      if (!token) {
-        onRequireAuth();
-        return;
-      }
       if (validateStep2()) setCurrentStep(3);
     } else if (currentStep === 3) {
       if (validateStep3()) setCurrentStep(4);
@@ -213,10 +209,6 @@ export default function ProcesoPago({
       }
       if (!validateStep3()) {
         setCurrentStep(3);
-        return;
-      }
-      if (!token) {
-        onRequireAuth();
         return;
       }
     }
@@ -239,6 +231,8 @@ export default function ProcesoPago({
           : `${personalData.nombres} ${personalData.apellidos}`,
         tipoDocumento: isGuestMode ? '-' : personalData.tipoDoc,
         numeroDocumento: isGuestMode ? '' : personalData.numDoc,
+        correoCliente: isGuestMode ? '' : personalData.email,
+        telefonoCliente: isGuestMode ? '' : personalData.telefono,
 
         // Productos del carrito
         items: items.map(item => ({
@@ -586,9 +580,9 @@ export default function ProcesoPago({
                 </div>
 
                 <div style={{ marginBottom: '20px' }}>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Correo Electrónico *</label>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Correo o Teléfono *</label>
                   <input 
-                    type="email" 
+                    type="text" 
                     value={personalData.email}
                     onChange={e => {
                       setPersonalData({...personalData, email: e.target.value});

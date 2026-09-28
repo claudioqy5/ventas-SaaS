@@ -37,6 +37,10 @@ public class Client
 
     // Autenticación de e-commerce
     public string? ClaveHash { get; set; }
+    
+    [BsonIgnore]
+    public string? NuevaClave { get; set; }
+    
     public bool EsUsuarioEcommerce { get; set; } = false;
     public bool CorreoVerificado { get; set; } = false;
     public string? TokenVerificacion { get; set; }

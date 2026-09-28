@@ -264,7 +264,22 @@
                 Cliente
               </h4>
               <div class="detail-row"><span>Nombre:</span> <strong>{{ selectedOrder.nombreCliente }}</strong></div>
+              <div v-if="selectedOrder.clienteTipoDocumento || selectedOrder.clienteNumeroDocumento" class="detail-row">
+                <span>Documento:</span> <strong>{{ selectedOrder.clienteTipoDocumento }} {{ selectedOrder.clienteNumeroDocumento }}</strong>
+              </div>
+              <div v-if="selectedOrder.clienteEmail" class="detail-row">
+                <span>Correo:</span> <strong>{{ selectedOrder.clienteEmail }}</strong>
+              </div>
+              <div v-if="selectedOrder.whatsAppCliente && selectedOrder.origenPedido !== 'WhatsAppBot'" class="detail-row">
+                <span>Teléfono:</span> <strong>+{{ selectedOrder.whatsAppCliente }}</strong>
+              </div>
               <div v-if="selectedOrder.esEntregaATercero" class="detail-row"><span>Receptor:</span> <strong>{{ selectedOrder.nombreReceptor }} (DNI: {{ selectedOrder.dniReceptor }})</strong></div>
+              
+              <div v-if="!selectedOrder.clienteId" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color, #e2e8f0);">
+                 <button @click="openLinkClientModal(selectedOrder)" class="btn" style="background: #0f172a; color: white; border: none; padding: 6px 12px; font-size: 0.82rem; width: 100%; border-radius: 6px; font-weight: 600;">
+                   Crear cuenta de e-commerce y vincular
+                 </button>
+              </div>
             </div>
 
             <div class="detail-section">
@@ -693,6 +708,36 @@
           </div>
         </div>
       </div>
+
+      <!-- Modal: Crear cuenta y vincular -->
+      <div v-if="linkClientModal.visible" class="modal-overlay" @click.self="linkClientModal.visible = false">
+        <div class="modal-content card" style="max-width: 400px; padding: 0;">
+          <header class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color, #e2e8f0);">
+            <h3 style="margin: 0; font-size: 1.1rem;">Vincular Pedido a Cuenta</h3>
+            <button @click="linkClientModal.visible = false" class="close-btn">×</button>
+          </header>
+          <div class="modal-body" style="padding: 20px;">
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0; margin-bottom: 16px; line-height: 1.5;">
+              Se creará (o actualizará) una cuenta de E-Commerce para <strong>{{ linkClientModal.order?.nombreCliente }}</strong> y se le asignará este pedido.
+            </p>
+            <div style="margin-bottom: 16px;">
+              <label class="form-label">Usuario (Correo o Teléfono)</label>
+              <input v-model="linkClientModal.correo" type="text" class="form-input-styled" placeholder="Ej: 962956919 o correo@ejemplo.com" />
+            </div>
+            <div style="margin-bottom: 16px;">
+              <label class="form-label">Contraseña inicial para el cliente</label>
+              <input v-model="linkClientModal.clave" type="text" class="form-input-styled" placeholder="Ej: 962956919" />
+            </div>
+          </div>
+          <footer style="display: flex; gap: 10px; justify-content: flex-end; padding: 16px 20px; border-top: 1px solid var(--border-color, #e2e8f0); background: #f8fafc;">
+            <button @click="linkClientModal.visible = false" class="btn btn-secondary">Cancelar</button>
+            <button @click="submitLinkClient" class="btn btn-primary" :disabled="linkClientModal.loading">
+              {{ linkClientModal.loading ? 'Vinculando...' : 'Crear y Vincular' }}
+            </button>
+          </footer>
+        </div>
+      </div>
+
     </main>
   </div>
 </template>
@@ -716,6 +761,68 @@ const filterFechaHasta = ref(new Date().toISOString().split('T')[0])
 const filterEstado = ref('PENDIENTE_PAGO')
 const selectedOrder = ref(null)
 const updatingStatus = ref(false)
+
+const linkClientModal = ref({
+  visible: false,
+  order: null,
+  correo: '',
+  clave: '',
+  loading: false
+})
+
+const openLinkClientModal = (order) => {
+  linkClientModal.value = {
+    visible: true,
+    order,
+    correo: order.clienteEmail || order.whatsAppCliente || order.clienteTelefono || '',
+    clave: order.whatsAppCliente || order.clienteTelefono || '',
+    loading: false
+  }
+}
+
+const submitLinkClient = async () => {
+  if (!linkClientModal.value.correo) {
+    alert('Debes ingresar un usuario (correo o teléfono) para la cuenta.')
+    return
+  }
+  if (!linkClientModal.value.clave) {
+    alert('Debes ingresar una contraseña temporal para la cuenta.')
+    return
+  }
+  
+  linkClientModal.value.loading = true
+  try {
+    const res = await fetch(`${API_URL}/api/auth/link-order-client`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authStore.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        orderId: linkClientModal.value.order.id,
+        correo: linkClientModal.value.correo,
+        clave: linkClientModal.value.clave
+      })
+    })
+    
+    const data = await res.json()
+    if (!res.ok) {
+      alert(data.message || 'Error al vincular el pedido.')
+      return
+    }
+    
+    alert(data.message || 'Cuenta creada y pedido vinculado exitosamente.')
+    linkClientModal.value.visible = false
+    if (selectedOrder.value && selectedOrder.value.id === linkClientModal.value.order.id) {
+       selectedOrder.value.clienteId = 'linked' // trigger reactivity hide locally
+    }
+    await fetchOrders()
+  } catch (err) {
+    alert('Error de conexión al crear la cuenta.')
+  } finally {
+    linkClientModal.value.loading = false
+  }
+}
 
 const clearDateFilter = () => {
   filterFechaDesde.value = ''

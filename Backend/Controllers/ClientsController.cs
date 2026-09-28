@@ -19,12 +19,14 @@ public class ClientsController : ControllerBase
     // Acceso a la base de datos y al usuario logueado
     private readonly MongoDbContext _context;
     private readonly IUserContext _userContext;
+    private readonly IPasswordHasher _passwordHasher;
 
     // Constructor: recibe la BD y el contexto del usuario via inyeccion de dependencias
-    public ClientsController(MongoDbContext context, IUserContext userContext)
+    public ClientsController(MongoDbContext context, IUserContext userContext, IPasswordHasher passwordHasher)
     {
         _context = context;
         _userContext = userContext;
+        _passwordHasher = passwordHasher;
     }
 
     // GET api/clients — retorna la lista de todos los clientes de la empresa actual
@@ -72,6 +74,13 @@ public class ClientsController : ControllerBase
         // Registro la fecha exacta en que fue creado
         client.FechaCreacion = DateTime.UtcNow;
 
+        if (!string.IsNullOrEmpty(client.NuevaClave))
+        {
+            client.ClaveHash = _passwordHasher.Hash(client.NuevaClave);
+            client.EsUsuarioEcommerce = true;
+            client.CorreoVerificado = true; // El admin lo verificó
+        }
+
         await _context.Clients.InsertOneAsync(client);
         return CreatedAtAction(nameof(GetAll), new { id = client.Id }, client);
     }
@@ -111,8 +120,21 @@ public class ClientsController : ControllerBase
             .Set(c => c.Nombre, client.Nombre)
             .Set(c => c.Telefono, client.Telefono)
             .Set(c => c.Correo, client.Correo)
+            .Set(c => c.TipoDocumento, client.TipoDocumento)
             .Set(c => c.NumeroDocumento, client.NumeroDocumento)
-            .Set(c => c.Direccion, client.Direccion);
+            .Set(c => c.Direccion, client.Direccion)
+            .Set(c => c.Departamento, client.Departamento)
+            .Set(c => c.Provincia, client.Provincia)
+            .Set(c => c.Distrito, client.Distrito)
+            .Set(c => c.Referencia, client.Referencia);
+
+        if (!string.IsNullOrEmpty(client.NuevaClave))
+        {
+            update = update
+                .Set(c => c.ClaveHash, _passwordHasher.Hash(client.NuevaClave))
+                .Set(c => c.EsUsuarioEcommerce, true)
+                .Set(c => c.CorreoVerificado, true);
+        }
 
         var result = await _context.Clients.UpdateOneAsync(filter, update);
         if (result.MatchedCount == 0) return NotFound();

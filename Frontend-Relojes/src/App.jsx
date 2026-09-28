@@ -260,6 +260,25 @@ export default function App({ initialCategory, initialProductId, initialView = '
     }, 40);
   };
 
+  const handleNavigateHomeAndClear = () => {
+    setSelectedProduct(null);
+    setSearchQuery('');
+    setSelectedCategory('');
+    setAdvancedFilters({
+      priceRange: { min: '', max: '' },
+      inStockOnly: false,
+      gender: [],
+      dynamic: {}
+    });
+    setShowFullCatalog(false);
+    setActiveView('catalog');
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', '/');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+
   const handleSearchSubmit = (queryToSearch) => {
     const q = (queryToSearch !== undefined ? queryToSearch : searchQuery).trim();
     if (!q) {
@@ -861,7 +880,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
       ) : activeView === 'pedido-confirmado' ? (
         <VistaPedidoConfirmado
           order={confirmedOrder}
-          onBackToCatalog={handleBackToCatalog}
+          onBackToCatalog={handleNavigateHomeAndClear}
           onNavigate={handleNavigateView}
           user={currentUser}
           whatsappNumber={whatsappConcierge}
