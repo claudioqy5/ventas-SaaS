@@ -86,7 +86,13 @@ public class MercadoPagoController : ControllerBase
             {
                 Name    = payerName,
                 Surname = payerSurname,
-                Email   = payerEmail
+                Email   = payerEmail,
+                Phone   = !string.IsNullOrEmpty(client?.Telefono) || !string.IsNullOrEmpty(request.PayerPhone) 
+                            ? new PreferencePayerPhoneRequest { Number = client?.Telefono ?? request.PayerPhone } 
+                            : null,
+                Identification = !string.IsNullOrEmpty(client?.NumeroDocumento) || !string.IsNullOrEmpty(request.PayerDni)
+                            ? new PreferencePayerIdentificationRequest { Type = client?.TipoDocumento ?? "DNI", Number = client?.NumeroDocumento ?? request.PayerDni }
+                            : null
             },
             BackUrls = new PreferenceBackUrlsRequest
             {
@@ -254,7 +260,9 @@ public record MpPreferenceRequest(
     string? BackUrl,
     string? ServerBaseUrl,
     string? PayerEmail,
-    string? PayerName
+    string? PayerName,
+    string? PayerPhone,
+    string? PayerDni
 );
 
 public record MpItem(
