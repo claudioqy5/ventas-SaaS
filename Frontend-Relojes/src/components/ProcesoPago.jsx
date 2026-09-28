@@ -144,7 +144,7 @@ export default function ProcesoPago({
     const errors = {};
     if (!personalData.nombres.trim()) errors.nombres = 'Ingresa tus nombres';
     if (!personalData.apellidos.trim()) errors.apellidos = 'Ingresa tus apellidos';
-    if (!personalData.email.trim()) errors.email = 'Ingresa un correo o teléfono válido';
+    if (!personalData.email.trim()) errors.email = 'Ingresa un usuario válido';
     if (!personalData.numDoc.trim()) errors.numDoc = 'Ingresa tu número de documento';
     if (!personalData.telefono.trim() || personalData.telefono.length < 8) errors.telefono = 'Ingresa un teléfono válido';
     setFormErrors(errors);
@@ -580,7 +580,7 @@ export default function ProcesoPago({
                 </div>
 
                 <div style={{ marginBottom: '20px' }}>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Correo o Teléfono *</label>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>Usuario *</label>
                   <input 
                     type="text" 
                     value={personalData.email}

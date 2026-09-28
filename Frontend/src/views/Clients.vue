@@ -486,7 +486,7 @@
                 <input v-model="form.telefono" type="text" placeholder="987654321" />
               </div>
               <div class="field">
-                <label>Usuario (Correo o Teléfono)</label>
+                <label>Usuario</label>
                 <input v-model="form.correo" type="text" placeholder="juan@correo.com o 987654321" />
               </div>
             </div>

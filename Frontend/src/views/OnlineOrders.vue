@@ -721,7 +721,7 @@
               Se creará (o actualizará) una cuenta de E-Commerce para <strong>{{ linkClientModal.order?.nombreCliente }}</strong> y se le asignará este pedido.
             </p>
             <div style="margin-bottom: 16px;">
-              <label class="form-label">Usuario (Correo o Teléfono)</label>
+              <label class="form-label">Usuario</label>
               <input v-model="linkClientModal.correo" type="text" class="form-input-styled" placeholder="Ej: 962956919 o correo@ejemplo.com" />
             </div>
             <div style="margin-bottom: 16px;">
@@ -782,7 +782,7 @@ const openLinkClientModal = (order) => {
 
 const submitLinkClient = async () => {
   if (!linkClientModal.value.correo) {
-    alert('Debes ingresar un usuario (correo o teléfono) para la cuenta.')
+    alert('Debes ingresar un usuario para la cuenta.')
     return
   }
   if (!linkClientModal.value.clave) {
