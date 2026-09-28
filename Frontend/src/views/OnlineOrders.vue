@@ -868,6 +868,14 @@ const submitLinkClient = async () => {
        selectedOrder.value.clienteId = 'linked' // trigger reactivity hide locally
     }
     await fetchOrders()
+    
+    // Si el modal de detalles sigue abierto, actualizarlo con los datos frescos
+    if (selectedOrder.value && selectedOrder.value.id === linkClientModal.value.order.id) {
+       const updatedOrder = orders.value.find(o => o.id === selectedOrder.value.id)
+       if (updatedOrder) {
+         selectedOrder.value = updatedOrder
+       }
+    }
   } catch (err) {
     alert('Error de conexión al crear la cuenta.')
   } finally {

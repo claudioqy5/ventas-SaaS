@@ -469,7 +469,11 @@ public class AuthController : ControllerBase
             }
         }
 
-        var updateSale = Builders<Sale>.Update.Set(s => s.ClienteId, client.Id);
+        var updateSale = Builders<Sale>.Update
+            .Set(s => s.ClienteId, client.Id)
+            .Set(s => s.NombreCliente, client.Nombre ?? (client.Nombres + " " + client.Apellidos).Trim())
+            .Set(s => s.ClienteEmail, client.Correo)
+            .Set(s => s.WhatsAppCliente, client.Telefono);
         await _context.Sales.UpdateOneAsync(s => s.Id == sale.Id, updateSale);
 
         return Ok(new { message = "Pedido vinculado exitosamente." });
