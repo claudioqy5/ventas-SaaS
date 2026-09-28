@@ -278,7 +278,9 @@ export default function ProcesoPago({
           orderId: res.orderId,
           items: items,
           payerEmail: personalData.email || user?.correo || user?.email || null,
-          payerName: `${personalData.nombres} ${personalData.apellidos}`.trim() || user?.nombre || 'Cliente'
+          payerName: `${personalData.nombres} ${personalData.apellidos}`.trim() || user?.nombre || 'Cliente',
+          payerPhone: personalData.telefono || user?.telefono || null,
+          payerDni: personalData.numDoc || user?.numeroDocumento || null
         });
         const checkoutUrl = mpRes.initPoint;
         if (checkoutUrl && typeof window !== 'undefined') {

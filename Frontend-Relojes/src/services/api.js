@@ -283,7 +283,7 @@ export async function updateCustomerProfile(token, profileData) {
  * Devuelve { preferenceId, initPoint, sandboxInitPoint }
  * El frontend redirige al usuario a sandboxInitPoint (pruebas) o initPoint (producción).
  */
-export async function createMercadoPagoPreference(token, { orderId, items, payerEmail, payerName }) {
+export async function createMercadoPagoPreference(token, { orderId, items, payerEmail, payerName, payerPhone, payerDni }) {
   const empresaId = DEFAULT_EMPRESA_ID;
   const baseApiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '');
 
@@ -308,7 +308,9 @@ export async function createMercadoPagoPreference(token, { orderId, items, payer
       backUrl,
       serverBaseUrl,
       payerEmail: payerEmail || null,
-      payerName: payerName || null
+      payerName: payerName || null,
+      payerPhone: payerPhone || null,
+      payerDni: payerDni || null
     })
   });
 
