@@ -1,5 +1,6 @@
 using System.Text.Json;
 using MercadoPago.Client.Preference;
+using MercadoPago.Client.Common;
 using MercadoPago.Config;
 using MercadoPago.Resource.Preference;
 using Microsoft.AspNetCore.Authorization;
@@ -88,10 +89,10 @@ public class MercadoPagoController : ControllerBase
                 Surname = payerSurname,
                 Email   = payerEmail,
                 Phone   = !string.IsNullOrEmpty(client?.Telefono) || !string.IsNullOrEmpty(request.PayerPhone) 
-                            ? new PreferencePayerPhoneRequest { Number = client?.Telefono ?? request.PayerPhone } 
+                            ? new PhoneRequest { Number = client?.Telefono ?? request.PayerPhone } 
                             : null,
                 Identification = !string.IsNullOrEmpty(client?.NumeroDocumento) || !string.IsNullOrEmpty(request.PayerDni)
-                            ? new PreferencePayerIdentificationRequest { Type = client?.TipoDocumento ?? "DNI", Number = client?.NumeroDocumento ?? request.PayerDni }
+                            ? new IdentificationRequest { Type = client?.TipoDocumento ?? "DNI", Number = client?.NumeroDocumento ?? request.PayerDni }
                             : null
             },
             BackUrls = new PreferenceBackUrlsRequest
