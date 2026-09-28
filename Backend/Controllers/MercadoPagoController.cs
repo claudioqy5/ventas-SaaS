@@ -82,8 +82,7 @@ public class MercadoPagoController : ControllerBase
             AutoReturn = "approved",
             // Notificación webhook al backend cuando se aprueba el pago
             NotificationUrl = $"{request.ServerBaseUrl}/api/mercadopago/{empresaId}/webhook",
-            ExternalReference = request.OrderId,  // ID de la orden en MongoDB
-            StatementDescriptor = "TIENDA ONLINE"
+            ExternalReference = request.OrderId  // ID de la orden en MongoDB
         };
 
         try
