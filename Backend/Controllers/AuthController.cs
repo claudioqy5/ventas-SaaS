@@ -420,7 +420,7 @@ public class AuthController : ControllerBase
                 var updateClient = Builders<Client>.Update
                     .Set(c => c.EsUsuarioEcommerce, true)
                     .Set(c => c.ClaveHash, _passwordHasher.Hash(request.Clave));
-                await _context.Clients.UpdateOneAsync(c => c.Id == client.Id, updateClient);
+                await _context.Clients.UpdateOneAsync(c => c.Id == client.Id && c.EmpresaId == empresaId, updateClient);
             }
         }
         else
@@ -439,7 +439,7 @@ public class AuthController : ControllerBase
                     updateClient = updateClient.Set(c => c.ClaveHash, _passwordHasher.Hash(request.Clave));
                 }
                 
-                await _context.Clients.UpdateOneAsync(c => c.Id == client.Id, updateClient);
+                await _context.Clients.UpdateOneAsync(c => c.Id == client.Id && c.EmpresaId == empresaId, updateClient);
             }
             else
             {
@@ -474,7 +474,7 @@ public class AuthController : ControllerBase
             .Set(s => s.NombreCliente, client.Nombre ?? (client.Nombres + " " + client.Apellidos).Trim())
             .Set(s => s.ClienteEmail, client.Correo)
             .Set(s => s.WhatsAppCliente, client.Telefono);
-        await _context.Sales.UpdateOneAsync(s => s.Id == sale.Id, updateSale);
+        await _context.Sales.UpdateOneAsync(s => s.Id == sale.Id && s.EmpresaId == empresaId, updateSale);
 
         return Ok(new { message = "Pedido vinculado exitosamente." });
     }
