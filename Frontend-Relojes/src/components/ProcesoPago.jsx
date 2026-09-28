@@ -276,7 +276,9 @@ export default function ProcesoPago({
       if (paymentMethod === 'mercadopago') {
         const mpRes = await createMercadoPagoPreference(token, {
           orderId: res.orderId,
-          items: items
+          items: items,
+          payerEmail: personalData.email || user?.correo || user?.email || null,
+          payerName: `${personalData.nombres} ${personalData.apellidos}`.trim() || user?.nombre || 'Cliente'
         });
         const checkoutUrl = mpRes.initPoint;
         if (checkoutUrl && typeof window !== 'undefined') {

@@ -64,14 +64,29 @@ public class MercadoPagoController : ControllerBase
         // URLs de retorno tras el pago
         var backUrl = request.BackUrl ?? "https://tienda.gruposercal.com";
 
+        // El email es OBLIGATORIO para Mercado Pago. Sin él el sistema antifraude bloquea el pago.
+        // Prioridad: cliente autenticado → email enviado desde el frontend → email del pedido en BD
+        var payerEmail = client?.Correo;
+        if (string.IsNullOrEmpty(payerEmail)) payerEmail = request.PayerEmail;
+        if (string.IsNullOrEmpty(payerEmail))
+        {
+            var saleForEmail = await _context.Sales.Find(s => s.Id == request.OrderId && s.EmpresaId == empresaId).FirstOrDefaultAsync();
+            payerEmail = saleForEmail?.ClienteEmail;
+        }
+        // Mercado Pago exige un email válido — placeholder genérico como último recurso
+        if (string.IsNullOrEmpty(payerEmail)) payerEmail = "comprador@tienda.com";
+
+        var payerName    = client?.Nombres ?? client?.Nombre ?? request.PayerName ?? "Cliente";
+        var payerSurname = client?.Apellidos ?? "";
+
         var preferenceRequest = new PreferenceRequest
         {
             Items = mpItems,
             Payer = new PreferencePayerRequest
             {
-                Name    = client?.Nombres ?? client?.Nombre ?? "Invitado",
-                Surname = client?.Apellidos ?? "",
-                Email   = !string.IsNullOrEmpty(client?.Correo) ? client.Correo : null
+                Name    = payerName,
+                Surname = payerSurname,
+                Email   = payerEmail
             },
             BackUrls = new PreferenceBackUrlsRequest
             {
@@ -237,7 +252,9 @@ public record MpPreferenceRequest(
     string? OrderId,
     List<MpItem> Items,
     string? BackUrl,
-    string? ServerBaseUrl
+    string? ServerBaseUrl,
+    string? PayerEmail,
+    string? PayerName
 );
 
 public record MpItem(
