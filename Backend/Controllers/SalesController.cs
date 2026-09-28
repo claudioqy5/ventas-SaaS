@@ -376,7 +376,7 @@ public class SalesController : ControllerBase
             AutoReturn = "approved",
             NotificationUrl = $"{serverBaseUrl}/api/mercadopago/{empresaId}/webhook",
             ExternalReference = sale.Id,
-            StatementDescriptor = "GRUPO SERCAL"
+            StatementDescriptor = "TIENDA ONLINE"
         };
 
         try
