@@ -26,13 +26,13 @@ export default function Beneficios({ whatsappNumber }) {
   ];
 
   return (
-    <section style={{
+    <section className="beneficios-section" style={{
       padding: '70px 24px',
       backgroundColor: 'var(--bg-main)', // Fondo igual al de la página principal
       borderTop: '1px solid rgba(59, 60, 65, 0.15)',
       borderBottom: '1px solid rgba(59, 60, 65, 0.15)',
     }}>
-      <div style={{
+      <div className="beneficios-grid" style={{
         maxWidth: '1200px',
         margin: '0 auto',
         display: 'grid',

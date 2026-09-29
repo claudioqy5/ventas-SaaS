@@ -153,13 +153,13 @@ export default function Testimonios() {
   }, []);
 
   return (
-    <section style={{
+    <section className="testimonios-section" style={{
       padding: '100px 0', 
       backgroundColor: '#ffffff',
       position: 'relative',
       overflow: 'hidden'
     }}>
-      <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+      <div className="testimonios-header" style={{ textAlign: 'center', marginBottom: '60px' }}>
         <span style={{
           fontSize: '0.74rem',
           letterSpacing: '0.22em',
@@ -170,7 +170,7 @@ export default function Testimonios() {
         }}>
           Experiencias
         </span>
-        <h2 className="font-serif" style={{
+        <h2 className="font-serif testimonios-title" style={{
           fontSize: 'clamp(2rem, 3.5vw, 2.8rem)',
           color: 'var(--c-deep-purple)',
           letterSpacing: '0.02em',
@@ -203,7 +203,7 @@ export default function Testimonios() {
         </style>
 
         {opinionesInfinitas.map((opinion, index) => (
-          <div key={`${opinion.id}-${index}`} style={{
+          <div className="testimonio-card" key={`${opinion.id}-${index}`} style={{
             display: 'flex',
             flexDirection: 'column',
             gap: '18px',

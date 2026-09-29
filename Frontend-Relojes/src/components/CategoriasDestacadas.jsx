@@ -16,7 +16,7 @@ export default function CategoriasDestacadas({ onSelectStyle, onSearchSubmit }) 
     { id: 'retro', nombre: 'Retro', imagen: retroImg, filterValue: 'Retro', style: { fontFamily: '"Courier New", monospace', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' } }
   ];
   return (
-    <div className="categorias-destacadas" style={{ padding: 'clamp(40px, 4vw, 60px) 0.5vw', backgroundColor: '#ffffff' }}>
+    <div className="categorias-destacadas" style={{ padding: 'clamp(40px, 4vw, 60px) 0', backgroundColor: '#ffffff' }}>
       <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: 'clamp(24px, 3vw, 40px)' }}>
           <p style={{

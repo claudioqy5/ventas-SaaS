@@ -44,6 +44,7 @@ export default function TarjetaProducto({
 
   return (
     <article
+      className="product-card"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onQuickView(activeProduct)}
@@ -70,7 +71,7 @@ export default function TarjetaProducto({
         {/* Header de la tarjeta (Etiqueta + Stock) */}
         <div style={{
           display: 'flex',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           alignItems: 'center',
           marginBottom: '12px'
         }}>
@@ -110,6 +111,7 @@ export default function TarjetaProducto({
 
         {/* Imagen del Reloj */}
         <div 
+          className="product-card-img-container"
           onMouseEnter={(e) => {
             e.stopPropagation();
             setIsImgHovered(true);
@@ -124,7 +126,7 @@ export default function TarjetaProducto({
             height: '260px',
             borderRadius: '12px',
             overflow: 'hidden',
-            backgroundColor: '#f8f8fa',
+            backgroundColor: '#ffffff',
             border: '1px solid #f0f0f0',
             marginBottom: '16px'
           }}>
@@ -138,9 +140,10 @@ export default function TarjetaProducto({
               left: 0,
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
+              objectFit: 'contain',
+              padding: '6px',
               opacity: (isImgHovered && secondImage) ? 0 : 1,
-              transform: isHovered && !secondImage ? 'scale(1.03)' : 'scale(1)',
+              transform: isHovered && !secondImage ? 'scale(1.04)' : 'scale(1)',
               transition: 'opacity 0.35s ease, transform 0.35s ease'
             }}
           />
@@ -156,9 +159,10 @@ export default function TarjetaProducto({
                 left: 0,
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
+                objectFit: 'contain',
+                padding: '6px',
                 opacity: isImgHovered ? 1 : 0,
-                transform: isImgHovered ? 'scale(1.03)' : 'scale(1)',
+                transform: isImgHovered ? 'scale(1.04)' : 'scale(1)',
                 transition: 'opacity 0.35s ease, transform 0.35s ease'
               }}
             />
@@ -179,7 +183,7 @@ export default function TarjetaProducto({
             {activeProduct.categoria || 'Relojes'}
           </span>
 
-          <h3 className="font-serif" style={{
+          <h3 className="font-serif product-card-title" style={{
             fontSize: '1.05rem',
             fontWeight: 500,
             color: '#1a1a1a',
@@ -189,7 +193,7 @@ export default function TarjetaProducto({
             {activeProduct.nombre}
           </h3>
 
-          <p style={{
+          <p className="product-card-description" style={{
             fontSize: '0.82rem',
             color: '#666666',
             lineHeight: 1.45,
@@ -213,6 +217,7 @@ export default function TarjetaProducto({
                 return (
                   <div
                     key={variant.id}
+                    className="product-card-variant-bubble"
                     onClick={(e) => {
                       e.stopPropagation();
                       setSelectedVariant(variant);
@@ -253,22 +258,22 @@ export default function TarjetaProducto({
         paddingTop: '12px',
         marginTop: '8px'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '12px' }}>
-          <span style={{ fontSize: '0.72rem', color: '#888888', fontWeight: 400 }}>
+        <div className="product-card-price-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '12px' }}>
+          <span className="product-card-price-label" style={{ fontSize: '0.72rem', color: '#888888', fontWeight: 400 }}>
             Precio
           </span>
           <div style={{ textAlign: 'right' }}>
             {activeProduct.precioOferta > 0 ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '0.8rem', textDecoration: 'line-through', color: '#999999', fontWeight: 400 }}>
+                <span className="product-card-price-old" style={{ fontSize: '0.8rem', textDecoration: 'line-through', color: '#999999', fontWeight: 400 }}>
                   S/ {Number(activeProduct.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                 </span>
-                <span className="font-serif" style={{ fontSize: '1.15rem', fontWeight: 600, color: '#1a1a1a' }}>
+                <span className="font-serif product-card-price-value" style={{ fontSize: '1.15rem', fontWeight: 600, color: '#1a1a1a' }}>
                   S/ {Number(activeProduct.precioOferta).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                 </span>
               </div>
             ) : (
-              <span className="font-serif" style={{ fontSize: '1.15rem', fontWeight: 600, color: '#1a1a1a' }}>
+              <span className="font-serif product-card-price-value" style={{ fontSize: '1.15rem', fontWeight: 600, color: '#1a1a1a' }}>
                 S/ {Number(activeProduct.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}
               </span>
             )}
@@ -276,8 +281,9 @@ export default function TarjetaProducto({
         </div>
 
         {/* Botones de Acción */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '8px' }}>
+        <div className="product-card-actions" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '8px' }}>
           <button
+            className="product-card-add-btn"
             onClick={handleAdd}
             disabled={activeProduct.stock <= 0}
             style={{
@@ -306,17 +312,18 @@ export default function TarjetaProducto({
             {added ? (
               <>
                 <Check size={15} />
-                Agregado
+                <span className="product-card-add-btn-text">Agregado</span>
               </>
             ) : (
               <>
                 <ShoppingBag size={15} strokeWidth={1.5} />
-                Agregar al carrito
+                <span className="product-card-add-btn-text product-card-add-text-default">Agregar al carrito</span>
               </>
             )}
           </button>
 
           <button
+            className="product-card-wa-btn"
             onClick={(e) => {
               e.stopPropagation();
               onWhatsAppInquiry(activeProduct);

@@ -86,8 +86,8 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         </div>
       ))}
 
-      {/* Giant Background Text Top - L'GANTE */}
-      <div style={{
+      {/* Giant Background Text Top - L'GANT */}
+      <div className="hero-giant-text-top" style={{
         position: 'absolute',
         top: '25%',
         left: '50%',
@@ -106,7 +106,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
       </div>
 
       {/* Giant Background Text Bottom - EN CADA SEGUNDO */}
-      <div style={{
+      <div className="hero-giant-text-bottom" style={{
         position: 'absolute',
         top: '75%',
         left: '50%',
@@ -140,6 +140,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
         {CAROUSEL_DATA.map((item, index) => (
           <div
             key={`text-${index}`}
+            className="hero-carousel-text"
             style={{
               position: 'absolute',
               textAlign: 'center',
@@ -151,7 +152,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
               padding: '0 20px'
             }}
           >
-            <h2 style={{
+            <h2 className="hero-carousel-title" style={{
               fontFamily: '"Cormorant Garamond", "Cinzel", serif',
               fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
               fontWeight: 700,
@@ -162,7 +163,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             }}>
               {item.title}
             </h2>
-            <p style={{
+            <p className="hero-carousel-desc" style={{
               fontFamily: 'var(--font-sans)',
               fontSize: 'clamp(1rem, 1.5vw, 1.25rem)',
               color: '#f5f5f7',
@@ -175,6 +176,7 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             </p>
             <a 
               href={item.actionUrl}
+              className="hero-carousel-btn"
               style={{
                 display: 'inline-block',
                 marginTop: '15px',

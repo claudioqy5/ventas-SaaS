@@ -526,6 +526,83 @@ body {
     max-width: 100% !important;
   }
   
+  /* Inicio.jsx hero fixes */
+  .hero-section {
+    height: calc(85vh - 60px) !important;
+    min-height: 500px !important;
+    border-bottom-left-radius: 40px !important;
+    border-bottom-right-radius: 40px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .hero-giant-text-top {
+    top: 20% !important;
+    font-size: clamp(4rem, 15vw, 8rem) !important;
+  }
+  .hero-giant-text-bottom {
+    top: 80% !important;
+    font-size: clamp(3rem, 12vw, 6rem) !important;
+  }
+  .hero-carousel-title {
+    font-size: clamp(1.8rem, 7vw, 2.5rem) !important;
+  }
+  .hero-carousel-desc {
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem) !important;
+    padding: 0 10px !important;
+  }
+  .hero-carousel-btn {
+    padding: 10px 24px !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* Beneficios section */
+  .beneficios-section {
+    padding: 40px 16px !important;
+  }
+  .beneficios-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+  }
+  .beneficios-grid > div {
+    padding: 10px !important;
+  }
+  .beneficios-grid h4 {
+    font-size: 0.9rem !important;
+  }
+  .beneficios-grid p {
+    font-size: 0.8rem !important;
+  }
+
+  /* Testimonios section */
+  .testimonios-section {
+    padding: 50px 0 !important;
+  }
+  .testimonios-header {
+    margin-bottom: 30px !important;
+  }
+  .testimonios-title {
+    font-size: clamp(1.6rem, 6vw, 2.2rem) !important;
+  }
+  .testimonio-card {
+    min-width: 240px !important;
+    max-width: 240px !important;
+  }
+  .testimonio-card > div:first-child {
+    height: 280px !important;
+  }
+
+  /* Footer */
+  .footer-main {
+    padding: 50px 16px 20px !important;
+  }
+  .footer-main > div > div:nth-child(2) {
+    grid-template-columns: 1fr !important;
+    gap: 30px !important;
+    padding-bottom: 30px !important;
+  }
+  
   /* Promo Card: Posición relativa fluida en móvil para no tapar texto ni sellos en ninguna resolución */
   .hero-promo-card {
     position: relative !important;
@@ -764,9 +841,81 @@ body {
 }
 
 @media (max-width: 640px) {
-  .grid-5-products, .grid-4-products {
-    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-    gap: 14px !important;
+  .grid-4-products, .grid-5-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px 8px !important;
+  }
+
+  /* Tarjetas de Producto en Móvil: Ocultar descripción y ajustar altura */
+  .product-card-description {
+    display: none !important;
+  }
+  .product-card {
+    padding: 8px !important;
+    border-radius: 10px !important;
+  }
+  .product-card-img-container {
+    height: 140px !important;
+    margin-bottom: 8px !important;
+  }
+  .product-card-title {
+    font-size: 0.75rem !important;
+    line-height: 1.25 !important;
+    margin-bottom: 4px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .product-card-price-label {
+    display: none !important;
+  }
+  .product-card-price-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+    margin-bottom: 8px !important;
+  }
+  .product-card-price-row > div {
+    text-align: left !important;
+  }
+  .product-card-price-old {
+    font-size: 0.7rem !important;
+  }
+  .product-card-price-value {
+    font-size: 0.95rem !important;
+  }
+  .product-card-actions {
+    grid-template-columns: 1fr auto !important;
+    gap: 4px !important;
+  }
+  .product-card-add-btn {
+    padding: 6px 4px !important;
+    font-size: 0.65rem !important;
+    border-radius: 6px !important;
+  }
+  .product-card-add-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  .product-card-add-text-default {
+    font-size: 0 !important;
+  }
+  .product-card-add-text-default::after {
+    content: "Agregar" !important;
+    font-size: 0.65rem !important;
+  }
+  .product-card-wa-btn {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .product-card-wa-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+  .product-card-variant-bubble {
+    width: 18px !important;
+    height: 18px !important;
   }
 }
 

@@ -851,3 +851,19 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
 - **Depuración de UI (Panel de Filtros):**
   - **Botón Obsoleto:** Se eliminó por completo el botón 'VER RESULTADOS' del componente `PanelFiltros.jsx`, ya que la arquitectura de la tienda aplica los filtros de catálogo automáticamente en tiempo real.
   - **Icono de Cierre (UX):** Se corrigió la renderización del botón 'X' (cerrar menú). Anteriormente se mostraba de manera errónea en la barra lateral de escritorio; ahora está condicionado (`isMobileOpen`) para desplegarse **únicamente** cuando se abre el cajón de filtros en dispositivos móviles.
+
+## Actualización - 29 de Septiembre (Optimización Mobile First)
+- **Refactorización de Interfaz Móvil (Catálogo y Productos)**:
+  - **Ajuste de Grillas:** Se forzó la visualización a 2 columnas (grid-template-columns: repeat(2, minmax(0, 1fr))) para todos los listados de productos en dispositivos móviles (tanto "Los más vendidos", "Nuevos Ingresos" como el catálogo principal), mejorando la densidad de información y aprovechando la pantalla.
+  - **Tarjetas de Producto Compactas (TarjetaProducto.jsx & index.css):**
+    - Se ocultó la descripción del producto en móviles para evitar sobrecarga de texto.
+    - Se ajustaron los márgenes (padding), altura de la imagen (140px) y tamaño de los botones para adaptarse armoniosamente a las 2 columnas.
+    - El precio y el precio anterior ahora se apilan en formato de columna sin la etiqueta "Precio", optimizando el espacio horizontal.
+    - El texto del botón "Agregar al carrito" se sustituyó dinámicamente vía CSS (::after) por la palabra "Agregar" exclusivamente en pantallas pequeñas, previniendo el desbordamiento de texto.
+    - Las fotos de los relojes se ajustaron con objectFit: contain para no verse recortadas, permitiendo apreciar el producto completo.
+  - **Colecciones Destacadas (CategoriasDestacadas.jsx):** Se ajustaron los estilos para que las tarjetas de categorías principales se presenten de borde a borde (padding: 0) y con esquinas completamente rectas (sin redondear), acatando los lineamientos estéticos de la marca.
+  - **Barra de Anuncios y Notificaciones (BarraNavegacion.jsx & ToastNotificacion.jsx):** La franja animada superior ahora ocupa el 100% del ancho (edge-to-edge) sin espacios laterales y el texto ha sido levemente reducido. Las alertas de "Añadido al carrito" también tienen menores dimensiones en móviles.
+
+- **Flujo de Pago (Checkout):**
+  - **Redirección de "Llenar formulario completo":** En el Paso 4 (Métodos de Pago) bajo el modo "Invitado", se corrigió la acción del botón para que redirija instantáneamente al Paso 2 ("Datos Personales"), evitando bloqueos de navegación.
+  - **Restricción de Mercado Pago en Guest Mode (ProcesoPago.jsx):** Para evitar fallos en la pasarela antifraude de Mercado Pago, se inhabilitó este método de pago si el usuario intenta comprar como invitado sin llenar todos sus datos. En su lugar, el sistema deshabilita el botón de compra, alerta al cliente del requerimiento por seguridad y lo invita a completar sus datos, evitando así generar pedidos huérfanos de Mercado Pago en el panel del administrador.
