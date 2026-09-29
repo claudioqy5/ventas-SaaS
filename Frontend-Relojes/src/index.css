@@ -358,21 +358,33 @@ body {
 }
 
 .marquee-container {
+  width: 100%;
   flex: 1;
   overflow: hidden;
   white-space: nowrap;
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  margin: 0;
+  padding: 0;
 }
 
 .marquee-text {
   display: inline-block;
   padding-left: 100%;
-  animation: marquee-scroll 35s linear infinite;
+  animation: marquee-scroll 32s linear infinite;
   font-weight: 700;
   color: var(--c-gold);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 768px) {
+  .top-micro-bar {
+    padding: 4px 0 !important;
+  }
+  .marquee-text {
+    font-size: 0.60rem !important;
+    letter-spacing: 0.06em !important;
+  }
 }
 
 /* Libro de Reclamaciones Layout */

@@ -202,6 +202,11 @@ export default function ProcesoPago({
   };
 
   const handleFinalizarCompra = async () => {
+    if (isGuestMode && paymentMethod === 'mercadopago') {
+      setSubmitError("⚠️ Por seguridad, Mercado Pago requiere tus datos personales (DNI, Teléfono y Email). Por favor completa tus datos o selecciona Yape / Transferencia.");
+      return;
+    }
+
     if (!isGuestMode) {
       if (!validateStep2()) {
         setCurrentStep(2);
@@ -209,12 +214,6 @@ export default function ProcesoPago({
       }
       if (!validateStep3()) {
         setCurrentStep(3);
-        return;
-      }
-    } else {
-      // Si es invitado y quiere usar Mercado Pago, no lo dejamos pasar.
-      if (paymentMethod === 'mercadopago') {
-        alert("⚠️ Por seguridad, Mercado Pago requiere tus datos personales (DNI, Teléfono y Email) para validar la compra.\n\nPor favor, regresa al Paso 2 'Datos personales' para completarlos, o selecciona otro método de pago (Yape/Transferencia).");
         return;
       }
     }
@@ -858,7 +857,10 @@ export default function ProcesoPago({
                     </span>
                     <button 
                       type="button"
-                      onClick={() => setIsGuestMode(false)} 
+                      onClick={() => {
+                        setIsGuestMode(false);
+                        setCurrentStep(2);
+                      }} 
                       style={{ background: 'none', border: 'none', color: 'var(--c-taupe)', fontSize: '0.75rem', cursor: 'pointer', textDecoration: 'underline' }}
                     >
                       Llenar formulario completo
@@ -927,7 +929,12 @@ export default function ProcesoPago({
 
                   {/* Opción 5: Mercado Pago */}
                   <div 
-                    onClick={() => setPaymentMethod('mercadopago')}
+                    onClick={() => {
+                      setPaymentMethod('mercadopago');
+                      if (isGuestMode) {
+                        setSubmitError('');
+                      }
+                    }}
                     style={{
                       padding: '16px 12px',
                       borderRadius: '8px',
@@ -1149,6 +1156,49 @@ export default function ProcesoPago({
                   {/* Vista 5: Mercado Pago */}
                   {paymentMethod === 'mercadopago' && (
                     <div>
+                      {isGuestMode && (
+                        <div style={{
+                          background: '#fef2f2',
+                          border: '1.5px solid #fca5a5',
+                          borderRadius: '8px',
+                          padding: '14px 16px',
+                          marginBottom: '20px',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '12px'
+                        }}>
+                          <AlertCircle size={20} color="#dc2626" style={{ flexShrink: 0, marginTop: '2px' }} />
+                          <div>
+                            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#991b1b', marginBottom: '4px' }}>
+                              Mercado Pago no disponible en Modo Invitado
+                            </div>
+                            <div style={{ fontSize: '0.82rem', color: '#7f1d1d', lineHeight: 1.4 }}>
+                              Por seguridad y prevención de fraudes, Mercado Pago requiere tus datos personales (DNI, Teléfono y Email) para validar el pago. Por favor completa tus datos o selecciona Yape / Transferencia.
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setIsGuestMode(false);
+                                setCurrentStep(2);
+                              }}
+                              style={{
+                                marginTop: '10px',
+                                padding: '8px 16px',
+                                background: '#dc2626',
+                                color: '#ffffff',
+                                border: 'none',
+                                borderRadius: '6px',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                cursor: 'pointer'
+                              }}
+                            >
+                              Llenar formulario completo &rarr;
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
                       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', marginBottom: '20px' }}>
                         <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: '#fff', border: '1px solid #e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(0,158,227,0.1)' }}>
                           <img src="/mercadopago-logo.png" alt="Mercado Pago" style={{ width: '34px', height: 'auto' }} />
@@ -1221,22 +1271,24 @@ export default function ProcesoPago({
                     <ChevronLeft size={18} /> Volver a entrega
                   </button>
                   <button 
+                    disabled={isSubmitting || (isGuestMode && paymentMethod === 'mercadopago')}
                     onClick={handleFinalizarCompra} 
                     style={{ 
                       padding: '16px 36px', 
-                      background: 'var(--c-obsidian)', 
-                      color: 'var(--c-blush)', 
-                      border: '1px solid var(--c-blush)', 
+                      background: (isSubmitting || (isGuestMode && paymentMethod === 'mercadopago')) ? '#94a3b8' : 'var(--c-obsidian)', 
+                      color: (isSubmitting || (isGuestMode && paymentMethod === 'mercadopago')) ? '#ffffff' : 'var(--c-blush)', 
+                      border: (isGuestMode && paymentMethod === 'mercadopago') ? '1px solid #94a3b8' : '1px solid var(--c-blush)', 
                       borderRadius: '6px', 
                       fontWeight: 700, 
                       fontSize: '0.95rem', 
                       letterSpacing: '0.08em', 
-                      cursor: 'pointer',
+                      cursor: (isSubmitting || (isGuestMode && paymentMethod === 'mercadopago')) ? 'not-allowed' : 'pointer',
+                      opacity: (isGuestMode && paymentMethod === 'mercadopago') ? 0.6 : 1,
                       boxShadow: '0 4px 18px rgba(11, 11, 12, 0.25)',
                       transition: 'all 0.3s'
                     }}
                   >
-                    FINALIZAR COMPRA
+                    {isGuestMode && paymentMethod === 'mercadopago' ? 'NO DISPONIBLE EN MODO INVITADO' : 'FINALIZAR COMPRA'}
                   </button>
                 </div>
               </div>
@@ -1274,18 +1326,19 @@ export default function ProcesoPago({
             )}
             
             <button 
-              disabled={items.length === 0 || isSubmitting}
+              disabled={items.length === 0 || isSubmitting || (isGuestMode && paymentMethod === 'mercadopago' && currentStep === 4)}
               onClick={handleNextStep}
               style={{ 
                 width: '100%', padding: '16px', 
-                background: items.length === 0 || isSubmitting ? '#e2e8f0' : 'var(--c-blush)', 
-                color: items.length === 0 || isSubmitting ? '#94a3b8' : 'var(--c-obsidian)', 
+                background: (items.length === 0 || isSubmitting || (isGuestMode && paymentMethod === 'mercadopago' && currentStep === 4)) ? '#94a3b8' : 'var(--c-blush)', 
+                color: (items.length === 0 || isSubmitting || (isGuestMode && paymentMethod === 'mercadopago' && currentStep === 4)) ? '#ffffff' : 'var(--c-obsidian)', 
                 border: 'none', borderRadius: '6px', fontWeight: 600, fontSize: '0.95rem', 
-                letterSpacing: '0.05em', cursor: items.length === 0 || isSubmitting ? 'not-allowed' : 'pointer', 
+                letterSpacing: '0.05em', cursor: (items.length === 0 || isSubmitting || (isGuestMode && paymentMethod === 'mercadopago' && currentStep === 4)) ? 'not-allowed' : 'pointer', 
+                opacity: (isGuestMode && paymentMethod === 'mercadopago' && currentStep === 4) ? 0.6 : 1,
                 transition: 'all 0.3s' 
               }}
             >
-              {isSubmitting ? 'PROCESANDO...' : currentStep < 4 ? 'CONTINUAR' : 'FINALIZAR COMPRA'}
+              {isSubmitting ? 'PROCESANDO...' : currentStep < 4 ? 'CONTINUAR' : (isGuestMode && paymentMethod === 'mercadopago' ? 'NO DISPONIBLE EN MODO INVITADO' : 'FINALIZAR COMPRA')}
             </button>
 
             {items.length > 0 && (

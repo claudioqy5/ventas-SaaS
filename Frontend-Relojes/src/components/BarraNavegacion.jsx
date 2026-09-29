@@ -167,18 +167,20 @@ export default function BarraNavegacion({
         }}
       >
         {/* Top micro-bar en carbón de lujo con texto dorado */}
-        <div style={{
+        <div className="top-micro-bar" style={{
           backgroundColor: '#1A1B1F',
           borderBottom: '1px solid rgba(212, 175, 55, 0.25)',
-          padding: 'clamp(5px, 0.6vw, 8px) clamp(12px, 2vw, 24px)',
+          padding: '6px 0',
+          width: '100%',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           fontSize: 'clamp(0.65rem, 0.75vw, 0.76rem)',
           letterSpacing: 'clamp(0.04em, 0.08vw, 0.08em)',
-          color: 'var(--c-gold)'
+          color: 'var(--c-gold)',
+          overflow: 'hidden'
         }}>
-          <div className="marquee-container" style={{ width: '100%' }}>
+          <div className="marquee-container" style={{ width: '100%', margin: 0, padding: 0 }}>
             <div className="marquee-text" style={{ color: 'var(--c-gold)' }}>
               ENVIOS A TODO EL PERÚ &nbsp;&nbsp;•&nbsp;&nbsp; ENTREGA EN TU DOMICILIO &nbsp;&nbsp;•&nbsp;&nbsp; 3 AÑOS DE GARANTIA &nbsp;&nbsp;•&nbsp;&nbsp; ESCRIBE A NUESTRA LINEA DE VENTAS POR WHATSAPP {whatsappNumber ? '+51 ' + whatsappNumber.replace(/^51/, '').replace(/(\d{3})(?=\d)/g, "$1 ") : '+51 916 382 742'}
             </div>
