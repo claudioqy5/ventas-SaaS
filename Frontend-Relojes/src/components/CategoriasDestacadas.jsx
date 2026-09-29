@@ -15,13 +15,12 @@ export default function CategoriasDestacadas({ onSelectStyle, onSearchSubmit }) 
     { id: 'elegante', nombre: 'Elegante', imagen: eleganteImg, filterValue: 'Elegante', style: { fontFamily: 'var(--font-serif), "Georgia", serif', fontWeight: 300, textTransform: 'uppercase', letterSpacing: '0.2em' } },
     { id: 'retro', nombre: 'Retro', imagen: retroImg, filterValue: 'Retro', style: { fontFamily: '"Courier New", monospace', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' } }
   ];
-
   return (
-    <div className="categorias-destacadas" style={{ padding: '60px 0.5vw', backgroundColor: '#ffffff' }}>
-      <div style={{ width: '100%', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+    <div className="categorias-destacadas" style={{ padding: 'clamp(40px, 4vw, 60px) 0.5vw', backgroundColor: '#ffffff' }}>
+      <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 'clamp(24px, 3vw, 40px)' }}>
           <p style={{
-            fontSize: '0.74rem',
+            fontSize: 'clamp(0.68rem, 0.75vw, 0.74rem)',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
             color: 'var(--c-blush)',
@@ -31,7 +30,7 @@ export default function CategoriasDestacadas({ onSelectStyle, onSearchSubmit }) 
           }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px', display: 'inline', position: 'relative', top: '-1px' }}><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"/></svg>
             DESCUBRE TU ESTILO
-            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '6px', display: 'inline', position: 'relative', top: '-1px' }}><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '6px', display: 'inline', position: 'relative', top: '-1px' }}><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0 0-3.41 0Z"/></svg>
           </p>
           <h2 className="font-serif" style={{
             fontSize: 'clamp(1.8rem, 3vw, 2.4rem)',
@@ -44,12 +43,7 @@ export default function CategoriasDestacadas({ onSelectStyle, onSearchSubmit }) 
           </h2>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(150px, 16vw, 300px), 1fr))',
-          gap: '0.5vw',
-          width: '100%'
-        }}>
+        <div className="grid-categorias-destacadas">
           {categorias.map((cat, idx) => (
             <div 
               key={idx} 
@@ -60,12 +54,11 @@ export default function CategoriasDestacadas({ onSelectStyle, onSearchSubmit }) 
                   onSelectStyle('Estilo', cat.filterValue);
                 }
               }}
+              className="categoria-card"
               style={{
                 position: 'relative',
-                //borderRadius: '12px',
                 overflow: 'hidden',
-                height: '45vh',
-                minHeight: '280px',
+                borderRadius: '0px',
                 cursor: 'pointer',
                 boxShadow: '0 4px 14px rgba(11, 11, 12, 0.08)',
                 transition: 'transform 0.4s ease, box-shadow 0.4s ease'
@@ -73,12 +66,14 @@ export default function CategoriasDestacadas({ onSelectStyle, onSearchSubmit }) 
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-6px)';
                 e.currentTarget.style.boxShadow = '0 12px 24px rgba(11, 11, 12, 0.15)';
-                e.currentTarget.querySelector('img').style.transform = 'scale(1.08)';
+                const img = e.currentTarget.querySelector('img');
+                if (img) img.style.transform = 'scale(1.08)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.boxShadow = '0 4px 14px rgba(11, 11, 12, 0.08)';
-                e.currentTarget.querySelector('img').style.transform = 'scale(1)';
+                const img = e.currentTarget.querySelector('img');
+                if (img) img.style.transform = 'scale(1)';
               }}
             >
               <img 
@@ -96,13 +91,13 @@ export default function CategoriasDestacadas({ onSelectStyle, onSearchSubmit }) 
                 bottom: 0,
                 left: 0,
                 right: 0,
-                padding: '40px 16px 16px',
+                padding: '30px 14px 14px',
                 background: 'linear-gradient(to top, rgba(11,11,12,0.85) 0%, rgba(11,11,12,0) 100%)',
                 color: '#ffffff',
                 textAlign: 'center',
                 pointerEvents: 'none'
               }}>
-                <h3 style={{ fontSize: '1.2rem', textShadow: '0 2px 4px rgba(0,0,0,0.6)', margin: 0, ...cat.style }}>
+                <h3 style={{ fontSize: 'clamp(1rem, 1.2vw, 1.25rem)', textShadow: '0 2px 4px rgba(0,0,0,0.6)', margin: 0, ...cat.style }}>
                   {cat.nombre}
                 </h3>
               </div>

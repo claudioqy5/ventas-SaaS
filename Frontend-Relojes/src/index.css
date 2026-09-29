@@ -389,9 +389,9 @@ body {
 }
 
 /* =========================================================
-   Surgical Mobile Overrides (Max-width: 768px)
+   Surgical Mobile & Tablet Overrides (Max-width: 991px)
    ========================================================= */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   /* Navbar */
   .navbar-main {
     padding: 12px 15px !important;
@@ -431,13 +431,13 @@ body {
     display: none;
   }
   .navbar-actions {
-    gap: 6px !important;
+    gap: 8px !important;
   }
   .navbar-actions > div > button,
   .navbar-actions > button,
   .navbar-search {
-    width: 36px !important;
-    height: 36px !important;
+    width: 38px !important;
+    height: 38px !important;
   }
   .navbar-actions > div > button > svg,
   .navbar-actions > button > svg,
@@ -445,23 +445,24 @@ body {
     width: 16px !important;
     height: 16px !important;
   }
-  /* When search is open on mobile, it should position absolute to cover the middle */
+  /* When search is open on mobile/tablet, it positions to cover gracefully */
   .navbar-search.is-open {
     position: absolute !important;
     right: 0 !important;
     width: calc(100vw - 90px) !important;
     max-width: none !important;
-    height: 36px !important;
+    height: 38px !important;
     z-index: 50 !important;
   }
   .navbar-search {
-    /* Prevent search bar from taking too much width on mobile when not open */
-    max-width: 36px !important;
+    max-width: 38px !important;
   }
   .user-text-desktop {
     display: none !important;
   }
-  
+}
+
+@media (max-width: 768px) {
   /* Hero Section */
   .hero-section {
     min-height: auto !important;
@@ -685,46 +686,75 @@ body {
   }
 }
 
+/* Grid de Colecciones Destacadas (Esquinas rectas sin redondear, pegadas al borde como la foto de referencia) */
+.grid-categorias-destacadas {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5vw;
+  width: 100%;
+}
+.categoria-card {
+  height: clamp(280px, 45vh, 480px);
+  border-radius: 0px !important;
+}
+
+@media (max-width: 991px) {
+  .grid-categorias-destacadas {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .categoria-card {
+    height: clamp(220px, 30vh, 340px);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-categorias-destacadas {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+  }
+  .categoria-card {
+    height: 180px;
+  }
+}
+
 /* Grid de productos fluido y adaptable */
 .grid-4-products {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 30px !important;
+  gap: clamp(16px, 1.8vw, 30px) !important;
   width: 100% !important;
 }
 
 .grid-5-products {
   display: grid !important;
   grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-  gap: 30px !important;
+  gap: clamp(14px, 1.6vw, 26px) !important;
   width: 100% !important;
 }
 
-@media (max-width: 1536px) {
-  .grid-4-products, .grid-5-products {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 25px !important;
-  }
-}
-
-@media (max-width: 1280px) {
-  .grid-4-products, .grid-5-products {
+@media (max-width: 1200px) {
+  .grid-5-products {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 20px !important;
+    gap: 16px !important;
+  }
+  .grid-4-products {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
   }
 }
 
-@media (max-width: 1024px) {
-  .grid-4-products, .grid-5-products {
+@media (max-width: 900px) {
+  .grid-5-products, .grid-4-products {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 16px !important;
+    gap: 14px !important;
   }
 }
 
 @media (max-width: 640px) {
-  .grid-4-products, .grid-5-products {
+  .grid-5-products, .grid-4-products {
     grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-    gap: 16px !important;
+    gap: 14px !important;
   }
 }
 

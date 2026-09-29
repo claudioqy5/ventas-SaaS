@@ -1265,8 +1265,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
           </main>
 
 
-      {/* Sección Transicional con Animación WebThreads en la Nueva Paleta */}
-      {!initialCategory && (
+      {/* Sección Transicional con Animación WebThreads en la Nueva Paleta - Solo vista principal */}
+      {!initialCategory && !showFullCatalog && activeView !== 'search' && (
         <section style={{ 
           position: 'relative', 
           width: '100%', 
@@ -1337,8 +1337,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
         </section>
       )}
 
-      {/* Sección "Nuevos Ingresos" */}
-      {!initialCategory && newArrivalsGrouped.length > 0 && (
+      {/* Sección "Nuevos Ingresos" - Solo vista principal */}
+      {!initialCategory && !showFullCatalog && activeView !== 'search' && newArrivalsGrouped.length > 0 && (
         <section style={{
           padding: '50px 2% 90px',
           backgroundColor: '#ffffff', // Fondo blanco
@@ -1383,11 +1383,11 @@ export default function App({ initialCategory, initialProductId, initialView = '
         </section>
       )}
 
-      {/* Sección de Beneficios */}
-      {!initialCategory && <Beneficios whatsappNumber={whatsappConcierge} />}
+      {/* Sección de Beneficios - Solo vista principal */}
+      {!initialCategory && !showFullCatalog && activeView !== 'search' && <Beneficios whatsappNumber={whatsappConcierge} />}
 
-      {/* Sección de Opiniones */}
-      {!initialCategory && <Testimonios />}
+      {/* Sección de Opiniones - Solo vista principal */}
+      {!initialCategory && !showFullCatalog && activeView !== 'search' && <Testimonios />}
 
         </>
       )}

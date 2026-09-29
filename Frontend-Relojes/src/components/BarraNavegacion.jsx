@@ -36,6 +36,24 @@ export default function BarraNavegacion({
   const [isMounted, setIsMounted] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
+  const headerRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(105);
+
+  // Medición dinámica y automática de la altura real del Header
+  useEffect(() => {
+    if (!headerRef.current) return;
+    const updateHeight = () => {
+      if (headerRef.current) {
+        setHeaderHeight(headerRef.current.offsetHeight);
+      }
+    };
+    updateHeight();
+    const resizeObserver = new ResizeObserver(() => {
+      updateHeight();
+    });
+    resizeObserver.observe(headerRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
 
   // Sugerencias de autocompletado inteligente en tiempo real
   const suggestions = useMemo(() => {
@@ -130,31 +148,34 @@ export default function BarraNavegacion({
 
   return (
     <>
-      <header style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        width: '100%',
-        zIndex: 100,
-        backgroundColor: 'rgba(255, 255, 255, 0.96)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(59, 60, 65, 0.14)',
-        boxShadow: '0 4px 20px rgba(11, 11, 12, 0.06)',
-        transform: showHeader ? 'translateY(0)' : 'translateY(-100%)',
-        transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease'
-      }}>
+      <header
+        ref={headerRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          width: '100%',
+          zIndex: 100,
+          backgroundColor: 'rgba(255, 255, 255, 0.96)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(59, 60, 65, 0.14)',
+          boxShadow: '0 4px 20px rgba(11, 11, 12, 0.06)',
+          transform: showHeader ? 'translateY(0)' : 'translateY(-100%)',
+          transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease'
+        }}
+      >
         {/* Top micro-bar en carbón de lujo con texto dorado */}
         <div style={{
           backgroundColor: '#1A1B1F',
           borderBottom: '1px solid rgba(212, 175, 55, 0.25)',
-          padding: '7px 24px',
+          padding: 'clamp(5px, 0.6vw, 8px) clamp(12px, 2vw, 24px)',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          fontSize: '0.74rem',
-          letterSpacing: '0.08em',
+          fontSize: 'clamp(0.65rem, 0.75vw, 0.76rem)',
+          letterSpacing: 'clamp(0.04em, 0.08vw, 0.08em)',
           color: 'var(--c-gold)'
         }}>
           <div className="marquee-container" style={{ width: '100%' }}>
@@ -165,13 +186,13 @@ export default function BarraNavegacion({
         </div>
 
         <div className="navbar-main" style={{
-          maxWidth: '95%',
+          maxWidth: 'clamp(1000px, 95vw, 1700px)',
           margin: '0 auto',
-          padding: '16px 24px',
+          padding: 'clamp(10px, 1.2vw, 16px) clamp(14px, 2vw, 32px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '24px'
+          gap: 'clamp(12px, 1.8vw, 24px)'
         }}>
           {/* Hamburger Menu (Mobile Only) */}
           <button
@@ -199,22 +220,22 @@ export default function BarraNavegacion({
               }
               window.location.href = '/';
             }}
-            style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+            style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', cursor: 'pointer', flexShrink: 0 }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(8px, 1.2vw, 14px)' }}>
               <img
                 src="/logo-lgant-negro.png"
                 alt="L'gant"
-                style={{ height: '42px', width: 'auto', objectFit: 'contain' }}
+                style={{ height: 'clamp(30px, 2.5vw, 42px)', width: 'auto', objectFit: 'contain' }}
               />
-              <div style={{ width: '1.5px', height: '36px', backgroundColor: 'var(--c-gold)', opacity: 0.6 }}></div>
-              <div style={{ fontSize: '2.1rem', fontFamily: '"Cinzel", serif', color: 'var(--c-obsidian)', lineHeight: 1, letterSpacing: '0.06em', fontWeight: 700 }}>
+              <div style={{ width: '1.5px', height: 'clamp(24px, 2.2vw, 36px)', backgroundColor: 'var(--c-gold)', opacity: 0.6 }}></div>
+              <div style={{ fontSize: 'clamp(1.4rem, 1.8vw, 2.1rem)', fontFamily: '"Cinzel", serif', color: 'var(--c-obsidian)', lineHeight: 1, letterSpacing: 'clamp(0.03em, 0.06vw, 0.06em)', fontWeight: 700 }}>
                 L'GANT
               </div>
             </div>
             <div style={{
-              fontSize: '0.58rem',
-              letterSpacing: '0.42em',
+              fontSize: 'clamp(0.48rem, 0.55vw, 0.58rem)',
+              letterSpacing: 'clamp(0.24em, 0.35vw, 0.42em)',
               fontFamily: '"Cinzel", serif',
               color: 'var(--c-steel)',
               textTransform: 'uppercase',
@@ -228,7 +249,7 @@ export default function BarraNavegacion({
 
 
         {/* Enlaces de Navegación de Alta Categoría */}
-        <nav className={`navbar-links ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '40px', flexWrap: 'wrap' }}>
+        <nav className={`navbar-links ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: 'clamp(10px, 2.2vw, 36px)' }}>
           {[
             { label: 'Hombre', href: '/categoria/hombre', tag: 'Hombre' },
             { label: 'Mujer', href: '/categoria/mujer', tag: 'Mujer' },
@@ -269,8 +290,8 @@ export default function BarraNavegacion({
                         ? 'var(--c-indigo)' 
                         : 'var(--c-deep-purple)',
                     textDecoration: 'none',
-                    fontSize: '0.8rem',
-                    letterSpacing: '0.12em',
+                    fontSize: 'clamp(0.72rem, 0.8vw, 0.84rem)',
+                    letterSpacing: 'clamp(0.06em, 0.1vw, 0.12em)',
                     textTransform: 'uppercase',
                     fontFamily: 'var(--font-serif)',
                     fontWeight: isCatActive ? 700 : 500,
@@ -335,7 +356,7 @@ export default function BarraNavegacion({
         </nav>
 
         {/* Acciones */}
-        <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(8px, 1.2vw, 16px)' }}>
           {/* Menú de Usuario (Dropdown desplegable estilo popover) */}
           <div ref={userMenuRef} style={{ position: 'relative' }}>
             <button
@@ -349,9 +370,9 @@ export default function BarraNavegacion({
               }}
               title={user ? `Cuenta: ${user.nombre}` : "Mi Cuenta / Iniciar Sesión"}
               style={{
-                height: '42px',
-                padding: user ? '0 16px 0 14px' : '0',
-                width: user ? 'auto' : '42px',
+                height: 'clamp(36px, 2.5vw, 42px)',
+                padding: user ? '0 clamp(10px, 1vw, 16px) 0 clamp(8px, 0.8vw, 14px)' : '0',
+                width: user ? 'auto' : 'clamp(36px, 2.5vw, 42px)',
                 borderRadius: user ? '9999px' : '50%',
                 background: user ? 'var(--c-deep-purple)' : '#ffffff',
                 border: user ? '1px solid var(--c-blush)' : '1px solid var(--border-light)',
@@ -563,8 +584,8 @@ export default function BarraNavegacion({
                 position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
-                height: '42px',
-                width: showSearch ? '290px' : '42px',
+                height: 'clamp(36px, 2.5vw, 42px)',
+                width: showSearch ? 'clamp(180px, 18vw, 290px)' : 'clamp(36px, 2.5vw, 42px)',
                 borderRadius: '9999px',
                 backgroundColor: '#ffffff',
                 border: `1px solid ${showSearch ? 'var(--c-indigo)' : 'var(--border-light)'}`,
@@ -613,8 +634,8 @@ export default function BarraNavegacion({
                   color: showSearch ? 'var(--c-indigo)' : 'var(--c-deep-purple)',
                   cursor: 'pointer',
                   flexShrink: 0,
-                  width: showSearch ? '24px' : '42px',
-                  height: '42px',
+                  width: showSearch ? '24px' : 'clamp(36px, 2.5vw, 42px)',
+                  height: 'clamp(36px, 2.5vw, 42px)',
                   transition: 'color 0.2s ease, width 0.3s ease'
                 }}
               >
@@ -651,7 +672,7 @@ export default function BarraNavegacion({
                   border: 'none',
                   outline: 'none',
                   color: 'var(--c-deep-purple)',
-                  fontSize: '0.85rem',
+                  fontSize: 'clamp(0.78rem, 0.85vw, 0.85rem)',
                   fontWeight: 500,
                   marginLeft: showSearch ? '8px' : '0',
                   opacity: showSearch ? 1 : 0,
@@ -850,8 +871,8 @@ export default function BarraNavegacion({
             title="Carrito de Compras"
             style={{
               position: 'relative',
-              width: '42px',
-              height: '42px',
+              width: 'clamp(36px, 2.5vw, 42px)',
+              height: 'clamp(36px, 2.5vw, 42px)',
               borderRadius: '50%',
               background: '#ffffff',
               border: '1px solid var(--border-light)',
@@ -861,7 +882,8 @@ export default function BarraNavegacion({
               justifyContent: 'center',
               cursor: 'pointer',
               boxShadow: '0 2px 8px rgba(11, 11, 12, 0.06)',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              flexShrink: 0
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = 'var(--c-blush)';
@@ -897,7 +919,7 @@ export default function BarraNavegacion({
         </div>
       </div>
     </header>
-    <div className="header-spacer" style={{ height: '105px', width: '100%' }} />
+    <div className="header-spacer" style={{ height: `${headerHeight}px`, width: '100%', transition: 'height 0.2s ease' }} />
     </>
   );
 }
