@@ -943,12 +943,8 @@ export default function ProcesoPago({
                       transition: 'all 0.2s'
                     }}
                   >
-                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: paymentMethod === 'mercadopago' ? 'rgba(0, 158, 227, 0.15)' : '#f0ede8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      {/* Logo MP simplificado */}
-                      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="11" cy="11" r="11" fill={paymentMethod === 'mercadopago' ? '#009ee3' : '#b0bec5'}/>
-                        <text x="5" y="15" fontSize="11" fontWeight="bold" fill="white" fontFamily="Arial">MP</text>
-                      </svg>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: paymentMethod === 'mercadopago' ? 'rgba(0, 158, 227, 0.15)' : '#f0ede8', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px' }}>
+                      <img src="/mercadopago-logo.png" alt="Mercado Pago" style={{ width: '100%', height: 'auto', opacity: paymentMethod === 'mercadopago' ? 1 : 0.6 }} />
                     </div>
                     <div>
                       <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--c-obsidian)' }}>Mercado Pago</div>
@@ -1154,8 +1150,8 @@ export default function ProcesoPago({
                   {paymentMethod === 'mercadopago' && (
                     <div>
                       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', marginBottom: '20px' }}>
-                        <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: 'linear-gradient(135deg, #009ee3, #00bcff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(0,158,227,0.3)' }}>
-                          <span style={{ color: '#fff', fontWeight: 800, fontSize: '0.9rem', letterSpacing: '-0.5px' }}>MP</span>
+                        <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: '#fff', border: '1px solid #e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(0,158,227,0.1)' }}>
+                          <img src="/mercadopago-logo.png" alt="Mercado Pago" style={{ width: '34px', height: 'auto' }} />
                         </div>
                         <div>
                           <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--c-obsidian)', marginBottom: '4px' }}>
