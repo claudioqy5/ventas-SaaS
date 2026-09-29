@@ -211,6 +211,12 @@ export default function ProcesoPago({
         setCurrentStep(3);
         return;
       }
+    } else {
+      // Si es invitado y quiere usar Mercado Pago, no lo dejamos pasar.
+      if (paymentMethod === 'mercadopago') {
+        alert("⚠️ Por seguridad, Mercado Pago requiere tus datos personales (DNI, Teléfono y Email) para validar la compra.\n\nPor favor, regresa al Paso 2 'Datos personales' para completarlos, o selecciona otro método de pago (Yape/Transferencia).");
+        return;
+      }
     }
 
     if (!validateStep4()) {
