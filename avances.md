@@ -841,3 +841,13 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
 - **Optimización de Bot IA (Flujo de automatización n8n)**:
   - **Corrección de Error 429 de Gemini API**: Se diagnosticó el motivo del límite de tokens excedido (el bot inyectaba todas las especificaciones detalladas de cada producto en la memoria del sistema).
   - **Filtro de Atributos**: Se desarrolló un script JS para el nodo "Preparar Prompt" que filtra los atributos de la base de datos y solo extrae datos cruciales para la venta basándose en palabras clave (`['color', 'material', 'cristal']`). Esto redujo drásticamente el peso del payload hacia Gemini, manteniendo respuestas técnicas inteligentes sin saturar la capa gratuita de la API.
+
+## Actualización - 28 de Septiembre (Mercado Pago Anti-fraude y UI de Filtros)
+- **Integración Mercado Pago (Checkout Pro) - Prevención Anti-fraude:**
+  - **Diagnóstico del Rechazo:** Se detectó que Mercado Pago rechazaba transacciones de usuarios 'Invitados' con el error `cc_rejected_high_risk`. Esto ocurría porque el motor antifraude de MP exige datos críticos del comprador para validar la transacción.
+  - **Backend (C#):** Se modificó `MercadoPagoController.cs` para inyectar explícitamente el documento de identidad (`Identification`) y el teléfono (`Phone`) dentro del objeto `Payer` en la `PreferenceRequest`, importando correctamente `MercadoPago.Client.Common`.
+  - **Frontend (Checkout):** En `ProcesoPago.jsx`, se implementó una regla de validación estricta para el modo 'Invitado' (`isGuestMode`). Si el cliente intenta pagar con Mercado Pago sin haber pasado por los pasos de 'Datos Personales' y 'Datos de Entrega', el sistema bloquea la pasarela y emite una alerta guiándolo a completar sus datos, asegurando que MP reciba la información necesaria para aprobar el pago.
+  - **Branding Oficial:** Se reemplazaron los marcadores visuales genéricos por el logotipo oficial de Mercado Pago (`mercadopago-logo.png`) en la interfaz de selección de métodos de pago.
+- **Depuración de UI (Panel de Filtros):**
+  - **Botón Obsoleto:** Se eliminó por completo el botón 'VER RESULTADOS' del componente `PanelFiltros.jsx`, ya que la arquitectura de la tienda aplica los filtros de catálogo automáticamente en tiempo real.
+  - **Icono de Cierre (UX):** Se corrigió la renderización del botón 'X' (cerrar menú). Anteriormente se mostraba de manera errónea en la barra lateral de escritorio; ahora está condicionado (`isMobileOpen`) para desplegarse **únicamente** cuando se abre el cajón de filtros en dispositivos móviles.
