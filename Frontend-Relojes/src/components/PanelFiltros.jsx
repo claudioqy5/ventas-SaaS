@@ -264,29 +264,7 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
         </button>
       )}
 
-      {/* Botón de Ver Resultados en Móvil */}
-      {onCloseMobile && (
-        <button
-          onClick={onCloseMobile}
-          style={{
-            width: '100%',
-            marginTop: '16px',
-            padding: '12px',
-            backgroundColor: 'var(--c-obsidian)',
-            color: 'var(--text-light)',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '0.85rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            boxShadow: '0 4px 14px rgba(11, 11, 12, 0.25)'
-          }}
-        >
-          Ver Resultados
-        </button>
-      )}
+
     </>
   );
 
