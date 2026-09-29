@@ -107,7 +107,7 @@ export default function PanelFiltros({ filters, setFilters, dynamicAttributesMap
             Limpiar todo
           </button>
         )}
-        {onCloseMobile && (
+        {isMobileOpen && onCloseMobile && (
           <button
             onClick={onCloseMobile}
             style={{
