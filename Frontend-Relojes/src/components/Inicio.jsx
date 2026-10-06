@@ -19,8 +19,8 @@ const CAROUSEL_DATA = [
     img: imgShalom,
     title: 'Envíos a Todo el Perú',
     desc: 'Envíos 100% seguros a cualquier destino nacional mediante Shalom.',
-    actionUrl: '#',
-    actionText: 'Ver Cobertura'
+    actionUrl: null,
+    actionText: null
   },
   {
     img: imgDorados,
@@ -182,38 +182,40 @@ export default function Inicio({ onExplore, onOpenWhatsAppConcierge }) {
             }}>
               {item.desc}
             </p>
-            <a 
-              href={item.actionUrl}
-              className="hero-carousel-btn"
-              style={{
-                display: 'inline-block',
-                marginTop: '15px',
-                padding: '12px 36px',
-                border: '1px solid rgba(255, 255, 255, 0.5)',
-                color: '#fff',
-                backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.15em',
-                fontSize: '0.8rem',
-                fontWeight: 500,
-                textDecoration: 'none',
-                transition: 'all 0.4s ease',
-                cursor: 'pointer',
-                pointerEvents: 'auto'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = 'rgba(255, 255, 255, 1)';
-                e.target.style.color = '#000';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.25)';
-                e.target.style.color = '#fff';
-              }}
-            >
-              {item.actionText}
-            </a>
+            {item.actionText && (
+              <a 
+                href={item.actionUrl}
+                className="hero-carousel-btn"
+                style={{
+                  display: 'inline-block',
+                  marginTop: '15px',
+                  padding: '12px 36px',
+                  border: '1px solid rgba(255, 255, 255, 0.5)',
+                  color: '#fff',
+                  backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.15em',
+                  fontSize: '0.8rem',
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  transition: 'all 0.4s ease',
+                  cursor: 'pointer',
+                  pointerEvents: 'auto'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+                  e.target.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.25)';
+                  e.target.style.color = '#fff';
+                }}
+              >
+                {item.actionText}
+              </a>
+            )}
           </div>
         ))}
       </div>
