@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 
-export default function BotonWhatsApp({ phoneNumber, message = "Hola, me gustaría recibir más información.", isVisible = true }) {
+export default function BotonWhatsApp({ 
+  phoneNumber, 
+  message = "⚜️ *L'GANT BOUTIQUE* ⚜️\n\n¡Hola! 👋 Deseo recibir asesoría personalizada sobre su catálogo exclusivo de relojes y consultar la disponibilidad de entrega.", 
+  isVisible = true 
+}) {
   const [showPill, setShowPill] = useState(true);
 
   if (!isVisible) return null;

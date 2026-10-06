@@ -19,8 +19,8 @@ const CAROUSEL_DATA = [
     img: imgShalom,
     title: 'Envíos a Todo el Perú',
     desc: 'Envíos 100% seguros a cualquier destino nacional mediante Shalom.',
-    actionUrl: null,
-    actionText: null
+    actionUrl: '/categoria/todos',
+    actionText: 'Ver Catálogo'
   },
   {
     img: imgDorados,

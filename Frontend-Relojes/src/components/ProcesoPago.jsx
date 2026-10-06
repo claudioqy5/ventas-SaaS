@@ -31,10 +31,15 @@ export default function ProcesoPago({
   onOrderSuccess,
   whatsappNumber = '51916382742'
 }) {
+  const [isMounted, setIsMounted] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // PASO 2: Datos Personales
   const [personalData, setPersonalData] = useState({
@@ -365,6 +370,10 @@ export default function ProcesoPago({
       setIsSubmitting(false);
     }
   };
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div style={{ width: '100%', minHeight: '100vh', background: 'var(--bg-main)', paddingTop: '30px', paddingBottom: '60px' }}>
@@ -1352,26 +1361,17 @@ export default function ProcesoPago({
                 <button
                   type="button"
                   onClick={handleDirectWhatsAppPurchase}
-                  style={{
-                    width: '100%',
-                    padding: '13px',
-                    background: '#25D366',
-                    color: '#ffffff',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontWeight: 600,
-                    fontSize: '0.84rem',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    boxShadow: '0 4px 14px rgba(37, 211, 102, 0.25)',
-                    transition: 'all 0.2s'
-                  }}
+                  className="wa-badge-pill-button"
                 >
-                  <WhatsAppIcon size={18} color="#ffffff" />
-                  COMPRA RÁPIDA POR WHATSAPP
+                  <div className="wa-emblem-circle">
+                    <div className="wa-emblem-icon">
+                      <WhatsAppIcon size={32} color="#ffffff" />
+                    </div>
+                  </div>
+                  <div className="wa-pill-body">
+                    <span className="wa-pill-subtitle">COMPRA RÁPIDA VÍA</span>
+                    <span className="wa-pill-title">WHATSAPP</span>
+                  </div>
                 </button>
               </div>
             )}

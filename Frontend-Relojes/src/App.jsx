@@ -822,8 +822,8 @@ export default function App({ initialCategory, initialProductId, initialView = '
 
   const handleOpenWhatsAppConcierge = () => {
     const text = encodeURIComponent(
-      `👋 *ATENCIÓN - CONCIERGE L'GANT*\n\n` +
-      `Hola, deseo comunicarme con un asesor de la boutique para recibir asesoramiento sobre su colección de alta relojería.`
+      `⚜️ *L'GANT BOUTIQUE* ⚜️\n\n` +
+      `¡Hola! 👋 Deseo recibir asesoría personalizada sobre su catálogo exclusivo de relojes y consultar la disponibilidad de entrega.`
     );
     window.open(`https://api.whatsapp.com/send?phone=${whatsappConcierge}&text=${text}`, '_blank');
   };

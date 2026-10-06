@@ -122,7 +122,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               marginTop: '5px',
               fontWeight: 600
             }}>
-              EN CADA SEGUNDO
+              Grupo SERCAL
             </div>
           </div>
         </div>
