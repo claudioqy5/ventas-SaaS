@@ -91,7 +91,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '18px',
+          gap: '16px',
           marginBottom: '50px',
           paddingBottom: '30px',
           borderBottom: '1px solid rgba(212, 175, 55, 0.25)'
@@ -99,9 +99,10 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
           <img
             src="/logo-lgant-blanco.png"
             alt="L'gant"
-            style={{ height: '54px', width: 'auto', objectFit: 'contain' }}
+            style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
           />
-          <div>
+          <div style={{ width: '1.5px', height: '40px', backgroundColor: 'var(--c-gold)', opacity: 0.6 }}></div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <div style={{
               fontFamily: '"Cinzel", serif',
               fontSize: '1.8rem',
@@ -114,13 +115,14 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             </div>
             <div style={{
               fontFamily: '"Cinzel", serif',
-              fontSize: '0.64rem',
+              fontSize: '0.55rem',
               color: 'var(--c-gold)',
               letterSpacing: '0.35em',
               textTransform: 'uppercase',
-              marginTop: '5px'
+              marginTop: '5px',
+              fontWeight: 600
             }}>
-              En cada segundo • Boutique Perú
+              EN CADA SEGUNDO
             </div>
           </div>
         </div>

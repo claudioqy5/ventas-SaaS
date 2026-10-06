@@ -222,29 +222,29 @@ export default function BarraNavegacion({
               }
               window.location.href = '/';
             }}
-            style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', cursor: 'pointer', flexShrink: 0 }}
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'clamp(8px, 1.2vw, 14px)', cursor: 'pointer', flexShrink: 0 }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(8px, 1.2vw, 14px)' }}>
-              <img
-                src="/logo-lgant-negro.png"
-                alt="L'gant"
-                style={{ height: 'clamp(30px, 2.5vw, 42px)', width: 'auto', objectFit: 'contain' }}
-              />
-              <div style={{ width: '1.5px', height: 'clamp(24px, 2.2vw, 36px)', backgroundColor: 'var(--c-gold)', opacity: 0.6 }}></div>
-              <div style={{ fontSize: 'clamp(1.4rem, 1.8vw, 2.1rem)', fontFamily: '"Cinzel", serif', color: 'var(--c-obsidian)', lineHeight: 1, letterSpacing: 'clamp(0.03em, 0.06vw, 0.06em)', fontWeight: 700 }}>
+            <img
+              src="/logo-lgant-negro.png"
+              alt="L'gant"
+              style={{ height: 'clamp(34px, 2.8vw, 44px)', width: 'auto', objectFit: 'contain' }}
+            />
+            <div style={{ width: '1.5px', height: 'clamp(28px, 2.4vw, 38px)', backgroundColor: 'var(--c-gold)', opacity: 0.6 }}></div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <div style={{ fontSize: 'clamp(1.3rem, 1.7vw, 2.0rem)', fontFamily: '"Cinzel", serif', color: 'var(--c-obsidian)', lineHeight: 1, letterSpacing: 'clamp(0.03em, 0.06vw, 0.06em)', fontWeight: 700 }}>
                 L'GANT
               </div>
-            </div>
-            <div style={{
-              fontSize: 'clamp(0.48rem, 0.55vw, 0.58rem)',
-              letterSpacing: 'clamp(0.24em, 0.35vw, 0.42em)',
-              fontFamily: '"Cinzel", serif',
-              color: 'var(--c-steel)',
-              textTransform: 'uppercase',
-              marginLeft: '0.42em',
-              fontWeight: 600
-            }}>
-              en cada segundo
+              <div style={{
+                fontSize: 'clamp(0.42rem, 0.5vw, 0.52rem)',
+                letterSpacing: 'clamp(0.24em, 0.32vw, 0.38em)',
+                fontFamily: '"Cinzel", serif',
+                color: 'var(--c-steel)',
+                textTransform: 'uppercase',
+                marginTop: '4px',
+                fontWeight: 600
+              }}>
+                EN CADA SEGUNDO
+              </div>
             </div>
           </a>
 
