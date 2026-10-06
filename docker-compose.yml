@@ -55,6 +55,22 @@ services:
     networks:
       - saas_network
 
+  frontend-relojes:
+    build:
+      context: ./Frontend-Relojes
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=https://ventassaas-api.helifyferdigital.cloud
+        - VITE_EMPRESA_ID=6a9a503000746b35867cddaf
+    container_name: saas_frontend_relojes
+    restart: always
+    ports:
+      - "8087:3000"
+    depends_on:
+      - backend-api
+    networks:
+      - saas_network
+
 volumes:
   mongo_data:
   uploads_data:
