@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 
 import imgEdifice from '../assets/hero/coleccion edifice.jpg';
+import imgShalom from '../assets/hero/shalom.jpg';
 import imgDorados from '../assets/hero/dorados.jpg';
 import imgMujeres from '../assets/hero/mujeres.jpg';
 
@@ -13,6 +14,13 @@ const CAROUSEL_DATA = [
     desc: 'Velocidad e inteligencia en cada milímetro de titanio.',
     actionUrl: '/buscar?q=edifice',
     actionText: 'Descubrir Edifice'
+  },
+  {
+    img: imgShalom,
+    title: 'Envíos a Todo el Perú',
+    desc: 'Envíos 100% seguros a cualquier destino nacional mediante Shalom.',
+    actionUrl: '#',
+    actionText: 'Ver Cobertura'
   },
   {
     img: imgDorados,
