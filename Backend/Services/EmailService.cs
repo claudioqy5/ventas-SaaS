@@ -43,7 +43,7 @@ public class EmailService : IEmailService
 
         // Asegurar que la URL nunca esté vacía ni sea localhost por accidente
         var rawStoreUrl = _config["StorefrontUrl"];
-        var storeBaseUrl = string.IsNullOrWhiteSpace(rawStoreUrl) ? "https://lgant.vercel.app" : rawStoreUrl;
+        var storeBaseUrl = string.IsNullOrWhiteSpace(rawStoreUrl) ? "https://lgant.pe" : rawStoreUrl;
         var verificationLink = $"{storeBaseUrl.TrimEnd('/')}/verificar-correo?token={verificationToken}";
 
         using var client = new SmtpClient(host, port)
