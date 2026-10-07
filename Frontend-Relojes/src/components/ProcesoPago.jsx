@@ -305,9 +305,17 @@ export default function ProcesoPago({
 
       // 2. Si es Mercado Pago: redirigir a MP
       if (paymentMethod === 'mercadopago') {
+        const mpItems = items.map(item => {
+          let itemPrice = item.precio;
+          if (appliedCoupon && appliedCoupon.discountPercentage) {
+            itemPrice = itemPrice * (1 - (appliedCoupon.discountPercentage / 100));
+          }
+          return { ...item, precio: Number(itemPrice.toFixed(2)) };
+        });
+
         const mpRes = await createMercadoPagoPreference(token, {
           orderId: res.orderId,
-          items: items,
+          items: mpItems,
           payerEmail: personalData.email || user?.correo || user?.email || null,
           payerName: `${personalData.nombres} ${personalData.apellidos}`.trim() || user?.nombre || 'Cliente',
           payerPhone: personalData.telefono || user?.telefono || null,
