@@ -27,6 +27,7 @@ import VistaPanelCliente from './components/VistaPanelCliente';
 import VistaPedidoConfirmado from './components/VistaPedidoConfirmado';
 import VistaVerificarCorreo from './components/VistaVerificarCorreo';
 import CookieBanner from './components/CookieBanner';
+import PestanaEnviosPeru from './components/PestanaEnviosPeru';
 import { SlidersHorizontal, RefreshCw, AlertCircle } from 'lucide-react';
 import { matchProductSmart } from './utils/searchEngine';
 
@@ -61,6 +62,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
   }, []);
 
   const [products, setProducts] = useState([]);
+  const [brands, setBrands] = useState(['Casio']);
   const [storeName, setStoreName] = useState("L'gant");
   const [whatsappConcierge, setWhatsappConcierge] = useState(DEFAULT_WHATSAPP);
   const [isConnected, setIsConnected] = useState(false);
@@ -411,6 +413,9 @@ export default function App({ initialCategory, initialProductId, initialView = '
     setIsConnected(data.connected);
     setIsFallback(data.isFallback);
     if (data.storeName) setStoreName(data.storeName);
+    if (data.brands && Array.isArray(data.brands) && data.brands.length > 0) {
+      setBrands(data.brands);
+    }
     // Actualizar el número de WhatsApp dinámicamente (bot prendido/apagado)
     if (data.whatsappNumber) setWhatsappConcierge(data.whatsappNumber);
     setLoading(false);
@@ -587,10 +592,27 @@ export default function App({ initialCategory, initialProductId, initialView = '
             a.valor?.toLowerCase().includes('mujer')
           );
           matchesCategory = isMujerCat || isMujerAttr;
+        } else if (selLower === 'parejas' || selLower === 'pareja') {
+          // Categoría Parejas en el backend (o atributo/etiqueta/nombre)
+          const isParejasCat = (p.categoria && p.categoria.toLowerCase().includes('pareja')) || 
+                               (p.categorias && p.categorias.some(c => c.toLowerCase().includes('pareja')));
+          const isParejasAttr = p.atributos?.some(a => 
+            (a.nombre?.toLowerCase().includes('género') || a.nombre?.toLowerCase().includes('genero') || a.nombre?.toLowerCase().includes('estilo') || a.nombre?.toLowerCase().includes('categoría') || a.nombre?.toLowerCase().includes('categoria')) &&
+            a.valor?.toLowerCase().includes('pareja')
+          );
+          const isParejasName = p.nombre?.toLowerCase().includes('pareja');
+          matchesCategory = isParejasCat || isParejasAttr || isParejasName;
         } else if (selLower === 'accesorios') {
           matchesCategory = (p.categoria && p.categoria.toLowerCase().includes('accesorio')) || (p.categorias && p.categorias.some(c => c.toLowerCase().includes('accesorio')));
         } else if (selLower === 'colecciones' || selLower === 'marcas') {
           matchesCategory = true;
+        } else if (brands && brands.some(b => b.toLowerCase() === selLower)) {
+          // Filtrado específico por una marca del negocio (ej: Casio)
+          const isBrandMatch = (p.marca && p.marca.toLowerCase() === selLower) ||
+                               p.nombre?.toLowerCase().includes(selLower) ||
+                               p.descripcion?.toLowerCase().includes(selLower) ||
+                               p.atributos?.some(a => (a.nombre?.toLowerCase() === 'marca' || a.nombre?.toLowerCase() === 'brand') && a.valor?.toLowerCase() === selLower);
+          matchesCategory = isBrandMatch;
         } else if (['casual', 'clásico', 'deportivo', 'elegante', 'retro', 'clasico'].includes(selLower)) {
           // Filtrar por estilo
           const targetStyle = selLower === 'clásico' ? 'clasico' : selLower;
@@ -671,7 +693,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
         if (sortBy === 'stock') return (b.stock || 0) - (a.stock || 0);
         return 0;
       });
-  }, [products, selectedCategory, searchQuery, sortBy, advancedFilters, activeView]);
+  }, [products, selectedCategory, searchQuery, sortBy, advancedFilters, activeView, brands]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -815,14 +837,14 @@ export default function App({ initialCategory, initialProductId, initialView = '
       `Hola, me interesa conocer más detalles y coordinar la adquisición del guardatiempo:\n` +
       `⚜️ *${product.nombre}*\n` +
       `💰 Precio: S/ ${Number(product.precio).toLocaleString('es-PE', { minimumFractionDigits: 2 })}\n` +
-      `¿Podría un asesor de la boutique brindarme información de disponibilidad y entrega?`
+      `¿Podría un asesor brindarme información de disponibilidad y tiempos de entrega?`
     );
     window.open(`https://api.whatsapp.com/send?phone=${whatsappConcierge}&text=${text}`, '_blank');
   };
 
   const handleOpenWhatsAppConcierge = () => {
     const text = encodeURIComponent(
-      `⚜️ *L'GANT BOUTIQUE* ⚜️\n\n` +
+      `⚜️ *L'GANT PERÚ* ⚜️\n\n` +
       `¡Hola! 👋 Deseo recibir asesoría personalizada sobre su catálogo exclusivo de relojes y consultar la disponibilidad de entrega.`
     );
     window.open(`https://api.whatsapp.com/send?phone=${whatsappConcierge}&text=${text}`, '_blank');
@@ -861,6 +883,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
         selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}
         whatsappNumber={whatsappConcierge}
+        brands={brands}
       />
 
       {/* VISTA PRINCIPAL: Checkout, Pedido Confirmado, Producto, Preguntas Frecuentes, Términos o Catálogo General */}
@@ -969,7 +992,7 @@ export default function App({ initialCategory, initialProductId, initialView = '
             padding: '50px 2% 90px',
             width: '100%',
             flex: 1,
-            backgroundColor: '#ffffff'
+            backgroundColor: (!initialCategory && !showFullCatalog && activeView !== 'search') ? '#ffffff' : '#f7f7f7'
           }}>
             {/* Encabezado del Catálogo */}
             <div className="catalog-header" style={{
@@ -1458,6 +1481,12 @@ export default function App({ initialCategory, initialProductId, initialView = '
 
       {/* Botón flotante de WhatsApp global (oculto en el carrito, durante el checkout y en pedido confirmado) */}
       <BotonWhatsApp phoneNumber={whatsappConcierge} isVisible={!isCartOpen && activeView !== 'checkout' && activeView !== 'pedido-confirmado'} />
+
+      {/* Pestaña lateral fija de Envíos Perú (siempre visible en el borde derecho) */}
+      <PestanaEnviosPeru 
+        whatsappNumber={whatsappConcierge} 
+        isVisible={!isCartOpen && activeView !== 'checkout' && activeView !== 'pedido-confirmado'} 
+      />
 
       {/* Notificación Toast al agregar al carrito */}
       <ToastNotificacion

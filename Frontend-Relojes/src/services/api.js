@@ -92,6 +92,8 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
       precioOferta: item.precioOferta || 0,
       categoria: catName,
       categorias: catNames,
+      marca: item.marca || item.Marca || 'Casio',
+      marcaId: item.marcaId || item.MarcaId || '',
       tipoProducto: item.tipoProducto,
       unidadMedida: item.unidadMedida,
       stock: item.stock,
@@ -108,13 +110,24 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     };
     });
 
+    // Obtener lista dinámica de marcas de la empresa
+    let marcasEmpresa = ['Casio'];
+    try {
+      marcasEmpresa = await fetchStoreBrands(empresaId, apiUrl);
+    } catch {
+      // Usar fallback de marcas presentes en productos
+      const extracted = Array.from(new Set(mapped.map(m => m.marca).filter(Boolean)));
+      if (extracted.length > 0) marcasEmpresa = extracted;
+    }
+
     return {
       connected: true,
       isFallback: false,
-      storeName: storeInfo.nombre || "L'gant • Boutique Perú",
+      storeName: storeInfo.nombre || "L'gant",
       // Número dinámico: si el bot está activo, usa el número del bot; si no, el número humano
       whatsappNumber: storeInfo.botWhatsAppActivo ? (storeInfo.numeroWhatsAppBot || '51955115893') : (storeInfo.numeroWhatsAppHumano || '51916382742'),
       botActivo: storeInfo.botWhatsAppActivo || false,
+      brands: marcasEmpresa.length > 0 ? marcasEmpresa : ['Casio'],
       products: mapped.length > 0 ? mapped : LUXURY_SAMPLE_WATCHES
     };
   } catch (err) {
@@ -122,13 +135,42 @@ export async function fetchStoreProducts(empresaId = DEFAULT_EMPRESA_ID, apiUrl 
     return {
       connected: false,
       isFallback: true,
-      storeName: "L'gant • Boutique Perú",
+      storeName: "L'gant",
       whatsappNumber: '51916382742',
       botActivo: false,
+      brands: ['Casio'],
       products: LUXURY_SAMPLE_WATCHES,
       error: err.message
     };
   }
+}
+
+// Obtener marcas registradas para la empresa (respetando aislamiento SaaS multi-tenant)
+export async function fetchStoreBrands(empresaId = DEFAULT_EMPRESA_ID, apiUrl = DEFAULT_API_URL) {
+  if (!empresaId) return ['Casio'];
+
+  try {
+    const publicBase = apiUrl.replace(/\/api\/relojes-store\/?$/, '/api/public/store');
+    let res = await fetch(`${apiUrl}/marcas/${empresaId}?_t=${Date.now()}`);
+    if (!res.ok) {
+      res = await fetch(`${publicBase}/${empresaId}/brands?_t=${Date.now()}`);
+    }
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        const brandNames = data
+          .map(b => (typeof b === 'string' ? b : (b.nombre || b.Nombre)))
+          .filter(Boolean);
+        if (brandNames.length > 0) {
+          return Array.from(new Set(brandNames));
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Error al consultar marcas de la empresa:', err);
+  }
+
+  return ['Casio'];
 }
 
 // ---- Autenticación del Cliente E-Commerce ----

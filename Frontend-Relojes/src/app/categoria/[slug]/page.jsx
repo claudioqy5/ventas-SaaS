@@ -15,11 +15,11 @@ export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const category = capitalizeCategory(resolvedParams.slug);
   return {
-    title: `Relojes para ${category} | L'gant Boutique`,
-    description: `Descubre nuestra exclusiva selección de relojes de lujo para ${category}. Piezas originales, automáticas y con garantía internacional en Perú.`,
+    title: `Relojes para ${category} | L'gant`,
+    description: `Descubre nuestra exclusiva selección de relojes de lujo para ${category}. Piezas originales, automáticas y con garantía oficial en Perú.`,
     openGraph: {
       title: `Catálogo Exclusivo: Relojes de ${category}`,
-      description: `Boutique de Alta Relojería en Perú. Explora nuestra colección de relojes suizos de lujo para ${category}.`,
+      description: `Alta Relojería en Perú. Explora nuestra colección de relojes suizos de lujo para ${category}.`,
     }
   };
 }

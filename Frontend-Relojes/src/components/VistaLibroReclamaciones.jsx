@@ -104,7 +104,7 @@ export default function VistaLibroReclamaciones({ storeName = "L'gant", empresaI
 
   if (isSubmitted) {
     return (
-      <div style={{ minHeight: '80vh', backgroundColor: '#FAFAFA', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
+      <div style={{ minHeight: '80vh', backgroundColor: '#f7f7f7', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
         <div style={{ backgroundColor: '#ffffff', padding: '48px', borderRadius: '16px', boxShadow: '0 10px 40px rgba(0,0,0,0.06)', maxWidth: '500px', textAlign: 'center', border: '1px solid rgba(212, 175, 55, 0.2)' }}>
           <CheckCircle size={64} color="var(--c-blush)" style={{ margin: '0 auto 24px' }} />
           <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--c-obsidian)', marginBottom: '16px' }}>Reclamo Registrado</h2>
@@ -118,7 +118,7 @@ export default function VistaLibroReclamaciones({ storeName = "L'gant", empresaI
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#FAFAFA', padding: '60px 20px' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f7f7f7', padding: '60px 20px' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         
         {/* Header de la Hoja */}

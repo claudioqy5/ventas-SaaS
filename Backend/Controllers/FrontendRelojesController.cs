@@ -59,6 +59,11 @@ public class FrontendRelojesController : ControllerBase
         var categorias = await _context.Categories.Find(catFilter).ToListAsync();
         var catDict = categorias.ToDictionary(c => c.Id, c => c.Nombre);
 
+        // Aislamiento multi-tenant SaaS por EmpresaId para las marcas
+        var brandFilter = Builders<Brand>.Filter.Eq(b => b.EmpresaId, empresaId);
+        var brands = await _context.Brands.Find(brandFilter).ToListAsync();
+        var brandDict = brands.ToDictionary(b => b.Id, b => b.Nombre);
+
         // Mapeo 100% seguro: Filtramos cualquier dato interno como "PrecioCosto"
         var catalogo = productos.Select(p => new
         {
@@ -72,6 +77,10 @@ public class FrontendRelojesController : ControllerBase
             CategoriaIds = p.CategoriaIds,
             Categoria = catDict.TryGetValue(p.CategoriaId ?? "", out var catName) ? catName : "Colección Destacada",
             Categorias = p.CategoriaIds?.Select(id => catDict.TryGetValue(id ?? "", out var n) ? n : null).Where(n => n != null).ToList() ?? new List<string>(),
+            p.MarcaId,
+            Marca = (!string.IsNullOrEmpty(p.MarcaId) && brandDict.TryGetValue(p.MarcaId, out var bName)) 
+                ? bName 
+                : (brands.Count == 1 ? brands[0].Nombre : "Casio"),
             p.ImagenUrl,
             p.Imagenes,
             p.CodigoBarras,
@@ -81,5 +90,24 @@ public class FrontendRelojesController : ControllerBase
         });
 
         return Ok(catalogo);
+    }
+
+    // GET api/relojes-store/marcas/{empresaId}
+    [HttpGet("marcas/{empresaId}")]
+    public async Task<IActionResult> GetMarcasRelojes(string empresaId)
+    {
+        if (string.IsNullOrWhiteSpace(empresaId))
+            return BadRequest(new { message = "Se requiere el ID de la empresa." });
+
+        // Filtrado estricto por EmpresaId para no mezclar datos entre clientes del SaaS
+        var brands = await _context.Brands.Find(b => b.EmpresaId == empresaId).ToListAsync();
+        var listaMarcas = brands.Select(b => new
+        {
+            b.Id,
+            b.Nombre,
+            b.Descripcion
+        });
+
+        return Ok(listaMarcas);
     }
 }

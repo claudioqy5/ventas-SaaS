@@ -176,7 +176,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                 <MapPin size={22} color="var(--c-gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ fontSize: '0.85rem' }}>
-                  <p style={{ margin: '0 0 4px 0', color: '#ffffff', fontWeight: 600 }}>Boutique Principal:</p>
+                  <p style={{ margin: '0 0 4px 0', color: '#ffffff', fontWeight: 600 }}>Tienda Principal:</p>
                   <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.75)' }}>Av. Echandia 182 Mza. C Lote 13,<br/>San Luis, Lima - Perú</p>
                 </div>
               </div>
@@ -280,13 +280,13 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff', textTransform: 'uppercase' }}>Síguenos:</span>
               <div style={{ display: 'flex', gap: '14px' }}>
-                <a href="https://www.tiktok.com/@lgante2074?_r=1&_t=ZS-99wss0k9ws0" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
+                <a href="https://www.facebook.com/people/Lgante/61588792018361/" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'} aria-label="Facebook">
                   <FacebookIcon size={20} />
                 </a>
-                <a href="https://www.tiktok.com/@lgante2074?_r=1&_t=ZS-99wss0k9ws0" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
+                <a href="https://www.instagram.com/lgante136" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'} aria-label="Instagram">
                   <InstagramIcon size={20} />
                 </a>
-                <a href="https://www.tiktok.com/@lgante2074?_r=1&_t=ZS-99wss0k9ws0" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
+                <a href="https://www.tiktok.com/@lgante2074?_r=1&_t=ZS-99wss0k9ws0" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--c-blush)'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'} aria-label="TikTok">
                   <TikTokIcon size={20} />
                 </a>
               </div>
@@ -323,7 +323,7 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             color: 'rgba(255, 255, 255, 0.4)'
           }}>
             <div>
-              © {new Date().getFullYear()} L'GANT. Boutique de Alta Relojería en Perú. Todos los derechos reservados.
+              © {new Date().getFullYear()} L'GANT. Alta Relojería en Perú. Todos los derechos reservados.
             </div>
             <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
               <span>Relojes 100% Auténticos</span>

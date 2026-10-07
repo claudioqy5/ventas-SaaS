@@ -119,7 +119,7 @@ export default function PaginaDetalleProducto({
     <div className="product-detail-page" style={{
       width: '100%',
       minHeight: '80vh',
-      backgroundColor: 'var(--bg-main)',
+      backgroundColor: '#f7f7f7',
       color: 'var(--c-deep-purple)',
       paddingBottom: '80px'
     }}>

@@ -38,7 +38,7 @@ export default function VistaVerificarCorreo({ onOpenAuth, onNavigateHome }) {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '40px 20px',
-      backgroundColor: '#fbf9f6'
+      backgroundColor: '#f7f7f7'
     }}>
       <div style={{
         maxWidth: '540px',

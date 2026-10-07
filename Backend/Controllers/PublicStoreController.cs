@@ -156,6 +156,26 @@ public class PublicStoreController : ControllerBase
         return Ok(categories);
     }
 
+    // GET api/public/store/{empresaId}/brands
+    [AllowAnonymous]
+    [HttpGet("{empresaId}/brands")]
+    public async Task<IActionResult> GetStoreBrands(string empresaId)
+    {
+        if (string.IsNullOrWhiteSpace(empresaId))
+            return BadRequest(new { message = "El identificador de la empresa es requerido." });
+
+        // Filtrado por EmpresaId para aislamiento multi-tenant
+        var brands = await _context.Brands.Find(b => b.EmpresaId == empresaId).ToListAsync();
+        var publicBrands = brands.Select(b => new
+        {
+            b.Id,
+            b.Nombre,
+            b.Descripcion
+        });
+
+        return Ok(publicBrands);
+    }
+
     // POST api/public/store/{empresaId}/auth/register
     [AllowAnonymous]
     [HttpPost("{empresaId}/auth/register")]

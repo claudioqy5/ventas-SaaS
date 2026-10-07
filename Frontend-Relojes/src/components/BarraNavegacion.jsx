@@ -22,13 +22,15 @@ export default function BarraNavegacion({
   onSearchSubmit,
   products = [],
   onSelectProduct,
-  whatsappNumber
+  whatsappNumber,
+  brands = ['Casio']
 }) {
   const [showSearch, setShowSearch] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
 
+  const [openDropdown, setOpenDropdown] = useState(null);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
   
@@ -255,6 +257,15 @@ export default function BarraNavegacion({
           {[
             { label: 'Hombre', href: '/categoria/hombre', tag: 'Hombre' },
             { label: 'Mujer', href: '/categoria/mujer', tag: 'Mujer' },
+            { label: 'Parejas', href: '/categoria/parejas', tag: 'Parejas' },
+            { 
+              label: 'Marcas', 
+              href: '#', 
+              isHighlight: false, 
+              isBrand: true, 
+              tag: 'Marcas',
+              dropdown: brands && brands.length > 0 ? brands : ['Casio']
+            },
             { 
               label: 'Colecciones', 
               href: '#', 
@@ -269,8 +280,10 @@ export default function BarraNavegacion({
           ].map((item, idx) => {
             const targetTag = item.tag || item.label;
             const isCatActive = selectedCategory && (
-              selectedCategory.toLowerCase() === targetTag.toLowerCase()
+              selectedCategory.toLowerCase() === targetTag.toLowerCase() ||
+              (item.dropdown && item.dropdown.some(d => d.toLowerCase() === selectedCategory.toLowerCase()))
             );
+            const isDropdownOpen = openDropdown === item.label;
 
             return (
               <div key={idx} className={item.dropdown ? "nav-item-container" : ""}>
@@ -279,10 +292,12 @@ export default function BarraNavegacion({
                   onClick={(e) => {
                     if (item.dropdown) {
                       e.preventDefault();
+                      setOpenDropdown(prev => prev === item.label ? null : item.label);
                     } else if (onSelectCategory) {
                       e.preventDefault();
                       onSelectCategory(targetTag);
                       if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+                      setOpenDropdown(null);
                     }
                   }}
                   style={{
@@ -317,6 +332,16 @@ export default function BarraNavegacion({
                   }}
                 >
                   {item.label}
+                  {item.dropdown && (
+                    <ChevronDown 
+                      size={12} 
+                      style={{ 
+                        transition: 'transform 0.2s ease', 
+                        transform: isDropdownOpen ? 'rotate(180deg)' : 'none',
+                        opacity: 0.7 
+                      }} 
+                    />
+                  )}
                   {item.badge && (
                     <span style={{
                       fontSize: '0.58rem',
@@ -334,22 +359,30 @@ export default function BarraNavegacion({
                 </Link>
 
                 {item.dropdown && (
-                  <div className="nav-dropdown">
-                    {item.dropdown.map((dropItem, dropIdx) => (
-                      <button
-                        key={dropIdx}
-                        className="nav-dropdown-item"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (onSelectCategory) {
-                            onSelectCategory(dropItem);
-                            if (isMobileMenuOpen) setIsMobileMenuOpen(false);
-                          }
-                        }}
-                      >
-                        {dropItem}
-                      </button>
-                    ))}
+                  <div 
+                    className={`nav-dropdown ${isDropdownOpen ? 'is-open' : ''}`}
+                    style={isDropdownOpen ? { display: 'block' } : undefined}
+                  >
+                    {item.dropdown.map((dropItem, dropIdx) => {
+                      const isDropActive = selectedCategory && selectedCategory.toLowerCase() === dropItem.toLowerCase();
+                      return (
+                        <button
+                          key={dropIdx}
+                          className="nav-dropdown-item"
+                          style={isDropActive ? { color: 'var(--c-blush)', fontWeight: 700 } : undefined}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (onSelectCategory) {
+                              onSelectCategory(dropItem);
+                              if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+                              setOpenDropdown(null);
+                            }
+                          }}
+                        >
+                          {dropItem}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>

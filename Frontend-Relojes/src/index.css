@@ -25,7 +25,7 @@
   --c-blush-glow: rgba(212, 175, 55, 0.35);
 
   /* BLANCOS Y FONDOS LUMINOSOS */
-  --bg-main: #fcfbf8;          /* Fondo perla claro, cálido y elegante */
+  --bg-main: #f7f7f7;          /* Fondo perla claro, cálido y elegante */
   --bg-surface: #ffffff;       /* Blanco puro */
   --bg-card: #ffffff;
   --bg-card-alt: #f5e6c8;
@@ -434,10 +434,30 @@ body {
     border-top: 1px solid rgba(59, 60, 65, 0.1) !important;
     gap: 20px !important;
   }
-  .navbar-links.mobile-open > a {
+  .navbar-links.mobile-open > a,
+  .navbar-links.mobile-open .nav-item-container > a {
     width: 100% !important;
     padding: 10px 0 !important;
     border-bottom: 1px solid rgba(59, 60, 65, 0.05) !important;
+  }
+  .navbar-links.mobile-open .nav-item-container {
+    width: 100% !important;
+  }
+  .navbar-links.mobile-open .nav-dropdown {
+    position: static !important;
+    transform: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: rgba(0, 0, 0, 0.03) !important;
+    border-radius: 8px !important;
+    padding: 6px 0 !important;
+    margin-top: 6px !important;
+    width: 100% !important;
+  }
+  .navbar-links.mobile-open .nav-dropdown-item {
+    text-align: left !important;
+    padding: 9px 16px !important;
+    font-size: 0.82rem !important;
   }
   .navbar-links::-webkit-scrollbar {
     display: none;
@@ -1274,6 +1294,7 @@ body {
   text-transform: uppercase;
   line-height: 1;
 }
+
 
 
 
