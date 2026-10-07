@@ -392,6 +392,13 @@
                     Libro de Reclamaciones
                   </span>
                 </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" value="cupones" v-model="form.permisos" />
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Cupones de Descuento
+                  </span>
+                </label>
               </div>
             </div>
 
@@ -518,7 +525,7 @@ const openCreateModal = () => {
   form.correo = ''
   form.clave = ''
   form.rol = authStore.isSuperadmin ? 'EmpresaOwner' : 'Employee'
-  form.permisos = authStore.isSuperadmin ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders', 'cuentas_cobrar', 'formas_pago', 'colaboradores', 'pedidos_web', 'chats_bot', 'libro_reclamaciones'] : ['ventas', 'productos']
+  form.permisos = authStore.isSuperadmin ? ['dashboard', 'historial_negocio', 'ventas', 'productos', 'categorias', 'modificar_productos', 'clientes', 'proveedores', 'compras', 'movimientos', 'config', 'reminders', 'cuentas_cobrar', 'formas_pago', 'colaboradores', 'pedidos_web', 'chats_bot', 'libro_reclamaciones', 'cupones'] : ['ventas', 'productos']
   form.activo = true
   form.nombreTienda = ''
   form.empresaId = ''
@@ -557,7 +564,8 @@ const formatPermissionName = (perm) => {
     'cuentas_cobrar': 'Cuentas por Cobrar',
     'formas_pago': 'Formas de Pago',
     'colaboradores': 'Colaboradores',
-    'libro_reclamaciones': 'Libro Reclamaciones'
+    'libro_reclamaciones': 'Libro Reclamaciones',
+    'cupones': 'Cupones de Descuento'
   }
   return mapping[perm] || perm
 }

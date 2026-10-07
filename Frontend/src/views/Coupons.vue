@@ -16,7 +16,7 @@
         <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('categorias')" to="/categories" class="nav-item" active-class="active"><span class="sidebar-text">Características</span></router-link>
         
         <div class="nav-section-title">Marketing</div>
-        <router-link to="/coupons" class="nav-item" active-class="active"><span class="sidebar-text">Cupones</span></router-link>
+        <router-link v-if="!authStore.isSuperadmin && authStore.hasPermission('cupones')" to="/coupons" class="nav-item" active-class="active"><span class="sidebar-text">Cupones</span></router-link>
       </nav>
       <button @click="handleLogout" class="btn btn-danger w-full logout-btn"><span class="sidebar-text">Cerrar Sesión</span></button>
     </aside>

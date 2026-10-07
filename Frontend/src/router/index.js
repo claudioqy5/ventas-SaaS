@@ -124,7 +124,7 @@ const routes = [
     path: '/coupons',
     component: Coupons,
     name: 'Coupons',
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, permission: 'cupones' }
   },
   {
     path: '/complaints',
