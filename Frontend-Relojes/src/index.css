@@ -401,9 +401,9 @@ body {
 }
 
 /* =========================================================
-   Surgical Mobile & Tablet Overrides (Max-width: 991px)
+   Surgical Mobile & Tablet Overrides (Max-width: 1040px)
    ========================================================= */
-@media (max-width: 991px) {
+@media (max-width: 1040px) {
   /* Navbar */
   .navbar-main {
     padding: 12px 15px !important;
@@ -426,13 +426,15 @@ body {
     top: 100% !important;
     left: 0 !important;
     width: 100% !important;
+    max-height: calc(100vh - 75px) !important;
+    overflow-y: auto !important;
     background: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(10px) !important;
     padding: 20px 24px !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
     z-index: 100 !important;
     border-top: 1px solid rgba(59, 60, 65, 0.1) !important;
-    gap: 20px !important;
+    gap: 16px !important;
   }
   .navbar-links.mobile-open > a,
   .navbar-links.mobile-open .nav-item-container > a {
@@ -443,7 +445,17 @@ body {
   .navbar-links.mobile-open .nav-item-container {
     width: 100% !important;
   }
+  .navbar-links.mobile-open .nav-item-container > a {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+  .nav-item-container:hover .nav-dropdown {
+    display: none !important; /* Desactivar hover táctil en móvil */
+  }
   .navbar-links.mobile-open .nav-dropdown {
+    display: none !important;
     position: static !important;
     transform: none !important;
     box-shadow: none !important;
@@ -453,6 +465,10 @@ body {
     padding: 6px 0 !important;
     margin-top: 6px !important;
     width: 100% !important;
+    animation: fadeIn 0.2s ease-out;
+  }
+  .navbar-links.mobile-open .nav-dropdown.is-open {
+    display: block !important;
   }
   .navbar-links.mobile-open .nav-dropdown-item {
     text-align: left !important;
@@ -998,8 +1014,14 @@ body {
   height: 15px;
   background: transparent;
 }
-.nav-item-container:hover .nav-dropdown {
-  display: block;
+/* En Desktop: puro hover elegante con rotación sutil del chevron */
+@media (min-width: 1041px) {
+  .nav-item-container:hover .nav-dropdown {
+    display: block !important;
+  }
+  .nav-item-container:hover .nav-chevron {
+    transform: rotate(180deg) !important;
+  }
 }
 .nav-dropdown-item {
   display: block;

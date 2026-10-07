@@ -30,12 +30,29 @@ export default function BarraNavegacion({
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
 
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [mobileOpenDropdown, setMobileOpenDropdown] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+
+  // Detección reactiva de modo móvil para menús y subopciones
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 1040;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setMobileOpenDropdown(null);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
   const headerRef = useRef(null);
@@ -69,7 +86,7 @@ export default function BarraNavegacion({
       .slice(0, 5);
   }, [searchQuery, products]);
 
-  // Cerrar menú de usuario y dropdown de búsqueda al hacer click fuera
+  // Cerrar menú de usuario, dropdown de búsqueda y menú móvil al hacer click/toque fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -78,12 +95,20 @@ export default function BarraNavegacion({
       if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
         setIsSearchFocused(false);
       }
+      if (headerRef.current && !headerRef.current.contains(event.target)) {
+        if (isMobileMenuOpen) {
+          setIsMobileMenuOpen(false);
+          setMobileOpenDropdown(null);
+        }
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside, { passive: true });
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, []);
+  }, [isMobileMenuOpen]);
 
   // Cerrar búsqueda al hacer click fuera
   // Eliminado el useEffect redundante para evitar doble registro y cierre inmediato
@@ -201,7 +226,12 @@ export default function BarraNavegacion({
           {/* Hamburger Menu (Mobile Only) */}
           <button
             className="mobile-menu-btn"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={() => {
+              setIsMobileMenuOpen(prev => {
+                if (prev) setMobileOpenDropdown(null);
+                return !prev;
+              });
+            }}
             style={{
               background: 'none',
               border: 'none',
@@ -253,7 +283,7 @@ export default function BarraNavegacion({
 
 
         {/* Enlaces de Navegación de Alta Categoría */}
-        <nav className={`navbar-links ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: 'clamp(10px, 2.2vw, 36px)' }}>
+        <nav className={`navbar-links ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: 'clamp(6px, 1.25vw, 26px)' }}>
           {[
             { label: 'Hombre', href: '/categoria/hombre', tag: 'Hombre' },
             { label: 'Mujer', href: '/categoria/mujer', tag: 'Mujer' },
@@ -283,21 +313,32 @@ export default function BarraNavegacion({
               selectedCategory.toLowerCase() === targetTag.toLowerCase() ||
               (item.dropdown && item.dropdown.some(d => d.toLowerCase() === selectedCategory.toLowerCase()))
             );
-            const isDropdownOpen = openDropdown === item.label;
+            const isSubmenuOpenOnMobile = isMobile && mobileOpenDropdown === item.label;
 
             return (
-              <div key={idx} className={item.dropdown ? "nav-item-container" : ""}>
+              <div key={idx} className={item.dropdown ? `nav-item-container ${isSubmenuOpenOnMobile ? 'is-open' : ''}` : ""}>
                 <Link
                   href={item.href}
                   onClick={(e) => {
                     if (item.dropdown) {
                       e.preventDefault();
-                      setOpenDropdown(prev => prev === item.label ? null : item.label);
-                    } else if (onSelectCategory) {
-                      e.preventDefault();
-                      onSelectCategory(targetTag);
+                      if (isMobile) {
+                        // En móvil: si se selecciona la opción madre, se alterna (abre/cierra)
+                        // Si se selecciona otra opción madre, se cierra la anterior y se abre la nueva
+                        setMobileOpenDropdown(prev => prev === item.label ? null : item.label);
+                      }
+                      // En web / escritorio: no hay efecto click que bloquee el menú, se abre y cierra limpiamente por hover
+                    } else {
+                      // Al hacer click en cualquier otra opción del header (Hombre, Mujer, Parejas, etc.)
+                      if (item.href === '#' || onSelectCategory) {
+                        e.preventDefault();
+                      }
+                      // Desaparecen inmediatamente las subopciones que estuvieran abiertas
+                      setMobileOpenDropdown(null);
                       if (isMobileMenuOpen) setIsMobileMenuOpen(false);
-                      setOpenDropdown(null);
+                      if (onSelectCategory) {
+                        onSelectCategory(targetTag);
+                      }
                     }
                   }}
                   style={{
@@ -307,8 +348,8 @@ export default function BarraNavegacion({
                         ? 'var(--c-indigo)' 
                         : 'var(--c-deep-purple)',
                     textDecoration: 'none',
-                    fontSize: 'clamp(0.72rem, 0.8vw, 0.84rem)',
-                    letterSpacing: 'clamp(0.06em, 0.1vw, 0.12em)',
+                    fontSize: 'clamp(0.68rem, 0.76vw, 0.82rem)',
+                    letterSpacing: 'clamp(0.04em, 0.08vw, 0.10em)',
                     textTransform: 'uppercase',
                     fontFamily: 'var(--font-serif)',
                     fontWeight: isCatActive ? 700 : 500,
@@ -316,7 +357,7 @@ export default function BarraNavegacion({
                     position: 'relative',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '5px',
+                    gap: '4px',
                     padding: '6px 0',
                     flexShrink: 0,
                     whiteSpace: 'nowrap',
@@ -335,9 +376,10 @@ export default function BarraNavegacion({
                   {item.dropdown && (
                     <ChevronDown 
                       size={12} 
+                      className="nav-chevron"
                       style={{ 
                         transition: 'transform 0.2s ease', 
-                        transform: isDropdownOpen ? 'rotate(180deg)' : 'none',
+                        transform: isSubmenuOpenOnMobile ? 'rotate(180deg)' : undefined,
                         opacity: 0.7 
                       }} 
                     />
@@ -360,22 +402,24 @@ export default function BarraNavegacion({
 
                 {item.dropdown && (
                   <div 
-                    className={`nav-dropdown ${isDropdownOpen ? 'is-open' : ''}`}
-                    style={isDropdownOpen ? { display: 'block' } : undefined}
+                    className={`nav-dropdown ${isSubmenuOpenOnMobile ? 'is-open' : ''}`}
                   >
                     {item.dropdown.map((dropItem, dropIdx) => {
                       const isDropActive = selectedCategory && selectedCategory.toLowerCase() === dropItem.toLowerCase();
                       return (
                         <button
                           key={dropIdx}
+                          type="button"
                           className="nav-dropdown-item"
                           style={isDropActive ? { color: 'var(--c-blush)', fontWeight: 700 } : undefined}
                           onClick={(e) => {
                             e.preventDefault();
+                            e.stopPropagation();
+                            // Cerrar subopciones y menú móvil al seleccionar
+                            setMobileOpenDropdown(null);
+                            if (isMobileMenuOpen) setIsMobileMenuOpen(false);
                             if (onSelectCategory) {
                               onSelectCategory(dropItem);
-                              if (isMobileMenuOpen) setIsMobileMenuOpen(false);
-                              setOpenDropdown(null);
                             }
                           }}
                         >

@@ -6,7 +6,7 @@ export default function PestanaEnviosPeru({ whatsappNumber = '51916382742', isVi
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
 
-  // Cerrar si se hace clic fuera del componente
+  // Cerrar si se hace clic o tap fuera del componente
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
@@ -15,52 +15,72 @@ export default function PestanaEnviosPeru({ whatsappNumber = '51916382742', isVi
     };
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside, { passive: true });
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [isOpen]);
 
   if (!isVisible) return null;
 
   return (
-    <aside 
-      ref={containerRef}
-      aria-label="Información de envíos en Perú"
-      style={{
-        position: 'fixed',
-        right: 0,
-        top: '52%',
-        transform: 'translateY(-50%)',
-        zIndex: 992,
-        display: 'flex',
-        alignItems: 'center',
-        fontFamily: 'var(--font-main)'
-      }}
-    >
-      {/* Panel Desplegable (se muestra suavemente hacia la izquierda) */}
-      <div
+    <>
+      {/* Fondo tenue translúcido al abrir en móviles/tablets para destacar el panel */}
+      {isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.45)',
+            backdropFilter: 'blur(2px)',
+            WebkitBackdropFilter: 'blur(2px)',
+            zIndex: 991,
+            animation: 'fadeIn 0.25s ease'
+          }}
+        />
+      )}
+
+      <aside 
+        ref={containerRef}
+        aria-label="Información de envíos en Perú"
         style={{
-          width: isOpen ? '310px' : '0px',
-          maxWidth: 'calc(100vw - 48px)',
-          opacity: isOpen ? 1 : 0,
-          pointerEvents: isOpen ? 'auto' : 'none',
-          overflow: 'hidden',
-          transition: 'all 0.38s cubic-bezier(0.16, 1, 0.3, 1)',
-          boxShadow: isOpen ? '-12px 18px 45px rgba(0, 0, 0, 0.45)' : 'none'
+          position: 'fixed',
+          right: 0,
+          top: '52%',
+          transform: 'translateY(-50%)',
+          zIndex: 992,
+          display: 'flex',
+          alignItems: 'center',
+          fontFamily: 'var(--font-main)'
         }}
       >
-        <div style={{
-          width: '310px',
-          maxWidth: 'calc(100vw - 48px)',
-          backgroundColor: '#141519',
-          color: '#ffffff',
-          borderRadius: '16px',
-          border: '1.5px solid rgba(212, 175, 55, 0.55)',
-          borderRight: 'none',
-          padding: '22px 20px',
-          boxSizing: 'border-box'
-        }}>
+        {/* Panel Desplegable (se muestra suavemente hacia la izquierda) */}
+        <div
+          style={{
+            width: isOpen ? 'clamp(280px, 82vw, 315px)' : '0px',
+            maxWidth: 'calc(100vw - 44px)',
+            opacity: isOpen ? 1 : 0,
+            pointerEvents: isOpen ? 'auto' : 'none',
+            overflow: 'hidden',
+            transition: 'all 0.38s cubic-bezier(0.16, 1, 0.3, 1)',
+            boxShadow: isOpen ? '-12px 18px 45px rgba(0, 0, 0, 0.45)' : 'none'
+          }}
+        >
+          <div style={{
+            width: 'clamp(280px, 82vw, 315px)',
+            maxWidth: 'calc(100vw - 44px)',
+            backgroundColor: '#141519',
+            color: '#ffffff',
+            borderRadius: '16px',
+            border: '1.5px solid rgba(212, 175, 55, 0.55)',
+            borderRight: 'none',
+            padding: 'clamp(18px, 3vw, 22px) clamp(15px, 2.8vw, 20px)',
+            boxSizing: 'border-box'
+          }}>
           {/* Header del Panel */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -274,5 +294,6 @@ export default function PestanaEnviosPeru({ whatsappNumber = '51916382742', isVi
         </div>
       </button>
     </aside>
+    </>
   );
 }
