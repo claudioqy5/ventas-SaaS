@@ -30,6 +30,10 @@ public class Sale
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Subtotal { get; set; }
 
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal Descuento { get; set; } = 0;
+    public string? CodigoCupon { get; set; }
+
     // Monto del impuesto aplicado (calculado en el servidor)
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal Impuesto { get; set; }

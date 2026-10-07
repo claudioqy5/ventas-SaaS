@@ -347,6 +347,8 @@ public class PublicStoreController : ControllerBase
             ClienteId = client?.Id,
             NombreCliente = nombreClienteFinal,
             Subtotal = request.Subtotal,
+            Descuento = request.Descuento,
+            CodigoCupon = request.CodigoCupon,
             Impuesto = request.Impuesto,
             Total = request.Total,
             MetodoPago = request.MetodoPago,
@@ -667,6 +669,8 @@ public record UpdateProfileRequest(string? Nombres, string? Apellidos, string? T
 /// </summary>
 public record StoreOrderRequest(
     decimal Subtotal,
+    decimal Descuento,
+    string? CodigoCupon,
     decimal Impuesto,
     decimal Total,
     string MetodoPago,

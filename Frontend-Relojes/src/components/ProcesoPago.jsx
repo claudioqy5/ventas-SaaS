@@ -254,6 +254,8 @@ export default function ProcesoPago({
     try {
       const orderData = {
         subtotal: subtotal,
+        descuento: discount,
+        codigoCupon: appliedCoupon ? appliedCoupon.code : null,
         impuesto: 0,
         total: total,
         metodoPago: `Online - ${paymentMethod}${isGuestMode ? ' (Invitado)' : ''}`,
