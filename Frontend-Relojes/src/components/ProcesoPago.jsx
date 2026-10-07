@@ -5,7 +5,7 @@ import {
   Smartphone, AlertCircle, Zap
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { submitOrder, createMercadoPagoPreference } from '../services/api';
+import { submitOrder, createMercadoPagoPreference, validateCoupon } from '../services/api';
 
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
 
@@ -36,6 +36,11 @@ export default function ProcesoPago({
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponError, setCouponError] = useState('');
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -106,7 +111,7 @@ export default function ProcesoPago({
   const [copiedText, setCopiedText] = useState('');
 
   const subtotal = items.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
-  const discount = 0;
+  const discount = appliedCoupon ? (subtotal * appliedCoupon.discountPercentage / 100) : 0;
   const total = subtotal - discount;
 
   const steps = [
@@ -121,6 +126,22 @@ export default function ProcesoPago({
       navigator.clipboard.writeText(text);
       setCopiedText(key);
       setTimeout(() => setCopiedText(''), 2500);
+    }
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setIsApplyingCoupon(true);
+    setCouponError('');
+    try {
+      const res = await validateCoupon(couponCode);
+      setAppliedCoupon({ code: res.code, discountPercentage: res.discountPercentage });
+      setCouponCode('');
+    } catch (err) {
+      setCouponError(err.message);
+      setAppliedCoupon(null);
+    } finally {
+      setIsApplyingCoupon(false);
     }
   };
 
@@ -1307,9 +1328,30 @@ export default function ProcesoPago({
 
           {/* Lado Derecho - Tarjeta de Resumen de Compra */}
           <div style={{ width: '100%', maxWidth: '380px', background: 'var(--bg-surface)', padding: '28px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-subtle)' }}>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '35px' }}>
-              <input type="text" placeholder="Cupón de descuento" style={{ flex: 1, padding: '12px 14px', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.85rem', outline: 'none', fontFamily: 'var(--font-main)' }} />
-              <button style={{ background: 'var(--c-obsidian)', color: 'var(--text-light)', border: 'none', padding: '0 20px', borderRadius: '6px', fontWeight: 600, fontSize: '0.75rem', letterSpacing: '0.05em', cursor: 'pointer' }}>AGREGAR</button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '35px' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input 
+                  type="text" 
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  placeholder="Cupón de descuento" 
+                  style={{ flex: 1, padding: '12px 14px', border: `1px solid ${couponError ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '6px', fontSize: '0.85rem', outline: 'none', fontFamily: 'var(--font-main)' }} 
+                />
+                <button 
+                  onClick={handleApplyCoupon}
+                  disabled={isApplyingCoupon || !couponCode.trim()}
+                  style={{ background: 'var(--c-obsidian)', color: 'var(--text-light)', border: 'none', padding: '0 20px', borderRadius: '6px', fontWeight: 600, fontSize: '0.75rem', letterSpacing: '0.05em', cursor: (isApplyingCoupon || !couponCode.trim()) ? 'not-allowed' : 'pointer', opacity: (isApplyingCoupon || !couponCode.trim()) ? 0.7 : 1 }}
+                >
+                  {isApplyingCoupon ? 'VERIFICANDO' : 'AGREGAR'}
+                </button>
+              </div>
+              {couponError && <span style={{ color: '#ef4444', fontSize: '0.75rem' }}>{couponError}</span>}
+              {appliedCoupon && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#ecfdf5', border: '1px solid #a7f3d0', padding: '8px 12px', borderRadius: '6px' }}>
+                  <span style={{ fontSize: '0.8rem', color: '#065f46', fontWeight: 600 }}>Cupón {appliedCoupon.code} aplicado (-{appliedCoupon.discountPercentage}%)</span>
+                  <button onClick={() => setAppliedCoupon(null)} style={{ background: 'none', border: 'none', color: '#047857', cursor: 'pointer', padding: '2px' }}><Trash2 size={14} /></button>
+                </div>
+              )}
             </div>
             
             <h3 style={{ fontSize: '1.05rem', color: 'var(--c-obsidian)', fontWeight: 700, textAlign: 'center', marginBottom: '25px', letterSpacing: '0.05em' }}>RESUMEN DE COMPRA</h3>

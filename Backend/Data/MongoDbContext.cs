@@ -39,4 +39,5 @@ public class MongoDbContext
     public IMongoCollection<VoucherSeries> VoucherSeries => _database.GetCollection<VoucherSeries>("VoucherSeries");
     public IMongoCollection<WhatsAppChat> WhatsAppChats => _database.GetCollection<WhatsAppChat>("WhatsAppChats");
     public IMongoCollection<Complaint> Complaints => _database.GetCollection<Complaint>("Complaints");
+    public IMongoCollection<Coupon> Coupons => _database.GetCollection<Coupon>("Coupons");
 }

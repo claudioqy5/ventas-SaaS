@@ -256,6 +256,23 @@ export async function verifyCustomerEmail(token) {
   return res.json();
 }
 
+export async function validateCoupon(code) {
+  const empresaId = DEFAULT_EMPRESA_ID;
+  const apiUrl = DEFAULT_API_URL.replace('/api/relojes-store', '/api/public/store');
+  
+  const res = await fetch(`${apiUrl}/${empresaId}/validate-coupon`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code })
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Error al validar el cupón.');
+  }
+  return res.json();
+}
+
 // ---- Gestión de Pedidos ----
 
 export async function submitOrder(token, orderData) {

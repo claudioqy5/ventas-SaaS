@@ -176,6 +176,23 @@ public class PublicStoreController : ControllerBase
         return Ok(publicBrands);
     }
 
+    // POST api/public/store/{empresaId}/validate-coupon
+    [AllowAnonymous]
+    [HttpPost("{empresaId}/validate-coupon")]
+    public async Task<IActionResult> ValidateCoupon(string empresaId, [FromBody] ValidateCouponRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(empresaId) || string.IsNullOrWhiteSpace(request.Code))
+            return BadRequest(new { message = "El identificador de la empresa y el código del cupón son requeridos." });
+
+        var code = request.Code.Trim().ToUpper();
+        var coupon = await _context.Coupons.Find(c => c.EmpresaId == empresaId && c.Code == code && c.IsActive).FirstOrDefaultAsync();
+
+        if (coupon == null)
+            return NotFound(new { message = "El cupón ingresado no existe, está inactivo o ha caducado." });
+
+        return Ok(new { discountPercentage = coupon.DiscountPercentage, code = coupon.Code });
+    }
+
     // POST api/public/store/{empresaId}/auth/register
     [AllowAnonymous]
     [HttpPost("{empresaId}/auth/register")]
@@ -703,3 +720,6 @@ public record BotVoucherRequest(string ImageUrl);
 
 /// <summary>Solicitud para adjuntar código de operación de pago enviado por texto.</summary>
 public record BotOperationCodeRequest(string CodigoOperacion);
+
+/// <summary>Solicitud para validar un cupón de descuento desde la tienda.</summary>
+public record ValidateCouponRequest(string Code);

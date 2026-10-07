@@ -16,6 +16,7 @@ import Reminders from '../views/Reminders.vue'
 import StockMovements from '../views/StockMovements.vue'
 import CreditSales from '../views/CreditSales.vue'
 import PaymentMethods from '../views/PaymentMethods.vue'
+import Coupons from '../views/Coupons.vue'
 
 import WhatsAppChats from '../views/WhatsAppChats.vue'
 import VerifyEmail from '../views/VerifyEmail.vue'
@@ -118,6 +119,12 @@ const routes = [
     component: PaymentMethods,
     name: 'PaymentMethods',
     meta: { requiresAuth: true, permission: 'formas_pago' }
+  },
+  {
+    path: '/coupons',
+    component: Coupons,
+    name: 'Coupons',
+    meta: { requiresAuth: true }
   },
   {
     path: '/complaints',
