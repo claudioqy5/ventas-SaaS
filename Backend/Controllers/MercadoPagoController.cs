@@ -74,8 +74,8 @@ public class MercadoPagoController : ControllerBase
             var saleForEmail = await _context.Sales.Find(s => s.Id == request.OrderId && s.EmpresaId == empresaId).FirstOrDefaultAsync();
             payerEmail = saleForEmail?.ClienteEmail;
         }
-        // Mercado Pago exige un email válido — placeholder genérico como último recurso
-        if (string.IsNullOrEmpty(payerEmail)) payerEmail = "comprador@tienda.com";
+        // Mercado Pago exige un email válido para aprobar pagos
+        // Si no hay correo, se enviará null y Mercado Pago evaluará la transacción.
 
         var payerName    = client?.Nombres ?? client?.Nombre ?? request.PayerName ?? "Cliente";
         var payerSurname = client?.Apellidos ?? "";
