@@ -319,9 +319,12 @@ export default function ProcesoPago({
           orderId: res.orderId,
           items: mpItems,
           payerEmail: personalData.email || user?.correo || user?.email || null,
-          payerName: `${personalData.nombres} ${personalData.apellidos}`.trim() || user?.nombre || 'Cliente',
+          payerName: personalData.nombres || user?.nombre?.split(' ')[0] || 'Cliente',
+          payerSurname: personalData.apellidos || user?.nombre?.split(' ').slice(1).join(' ') || '',
           payerPhone: personalData.telefono || user?.telefono || null,
-          payerDni: personalData.numDoc || user?.numeroDocumento || null
+          payerDni: personalData.numDoc || user?.numeroDocumento || null,
+          addressStreetName: deliveryAddress.direccion || 'Av Principal',
+          addressZipCode: deliveryAddress.distrito || '15000'
         });
         const checkoutUrl = mpRes.initPoint;
         if (checkoutUrl && typeof window !== 'undefined') {

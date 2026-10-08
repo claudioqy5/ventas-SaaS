@@ -78,7 +78,7 @@ public class MercadoPagoController : ControllerBase
         // Si no hay correo, se enviará null y Mercado Pago evaluará la transacción.
 
         var payerName    = client?.Nombres ?? client?.Nombre ?? request.PayerName ?? "Cliente";
-        var payerSurname = client?.Apellidos ?? "";
+        var payerSurname = client?.Apellidos ?? request.PayerSurname ?? "";
 
         var preferenceRequest = new PreferenceRequest
         {
@@ -93,6 +93,9 @@ public class MercadoPagoController : ControllerBase
                             : null,
                 Identification = !string.IsNullOrEmpty(client?.NumeroDocumento) || !string.IsNullOrEmpty(request.PayerDni)
                             ? new IdentificationRequest { Type = client?.TipoDocumento ?? "DNI", Number = client?.NumeroDocumento ?? request.PayerDni }
+                            : null,
+                Address = !string.IsNullOrEmpty(request.AddressStreetName)
+                            ? new AddressRequest { StreetName = request.AddressStreetName, ZipCode = request.AddressZipCode ?? "15000" }
                             : null
             },
             BackUrls = new PreferenceBackUrlsRequest
@@ -262,8 +265,11 @@ public record MpPreferenceRequest(
     string? ServerBaseUrl,
     string? PayerEmail,
     string? PayerName,
+    string? PayerSurname,
     string? PayerPhone,
-    string? PayerDni
+    string? PayerDni,
+    string? AddressStreetName,
+    string? AddressZipCode
 );
 
 public record MpItem(
