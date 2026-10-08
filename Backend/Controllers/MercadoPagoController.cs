@@ -63,7 +63,7 @@ public class MercadoPagoController : ControllerBase
         }).ToList();
 
         // URLs de retorno tras el pago
-        var backUrl = request.BackUrl ?? "https://tienda.gruposercal.com";
+        var backUrl = request.BackUrl ?? "https://lgant.pe";
 
         // El email es OBLIGATORIO para Mercado Pago. Sin él el sistema antifraude bloquea el pago.
         // Prioridad: cliente autenticado → email enviado desde el frontend → email del pedido en BD
