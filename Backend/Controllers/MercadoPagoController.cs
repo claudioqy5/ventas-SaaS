@@ -190,6 +190,13 @@ public class MercadoPagoController : ControllerBase
 
             if (payment == null) return Ok();
 
+            // === LOG PARA AUDITAR RECHAZOS Y APROBACIONES DE MERCADO PAGO ===
+            Console.WriteLine($"\n[MP WEBHOOK] Notificación recibida para el Pago ID: {notificationId}");
+            Console.WriteLine($"Status: {payment.Status}");
+            Console.WriteLine($"Detail: {payment.StatusDetail}");
+            Console.WriteLine($"Payment Method: {payment.PaymentMethodId}");
+            Console.WriteLine($"Email del Payer: {payment.Payer?.Email}\n");
+
             // El orderId que registramos como ExternalReference al crear la preferencia
             var orderId = payment.ExternalReference;
 
