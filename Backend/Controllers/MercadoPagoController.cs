@@ -98,7 +98,7 @@ public class MercadoPagoController : ControllerBase
                             : null,
                 Identification = !string.IsNullOrEmpty(client?.NumeroDocumento) || !string.IsNullOrEmpty(request.PayerDni)
                             ? new IdentificationRequest { 
-                                Type = (client?.NumeroDocumento ?? request.PayerDni).Length == 11 ? "RUC" : "DNI", 
+                                Type = (client?.NumeroDocumento ?? request.PayerDni)?.Length == 11 ? "RUC" : "DNI", 
                                 Number = client?.NumeroDocumento ?? request.PayerDni 
                               }
                             : null,
@@ -302,6 +302,7 @@ public record MpPreferenceRequest(
 );
 
 public record MpItem(
+    string? ProductoId,
     string NombreProducto,
     decimal Cantidad,
     decimal PrecioUnitario
