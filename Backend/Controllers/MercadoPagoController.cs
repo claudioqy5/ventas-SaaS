@@ -110,6 +110,17 @@ public class MercadoPagoController : ControllerBase
             ExternalReference = request.OrderId  // ID de la orden en MongoDB
         };
 
+        Console.WriteLine("=== DATOS ENVIADOS A MERCADO PAGO (BACKEND) ===");
+        Console.WriteLine($"nombre: {preferenceRequest.Payer.Name}");
+        Console.WriteLine($"apellidos: {preferenceRequest.Payer.Surname}");
+        Console.WriteLine($"email: {preferenceRequest.Payer.Email}");
+        Console.WriteLine($"telefono: {preferenceRequest.Payer.Phone?.Number}");
+        Console.WriteLine($"DNI: {preferenceRequest.Payer.Identification?.Number}");
+        Console.WriteLine($"direccion: {preferenceRequest.Payer.Address?.StreetName}");
+        Console.WriteLine($"distrito: {preferenceRequest.Payer.Address?.ZipCode}");
+        Console.WriteLine($"items count: {preferenceRequest.Items.Count}");
+        Console.WriteLine("==================================================");
+
         try
         {
             var preferenceClient = new PreferenceClient();

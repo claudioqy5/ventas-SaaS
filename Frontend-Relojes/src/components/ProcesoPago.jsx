@@ -315,7 +315,7 @@ export default function ProcesoPago({
           return { ...item, precio: Number(itemPrice.toFixed(2)) };
         });
 
-        const mpRes = await createMercadoPagoPreference(token, {
+        const payloadMP = {
           orderId: res.orderId,
           items: mpItems,
           payerEmail: personalData.email || user?.correo || user?.email || null,
@@ -325,7 +325,20 @@ export default function ProcesoPago({
           payerDni: personalData.numDoc || user?.numeroDocumento || null,
           addressStreetName: deliveryAddress.direccion || 'Av Principal',
           addressZipCode: deliveryAddress.distrito || '15000'
-        });
+        };
+
+        console.log("=== DATOS ENVIADOS A MERCADO PAGO (FRONTEND) ===");
+        console.log("nombre: ", payloadMP.payerName);
+        console.log("apellidos: ", payloadMP.payerSurname);
+        console.log("email: ", payloadMP.payerEmail);
+        console.log("telefono: ", payloadMP.payerPhone);
+        console.log("DNI: ", payloadMP.payerDni);
+        console.log("direccion: ", payloadMP.addressStreetName);
+        console.log("distrito: ", payloadMP.addressZipCode);
+        console.log("carrito (items): ", JSON.stringify(payloadMP.items, null, 2));
+        console.log("==================================================");
+
+        const mpRes = await createMercadoPagoPreference(token, payloadMP);
         const checkoutUrl = mpRes.initPoint;
         if (checkoutUrl && typeof window !== 'undefined') {
           // Open in a new tab to avoid Mercado Pago CSP / BFCache issues
