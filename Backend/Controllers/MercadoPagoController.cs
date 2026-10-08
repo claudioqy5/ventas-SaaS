@@ -97,7 +97,10 @@ public class MercadoPagoController : ControllerBase
                             ? new PhoneRequest { AreaCode = "51", Number = cleanPhone } // Separado según documentación
                             : null,
                 Identification = !string.IsNullOrEmpty(client?.NumeroDocumento) || !string.IsNullOrEmpty(request.PayerDni)
-                            ? new IdentificationRequest { Type = "DNI", Number = client?.NumeroDocumento ?? request.PayerDni }
+                            ? new IdentificationRequest { 
+                                Type = (client?.NumeroDocumento ?? request.PayerDni).Length == 11 ? "RUC" : "DNI", 
+                                Number = client?.NumeroDocumento ?? request.PayerDni 
+                              }
                             : null,
                 Address = !string.IsNullOrEmpty(request.AddressStreetName)
                             ? new AddressRequest { 
