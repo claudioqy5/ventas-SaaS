@@ -53,15 +53,6 @@ public class MercadoPagoController : ControllerBase
 
         MercadoPagoConfig.AccessToken = accessToken;
 
-        // Construir los ítems de la preferencia
-        var mpItems = request.Items.Select(item => new PreferenceItemRequest
-        {
-            Title = item.NombreProducto,
-            Quantity = (int)item.Cantidad,
-            UnitPrice = item.PrecioUnitario,
-            CurrencyId = "PEN"   // Soles peruanos
-        }).ToList();
-
         // URLs de retorno tras el pago
         var backUrl = request.BackUrl ?? "https://lgant.pe";
 
@@ -74,28 +65,45 @@ public class MercadoPagoController : ControllerBase
             var saleForEmail = await _context.Sales.Find(s => s.Id == request.OrderId && s.EmpresaId == empresaId).FirstOrDefaultAsync();
             payerEmail = saleForEmail?.ClienteEmail;
         }
-        // Mercado Pago exige un email válido para aprobar pagos
-        // Si no hay correo, se enviará null y Mercado Pago evaluará la transacción.
 
-        var payerName    = client?.Nombres ?? client?.Nombre ?? request.PayerName ?? "Cliente";
-        var payerSurname = client?.Apellidos ?? request.PayerSurname ?? "";
+        // === REGLA ANTIFRAUDE: NUNCA ENVIAR DATOS INVENTADOS ===
+        // Si el usuario no proporcionó un dato, es mil veces mejor enviar null a enviar un dato falso como "Cliente" o "15000".
+        var payerName = client?.Nombres ?? client?.Nombre ?? request.PayerName;
+        var payerSurname = client?.Apellidos ?? request.PayerSurname;
+
+        // Limpieza de teléfono (quitar +51, espacios)
+        var rawPhone = client?.Telefono ?? request.PayerPhone;
+        var cleanPhone = !string.IsNullOrEmpty(rawPhone) ? new string(rawPhone.Where(char.IsDigit).ToArray()) : null;
 
         var preferenceRequest = new PreferenceRequest
         {
-            Items = mpItems,
+            Items = request.Items.Select(item => new PreferenceItemRequest
+            {
+                Id = item.ProductoId, // Identificador real del producto
+                Title = item.NombreProducto,
+                Description = item.NombreProducto, // Agregado para mejorar calidad
+                CategoryId = "others", // Categoría genérica aceptada
+                Quantity = (int)item.Cantidad,
+                UnitPrice = Math.Round(item.PrecioUnitario, 2), // Redondeado a 2 decimales exactos
+                CurrencyId = "PEN"
+            }).ToList(),
+
             Payer = new PreferencePayerRequest
             {
                 Name    = payerName,
                 Surname = payerSurname,
                 Email   = payerEmail,
-                Phone   = !string.IsNullOrEmpty(client?.Telefono) || !string.IsNullOrEmpty(request.PayerPhone) 
-                            ? new PhoneRequest { Number = client?.Telefono ?? request.PayerPhone } 
+                Phone   = !string.IsNullOrEmpty(cleanPhone) 
+                            ? new PhoneRequest { AreaCode = "51", Number = cleanPhone } // Separado según documentación
                             : null,
                 Identification = !string.IsNullOrEmpty(client?.NumeroDocumento) || !string.IsNullOrEmpty(request.PayerDni)
-                            ? new IdentificationRequest { Type = client?.TipoDocumento ?? "DNI", Number = client?.NumeroDocumento ?? request.PayerDni }
+                            ? new IdentificationRequest { Type = "DNI", Number = client?.NumeroDocumento ?? request.PayerDni }
                             : null,
                 Address = !string.IsNullOrEmpty(request.AddressStreetName)
-                            ? new AddressRequest { StreetName = request.AddressStreetName, ZipCode = request.AddressZipCode ?? "15000" }
+                            ? new AddressRequest { 
+                                StreetName = request.AddressStreetName,
+                                ZipCode = !string.IsNullOrEmpty(request.AddressZipCode) ? request.AddressZipCode : null // NUNCA poner "15000" por defecto
+                              }
                             : null
             },
             BackUrls = new PreferenceBackUrlsRequest
