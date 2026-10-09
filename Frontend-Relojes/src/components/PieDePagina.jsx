@@ -296,18 +296,10 @@ export default function PieDePagina({ onOpenWhatsAppConcierge, storeName, onNavi
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff', textTransform: 'uppercase' }}>Pago Seguro:</span>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                <CardBadge bg="#009EE3" color="#ffffff">
-                  <span style={{ fontSize: '0.55rem', marginRight: '2px', color: '#000' }}>mercado</span>
-                  <span style={{ fontSize: '0.55rem' }}>pago</span>
-                </CardBadge>
-                <CardBadge bg="#1434CB" color="#ffffff">VISA</CardBadge>
-                <CardBadge bg="#222222" color="#ffffff">
-                  <div style={{ position: 'relative', width: '16px', height: '10px' }}>
-                    <div style={{ position: 'absolute', left: 0, width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#EB001B', opacity: 0.9 }}></div>
-                    <div style={{ position: 'absolute', right: 0, width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#F79E1B', opacity: 0.9 }}></div>
-                  </div>
-                </CardBadge>
-                <CardBadge bg="#002663" color="#ffffff">AMEX</CardBadge>
+                <CardBadge bg="#742284" color="#ffffff">YAPE</CardBadge>
+                <CardBadge bg="#00D2C6" color="#ffffff">PLIN</CardBadge>
+                <CardBadge bg="#002A8F" color="#ffffff">BCP</CardBadge>
+                <CardBadge bg="#009B3A" color="#ffffff">INTERBANK</CardBadge>
               </div>
             </div>
           </div>

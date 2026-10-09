@@ -395,7 +395,7 @@ export default function ModalProducto({
               </div>
             </div>
 
-            {/* Acciones y Métodos de Pago (Mercado Pago) */}
+            {/* Acciones de Compra */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 {/* Cantidad */}
