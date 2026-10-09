@@ -489,26 +489,39 @@ public class PublicStoreController : ControllerBase
 
             foreach (var item in request.Items)
             {
-                var product = await _context.Products
-                    .Find(p => p.Id == item.ProductoId && p.EmpresaId == empresaId)
-                    .FirstOrDefaultAsync();
+                Product? product = null;
+                if (!string.IsNullOrEmpty(item.ProductoId))
+                {
+                    product = await _context.Products
+                        .Find(p => p.Id == item.ProductoId && p.EmpresaId == empresaId)
+                        .FirstOrDefaultAsync();
+                }
 
-                if (product == null)
-                    return BadRequest(new { message = $"El producto '{item.NombreProducto}' no existe o no pertenece a esta tienda." });
+                if (product == null && !string.IsNullOrWhiteSpace(item.NombreProducto))
+                {
+                    var nombreBuscado = item.NombreProducto.Trim();
+                    product = await _context.Products
+                        .Find(p => p.EmpresaId == empresaId && p.Nombre == nombreBuscado)
+                        .FirstOrDefaultAsync();
+                }
+
+                var nombreFinal = product?.Nombre ?? item.NombreProducto ?? "Reloj L'gant";
+                var precioFinal = item.PrecioUnitario > 0 ? item.PrecioUnitario : (product?.Precio ?? 0);
+                var cantidadFinal = item.Cantidad > 0 ? item.Cantidad : 1;
 
                 detalles.Add(new SaleItem
                 {
-                    ProductoId = product.Id,
-                    NombreProducto = product.Nombre,
-                    Cantidad = item.Cantidad,
-                    PrecioUnitario = item.PrecioUnitario,
-                    UnidadMedida = product.UnidadMedida,
+                    ProductoId = product?.Id,
+                    NombreProducto = nombreFinal,
+                    Cantidad = cantidadFinal,
+                    PrecioUnitario = precioFinal,
+                    UnidadMedida = product?.UnidadMedida ?? "Unidad",
                     CantidadPresentacion = 1,
-                    PrecioPresentacion = item.PrecioUnitario,
+                    PrecioPresentacion = precioFinal,
                     Presentacion = "Unidad"
                 });
 
-                total += item.Cantidad * item.PrecioUnitario;
+                total += cantidadFinal * precioFinal;
             }
 
             // Si el cliente de WhatsApp ya tiene registro en el sistema por su número, vincular su ObjectId
@@ -535,6 +548,7 @@ public class PublicStoreController : ControllerBase
                 Impuesto = 0,
                 Total = total,
                 MetodoPago = request.MetodoPago ?? "Yape",
+                CodigoOperacionPago = request.CodigoOperacion ?? request.CodigoOperacionPago,
                 EstadoPago = "Pendiente",
                 EstadoOrden = "PENDIENTE_PAGO",
                 OrigenPedido = "WhatsAppBot",
@@ -711,10 +725,12 @@ public record BotOrderRequest(
     string? DireccionEntrega,
     string? NotasEntrega,
     List<BotOrderItem> Items,
-    string? DirecionEntrega = null
+    string? DirecionEntrega = null,
+    string? CodigoOperacion = null,
+    string? CodigoOperacionPago = null
 );
 
-public record BotOrderItem(string ProductoId, string NombreProducto, decimal Cantidad, decimal PrecioUnitario);
+public record BotOrderItem(string? ProductoId, string? NombreProducto, decimal Cantidad, decimal PrecioUnitario);
 
 /// <summary>Solicitud para subir una imagen en base64 recibida por WhatsApp.</summary>
 public record BotImageUploadRequest(string Base64Image, string? Extension);
