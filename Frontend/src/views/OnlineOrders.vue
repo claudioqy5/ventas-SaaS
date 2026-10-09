@@ -453,180 +453,173 @@
             </button>
           </div>
 
-          <!-- 2-Column Modal Layout: Stepper on Left, Action Box on Right -->
-          <div class="status-modal-body-grid">
-            <!-- Columna Izquierda: Pasos del Stepper -->
-            <div class="stepper-col">
-              <div class="horizontal-stepper-wrapper">
-                <div class="stepper-progress-bar">
-                  <div class="stepper-progress-fill" :style="{ width: progressPercentage + '%' }"></div>
+          <!-- Horizontal Stepper Timeline (Ancho Completo) -->
+          <div class="horizontal-stepper-wrapper">
+            <div class="stepper-progress-bar">
+              <div class="stepper-progress-fill" :style="{ width: progressPercentage + '%' }"></div>
+            </div>
+
+            <div class="horizontal-stepper-steps">
+              <div
+                v-for="(step, index) in timelineSteps"
+                :key="step.value"
+                :class="[
+                  'stepper-step-card',
+                  getStepStatus(step.value),
+                  { 
+                    'is-selected': statusModal.selected === step.value,
+                    'is-clickable': isStepClickable(step.value)
+                  }
+                ]"
+                @click="handleStepClick(step.value)"
+              >
+                <div class="step-node-badge">
+                  <div class="step-icon-wrapper">
+                    <!-- Completed Check Icon -->
+                    <svg v-if="getStepStatus(step.value) === 'completed'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    <!-- Icon for step -->
+                    <template v-else>
+                      <svg v-if="step.icon === 'clock'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      <svg v-else-if="step.icon === 'package'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                      <svg v-else-if="step.icon === 'truck'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                      <svg v-else-if="step.icon === 'check-circle'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </template>
+                  </div>
+                  <span class="step-index-tag">Paso {{ index + 1 }}</span>
                 </div>
 
-                <div class="horizontal-stepper-steps">
-                  <div
-                    v-for="(step, index) in timelineSteps"
-                    :key="step.value"
-                    :class="[
-                      'stepper-step-card',
-                      getStepStatus(step.value),
-                      { 
-                        'is-selected': statusModal.selected === step.value,
-                        'is-clickable': isStepClickable(step.value)
-                      }
-                    ]"
-                    @click="handleStepClick(step.value)"
-                  >
-                    <div class="step-node-badge">
-                      <div class="step-icon-wrapper">
-                        <!-- Completed Check Icon -->
-                        <svg v-if="getStepStatus(step.value) === 'completed'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                        <!-- Icon for step -->
-                        <template v-else>
-                          <svg v-if="step.icon === 'clock'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                          <svg v-else-if="step.icon === 'package'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                          <svg v-else-if="step.icon === 'truck'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                          <svg v-else-if="step.icon === 'check-circle'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        </template>
-                      </div>
-                      <span class="step-index-tag">Paso {{ index + 1 }}</span>
-                    </div>
-
-                    <div class="step-card-body">
-                      <h4 :class="['step-card-title', step.class]">{{ step.label }}</h4>
-                      <p class="step-card-desc">{{ step.description }}</p>
-                      
-                      <div class="step-status-tag">
-                        <span v-if="statusModal.selected === step.value" class="tag-selected">✓ Seleccionado</span>
-                        <span v-else-if="getStepStatus(step.value) === 'current'" class="tag-current">Estado Actual</span>
-                        <span v-else-if="getStepStatus(step.value) === 'completed'" class="tag-completed">Completado</span>
-                        <span v-else-if="isStepClickable(step.value)" class="tag-action">Cambiar a este</span>
-                        <span v-else class="tag-disabled">—</span>
-                      </div>
-                    </div>
+                <div class="step-card-body">
+                  <h4 :class="['step-card-title', step.class]">{{ step.label }}</h4>
+                  <p class="step-card-desc">{{ step.description }}</p>
+                  
+                  <div class="step-status-tag">
+                    <span v-if="statusModal.selected === step.value" class="tag-selected">✓ Seleccionado</span>
+                    <span v-else-if="getStepStatus(step.value) === 'current'" class="tag-current">Estado Actual</span>
+                    <span v-else-if="getStepStatus(step.value) === 'completed'" class="tag-completed">Completado</span>
+                    <span v-else-if="isStepClickable(step.value)" class="tag-action">Cambiar a este</span>
+                    <span v-else class="tag-disabled">—</span>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- Columna Derecha: Formulario Contextual de Acción -->
-            <div class="action-col">
-              <div v-if="statusModal.selected === 'EN_PREPARACION'" class="status-action-box bg-emerald" style="margin: 0;">
-                <div class="action-box-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                  <div>
-                    <strong>Confirmación de pago e ingreso a Ventas</strong>
-                    <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Al pasar a "En Preparación", se descontará el stock y se registrará la venta en el Dashboard e Historial.</p>
-                  </div>
+          <!-- Contextual Action Forms -->
+          <div v-if="statusModal.selected === 'EN_PREPARACION'" class="status-action-box bg-emerald">
+            <div class="action-box-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <div>
+                <strong>Confirmación de pago e ingreso a Ventas</strong>
+                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Al pasar a "En Preparación", se descontará el stock y se registrará la venta en el Dashboard e Historial.</p>
+              </div>
+            </div>
+            
+            <div class="billing-form-section">
+              <div class="form-row-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>Facturación Electrónica (SUNAT / Interno)</span>
+              </div>
+
+              <div class="form-grid-2col">
+                <div>
+                  <label class="form-label">Comprobante a emitir:</label>
+                  <select v-model="statusModal.tipoComprobante" class="form-input-styled">
+                    <option value="Nota de Venta">Nota de Venta (Interno)</option>
+                    <option value="Boleta">Boleta de Venta</option>
+                    <option value="Factura">Factura</option>
+                  </select>
                 </div>
-                
-                <div class="billing-form-section">
-                  <div class="form-row-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    <span>Facturación Electrónica (SUNAT / Interno)</span>
+
+                <div v-if="statusModal.tipoComprobante === 'Boleta' || statusModal.tipoComprobante === 'Factura'" class="form-flex-row">
+                  <div style="flex: 1;">
+                    <label class="form-label">Tipo Doc.</label>
+                    <select v-model="statusModal.clienteTipoDocumento" class="form-input-styled">
+                      <option v-if="statusModal.tipoComprobante !== 'Factura'" value="-">Sin Documento</option>
+                      <option v-if="statusModal.tipoComprobante !== 'Factura'" value="1">DNI</option>
+                      <option v-if="statusModal.tipoComprobante !== 'Boleta'" value="6">RUC</option>
+                    </select>
                   </div>
-
-                  <div class="form-grid-2col">
-                    <div>
-                      <label class="form-label">Comprobante a emitir:</label>
-                      <select v-model="statusModal.tipoComprobante" class="form-input-styled">
-                        <option value="Nota de Venta">Nota de Venta (Interno)</option>
-                        <option value="Boleta">Boleta de Venta</option>
-                        <option value="Factura">Factura</option>
-                      </select>
-                    </div>
-
-                    <div v-if="statusModal.tipoComprobante === 'Boleta' || statusModal.tipoComprobante === 'Factura'" class="form-flex-row">
-                      <div style="flex: 1;">
-                        <label class="form-label">Tipo Doc.</label>
-                        <select v-model="statusModal.clienteTipoDocumento" class="form-input-styled">
-                          <option v-if="statusModal.tipoComprobante !== 'Factura'" value="-">Sin Documento</option>
-                          <option v-if="statusModal.tipoComprobante !== 'Factura'" value="1">DNI</option>
-                          <option v-if="statusModal.tipoComprobante !== 'Boleta'" value="6">RUC</option>
-                        </select>
-                      </div>
-                      <div style="flex: 2;">
-                        <label class="form-label">N° Documento</label>
-                        <input v-model="statusModal.clienteNumeroDocumento" type="text" placeholder="Ej: 71234567" class="form-input-styled" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div v-if="statusModal.tipoComprobante === 'Boleta' || statusModal.tipoComprobante === 'Factura'" class="form-grid-2col" style="margin-top: 10px;">
-                    <div>
-                      <label class="form-label">Nombre / Razón Social</label>
-                      <input v-model="statusModal.clienteRazonSocial" type="text" placeholder="Nombre completo o Razón Social" class="form-input-styled" />
-                    </div>
-                    <div>
-                      <label class="form-label">Dirección Fiscal (Opcional)</label>
-                      <input v-model="statusModal.clienteDireccion" type="text" placeholder="Av. Principal #123" class="form-input-styled" />
-                    </div>
-                  </div>
-
-                  <!-- Envío de Comprobante por WhatsApp -->
-                  <div class="whatsapp-dispatch-card" style="margin-top: 14px; padding: 12px 14px; background: #ffffff; border: 1px solid #86efac; border-radius: 8px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-                      <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.86rem; color: #166534; cursor: pointer; user-select: none;">
-                        <input type="checkbox" v-model="statusModal.enviarWhatsApp" style="width: 16px; height: 16px; accent-color: #25d366;" />
-                        <span style="display: inline-flex; align-items: center; gap: 6px;">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="#25d366"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                          Enviar comprobante por WhatsApp al confirmar
-                        </span>
-                      </label>
-                      <span style="font-size: 0.72rem; color: #15803d; background: #dcfce7; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
-                        Automático
-                      </span>
-                    </div>
-
-                    <div v-if="statusModal.enviarWhatsApp" style="margin-top: 10px;">
-                      <label class="form-label" style="color: #166534; font-size: 0.78rem;">Número de WhatsApp del Cliente:</label>
-                      <div style="display: flex; gap: 8px; align-items: center;">
-                        <div style="position: relative; flex: 1;">
-                          <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.85rem; color: #64748b; font-weight: 600;">+51</span>
-                          <input
-                            v-model="statusModal.whatsAppCliente"
-                            type="text"
-                            placeholder="Ej: 987654321"
-                            class="form-input-styled"
-                            style="padding-left: 42px; background: white; border-color: #86efac;"
-                          />
-                        </div>
-                        <span v-if="statusModal.order?.whatsAppCliente" style="font-size: 0.74rem; color: #16a34a; white-space: nowrap;">
-                          ✓ Detectado del pedido
-                        </span>
-                      </div>
-                    </div>
+                  <div style="flex: 2;">
+                    <label class="form-label">N° Documento</label>
+                    <input v-model="statusModal.clienteNumeroDocumento" type="text" placeholder="Ej: 71234567" class="form-input-styled" />
                   </div>
                 </div>
               </div>
 
-              <div v-else-if="statusModal.selected === 'ENVIADO'" class="status-action-box bg-purple" style="margin: 0;">
-                <div class="action-box-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                  <div>
-                    <strong>Despacho y Envío del Pedido</strong>
-                    <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Puedes ingresar la guía o código de seguimiento para que el cliente rastree su paquete.</p>
-                  </div>
+              <div v-if="statusModal.tipoComprobante === 'Boleta' || statusModal.tipoComprobante === 'Factura'" class="form-grid-2col" style="margin-top: 10px;">
+                <div>
+                  <label class="form-label">Nombre / Razón Social</label>
+                  <input v-model="statusModal.clienteRazonSocial" type="text" placeholder="Nombre completo o Razón Social" class="form-input-styled" />
                 </div>
-                <div style="margin-top: 12px;">
-                  <label class="form-label" style="color: #5b21b6;">Número / Código de Seguimiento (opcional)</label>
-                  <input
-                    v-model="statusModal.numeroSeguimiento"
-                    type="text"
-                    placeholder="Ej: OLVA-987654321 / SHUTTLE-123"
-                    class="form-input-styled"
-                    style="border-color: #c4b5fd; background: white;"
-                  />
+                <div>
+                  <label class="form-label">Dirección Fiscal (Opcional)</label>
+                  <input v-model="statusModal.clienteDireccion" type="text" placeholder="Av. Principal #123" class="form-input-styled" />
                 </div>
               </div>
 
-              <div v-else-if="statusModal.selected === 'CANCELADO'" class="status-action-box bg-red" style="margin: 0;">
-                <div class="action-box-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                  <div>
-                    <strong>Advertencia de Cancelación</strong>
-                    <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Al confirmar la cancelación, el pedido quedará anulado y el stock de los productos será restaurado automáticamente al inventario si ya había sido descontado.</p>
+              <!-- Envío de Comprobante por WhatsApp -->
+              <div class="whatsapp-dispatch-card" style="margin-top: 14px; padding: 12px 14px; background: #ffffff; border: 1px solid #86efac; border-radius: 8px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                  <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.86rem; color: #166534; cursor: pointer; user-select: none;">
+                    <input type="checkbox" v-model="statusModal.enviarWhatsApp" style="width: 16px; height: 16px; accent-color: #25d366;" />
+                    <span style="display: inline-flex; align-items: center; gap: 6px;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="#25d366"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                      Enviar comprobante por WhatsApp al confirmar
+                    </span>
+                  </label>
+                  <span style="font-size: 0.72rem; color: #15803d; background: #dcfce7; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
+                    Automático
+                  </span>
+                </div>
+
+                <div v-if="statusModal.enviarWhatsApp" style="margin-top: 10px;">
+                  <label class="form-label" style="color: #166534; font-size: 0.78rem;">Número de WhatsApp del Cliente:</label>
+                  <div style="display: flex; gap: 8px; align-items: center;">
+                    <div style="position: relative; flex: 1;">
+                      <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.85rem; color: #64748b; font-weight: 600;">+51</span>
+                      <input
+                        v-model="statusModal.whatsAppCliente"
+                        type="text"
+                        placeholder="Ej: 987654321"
+                        class="form-input-styled"
+                        style="padding-left: 42px; background: white; border-color: #86efac;"
+                      />
+                    </div>
+                    <span v-if="statusModal.order?.whatsAppCliente" style="font-size: 0.74rem; color: #16a34a; white-space: nowrap;">
+                      ✓ Detectado del pedido
+                    </span>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="statusModal.selected === 'ENVIADO'" class="status-action-box bg-purple">
+            <div class="action-box-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              <div>
+                <strong>Despacho y Envío del Pedido</strong>
+                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Puedes ingresar la guía o código de seguimiento para que el cliente rastree su paquete.</p>
+              </div>
+            </div>
+            <div style="margin-top: 12px;">
+              <label class="form-label" style="color: #5b21b6;">Número / Código de Seguimiento (opcional)</label>
+              <input
+                v-model="statusModal.numeroSeguimiento"
+                type="text"
+                placeholder="Ej: OLVA-987654321 / SHUTTLE-123"
+                class="form-input-styled"
+                style="border-color: #c4b5fd; background: white;"
+              />
+            </div>
+          </div>
+
+          <div v-if="statusModal.selected === 'CANCELADO'" class="status-action-box bg-red">
+            <div class="action-box-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <div>
+                <strong>Advertencia de Cancelación</strong>
+                <p style="margin: 0; font-size: 0.82rem; opacity: 0.9;">Al confirmar la cancelación, el pedido quedará anulado y el stock de los productos será restaurado automáticamente al inventario si ya había sido descontado.</p>
               </div>
             </div>
           </div>
@@ -1097,10 +1090,15 @@ const openStatusModal = (order) => {
   const defaultName = order.razonSocialFactura || order.clienteRazonSocial || order.nombreCliente || ''
   const defaultAddress = order.direccionFiscalFactura || order.clienteDireccion || order.direccionEntrega || ''
 
+  let defaultSelected = ''
+  if (order.estadoOrden === 'PENDIENTE_PAGO') defaultSelected = 'EN_PREPARACION'
+  else if (order.estadoOrden === 'EN_PREPARACION') defaultSelected = 'ENVIADO'
+  else if (order.estadoOrden === 'ENVIADO') defaultSelected = 'ENTREGADO'
+
   statusModal.value = { 
     visible: true, 
     order, 
-    selected: '', 
+    selected: defaultSelected, 
     numeroSeguimiento: '',
     tipoComprobante: initialTipo,
     clienteTipoDocumento: defaultDocType,
@@ -1547,21 +1545,6 @@ onMounted(() => fetchOrders())
   border-radius: 16px;
   overflow: hidden;
   padding: 24px;
-  max-width: 840px !important;
-}
-
-.status-modal-body-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: 16px;
-  align-items: start;
-  margin-bottom: 20px;
-}
-
-@media (max-width: 880px) {
-  .status-modal-body-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .status-order-info {
