@@ -867,3 +867,51 @@ Se fusionaron todos los flujos independientes en una arquitectura limpia y robus
 - **Flujo de Pago (Checkout):**
   - **Redirección de "Llenar formulario completo":** En el Paso 4 (Métodos de Pago) bajo el modo "Invitado", se corrigió la acción del botón para que redirija instantáneamente al Paso 2 ("Datos Personales"), evitando bloqueos de navegación.
   - **Restricción de Mercado Pago en Guest Mode (ProcesoPago.jsx):** Para evitar fallos en la pasarela antifraude de Mercado Pago, se inhabilitó este método de pago si el usuario intenta comprar como invitado sin llenar todos sus datos. En su lugar, el sistema deshabilita el botón de compra, alerta al cliente del requerimiento por seguridad y lo invita a completar sus datos, evitando así generar pedidos huérfanos de Mercado Pago en el panel del administrador.
+
+## Actualización - 8 de Octubre (Reingeniería de Bot n8n, Desacople de Mercado Pago y Refactorización UI)
+
+### 1. Reingeniería Integral del Bot de WhatsApp en n8n
+- **Ahorro Extremo de Tokens (>90% de reducción):**
+  - Se eliminó la consulta recurrente al catálogo completo de la base de datos dentro del flujo de n8n. Anteriormente, cada mensaje entrante inyectaba decenas de productos y especificaciones extensas (~8,000 a 10,000 tokens por mensaje), lo que saturaba la cuota de la API de Gemini.
+  - Con el nuevo flujo estructurado, cada mensaje consume únicamente entre **600 y 800 tokens**, reduciendo drásticamente la latencia de respuesta a menos de 1-2 segundos y manteniendo los costos mensuales prácticamente en centavos.
+- **Simplificación del Flujo (Retiro de Comprobantes por Imagen):**
+  - Se retiró la recepción y procesamiento de vouchers por imagen fotográfica para evitar fallas de reconocimiento o ambigüedades. En su lugar, el bot ahora solicita formal y amablemente el **número de operación o transacción** en texto.
+- **Flujo de Ventas Psicológico y Concierge (Valentina):**
+  - **Etapa 1 (Confirmación y Cobertura primero):** Ante la consulta por un modelo, el bot confirma disponibilidad inmediata, explica los tiempos de entrega (Lima express / Provincias asegurado por Shalom) y solicita los datos de despacho (Nombre, DNI, Dirección/Distrito) para verificar cobertura antes de pedir dinero.
+  - **Etapa 2 (Cuentas Oficiales):** Con los datos confirmados, brinda las cuentas bancarias de la empresa (Yape `997 099 683` y cuentas corrientes BCP e Interbank a nombre de `GRUPO SERCAL S.A.C.`), prohibiendo menciones a pasarelas externas o Plin.
+  - **Etapa 3 (Cierre y Orden Automática):** Cuando el cliente ingresa su código de operación, la IA genera un JSON estructurado con `esPago: true`, activando la creación automática del pedido en el SaaS y enviando una confirmación de reserva y despacho sumamente tranquilizadora.
+  - **Etapa 4 (Consultas Generales y Catálogo):** Si el cliente hace preguntas genéricas ("¿qué modelos tienes?", "¿tienen dorados?"), el bot lo invita con distinción a explorar las fotografías en alta definición y precios en tiempo real en la tienda oficial: `https://lgant.pe/`.
+- **Memoria Inteligente de 5 Horas:**
+  - El bot ahora filtra y recuerda exclusivamente los mensajes ocurridos en las **últimas 5 horas**, previniendo que conversaciones de días o semanas anteriores contaminen la atención actual.
+  - Se agregó una lógica de normalización que fusiona mensajes consecutivos del mismo rol (`user`/`model`), garantizando compatibilidad total con la API de Gemini y evitando errores 400 de alternancia.
+- **Actualización de Modelo de IA y Resolución de Cuota:**
+  - Se actualizó el endpoint hacia `gemini-3.5-flash-lite`, corrigiendo la deprecación de versiones preliminares.
+  - Se resolvió el bloqueo de cuota (error 402) generado por activación accidental de prepago sin saldo en Google AI Studio, orientando la migración hacia el proyecto con nivel gratuito activo.
+
+### 2. Backend SaaS (.NET 9 / C#)
+- **Registro Flexible de Pedidos del Bot (`PublicStoreController.cs`):**
+  - Se optimizó el endpoint `POST /api/public/store/{empresaId}/bot/orders`: ahora permite procesar pedidos incluso si no se envía un `productoId` de MongoDB, buscando automáticamente coincidencias por nombre de producto o registrando el ítem de forma directa sin arrojar error 400.
+  - Se incorporó la persistencia del campo `CodigoOperacionPago` en el documento de venta (`Sale`), registrando el código bancario proporcionado por el cliente desde WhatsApp para facilitar la conciliación de almacén.
+- **Filtro Temporal en Historial de Chat (`WhatsAppChatsController.cs`):**
+  - Se actualizó el endpoint `GET /api/public/store/{empresaId}/bot/chat-history/{whatsAppCliente}` para recibir los parámetros opcionales `hours` (por defecto 5) y `limit` (por defecto 15).
+  - La consulta en base de datos ahora descarta mensajes con antigüedad mayor a las horas especificadas (`m.Fecha >= DateTime.UtcNow.AddHours(-hours)`), optimizando ancho de banda y memoria.
+
+### 3. Tienda Web (`Frontend-Relojes` / `lgant.pe`)
+- **Desacople Temporal de Mercado Pago en Checkout (`ProcesoPago.jsx`):**
+  - Se retiró la pestaña de selección de Mercado Pago tras identificarse bloqueos y restricciones antifraude a nivel de cuenta del recaudador.
+  - El checkout quedó simplificado y enfocado en los métodos de pago directos y más efectivos en Perú: **Yape / Plin** y **Transferencia Bancaria (BCP / Interbank)**.
+  - Se limpiaron todas las validaciones y bloqueos condicionales del modo invitado que dependían de Mercado Pago, permitiendo un flujo de finalización de compra fluido y sin trabas.
+- **Actualización de Métodos en Footer (`PieDePagina.jsx`):**
+  - Se eliminó el badge azul de Mercado Pago de la sección inferior "Pago Seguro".
+  - Se incorporaron los badges representativos de los métodos oficiales disponibles: **YAPE**, **PLIN**, **BCP** e **INTERBANK**.
+- **Limpieza de Componentes (`ModalProducto.jsx`):**
+  - Se depuraron referencias y comentarios en el modal de detalle de producto para reflejar el flujo de compra directo.
+
+### 4. Panel Administrativo SaaS (`Frontend` / Vue 3)
+- **Rediseño de Acciones en Cupones de Descuento (`Coupons.vue`):**
+  - Se solucionó el defecto visual donde los textos "Editar" y "Eliminar" se renderizaban encimados y solapados en la tabla de cupones.
+  - Se implementaron botones de acción modernos con iconos SVG vectoriales (`.btn-action-icon`), manteniendo coherencia con el diseño del resto del ERP:
+    - **Editar:** Botón azul sutil (`#eff6ff`) con icono de edición y elevación dinámica en hover.
+    - **Eliminar:** Botón rojo sutil (`#fef2f2`) con icono de papelera y elevación dinámica en hover.
+  - Se validó la compilación de producción mediante `vite build` con 0 errores.
+
