@@ -64,10 +64,14 @@ public class PublicBotChatController : ControllerBase
     }
 
     // GET api/public/store/{empresaId}/bot/chat-history/{whatsAppCliente}
-    // Obtiene los últimos N mensajes para inyectar al prompt de n8n
+    // Obtiene los últimos N mensajes de las últimas horas (por defecto 5h) para inyectar al prompt de n8n
     [AllowAnonymous]
     [HttpGet("{empresaId}/bot/chat-history/{whatsAppCliente}")]
-    public async Task<IActionResult> GetBotChatHistory(string empresaId, string whatsAppCliente, [FromQuery] int limit = 10)
+    public async Task<IActionResult> GetBotChatHistory(
+        string empresaId, 
+        string whatsAppCliente, 
+        [FromQuery] int limit = 15,
+        [FromQuery] int hours = 5)
     {
         var chat = await _context.WhatsAppChats
             .Find(c => c.EmpresaId == empresaId && c.WhatsAppCliente == whatsAppCliente)
@@ -76,7 +80,12 @@ public class PublicBotChatController : ControllerBase
         if (chat == null)
             return Ok(new List<ChatMessage>());
 
-        var history = chat.Mensajes.TakeLast(limit).ToList();
+        var limiteTiempo = DateTime.UtcNow.AddHours(-hours);
+        var history = chat.Mensajes
+            .Where(m => m.Fecha >= limiteTiempo)
+            .TakeLast(limit)
+            .ToList();
+
         return Ok(history);
     }
 
