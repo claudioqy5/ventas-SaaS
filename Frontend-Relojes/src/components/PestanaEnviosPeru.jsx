@@ -71,28 +71,27 @@ export default function PestanaEnviosPeru({ whatsappNumber = '51916382742', isVi
           }}
         >
           <div style={{
-            width: 'clamp(280px, 82vw, 315px)',
+            width: 'clamp(260px, 80vw, 295px)',
             maxWidth: 'calc(100vw - 44px)',
-            backgroundColor: '#141519',
+            backgroundColor: '#111215',
             color: '#ffffff',
             borderRadius: '16px',
-            border: '1.5px solid rgba(212, 175, 55, 0.55)',
-            borderRight: 'none',
-            padding: 'clamp(18px, 3vw, 22px) clamp(15px, 2.8vw, 20px)',
-            boxSizing: 'border-box'
+            border: '1px solid rgba(212, 175, 55, 0.4)',
+            padding: '20px 18px',
+            boxSizing: 'border-box',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)'
           }}>
           {/* Header del Panel */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {/* Bandera de Perú */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
               <div style={{
-                width: '22px',
-                height: '15px',
-                borderRadius: '3px',
+                width: '18px',
+                height: '12px',
+                borderRadius: '2px',
                 overflow: 'hidden',
                 display: 'flex',
-                boxShadow: '0 2px 5px rgba(0,0,0,0.5)',
-                border: '1px solid rgba(255,255,255,0.25)',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
                 flexShrink: 0
               }}>
                 <div style={{ flex: 1, backgroundColor: '#D91023' }}></div>
@@ -100,13 +99,13 @@ export default function PestanaEnviosPeru({ whatsappNumber = '51916382742', isVi
                 <div style={{ flex: 1, backgroundColor: '#D91023' }}></div>
               </div>
               <span style={{
-                fontSize: '0.68rem',
-                letterSpacing: '0.14em',
+                fontSize: '0.65rem',
+                letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 color: 'var(--c-gold)',
                 fontWeight: 700
               }}>
-                Tienda Oficial en Perú
+                Perú Directo
               </span>
             </div>
 
@@ -114,82 +113,71 @@ export default function PestanaEnviosPeru({ whatsappNumber = '51916382742', isVi
               onClick={() => setIsOpen(false)}
               aria-label="Cerrar panel de envíos"
               style={{
-                background: 'rgba(255,255,255,0.1)',
+                background: 'rgba(255,255,255,0.08)',
                 border: 'none',
                 borderRadius: '50%',
-                width: '26px',
-                height: '26px',
+                width: '24px',
+                height: '24px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: 'rgba(255,255,255,0.8)',
+                color: 'rgba(255,255,255,0.7)',
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
               onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = '#fff'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; }}
             >
-              <X size={15} />
+              <X size={14} />
             </button>
           </div>
 
           {/* Título */}
           <h4 style={{
-            margin: '0 0 6px 0',
-            fontSize: '1.12rem',
+            margin: '0 0 4px 0',
+            fontSize: '1.05rem',
             fontFamily: '"Cinzel", serif',
             color: '#ffffff',
             fontWeight: 700,
             letterSpacing: '0.02em'
           }}>
-            Envíos a Todo el Perú
+            Envíos Nacionales
           </h4>
           
           <p style={{
             margin: '0 0 14px 0',
-            fontSize: '0.78rem',
-            color: 'rgba(255, 255, 255, 0.78)',
-            lineHeight: 1.45
+            fontSize: '0.75rem',
+            color: 'rgba(255, 255, 255, 0.65)',
+            lineHeight: 1.35
           }}>
-            Despachos diarios y seguros desde Lima hacia todas las provincias a nivel nacional.
+            Despachos diarios y 100% seguros desde Lima a todo el país.
           </p>
 
-          <div style={{ height: '1px', background: 'linear-gradient(90deg, rgba(212,175,55,0.5), transparent)', marginBottom: '14px' }}></div>
-
-          {/* Viñetas con beneficios */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '18px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(212, 175, 55, 0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Truck size={15} color="#D4AF37" />
-              </div>
-              <div>
-                <strong style={{ display: 'block', fontSize: '0.75rem', color: '#ffffff' }}>Shalom y Olva Courier</strong>
-                <span style={{ fontSize: '0.70rem', color: 'rgba(255,255,255,0.65)' }}>Entrega a domicilio o retiro en agencia</span>
-              </div>
+          {/* Viñetas con beneficios minimalistas */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+              <Truck size={14} color="#D4AF37" style={{ flexShrink: 0 }} />
+              <span style={{ fontSize: '0.74rem', color: 'rgba(255,255,255,0.9)' }}>
+                <strong>Shalom</strong>
+              </span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(52, 199, 89, 0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <ShieldCheck size={15} color="#34C759" />
-              </div>
-              <div>
-                <strong style={{ display: 'block', fontSize: '0.75rem', color: '#ffffff' }}>Envío 100% Protegido</strong>
-                <span style={{ fontSize: '0.70rem', color: 'rgba(255,255,255,0.65)' }}>Código de rastreo y guía de remisión</span>
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+              <ShieldCheck size={14} color="#34C759" style={{ flexShrink: 0 }} />
+              <span style={{ fontSize: '0.74rem', color: 'rgba(255,255,255,0.9)' }}>
+                <strong>Envío 100% Protegido</strong> con guía
+              </span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <MapPin size={15} color="#f5e6c8" />
-              </div>
-              <div>
-                <strong style={{ display: 'block', fontSize: '0.75rem', color: '#ffffff' }}>Stock Local en Perú</strong>
-                <span style={{ fontSize: '0.70rem', color: 'rgba(255,255,255,0.65)' }}>Disponibilidad inmediata sin esperas</span>
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+              <MapPin size={14} color="#F5E6C8" style={{ flexShrink: 0 }} />
+              <span style={{ fontSize: '0.74rem', color: 'rgba(255,255,255,0.9)' }}>
+                <strong>Stock disponible</strong> en Lima
+              </span>
             </div>
           </div>
 
-          {/* Botón WhatsApp */}
+          {/* Botón WhatsApp Minimalista */}
           <button
             onClick={() => {
               const text = encodeURIComponent(
@@ -199,27 +187,27 @@ export default function PestanaEnviosPeru({ whatsappNumber = '51916382742', isVi
             }}
             style={{
               width: '100%',
-              padding: '10px',
+              padding: '9px 12px',
               backgroundColor: 'var(--c-gold)',
               border: 'none',
               borderRadius: '8px',
               color: '#0d0e11',
-              fontSize: '0.75rem',
+              fontSize: '0.73rem',
               fontWeight: 700,
-              letterSpacing: '0.06em',
+              letterSpacing: '0.05em',
               textTransform: 'uppercase',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '7px',
+              gap: '6px',
               transition: 'all 0.2s ease',
-              boxShadow: '0 4px 14px rgba(212, 175, 55, 0.3)'
+              boxShadow: '0 3px 12px rgba(212, 175, 55, 0.25)'
             }}
             onMouseEnter={(e) => { e.currentTarget.style.filter = 'brightness(1.1)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.filter = 'brightness(1)'; }}
           >
-            <MessageCircle size={15} color="#0d0e11" />
+            <MessageCircle size={14} color="#0d0e11" />
             <span>Consultar Cobertura</span>
           </button>
         </div>

@@ -1185,10 +1185,10 @@ body {
    ========================================================= */
 @keyframes emblemPulseGlow {
   0%, 100% {
-    box-shadow: inset 0 4px 8px rgba(255, 255, 255, 0.7), inset 0 -6px 10px rgba(0, 0, 0, 0.5), 0 6px 16px rgba(37, 211, 102, 0.4), 0 0 0 0 rgba(37, 211, 102, 0.5);
+    box-shadow: 0 6px 16px rgba(0, 200, 83, 0.4), 0 0 0 0 rgba(0, 200, 83, 0.5);
   }
   50% {
-    box-shadow: inset 0 4px 8px rgba(255, 255, 255, 0.9), inset 0 -6px 10px rgba(0, 0, 0, 0.5), 0 10px 25px rgba(37, 211, 102, 0.6), 0 0 0 12px rgba(37, 211, 102, 0);
+    box-shadow: 0 10px 25px rgba(0, 200, 83, 0.6), 0 0 0 12px rgba(0, 200, 83, 0);
   }
 }
 
@@ -1227,45 +1227,46 @@ body {
   transform: translateY(1px) scale(0.99);
 }
 
-/* Circulo 3D Emblema de WhatsApp */
+/* Círculo 3D Emblema de WhatsApp con Verde Sólido (#00c853) Sin Sombras Oscuras Internas */
 .wa-emblem-circle {
   position: relative;
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #25D366 0%, #128C7E 70%, #075E54 100%);
-  border: 4px solid #ffffff;
+  background: #00c853;
+  border: 3.5px solid #ffffff;
   z-index: 3;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 200, 83, 0.4);
   animation: emblemPulseGlow 2.5s infinite ease-in-out;
   transition: all 0.3s ease;
 }
 
 .wa-badge-pill-button:hover .wa-emblem-circle {
-  background: radial-gradient(circle at 35% 30%, #34E775 0%, #14A090 70%, #086F63 100%);
+  background: #00d659;
 }
 
 .wa-emblem-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  color: #ffffff;
   animation: emblemIconWiggle 3.2s infinite ease-in-out;
 }
 
-/* Cuerpo estilo Píldora (Pill) */
+/* Cuerpo estilo Píldora (Pill) con Verde Sólido WhatsApp (#00c853) */
 .wa-pill-body {
   position: relative;
   flex: 1;
   margin-left: -28px;
-  padding: 10px 20px 10px 38px;
-  background: #ffffff;
-  border: 3.5px solid #25D366;
+  padding: 11px 20px 11px 36px;
+  background: #00c853;
+  border: 3px solid #00c853;
   border-radius: 50px;
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.22), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 6px 20px rgba(0, 200, 83, 0.35);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1276,8 +1277,9 @@ body {
 }
 
 .wa-badge-pill-button:hover .wa-pill-body {
-  border-color: #128C7E;
-  box-shadow: 0 10px 28px rgba(37, 211, 102, 0.38), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  background: #00d659;
+  border-color: #00d659;
+  box-shadow: 0 10px 28px rgba(0, 200, 83, 0.5);
 }
 
 .wa-pill-body::after {
@@ -1289,9 +1291,9 @@ body {
   height: 200%;
   background: linear-gradient(
     90deg,
-    rgba(37, 211, 102, 0) 0%,
-    rgba(37, 211, 102, 0.25) 50%,
-    rgba(37, 211, 102, 0) 100%
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
   );
   animation: pillShimmer 3.2s infinite ease-in-out;
   pointer-events: none;
@@ -1300,8 +1302,8 @@ body {
 .wa-pill-subtitle {
   font-family: var(--font-sans);
   font-size: 0.70rem;
-  font-weight: 500;
-  color: #4b5563;
+  font-weight: 600;
+  color: #ffffff;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 1px;
@@ -1310,8 +1312,8 @@ body {
 .wa-pill-title {
   font-family: var(--font-sans);
   font-size: 1.15rem;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 800;
+  color: #ffffff;
   letter-spacing: -0.01em;
   text-transform: uppercase;
   line-height: 1;
