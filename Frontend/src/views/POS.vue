@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="dashboard-layout">
 <!-- Barra de navegacion lateral -->
     <aside class="sidebar" @mouseenter="isSidebarHovered = true" @mouseleave="isSidebarHovered = false">
@@ -619,7 +619,7 @@
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             <polyline points="9 12 11 14 15 10"></polyline>
           </svg>
-          Estructura lista para SUNAT
+          {{ (lastCreatedSale?.sunatCdrUrl || lastCreatedSale?.sunatEstado === 'ACEPTADO') ? 'Aceptado por SUNAT' : (lastCreatedSale?.sunatEstado || 'SUNAT Electrónico') }}
         </span>
         <span v-else-if="!isTicketGenerated" class="voucher-status-pill internal">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -637,6 +637,26 @@
           </svg>
           Esperando Pago Mercado Pago
         </span>
+      </div>
+
+      <!-- Alerta SUNAT y Reintento directo en POS si falló el envío -->
+      <div v-if="!isTicketGenerated && lastSaleVoucherType !== 'Nota de Venta' && lastCreatedSale && (!lastCreatedSale.sunatCdrUrl || lastCreatedSale.sunatEstado === 'ERROR' || lastCreatedSale.sunatEstado === 'No Enviado')" style="margin: 10px 0; background: #fffbeb; border: 1px solid #fde68a; padding: 10px; border-radius: var(--radius-sm); color: #92400e; text-align: left; font-size: 0.82rem;">
+        <div style="font-weight: 700; margin-bottom: 3px; display: flex; align-items: center; gap: 5px;">
+          <span>⚠️</span>
+          <span>SUNAT: {{ lastCreatedSale.sunatEstado || 'Pendiente' }}</span>
+        </div>
+        <p v-if="lastCreatedSale.sunatMensajeRespuesta" style="margin: 2px 0 6px 0; font-size: 0.78rem; word-break: break-word;">
+          {{ lastCreatedSale.sunatMensajeRespuesta }}
+        </p>
+        <button 
+          @click="reenviarSunatPOS" 
+          :disabled="reenviandoSunatPos" 
+          class="btn btn-primary" 
+          style="width: 100%; padding: 6px 10px; font-size: 0.8rem; background: #d97706; border-color: #b45309; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;"
+        >
+          <span v-if="reenviandoSunatPos">⏳ Reenviando a SUNAT...</span>
+          <span v-else>🚀 Reintentar envío a SUNAT ahora</span>
+        </button>
       </div>
 
       <!-- Resumen tipo Ticket de Productos -->
@@ -803,6 +823,39 @@ let barcodeTimer = null
 
 // ── Sale success modal ──
 const showSuccessModal = ref(false)
+const lastCreatedSale = ref(null)
+const reenviandoSunatPos = ref(false)
+
+const reenviarSunatPOS = async () => {
+  if (!lastCreatedSale.value) return
+  reenviandoSunatPos.value = true
+  try {
+    const res = await fetch(`${API_URL}/api/sales/${lastCreatedSale.value.id}/reenviar-sunat`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authStore.token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    const data = await res.json()
+    if (res.ok && data.success) {
+      alert(`✅ ${data.message}`)
+      if (data.sale) {
+        lastCreatedSale.value = data.sale
+      }
+    } else {
+      alert(`⚠️ ${data.message || 'Error al conectar con SUNAT.'}`)
+      if (data.sale) {
+        lastCreatedSale.value = data.sale
+      }
+    }
+  } catch (err) {
+    alert(`❌ Error de conexión al reintentar envío: ${err.message}`)
+  } finally {
+    reenviandoSunatPos.value = false
+  }
+}
+
 const lastSaleCode = ref('')
 const lastSaleVoucherType = ref('Boleta')
 const lastSaleClientName = ref('')
@@ -1441,6 +1494,7 @@ const checkout = async () => {
     }
 
     const createdSale = await res.json()
+    lastCreatedSale.value = createdSale
 
     // Mostrar modal de éxito
     lastSaleCode.value = createdSale.numeroComprobante || proximoCorrelativo.value

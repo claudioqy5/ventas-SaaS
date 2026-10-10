@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -703,6 +703,71 @@ public class SalesController : ControllerBase
         }
 
         return Ok(new { message = "Venta revertida exitosamente y stock restaurado.", sale });
+    }
+
+    // POST api/sales/{id}/reenviar-sunat – Reenvía o reintenta el envío de una boleta o factura a SUNAT
+    [HttpPost("{id}/reenviar-sunat")]
+    public async Task<IActionResult> ReenviarSunat(string id)
+    {
+        if (!_userContext.HasPermission("ventas") && !_userContext.HasPermission("historial_ventas"))
+            return Forbid();
+
+        var empresaId = _userContext.EmpresaId;
+        if (string.IsNullOrEmpty(empresaId)) return BadRequest(new { message = "Falta el identificador de la empresa." });
+
+        var sale = await _context.Sales.Find(s => s.Id == id && s.EmpresaId == empresaId).FirstOrDefaultAsync();
+        if (sale == null)
+            return NotFound(new { message = "La venta no existe." });
+
+        if (sale.Revertida)
+            return BadRequest(new { message = "No se puede enviar a SUNAT una venta que ha sido revertida." });
+
+        if (sale.TipoComprobante == "Nota de Venta")
+            return BadRequest(new { message = "Las Notas de Venta son comprobantes internos y no se declaran ante SUNAT." });
+
+        var empresa = await _context.Empresas.Find(e => e.Id == empresaId).FirstOrDefaultAsync();
+        if (empresa == null || !empresa.EmisionElectronicaActiva || string.IsNullOrEmpty(empresa.ApisPeruToken))
+            return BadRequest(new { message = "La empresa no tiene activa la facturación electrónica o no ha configurado el Token de APIsPERU." });
+
+        try
+        {
+            var sunatResult = await _apisPeruService.EmitirComprobanteAsync(sale, empresa);
+
+            var update = Builders<Sale>.Update
+                .Set(s => s.SunatEstado, sunatResult.SunatStatus ?? (sunatResult.Success ? "ACEPTADO" : "ERROR"))
+                .Set(s => s.SunatMensajeRespuesta, sunatResult.Message)
+                .Set(s => s.SunatXmlUrl, sunatResult.XmlUrl)
+                .Set(s => s.SunatPdfUrl, sunatResult.PdfUrl)
+                .Set(s => s.SunatCdrUrl, sunatResult.CdrUrl)
+                .Set(s => s.SunatHash, sunatResult.Hash);
+
+            await _context.Sales.UpdateOneAsync(s => s.Id == id && s.EmpresaId == empresaId, update);
+
+            var updatedSale = await _context.Sales.Find(s => s.Id == id && s.EmpresaId == empresaId).FirstOrDefaultAsync();
+
+            if (sunatResult.Success)
+            {
+                return Ok(new
+                {
+                    success = true,
+                    message = $"Comprobante enviado exitosamente a SUNAT: {sunatResult.SunatStatus}",
+                    sale = updatedSale
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = $"No se pudo enviar a SUNAT: {sunatResult.Message}",
+                    sale = updatedSale
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { success = false, message = $"Excepción al reenviar comprobante: {ex.Message}" });
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="dashboard-layout">
     <!-- Barra de navegacion lateral -->
     <aside class="sidebar">
@@ -129,6 +129,10 @@
                   <svg v-else xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                   {{ sale.numeroComprobante || (sale.tipoComprobante || 'VTA') }}
                 </span>
+                <div v-if="esComprobanteElectronico(sale)" style="margin-top: 3px;">
+                  <span v-if="sale.sunatCdrUrl" style="font-size: 10px; color: #16a34a; font-weight: 700; background: #f0fdf4; padding: 2px 5px; border-radius: 4px; border: 1px solid #bbf7d0; display: inline-block;">✓ SUNAT</span>
+                  <span v-else-if="!sale.revertida" style="font-size: 10px; color: #d97706; font-weight: 700; background: #fffbeb; padding: 2px 5px; border-radius: 4px; border: 1px solid #fde68a; display: inline-block;">⚠️ Pendiente</span>
+                </div>
               </td>
               <td>
                 <span class="date-badge">{{ formatDateTime(sale.fechaCreacion) }}</span>
@@ -288,6 +292,29 @@
                 Descargar CDR
               </a>
             </div>
+
+            <!-- Bloque de reenvío SUNAT si falló o no tiene CDR -->
+            <div 
+              v-if="esComprobanteElectronico(selectedSale) && !selectedSale?.revertida && (!selectedSale?.sunatCdrUrl || selectedSale?.sunatEstado === 'ERROR' || selectedSale?.sunatEstado === 'No Enviado')" 
+              style="background: #fffbeb; border: 1px solid #fde68a; padding: 12px; border-radius: var(--radius-sm); color: #92400e; font-size: 0.85rem;"
+            >
+              <div style="font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                <span>⚠️</span>
+                <span>Estado SUNAT: {{ selectedSale?.sunatEstado || 'Pendiente de envío' }}</span>
+              </div>
+              <p v-if="selectedSale?.sunatMensajeRespuesta" style="margin: 4px 0 8px 0; font-size: 0.8rem; word-break: break-word;">
+                <strong>Detalle:</strong> {{ selectedSale.sunatMensajeRespuesta }}
+              </p>
+              <button 
+                @click="reenviarSunat(selectedSale)" 
+                :disabled="reenviandoSunatId === selectedSale.id"
+                class="btn btn-primary"
+                style="width: 100%; margin-top: 6px; background: #d97706; border-color: #b45309; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; cursor: pointer;"
+              >
+                <span v-if="reenviandoSunatId === selectedSale.id">⏳ Reenviando a SUNAT...</span>
+                <span v-else>🚀 Reenviar Comprobante a SUNAT</span>
+              </button>
+            </div>
             
             <div v-if="selectedSale?.revertida" style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); text-align: center; color: #b91c1c; font-weight: 500; font-size: 0.9rem;">
               🚫 Esta venta fue revertida por {{ selectedSale.revertidaPorNombre || 'el sistema' }} el {{ formatDateTime(selectedSale.fechaReversion) }}
@@ -329,6 +356,48 @@ const getTodayDateString = () => {
 const filterDateFrom = ref(getTodayDateString())
 const filterDateTo = ref(getTodayDateString())
 const selectedSale = ref(null)
+const reenviandoSunatId = ref(null)
+
+const esComprobanteElectronico = (sale) => {
+  if (!sale || !sale.tipoComprobante) return false
+  const t = sale.tipoComprobante.toLowerCase()
+  return t.includes('boleta') || t.includes('factura')
+}
+
+const reenviarSunat = async (sale) => {
+  if (!confirm(`¿Deseas reenviar el comprobante ${sale.numeroComprobante || sale.tipoComprobante} a la SUNAT?`)) return
+  
+  reenviandoSunatId.value = sale.id
+  try {
+    const res = await fetch(`${API_URL}/api/sales/${sale.id}/reenviar-sunat`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authStore.token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    const data = await res.json()
+    if (res.ok && data.success) {
+      alert(`✅ ${data.message}`)
+      if (data.sale) {
+        selectedSale.value = data.sale
+        const idx = sales.value.findIndex(s => s.id === sale.id)
+        if (idx !== -1) sales.value[idx] = data.sale
+      }
+    } else {
+      alert(`⚠️ ${data.message || 'Error al conectar con SUNAT.'}`)
+      if (data.sale) {
+        selectedSale.value = data.sale
+        const idx = sales.value.findIndex(s => s.id === sale.id)
+        if (idx !== -1) sales.value[idx] = data.sale
+      }
+    }
+  } catch (err) {
+    alert(`❌ Error de conexión al reintentar envío: ${err.message}`)
+  } finally {
+    reenviandoSunatId.value = null
+  }
+}
 
 const activePaymentMethods = computed(() => paymentMethodsList.value.filter(m => m.activo))
 
