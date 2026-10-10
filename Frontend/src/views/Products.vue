@@ -705,15 +705,16 @@
               <div style="display: flex; flex-direction: column; gap: 12px;">
             <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; align-items: start;">
               <div class="field" style="margin-bottom: 0;">
-                <label>Nombre del Producto</label>
-                <input v-model="form.nombre" type="text" placeholder="Ej. Alimento Royal Canin" required />
+                <label>Nombre del Producto <span style="color: #ef4444;">*</span></label>
+                <input v-model="form.nombre" type="text" placeholder="Ej. Alimento Royal Canin" :class="{ 'input-error': formErrors.nombre }" />
+                <span v-if="formErrors.nombre" class="field-error-text">{{ formErrors.nombre }}</span>
               </div>
               <div class="field" style="position: relative; margin-bottom: 0;" ref="categoryDropdownRef">
                 <label>Categorías <span style="color: #ef4444;">*</span></label>
                 <div 
                   @click="toggleCategoryDropdown"
                   class="multiselect-trigger"
-                  :class="{ 'active': showCategoryDropdown }"
+                  :class="{ 'active': showCategoryDropdown, 'input-error': formErrors.categoriaIds }"
                 >
                   <div class="multiselect-selected-text">
                     <template v-if="!form.categoriaIds || form.categoriaIds.length === 0">
@@ -731,6 +732,7 @@
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </div>
+                <span v-if="formErrors.categoriaIds" class="field-error-text">{{ formErrors.categoriaIds }}</span>
 
                 <!-- Menú desplegable flotante (No empuja los elementos inferiores) -->
                 <div v-if="showCategoryDropdown" class="multiselect-dropdown-panel" @click.stop>
@@ -797,8 +799,9 @@
             <!-- FILA 2: Código/SKU, Modelo y Tipo de Producto -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 12px; align-items: end;">
               <div class="field">
-                <label>Código de Barra / SKU</label>
-                <input v-model="form.codigoBarras" type="text" placeholder="7501234567" required />
+                <label>Código de Barra / SKU <span style="color: #ef4444;">*</span></label>
+                <input v-model="form.codigoBarras" type="text" placeholder="7501234567" :class="{ 'input-error': formErrors.codigoBarras }" />
+                <span v-if="formErrors.codigoBarras" class="field-error-text">{{ formErrors.codigoBarras }}</span>
               </div>
               <div class="field">
                 <label>Agrupador (Modelo)</label>
@@ -831,11 +834,12 @@
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Kg x Costal</label>
-                  <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" required />
+                  <input v-model.number="form.kilosPorCostal" type="number" step="0.01" min="0" />
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>{{ isEdit ? 'Stock' : 'Inicial (Costales)' }}</label>
-                  <input v-model.number="form.stock" type="number" step="0.1" min="0" required />
+                  <input v-model.number="form.stock" type="number" step="0.1" min="0" :class="{ 'input-error': formErrors.stock }" />
+                  <span v-if="formErrors.stock" class="field-error-text">{{ formErrors.stock }}</span>
                 </div>
               </div>
 
@@ -847,7 +851,7 @@
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Costo Costal</label>
-                  <input v-model.number="form.precioCostoCostal" type="number" step="0.01" min="0" required />
+                  <input v-model.number="form.precioCostoCostal" type="number" step="0.01" min="0" />
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Costo Kg (calc)</label>
@@ -868,15 +872,17 @@
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Venta Costal Entero</label>
-                  <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" required />
+                  <input v-model.number="form.precioCostal" type="number" step="0.01" min="0" />
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
-                  <label>Precio Venta x Kg</label>
-                  <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                  <label>Precio Venta x Kg <span style="color: #ef4444;">*</span></label>
+                  <input v-model.number="form.precio" type="number" step="0.01" min="0" :class="{ 'input-error': formErrors.precio }" />
+                  <span v-if="formErrors.precio" class="field-error-text">{{ formErrors.precio }}</span>
                 </div>
                 <div class="field" style="grid-column: span 2; margin-bottom: 0 !important;">
                   <label>Precio Oferta x Kg (S/.) — 0 = Sin oferta</label>
-                  <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" />
+                  <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" :class="{ 'input-error': formErrors.precioOferta }" />
+                  <span v-if="formErrors.precioOferta" class="field-error-text">{{ formErrors.precioOferta }}</span>
                 </div>
               </div>
             </div>
@@ -890,7 +896,8 @@
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>{{ isEdit ? 'Stock' : 'Inicial (Und)' }}</label>
-                  <input v-model.number="form.stock" type="number" step="1" min="0" required />
+                  <input v-model.number="form.stock" type="number" step="1" min="0" :class="{ 'input-error': formErrors.stock }" />
+                  <span v-if="formErrors.stock" class="field-error-text">{{ formErrors.stock }}</span>
                 </div>
               </div>
               <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
@@ -900,7 +907,7 @@
                 </div>
                 <div class="field" style="margin-bottom: 0 !important;">
                   <label>Precio Costo (S/.)</label>
-                  <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" required />
+                  <input v-model.number="form.precioCosto" type="number" step="0.01" min="0" />
                 </div>
               </div>
               <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px;">
@@ -915,12 +922,14 @@
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                   <div class="field" style="margin-bottom: 0 !important;">
-                    <label>Precio Venta Base</label>
-                    <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                    <label>Precio Venta Base <span style="color: #ef4444;">*</span></label>
+                    <input v-model.number="form.precio" type="number" step="0.01" min="0" :class="{ 'input-error': formErrors.precio }" />
+                    <span v-if="formErrors.precio" class="field-error-text">{{ formErrors.precio }}</span>
                   </div>
                   <div class="field" style="margin-bottom: 0 !important;">
                     <label>Precio Oferta (S/.)</label>
-                    <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" />
+                    <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" :class="{ 'input-error': formErrors.precioOferta }" />
+                    <span v-if="formErrors.precioOferta" class="field-error-text">{{ formErrors.precioOferta }}</span>
                   </div>
                 </div>
               </div>
@@ -950,12 +959,14 @@
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                   <div class="field" style="margin-bottom: 0 !important;">
-                    <label>Precio Servicio (S/.)</label>
-                    <input v-model.number="form.precio" type="number" step="0.01" min="0" required />
+                    <label>Precio Servicio (S/.) <span style="color: #ef4444;">*</span></label>
+                    <input v-model.number="form.precio" type="number" step="0.01" min="0" :class="{ 'input-error': formErrors.precio }" />
+                    <span v-if="formErrors.precio" class="field-error-text">{{ formErrors.precio }}</span>
                   </div>
                   <div class="field" style="margin-bottom: 0 !important;">
                     <label>Precio Oferta (S/.)</label>
-                    <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" />
+                    <input v-model.number="form.precioOferta" type="number" step="0.01" min="0" placeholder="0.00" :class="{ 'input-error': formErrors.precioOferta }" />
+                    <span v-if="formErrors.precioOferta" class="field-error-text">{{ formErrors.precioOferta }}</span>
                   </div>
                 </div>
               </div>
@@ -970,17 +981,18 @@
                   :step="form.tipoProducto === 'Costal' ? '0.1' : '1'"
                   :disabled="form.tipoProducto === 'Servicio'"
                   placeholder="Ej. 2"
-                  min="0" required />
+                  min="0"
+                  :class="{ 'input-error': formErrors.stockMinimo }" />
+                <span v-if="formErrors.stockMinimo" class="field-error-text">{{ formErrors.stockMinimo }}</span>
               </div>
               <div class="field">
                 <label>Descripción del Producto</label>
                 <textarea v-model="form.descripcion" placeholder="Ej. Alimento premium sabor cordero y arroz" rows="4" style="width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 0.9rem; font-family: inherit; resize: vertical;"></textarea>
               </div>
             </div>
+          </div>
 
-            </div>
-
-            <!-- COLUMNA DERECHA: Especificaciones -->
+          <!-- COLUMNA DERECHA: Especificaciones -->
             <div>
               <div class="specifications-panel">
                 <div class="specifications-header">
@@ -1789,6 +1801,8 @@ const form = reactive({
   kilosPorCostal: 0
 })
 
+const formErrors = reactive({})
+
 // Calcula reactivamente el costo por kilogramo
 const costoKgCalculado = computed(() => {
   if (form.tipoProducto === 'Costal' && form.kilosPorCostal > 0) {
@@ -1942,6 +1956,7 @@ const fetchCategories = async () => {
 const openAddModal = () => {
   isEdit.value = false
   currentProductId.value = null
+  Object.keys(formErrors).forEach(k => delete formErrors[k])
   form.nombre = ''
   form.codigoBarras = ''
   form.codigoModelo = ''
@@ -1971,6 +1986,7 @@ const openAddModal = () => {
 const openEditModal = (product) => {
   isEdit.value = true
   currentProductId.value = product.id
+  Object.keys(formErrors).forEach(k => delete formErrors[k])
   form.nombre = product.nombre
   form.codigoBarras = product.codigoBarras
   form.codigoModelo = product.codigoModelo || ''
@@ -2007,14 +2023,76 @@ const openEditModal = (product) => {
 }
 
 const saveProduct = async () => {
+  // Limpiar errores previos
+  Object.keys(formErrors).forEach(k => delete formErrors[k])
+
+  // Validaciones del lado del cliente
+  if (!form.nombre || !form.nombre.trim()) {
+    formErrors.nombre = 'El nombre del producto es obligatorio.'
+  }
+
   if (!form.categoriaIds || form.categoriaIds.length === 0) {
-    alert('Por favor seleccione al menos una categoría.')
+    formErrors.categoriaIds = 'Debe seleccionar al menos una categoría.'
+  }
+
+  if (!form.codigoBarras || !form.codigoBarras.trim()) {
+    formErrors.codigoBarras = 'El código de barras / SKU es obligatorio.'
+  }
+
+  if (form.precio === null || form.precio === undefined || form.precio === '' || isNaN(Number(form.precio))) {
+    formErrors.precio = 'El precio de venta es obligatorio.'
+  } else if (Number(form.precio) < 0) {
+    formErrors.precio = 'El precio de venta no puede ser negativo.'
+  }
+
+  if (form.precioOferta !== null && form.precioOferta !== undefined && form.precioOferta !== '') {
+    const po = Number(form.precioOferta)
+    if (isNaN(po) || po < 0) {
+      formErrors.precioOferta = 'El precio de oferta debe ser 0 o un número positivo.'
+    }
+  }
+
+  if (form.tipoProducto !== 'Servicio') {
+    if (form.stock === null || form.stock === undefined || form.stock === '' || isNaN(Number(form.stock))) {
+      formErrors.stock = 'El stock es obligatorio.'
+    } else if (Number(form.stock) < 0) {
+      formErrors.stock = 'El stock no puede ser negativo.'
+    }
+
+    if (form.stockMinimo === null || form.stockMinimo === undefined || form.stockMinimo === '' || isNaN(Number(form.stockMinimo))) {
+      formErrors.stockMinimo = 'El stock mínimo es obligatorio.'
+    } else if (Number(form.stockMinimo) < 0) {
+      formErrors.stockMinimo = 'El stock mínimo no puede ser negativo.'
+    }
+  }
+
+  if (Object.keys(formErrors).length > 0) {
+    const errorList = Object.values(formErrors).map(msg => `• ${msg}`).join('\n')
+    alert(`No se pudo guardar el producto. Por favor corrija los siguientes campos:\n\n${errorList}`)
     return
   }
 
   try {
+    const sanitizeNumber = (val, defaultValue = 0) => {
+      if (val === null || val === undefined || val === '' || isNaN(Number(val))) {
+        return defaultValue
+      }
+      return Number(val)
+    }
+
     const payload = { ...form }
+    payload.nombre = (form.nombre || '').trim()
+    payload.codigoBarras = (form.codigoBarras || '').trim()
+    payload.codigoModelo = (form.codigoModelo || '').trim()
     payload.categoriaId = form.categoriaIds[0]
+    payload.precio = sanitizeNumber(form.precio, 0)
+    payload.precioOferta = sanitizeNumber(form.precioOferta, 0)
+    payload.precioCosto = sanitizeNumber(form.precioCosto, 0)
+    payload.precioCostoCostal = sanitizeNumber(form.precioCostoCostal, 0)
+    payload.precioCostal = sanitizeNumber(form.precioCostal, 0)
+    payload.kilosPorCostal = sanitizeNumber(form.kilosPorCostal, 0)
+    payload.stock = sanitizeNumber(form.stock, 0)
+    payload.stockMinimo = sanitizeNumber(form.stockMinimo, 5)
 
     // Fix empty marcaId parsing error in backend
     if (!payload.marcaId) {
@@ -2052,8 +2130,31 @@ const saveProduct = async () => {
       try {
         const errData = await res.json();
         if (errData.errors) {
-          const firstErrorKey = Object.keys(errData.errors)[0];
-          errorMsg = errData.errors[firstErrorKey][0];
+          const fieldNameMap = {
+            'product': 'Por favor verifique los datos del producto. Hay campos con valores no válidos o vacíos.',
+            'PrecioOferta': 'El precio de oferta debe ser un número válido.',
+            'precioOferta': 'El precio de oferta debe ser un número válido.',
+            'Precio': 'El precio de venta es obligatorio y debe ser un número válido.',
+            'precio': 'El precio de venta es obligatorio y debe ser un número válido.',
+            'Nombre': 'El nombre del producto es obligatorio.',
+            'nombre': 'El nombre del producto es obligatorio.',
+            'CodigoBarras': 'El código de barras / SKU es obligatorio.',
+            'codigoBarras': 'El código de barras / SKU es obligatorio.',
+            'CategoriaId': 'Debe seleccionar al menos una categoría.',
+            'categoriaId': 'Debe seleccionar al menos una categoría.'
+          };
+
+          const formattedErrors = [];
+          for (const [key, msgs] of Object.entries(errData.errors)) {
+            const customMessage = fieldNameMap[key];
+            if (customMessage) {
+              formattedErrors.push(customMessage);
+            } else {
+              const rawMessage = Array.isArray(msgs) ? msgs.join(', ') : msgs;
+              formattedErrors.push(`Campo '${key}': ${rawMessage}`);
+            }
+          }
+          errorMsg = formattedErrors.join('\n');
         } else if (errData.message) {
           errorMsg = errData.message;
         } else if (errData.title) {
@@ -3982,5 +4083,19 @@ onUnmounted(() => {
 
 .btn-done-categories:hover {
   background-color: #1d4ed8;
+}
+
+/* Estilos de validación visual de campos */
+.field-error-text {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 3px;
+  display: block;
+  font-weight: 500;
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
 }
 </style>

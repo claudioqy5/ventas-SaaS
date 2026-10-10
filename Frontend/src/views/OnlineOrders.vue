@@ -248,7 +248,7 @@
 
       <!-- Modal: Detalle del pedido -->
       <div v-if="selectedOrder" class="modal-overlay" @click.self="selectedOrder = null">
-        <div class="modal-content card" style="max-width: 680px;">
+        <div class="modal-content card" style="max-width: 50%;">
           <header class="modal-header">
             <div style="display:flex; align-items:center; gap:10px;">
               <h3>Detalle del Pedido #{{ selectedOrder.id?.slice(-8).toUpperCase() }}</h3>
@@ -453,7 +453,7 @@
             </button>
           </div>
 
-          <!-- Horizontal Stepper Timeline -->
+          <!-- Horizontal Stepper Timeline (Ancho Completo) -->
           <div class="horizontal-stepper-wrapper">
             <div class="stepper-progress-bar">
               <div class="stepper-progress-fill" :style="{ width: progressPercentage + '%' }"></div>
@@ -534,9 +534,9 @@
                   <div style="flex: 1;">
                     <label class="form-label">Tipo Doc.</label>
                     <select v-model="statusModal.clienteTipoDocumento" class="form-input-styled">
-                      <option value="-">Sin Documento</option>
-                      <option value="1">DNI</option>
-                      <option value="6">RUC</option>
+                      <option v-if="statusModal.tipoComprobante !== 'Factura'" value="-">Sin Documento</option>
+                      <option v-if="statusModal.tipoComprobante !== 'Factura'" value="1">DNI</option>
+                      <option v-if="statusModal.tipoComprobante !== 'Boleta'" value="6">RUC</option>
                     </select>
                   </div>
                   <div style="flex: 2;">
@@ -777,7 +777,7 @@
 
 <script setup>
 import { API_URL } from '../config'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -915,6 +915,16 @@ const statusModal = ref({
   clienteDireccion: '',
   enviarWhatsApp: true,
   whatsAppCliente: ''
+})
+
+watch(() => statusModal.value.tipoComprobante, (newTipo) => {
+  if (newTipo === 'Factura') {
+    statusModal.value.clienteTipoDocumento = '6'
+  } else if (newTipo === 'Boleta') {
+    if (statusModal.value.clienteTipoDocumento === '6') {
+      statusModal.value.clienteTipoDocumento = (statusModal.value.clienteNumeroDocumento && statusModal.value.clienteNumeroDocumento.length === 8) ? '1' : '-'
+    }
+  }
 })
 
 const voucherSuccessModal = ref({
@@ -1067,17 +1077,30 @@ const openDetail = (order) => {
 }
 
 const openStatusModal = (order) => {
-  const defaultDocType = order.rucFactura ? '6' : (order.dniReceptor ? (order.dniReceptor.length === 11 ? '6' : '1') : '-')
+  const initialTipo = order.tipoComprobante || 'Boleta'
+  let defaultDocType = order.rucFactura ? '6' : (order.dniReceptor ? (order.dniReceptor.length === 11 ? '6' : '1') : '-')
+  
+  if (initialTipo === 'Factura') {
+    defaultDocType = '6'
+  } else if (initialTipo === 'Boleta' && defaultDocType === '6') {
+    defaultDocType = (order.clienteNumeroDocumento && order.clienteNumeroDocumento.length === 8) ? '1' : '-'
+  }
+
   const defaultDocNum = order.rucFactura || order.dniReceptor || order.clienteNumeroDocumento || ''
   const defaultName = order.razonSocialFactura || order.clienteRazonSocial || order.nombreCliente || ''
   const defaultAddress = order.direccionFiscalFactura || order.clienteDireccion || order.direccionEntrega || ''
 
+  let defaultSelected = ''
+  if (order.estadoOrden === 'PENDIENTE_PAGO') defaultSelected = 'EN_PREPARACION'
+  else if (order.estadoOrden === 'EN_PREPARACION') defaultSelected = 'ENVIADO'
+  else if (order.estadoOrden === 'ENVIADO') defaultSelected = 'ENTREGADO'
+
   statusModal.value = { 
     visible: true, 
     order, 
-    selected: '', 
+    selected: defaultSelected, 
     numeroSeguimiento: '',
-    tipoComprobante: order.tipoComprobante || 'Boleta',
+    tipoComprobante: initialTipo,
     clienteTipoDocumento: defaultDocType,
     clienteNumeroDocumento: defaultDocNum,
     clienteRazonSocial: defaultName,
@@ -1502,7 +1525,7 @@ onMounted(() => fetchOrders())
 
 /* Modal */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.45); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.modal-content { width: 100%; max-width: 680px; background: #fff; padding: 28px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto; }
+.modal-content { width: 100%; max-width: 50%; background: #fff; padding: 28px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto; }
 .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; }
 .modal-header h3 { font-size: 1.2rem; font-weight: 600; margin: 0; }
 .close-btn { background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text-muted); line-height: 1; }
