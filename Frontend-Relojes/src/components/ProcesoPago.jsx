@@ -100,9 +100,33 @@ export default function ProcesoPago({
   const [paymentMethod, setPaymentMethod] = useState('yape'); // 'yape' | 'transferencia' | 'mercadopago'
   const [paymentDetails, setPaymentDetails] = useState({
     codigoOperacionYape: '',
+    cuentaYape: 'deyvi', // 'deyvi' | 'sercal'
     bancoTransferencia: 'BCP',
     codigoOperacionTransferencia: ''
   });
+
+  const yapeAccounts = {
+    deyvi: {
+      id: 'deyvi',
+      titular: 'Deyvi Walter Calixto Camayo',
+      numero: '916 382 742',
+      numeroRaw: '916382742',
+      qrImg: '/qr-yape.png',
+      badge: 'Yape Oficial',
+      label: 'Yape 1 (Deyvi Calixto)',
+      alt: 'Código QR Yape - Deyvi Walter Calixto Camayo'
+    },
+    sercal: {
+      id: 'sercal',
+      titular: 'Grupo Sercal S.A.C.',
+      numero: '997 099 683',
+      numeroRaw: '997099683',
+      qrImg: '/qr-yape2.png',
+      badge: 'Yape Empresa',
+      label: 'Yape 2 (Grupo Sercal)',
+      alt: 'Código QR Yape - Grupo Sercal S.A.C.'
+    }
+  };
 
   // Comprobante y Términos
   const [tipoComprobante, setTipoComprobante] = useState('boleta'); // 'boleta' | 'factura'
@@ -291,7 +315,7 @@ export default function ProcesoPago({
 
         // Código de operación de pago
         codigoOperacionPago: paymentMethod === 'yape'
-          ? paymentDetails.codigoOperacionYape
+          ? `${paymentDetails.codigoOperacionYape}${paymentDetails.cuentaYape === 'sercal' ? ' (Yape: Grupo Sercal S.A.C.)' : ' (Yape: Deyvi Calixto)'}`
           : paymentMethod === 'transferencia'
             ? paymentDetails.codigoOperacionTransferencia
             : null
@@ -392,7 +416,7 @@ export default function ProcesoPago({
           .join('\n');
 
         const opCodeText = (paymentMethod === 'yape' && paymentDetails.codigoOperacionYape)
-          ? `\n*N° Operación Yape:* ${paymentDetails.codigoOperacionYape}`
+          ? `\n*N° Operación Yape:* ${paymentDetails.codigoOperacionYape}\n*Cuenta Yape:* ${paymentDetails.cuentaYape === 'sercal' ? 'Grupo Sercal S.A.C. (997 099 683)' : 'Deyvi Walter Calixto Camayo (916 382 742)'}`
           : (paymentMethod === 'transferencia' && paymentDetails.codigoOperacionTransferencia)
             ? `\n*N° Operación Transferencia (${paymentDetails.bancoTransferencia}):* ${paymentDetails.codigoOperacionTransferencia}`
             : '';
@@ -984,92 +1008,128 @@ export default function ProcesoPago({
                 <div style={{ background: '#fcfbf8', border: '1px solid var(--border-light)', borderRadius: '10px', padding: '24px', marginBottom: '25px' }}>
                   
                   {/* Vista 1: Yape / Plin */}
-                  {paymentMethod === 'yape' && (
-                    <div>
-                      <div style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '20px' }}>
-                        {/* Tarjeta de Código QR Oficial de Yape */}
-                        <div style={{
-                          background: '#742284',
-                          borderRadius: '14px',
-                          padding: '8px',
-                          boxShadow: '0 8px 20px rgba(116, 34, 132, 0.2)',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          border: '1.5px solid rgba(212, 175, 55, 0.35)',
-                          maxWidth: '170px',
-                          width: '100%',
-                          flexShrink: 0
-                        }}>
-                          <img 
-                            src="/qr-yape.png" 
-                            alt="Código QR Yape - Grupo Sercal S.A.C."
-                            style={{
-                              width: '100%',
-                              height: 'auto',
-                              borderRadius: '8px',
-                              display: 'block'
+                  {paymentMethod === 'yape' && (() => {
+                    const activeYape = yapeAccounts[paymentDetails.cuentaYape || 'deyvi'] || yapeAccounts.deyvi;
+                    return (
+                      <div>
+                        {/* Selector de Cuentas Yape */}
+                        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                          {Object.values(yapeAccounts).map(cta => {
+                            const isSelected = (paymentDetails.cuentaYape || 'deyvi') === cta.id;
+                            return (
+                              <button
+                                key={cta.id}
+                                type="button"
+                                onClick={() => setPaymentDetails({ ...paymentDetails, cuentaYape: cta.id })}
+                                style={{
+                                  flex: 1,
+                                  padding: '10px 12px',
+                                  borderRadius: '8px',
+                                  border: isSelected ? '2px solid var(--c-blush)' : '1px solid var(--border-light)',
+                                  background: isSelected ? '#ffffff' : '#f0ede8',
+                                  fontWeight: 600,
+                                  fontSize: '0.83rem',
+                                  color: 'var(--c-obsidian)',
+                                  cursor: 'pointer',
+                                  textAlign: 'center',
+                                  transition: 'all 0.2s',
+                                  boxShadow: isSelected ? '0 2px 8px rgba(212, 175, 55, 0.12)' : 'none'
+                                }}
+                              >
+                                <div>{cta.label}</div>
+                                <div style={{ fontSize: '0.75rem', color: isSelected ? 'var(--c-blush)' : 'var(--c-taupe)', fontWeight: 500, marginTop: '2px' }}>
+                                  {cta.numero}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '20px' }}>
+                          {/* Tarjeta de Código QR Oficial de Yape */}
+                          <div style={{
+                            background: '#742284',
+                            borderRadius: '14px',
+                            padding: '8px',
+                            boxShadow: '0 8px 20px rgba(116, 34, 132, 0.2)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            border: '1.5px solid rgba(212, 175, 55, 0.35)',
+                            maxWidth: '170px',
+                            width: '100%',
+                            flexShrink: 0
+                          }}>
+                            <img 
+                              src={activeYape.qrImg} 
+                              alt={activeYape.alt}
+                              style={{
+                                width: '100%',
+                                height: 'auto',
+                                borderRadius: '8px',
+                                display: 'block'
+                              }}
+                            />
+                          </div>
+
+                          <div style={{ flex: 1, minWidth: '220px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                              <span style={{ display: 'inline-block', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: '#742284', color: '#ffffff', padding: '3px 10px', borderRadius: '12px', fontWeight: 600 }}>
+                                {activeYape.badge}
+                              </span>
+                              <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <ShieldCheck size={14} /> Verificado
+                              </span>
+                            </div>
+                            
+                            <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--c-obsidian)', marginBottom: '3px', letterSpacing: '0.04em' }}>
+                              {activeYape.numero}
+                            </div>
+                            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--c-obsidian)', marginBottom: '4px' }}>
+                              Titular: {activeYape.titular}
+                            </div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--c-taupe)', marginBottom: '12px' }}>
+                              Escanea el código QR desde tu app de Yape o transfiere directamente al número celular.
+                            </div>
+                            <button 
+                              type="button"
+                              onClick={() => handleCopy(activeYape.numeroRaw, `yape_${activeYape.id}`)}
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '7px 14px', background: '#ffffff', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.8rem', color: 'var(--c-obsidian)', cursor: 'pointer', fontWeight: 500, boxShadow: '0 2px 6px rgba(0,0,0,0.04)' }}
+                            >
+                              {copiedText === `yape_${activeYape.id}` ? <Check size={14} color="#16a34a" /> : <Copy size={14} />}
+                              {copiedText === `yape_${activeYape.id}` ? '¡Número copiado!' : 'Copiar número celular'}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div style={{ marginBottom: '15px' }}>
+                          <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>
+                            Número de Operación o Referencia *
+                          </label>
+                          <input 
+                            type="text" 
+                            value={paymentDetails.codigoOperacionYape}
+                            onChange={e => {
+                              setPaymentDetails({...paymentDetails, codigoOperacionYape: e.target.value});
+                              if (formErrors.codigoOperacionYape) setFormErrors({...formErrors, codigoOperacionYape: null});
                             }}
+                            placeholder="Ej. 7849102"
+                            style={{ width: '100%', padding: '12px 14px', border: `1px solid ${formErrors.codigoOperacionYape ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '6px', fontSize: '0.9rem', outline: 'none', background: '#ffffff', fontFamily: 'var(--font-main)' }}
                           />
+                          {formErrors.codigoOperacionYape && (
+                            <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <AlertCircle size={12} /> {formErrors.codigoOperacionYape}
+                            </span>
+                          )}
                         </div>
 
-                        <div style={{ flex: 1, minWidth: '220px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                            <span style={{ display: 'inline-block', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: '#742284', color: '#ffffff', padding: '3px 10px', borderRadius: '12px', fontWeight: 600 }}>
-                              Yape Oficial
-                            </span>
-                            <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                              <ShieldCheck size={14} /> Verificado
-                            </span>
-                          </div>
-                          
-                          <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--c-obsidian)', marginBottom: '3px', letterSpacing: '0.04em' }}>
-                            916 382 742
-                          </div>
-                          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--c-obsidian)', marginBottom: '4px' }}>
-                            Titular: Deyvi Walter Calixto Camayo
-                          </div>
-                          <div style={{ fontSize: '0.8rem', color: 'var(--c-taupe)', marginBottom: '12px' }}>
-                            Escanea el código QR desde tu app de Yape o transfiere directamente al número celular.
-                          </div>
-                          <button 
-                            type="button"
-                            onClick={() => handleCopy('916382742', 'yape_num')}
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '7px 14px', background: '#ffffff', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.8rem', color: 'var(--c-obsidian)', cursor: 'pointer', fontWeight: 500, boxShadow: '0 2px 6px rgba(0,0,0,0.04)' }}
-                          >
-                            {copiedText === 'yape_num' ? <Check size={14} color="#16a34a" /> : <Copy size={14} />}
-                            {copiedText === 'yape_num' ? '¡Número copiado!' : 'Copiar número celular'}
-                          </button>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.8rem', color: 'var(--c-taupe)', background: '#ffffff', padding: '12px 14px', borderRadius: '6px', border: '1px solid var(--border-light)' }}>
+                          <ShieldCheck size={18} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                          <span>Transfiere el monto exacto de <strong>S/ {total.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</strong> a la cuenta seleccionada. Al confirmar, podrás enviar tu constancia directamente por WhatsApp para un despacho prioritario.</span>
                         </div>
                       </div>
-
-                      <div style={{ marginBottom: '15px' }}>
-                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--c-obsidian)', fontWeight: 500, marginBottom: '8px' }}>
-                          Número de Operación o Referencia *
-                        </label>
-                        <input 
-                          type="text" 
-                          value={paymentDetails.codigoOperacionYape}
-                          onChange={e => {
-                            setPaymentDetails({...paymentDetails, codigoOperacionYape: e.target.value});
-                            if (formErrors.codigoOperacionYape) setFormErrors({...formErrors, codigoOperacionYape: null});
-                          }}
-                          placeholder="Ej. 7849102"
-                          style={{ width: '100%', padding: '12px 14px', border: `1px solid ${formErrors.codigoOperacionYape ? '#ef4444' : 'var(--border-light)'}`, borderRadius: '6px', fontSize: '0.9rem', outline: 'none', background: '#ffffff', fontFamily: 'var(--font-main)' }}
-                        />
-                        {formErrors.codigoOperacionYape && (
-                          <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <AlertCircle size={12} /> {formErrors.codigoOperacionYape}
-                          </span>
-                        )}
-                      </div>
-
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.8rem', color: 'var(--c-taupe)', background: '#ffffff', padding: '12px 14px', borderRadius: '6px', border: '1px solid var(--border-light)' }}>
-                        <ShieldCheck size={18} color="var(--c-blush)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                        <span>Transfiere el monto exacto de <strong>S/ {total.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</strong>. Al confirmar, podrás enviar tu constancia directamente por WhatsApp para un despacho prioritario.</span>
-                      </div>
-                    </div>
-                  )}
+                    );
+                  })()}
 
 
 
