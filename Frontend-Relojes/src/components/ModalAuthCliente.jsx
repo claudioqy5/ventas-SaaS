@@ -72,15 +72,7 @@ export default function ModalAuthCliente({ isOpen, onClose, user, token, onLogin
     try {
       let data;
       if (isRegister) {
-        const regRes = await registerCustomer(nombres.trim(), apellidos.trim(), email, password, telefono);
-        if (regRes && regRes.requiresVerification) {
-          setIsRegister(false);
-          setError('');
-          setSuccessMessage(regRes.message || '¡Cuenta creada! Hemos enviado un enlace de activación a tu correo. Por favor revísalo antes de ingresar.');
-          setIsLoading(false);
-          return;
-        }
-        data = regRes;
+        data = await registerCustomer(nombres.trim(), apellidos.trim(), email, password, telefono);
       } else {
         data = await loginCustomer(email, password);
       }

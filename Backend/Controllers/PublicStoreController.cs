@@ -217,7 +217,6 @@ public class PublicStoreController : ControllerBase
             if (existing.EsUsuarioEcommerce)
                 return BadRequest(new { message = "El correo ya está registrado en la tienda." });
             
-            var tokenVerif = Guid.NewGuid().ToString("N");
             // Si ya existía como cliente de mostrador (POS), lo convertimos en cliente ecommerce
             existing.EsUsuarioEcommerce = true;
             existing.ClaveHash = _passwordHasher.Hash(request.Clave);
@@ -225,21 +224,34 @@ public class PublicStoreController : ControllerBase
             existing.Apellidos = !string.IsNullOrWhiteSpace(apellidos) ? apellidos : existing.Apellidos;
             existing.Nombre = !string.IsNullOrWhiteSpace(nombreCompleto) ? nombreCompleto : existing.Nombre;
             existing.Telefono = request.Telefono ?? existing.Telefono;
-            existing.CorreoVerificado = false;
-            existing.TokenVerificacion = tokenVerif;
+            existing.CorreoVerificado = true;
+            existing.TokenVerificacion = null;
             
             await _context.Clients.ReplaceOneAsync(c => c.Id == existing.Id, existing);
 
-            // Despachar correo de activación VIP
-            _ = _emailService.SendClientVerificationEmailAsync(existing.Correo, existing.Nombres ?? existing.Nombre, tokenVerif);
+            var tokenExisting = _jwtProvider.GenerateClientToken(existing);
 
             return Ok(new { 
-                message = "Cuenta creada con éxito. Por favor revisa tu bandeja de entrada o spam para verificar tu correo antes de iniciar sesión.", 
-                requiresVerification = true 
+                message = "Cuenta creada con éxito.", 
+                token = tokenExisting,
+                client = new {
+                    existing.Id,
+                    existing.Nombre,
+                    existing.Nombres,
+                    existing.Apellidos,
+                    existing.Correo,
+                    existing.Telefono,
+                    existing.TipoDocumento,
+                    existing.NumeroDocumento,
+                    existing.Direccion,
+                    existing.Departamento,
+                    existing.Provincia,
+                    existing.Distrito,
+                    existing.Referencia
+                }
             });
         }
 
-        var tokenVerificacion = Guid.NewGuid().ToString("N");
         var newClient = new Client
         {
             EmpresaId = empresaId,
@@ -250,19 +262,33 @@ public class PublicStoreController : ControllerBase
             Telefono = request.Telefono ?? string.Empty,
             ClaveHash = _passwordHasher.Hash(request.Clave),
             EsUsuarioEcommerce = true,
-            CorreoVerificado = false,
-            TokenVerificacion = tokenVerificacion,
+            CorreoVerificado = true,
+            TokenVerificacion = null,
             FechaCreacion = DateTime.UtcNow
         };
 
         await _context.Clients.InsertOneAsync(newClient);
 
-        // Despachar correo de activación VIP
-        _ = _emailService.SendClientVerificationEmailAsync(newClient.Correo, newClient.Nombres ?? newClient.Nombre, tokenVerificacion);
+        var token = _jwtProvider.GenerateClientToken(newClient);
 
         return Ok(new { 
-            message = "Cuenta creada con éxito. Por favor revisa tu bandeja de entrada o spam para verificar tu correo antes de iniciar sesión.", 
-            requiresVerification = true 
+            message = "Cuenta creada con éxito.", 
+            token,
+            client = new {
+                newClient.Id,
+                newClient.Nombre,
+                newClient.Nombres,
+                newClient.Apellidos,
+                newClient.Correo,
+                newClient.Telefono,
+                newClient.TipoDocumento,
+                newClient.NumeroDocumento,
+                newClient.Direccion,
+                newClient.Departamento,
+                newClient.Provincia,
+                newClient.Distrito,
+                newClient.Referencia
+            }
         });
     }
 
@@ -274,11 +300,6 @@ public class PublicStoreController : ControllerBase
         var client = await _context.Clients.Find(c => c.EmpresaId == empresaId && c.Correo == request.Correo && c.EsUsuarioEcommerce).FirstOrDefaultAsync();
         if (client == null || string.IsNullOrEmpty(client.ClaveHash) || !_passwordHasher.Verify(request.Clave, client.ClaveHash))
             return Unauthorized(new { message = "Correo o contraseña incorrectos." });
-
-        if (!client.CorreoVerificado && !string.IsNullOrEmpty(client.TokenVerificacion))
-        {
-            return Unauthorized(new { message = "Por favor, verifica tu correo antes de ingresar. Revisa tu bandeja de entrada o spam." });
-        }
 
         var token = _jwtProvider.GenerateClientToken(client);
         return Ok(new { token, client = new {
